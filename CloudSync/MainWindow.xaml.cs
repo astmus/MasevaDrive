@@ -112,7 +112,7 @@ namespace CloudSync
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            List<OneDriveFolder> f = new List<OneDriveFolder>() { new OneDriveFolder() { Size=549392,Name="Maxim" }, new OneDriveFolder() { Size = 2495912, Name = "Dertt" } };
+            List<OneDriveFolder> f = new List<OneDriveFolder>() { new OneDriveFolder() { Size=549392,Name="Maxim" }, new OneDriveFolder() { Size = 2495912, Name = "De ewr wer wer wer rtt" } };
             FolderSyncConfigurator window = new FolderSyncConfigurator(f);
             window.Show();
         }

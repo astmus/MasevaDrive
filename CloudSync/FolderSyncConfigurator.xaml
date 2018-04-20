@@ -6,9 +6,12 @@
         xmlns:local="clr-namespace:CloudSync"
         mc:Ignorable="d"
         Title="FolderSyncConfigurator" Height="650" Width="500">
-    <StackPanel>
-
-        <ListBox Margin="12,12,12,20"  x:Name="folders" HorizontalAlignment="Stretch" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ListBox Grid.Row="0" Grid.Column="0"  SelectionMode="Multiple"  Margin="12,12,12,8"  x:Name="folders" HorizontalAlignment="Stretch" >
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -16,21 +19,21 @@
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid x:Name="grid">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox VerticalAlignment="Center"  Grid.Column="0"  x:Name="folderName" Content="{Binding Name}"/>
-                        <TextBlock VerticalAlignment="Center"  Margin="10,0,0,0" Grid.Column="1" Text="{Binding FormattedSize}"/>
-                        <TextBox VerticalAlignment="Center"  Margin="10,0,10,0"  Grid.Column="2" HorizontalContentAlignment="Stretch" x:Name="folderPath"/>
+                        <CheckBox VerticalAlignment="Center" IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"  Grid.Column="0"  x:Name="folderName" Content="{Binding Name}"/>
+                        <TextBlock VerticalAlignment="Center" Margin="4,0,0,0" Grid.Column="1" Text="{Binding FormattedSize, StringFormat={}({0})}"/>
+                        <TextBox VerticalAlignment="Center" Margin="4,0,10,0"  Grid.Column="2" HorizontalContentAlignment="Stretch" x:Name="folderPath"/>
                         <Button Grid.Column="3" x:Name="selectFolderButton" IsEnabled="{Binding ElementName=folderName, Path=IsChecked}"  Content="Select folder" Click="selectFolderButton_Click"/>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button Content="Ok" Width="60"/>
-    </StackPanel>
+        <Button Grid.Row="1" Margin="12,0,12,8"  Content="Ok" Click="Button_Click"  Width="60"/>
+    </Grid>
 </Window>

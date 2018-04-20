@@ -39,5 +39,33 @@ namespace CloudSync
                 } 
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {            
+            foreach (var item in folders.SelectedItems)
+            {
+                ListBoxItem container = folders.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
+                TextBox folderSyncPath = FindVisualChild<TextBox>(container);
+                
+            }
+        }
+
+        private childItem FindVisualChild<childItem>(DependencyObject obj)
+                  where childItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                    return (childItem)child;
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
+        }
     }
 }
