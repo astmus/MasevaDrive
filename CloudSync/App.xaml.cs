@@ -14,7 +14,6 @@ namespace CloudSync
 	/// </summary>
 	public partial class App : Application
 	{
-		private static string ClientId = "32171e35-694f-4481-a8bc-0498cb7da487";
-		public static PublicClientApplication PublicClientApp = new PublicClientApplication(ClientId);
+		
 	}
 }
