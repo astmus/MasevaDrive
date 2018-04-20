@@ -1,9 +1,12 @@
-﻿using Microsoft.Identity.Client;
+﻿using CloudSync.Models;
+using Microsoft.Identity.Client;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace CloudSync
 {
@@ -11,7 +14,7 @@ namespace CloudSync
     {
         private static string ClientId = "32171e35-694f-4481-a8bc-0498cb7da487";
         public static PublicClientApplication PublicClientApp = new PublicClientApplication(ClientId);
-        static string[] _scopes = new string[] { "user.read" };
+        static string[] _scopes = new string[] { "user.read","files.readwrite"};
         public static async Task<AuthenticationResult> Authenticate()
         {
             AuthenticationResult result = null;
@@ -65,6 +68,15 @@ namespace CloudSync
             {
                 return ex.ToString();
             }
+        }
+
+        //
+        public async static Task<List<OneDriveFolder>> GetRootFolders(string token)
+        {
+            var result = JObject.Parse(await GetHttpContentWithToken("https://graph.microsoft.com/v1.0/me/drive/root/children?select=id,name,size,folder", token));            
+            var data = result["value"]?.Where(w => w["folder"] != null); ;
+            List<OneDriveFolder> folders = data.Select(s => s.ToObject<OneDriveFolder>()).ToList();
+            return folders;
         }
 
         public static void SignOut()

@@ -9,10 +9,13 @@
 	<Grid>
 		<StackPanel Background="Azure">
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                
                 <Button Content="do some"  Click="Button_Click"/>
-                <Button x:Name="CallGraphButton" Content="Call Microsoft Graph API" HorizontalAlignment="Right" Padding="5" Click="CallGraphButton_Click" Margin="5" FontFamily="Segoe Ui"/>
+                <Button x:Name="CallGraphButton" Content="Add one drive" HorizontalAlignment="Right" Padding="5" Click="CallGraphButton_Click" Margin="5" FontFamily="Segoe Ui"/>
 				<Button x:Name="SignOutButton" Content="Sign-Out" HorizontalAlignment="Right" Padding="5" Click="SignOutButton_Click" Margin="5" Visibility="Collapsed" FontFamily="Segoe Ui"/>
 			</StackPanel>
+            <ListBox x:Name="users" />
+            <TextBox x:Name="requestFiled" Text="https://graph.microsoft.com/v1.0/me"/>
 			<Label Content="API Call Results" Margin="0,0,0,-5" FontFamily="Segoe Ui" />
 			<TextBox x:Name="ResultText" TextWrapping="Wrap" MinHeight="120" Margin="5" FontFamily="Segoe Ui"/>
 			<Label Content="Token Info" Margin="0,0,0,-5" FontFamily="Segoe Ui" />

@@ -4,6 +4,9 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Identity.Client;
 using System.Linq;
+using Newtonsoft;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CloudSync
 {
@@ -39,13 +42,14 @@ namespace CloudSync
 			//1040774072306-lrse4dhjchjotlf3e12nlk6tumvi6vv1.apps.googleusercontent.com
 			//A1JB6_bP36d8GtzxVPHEVSNI
 		}
-
-		private async void CallGraphButton_Click(object sender, RoutedEventArgs e)
+        AuthenticationResult authResult;
+        private async void CallGraphButton_Click(object sender, RoutedEventArgs e)
 		{
-            var authResult = await OneDrive.Authenticate();
+             authResult = await OneDrive.Authenticate();
 
             if (authResult != null)
 			{
+                users.Items.Add(authResult.User.DisplayableId+" "+ authResult.User.Name);
 				ResultText.Text = await OneDrive.GetHttpContentWithToken(_graphAPIEndpoint, authResult.AccessToken);
 				DisplayBasicTokenInfo(authResult);
 				this.SignOutButton.Visibility = Visibility.Visible;
@@ -96,9 +100,12 @@ namespace CloudSync
 			}
 		}        
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            var result = await OneDrive.GetRootFolders(authResult.AccessToken);
+            ResultText.Text = JsonConvert.SerializeObject(result);            
         }
+
+
     }
 }
