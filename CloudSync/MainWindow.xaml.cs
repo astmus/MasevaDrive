@@ -7,6 +7,8 @@ using System.Linq;
 using Newtonsoft;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using CloudSync.Models;
+using System.Collections.Generic;
 
 namespace CloudSync
 {
@@ -52,7 +54,7 @@ namespace CloudSync
                 users.Items.Add(authResult.User.DisplayableId+" "+ authResult.User.Name);
 				ResultText.Text = await OneDrive.GetHttpContentWithToken(_graphAPIEndpoint, authResult.AccessToken);
 				DisplayBasicTokenInfo(authResult);
-				this.SignOutButton.Visibility = Visibility.Visible;
+				this.SignOutButton.Visibility = Visibility.Visible;                
 			}
 		}		
 
@@ -103,9 +105,16 @@ namespace CloudSync
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             var result = await OneDrive.GetRootFolders(authResult.AccessToken);
-            ResultText.Text = JsonConvert.SerializeObject(result);            
+            ResultText.Text = JsonConvert.SerializeObject(result);
+            FolderSyncConfigurator window = new FolderSyncConfigurator(result);
+            window.Show();
         }
 
-
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            List<OneDriveFolder> f = new List<OneDriveFolder>() { new OneDriveFolder() { Size=549392,Name="Maxim" }, new OneDriveFolder() { Size = 2495912, Name = "Dertt" } };
+            FolderSyncConfigurator window = new FolderSyncConfigurator(f);
+            window.Show();
+        }
     }
 }

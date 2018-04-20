@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CloudSync.Models
 {
-    class OneDriveFolder
+    public class OneDriveFolder
     {
         public string Id { get; set; }
         public string Name { get; set; }
