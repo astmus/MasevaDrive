@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace CloudSync.Models
 {
-    public class OneDriveFolder
+    public class OneDriveItem
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -25,6 +27,22 @@ namespace CloudSync.Models
             }
         }
     }
+    
+    public class OneDriveSyncItem : OneDriveItem
+    {        
+        [JsonProperty("@microsoft.graph.downloadUrl")]
+        public string Link { get; set; }
+        [JsonProperty("parentReference")]
+        public JObject ParentReference { get; set; }
 
-
+        public string ReferencePath
+        {
+            get
+            {
+                string fullPath = ParentReference["path"].Value<String>();
+                fullPath = fullPath.Substring(fullPath.IndexOf(":") + 2);
+                return fullPath.Substring(fullPath.IndexOf("/") + 1);
+            }
+        }
+    }
 }

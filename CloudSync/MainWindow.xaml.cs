@@ -19,7 +19,7 @@ namespace CloudSync
 	{
 		private System.Windows.Forms.NotifyIcon trayIcon;
 		string _graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";//Set the scope for API call to user.read
-		
+		List<OneDriveSyncFolder> oneDriveFolders { get; set; }
 		/// <summary>
 		/// OneDriveApi instance to work with
 		/// </summary>
@@ -107,14 +107,22 @@ namespace CloudSync
             var result = await OneDrive.GetRootFolders(authResult.AccessToken);
             ResultText.Text = JsonConvert.SerializeObject(result);
             FolderSyncConfigurator window = new FolderSyncConfigurator(result);
-            window.Show();
+            oneDriveFolders = window.Show();
+            foldersListBox.ItemsSource = oneDriveFolders;
+            foldersListBox.SelectAll();
+            oneDriveFolders[0].Sync();
+            //
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            List<OneDriveFolder> f = new List<OneDriveFolder>() { new OneDriveFolder() { Size=549392,Name="Maxim" }, new OneDriveFolder() { Size = 2495912, Name = "De ewr wer wer wer rtt" } };
+            /*List<OneDriveItem> f = new List<OneDriveItem>() { new OneDriveItem() { Size=549392,Name="Maxim" }, new OneDriveItem() { Size = 2495912, Name = "De ewr wer wer wer rtt" } };
             FolderSyncConfigurator window = new FolderSyncConfigurator(f);
-            window.Show();
+            oneDriveFolders = window.Show();
+            foldersListBox.ItemsSource = oneDriveFolders;
+            foldersListBox.SelectAll();
+            oneDriveFolders[0].Sync();*/
+            ResultText.Text = await OneDrive.GetHttpContentWithToken(requestFiled.Text, authResult.AccessToken);
         }
     }
 }

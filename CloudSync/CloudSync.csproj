@@ -110,17 +110,21 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CloudWorker.cs" />
+    <Compile Include="DownloadFileWorker.cs" />
     <Compile Include="FolderSyncConfigurator.xaml.cs">
       <DependentUpon>FolderSyncConfigurator.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IProgressable.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\OneDriveFolder.cs" />
+    <Compile Include="Models\OneDriveItem.cs" />
     <Compile Include="OneDrive.cs" />
+    <Compile Include="OneDriveSyncFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

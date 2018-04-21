@@ -1,6 +1,7 @@
 ﻿using CloudSync.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+
 
 namespace CloudSync
 {
@@ -20,7 +21,8 @@ namespace CloudSync
     /// </summary>
     public partial class FolderSyncConfigurator : Window
     {
-        public FolderSyncConfigurator(List<OneDriveFolder> driveFolders)
+        
+        public FolderSyncConfigurator(List<OneDriveItem> driveFolders)
         {
             InitializeComponent();
             folders.ItemsSource = driveFolders;
@@ -33,21 +35,25 @@ namespace CloudSync
             TextBox folderPath = parent.FindName("folderPath") as TextBox;
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
-                if ( dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     folderPath.Text = dialog.SelectedPath;
                 } 
             }
         }
 
+        List<OneDriveSyncFolder> res = new List<OneDriveSyncFolder>();
         private void Button_Click(object sender, RoutedEventArgs e)
         {            
             foreach (var item in folders.SelectedItems)
             {
                 ListBoxItem container = folders.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
                 TextBox folderSyncPath = FindVisualChild<TextBox>(container);
-                
+                var syncFolder = new OneDriveSyncFolder(item as OneDriveItem, folderSyncPath.Text);
+                res.Add(syncFolder);
+                Directory.CreateDirectory(Path.Combine(syncFolder.PathToSync, syncFolder.Name));
             }
+            this.Close();
         }
 
         private childItem FindVisualChild<childItem>(DependencyObject obj)
@@ -66,6 +72,12 @@ namespace CloudSync
                 }
             }
             return null;
+        }
+
+        public new List<OneDriveSyncFolder> Show()
+        {
+            this.ShowDialog();
+            return res;
         }
     }
 }
