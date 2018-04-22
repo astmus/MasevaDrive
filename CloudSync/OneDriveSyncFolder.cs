@@ -13,6 +13,10 @@ namespace CloudSync
     public class OneDriveSyncFolder : OneDriveItem
     {
         private string nextDeltaLink;
+        public OneDriveSyncFolder()
+        {
+
+        }
         public OneDriveSyncFolder(OneDriveItem folder, string pathToSync) : base()
         {
             this.Id = folder.Id;
@@ -20,7 +24,8 @@ namespace CloudSync
             this.Size = folder.Size;
             this.PathToSync = pathToSync;
         }
-        
+
+        public bool IsActive { get; set; } = true;
         public string PathToSync { get; set; }
         public event Action<IProgressable> NewWorkerReady;
         List<OneDriveSyncItem> itemsForSync = new List<OneDriveSyncItem>();

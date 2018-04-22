@@ -6,10 +6,14 @@
         xmlns:local="clr-namespace:CloudSync"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <ResourceDictionary>
+            
+        </ResourceDictionary>
+    </Window.Resources>
 	<Grid>
 		<StackPanel Background="Azure">
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">                
                 <Button Content="do some"  Click="Button_Click"/>
                 <Button Content="do some 2"  Click="Button_Click_1"/>
                 <Button x:Name="CallGraphButton" Content="Add one drive" HorizontalAlignment="Right" Padding="5" Click="CallGraphButton_Click" Margin="5" FontFamily="Segoe Ui"/>
@@ -25,18 +29,19 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <ListBox SelectionMode="Multiple"  x:Name="foldersListBox"  Grid.Column="0">
+                <ListBox x:Name="foldersListBox"  Grid.Column="0">                    
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid x:Name="grid">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="Auto"/>                                    
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>                                    
                                 </Grid.ColumnDefinitions>
-                                <CheckBox VerticalAlignment="Center" IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"  Grid.Column="0"  x:Name="folderName" Content="{Binding Name}"/>
-                                <TextBlock VerticalAlignment="Center" Margin="4,0,0,0" Grid.Column="1" Text="{Binding FormattedSize, StringFormat={}({0})}"/>
-                                <TextBox VerticalAlignment="Center" Margin="4,0,10,0"  Grid.Column="2" HorizontalContentAlignment="Stretch" x:Name="folderPath"/>                                
+                                <CheckBox  Grid.ColumnSpan="3" Checked="folderName_Checked" DataContext="{Binding}" VerticalAlignment="Center" IsChecked="{Binding IsActive, Mode=TwoWay}"  Grid.Column="0"  x:Name="folderName"/>
+                                <TextBlock VerticalAlignment="Center" IsHitTestVisible="False" Margin="20,0,0,0" Grid.Column="0" Text="{Binding Name}"/>
+                                <TextBlock VerticalAlignment="Center" IsHitTestVisible="False" Margin="4,0,0,0" Grid.Column="1" Text="{Binding FormattedSize, StringFormat={}({0})}"/>
+                                <TextBlock VerticalAlignment="Center" IsHitTestVisible="False" Margin="4,0,10,0"  Grid.Column="2" Text="{Binding PathToSync}"  x:Name="folderPath"/>                                
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

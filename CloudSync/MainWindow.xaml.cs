@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using CloudSync.Models;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace CloudSync
 {
@@ -19,7 +20,11 @@ namespace CloudSync
 	{
 		private System.Windows.Forms.NotifyIcon trayIcon;
 		string _graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";//Set the scope for API call to user.read
-		List<OneDriveSyncFolder> oneDriveFolders { get; set; }
+		List<OneDriveSyncFolder> oneDriveFolders
+        {
+            get { return Settings.Instance.FoldersForSync; }
+            set { Settings.Instance.FoldersForSync = value; }
+        }
 		/// <summary>
 		/// OneDriveApi instance to work with
 		/// </summary>
@@ -35,6 +40,8 @@ namespace CloudSync
 			trayIcon.DoubleClick += TrayIcon_DoubleClick;
 			StateChanged += MainWindow_StateChanged;
 			this.Loaded += MainWindow_Loaded;
+            Settings.Instance.Load();
+            foldersListBox.ItemsSource = oneDriveFolders;
 		}
 
 		private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -123,6 +130,18 @@ namespace CloudSync
             foldersListBox.SelectAll();
             oneDriveFolders[0].Sync();*/
             ResultText.Text = await OneDrive.GetHttpContentWithToken(requestFiled.Text, authResult.AccessToken);
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+            Settings.Instance.Save();
+        }
+
+        private void folderName_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox box = sender as CheckBox;
+            (box.DataContext as OneDriveSyncFolder).IsActive = box.IsChecked.Value;
         }
     }
 }
