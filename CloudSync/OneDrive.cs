@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace CloudSync
 {
@@ -14,8 +15,8 @@ namespace CloudSync
     {
         private static string ClientId = "32171e35-694f-4481-a8bc-0498cb7da487";
         public static PublicClientApplication PublicClientApp = new PublicClientApplication(ClientId);
-        static string[] _scopes = new string[] { "user.read","files.readwrite"};
-        static AuthenticationResult authResult = null;
+        static string[] _scopes = new string[] { "user.read","files.readwrite", "files.readwrite.all" };
+        public static AuthenticationResult authResult = null;
         public static async Task<AuthenticationResult> Authenticate()
         {  
 
@@ -95,6 +96,31 @@ namespace CloudSync
             }
         }
 
+
+        /// <summary>
+		/// Perform an HTTP GET request to a URL using an HTTP Authorization header
+		/// </summary>
+		/// <param name="url">The URL</param>
+		/// <param name="token">The token</param>
+		/// <returns>String containing the results of the GET operation</returns>
+		public static async Task<Stream> GetHttpStreamWithToken(string url)
+        {
+            var httpClient = new System.Net.Http.HttpClient();
+            System.Net.Http.HttpResponseMessage response;
+            try
+            {
+                var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
+                //Add the token in Authorization header
+                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authResult.AccessToken);
+                response = await httpClient.SendAsync(request);
+                var content = await response.Content.ReadAsStreamAsync();
+                return content;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         //
         public async static Task<List<OneDriveItem>> GetRootFolders(string token)
         {

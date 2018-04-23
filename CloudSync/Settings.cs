@@ -26,7 +26,7 @@ namespace CloudSync
         }
 
         public void Save()
-        {
+        {            
             Properties.Settings.Default.Folders = JsonConvert.SerializeObject(FoldersForSync);
             Properties.Settings.Default.Save();
         }

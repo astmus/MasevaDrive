@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace CloudSync.Models
 {
@@ -14,6 +15,7 @@ namespace CloudSync.Models
         public string Name { get; set; }
         public uint Size { get; set; }
 
+        [JsonIgnore]
         public string FormattedSize
         {
             get {
@@ -29,9 +31,12 @@ namespace CloudSync.Models
     }
     
     public class OneDriveSyncItem : OneDriveItem
-    {        
-        [JsonProperty("@microsoft.graph.downloadUrl")]
-        public string Link { get; set; }
+    {           
+        [JsonIgnore]
+        public string Link
+        {
+            get { return String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}/content", Id); }
+        }
         [JsonProperty("parentReference")]
         public JObject ParentReference { get; set; }
 
@@ -40,8 +45,8 @@ namespace CloudSync.Models
             get
             {
                 string fullPath = ParentReference["path"].Value<String>();
-                fullPath = fullPath.Substring(fullPath.IndexOf(":") + 2);
-                return fullPath.Substring(fullPath.IndexOf("/") + 1);
+                return fullPath.Substring(fullPath.IndexOf(":") + 2).Replace("/","\\");
+                //return fullPath.Substring(fullPath.IndexOf("/") + 1);
             }
         }
     }

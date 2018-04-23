@@ -48,7 +48,7 @@ namespace CloudSync
             foreach (var item in folders.SelectedItems)
             {
                 ListBoxItem container = folders.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
-                TextBox folderSyncPath = FindVisualChild<TextBox>(container);
+                TextBox folderSyncPath = container.FindVisualChild<TextBox>();
                 var syncFolder = new OneDriveSyncFolder(item as OneDriveItem, folderSyncPath.Text);
                 res.Add(syncFolder);
                 Directory.CreateDirectory(Path.Combine(syncFolder.PathToSync, syncFolder.Name));
@@ -56,23 +56,7 @@ namespace CloudSync
             this.Close();
         }
 
-        private childItem FindVisualChild<childItem>(DependencyObject obj)
-                  where childItem : DependencyObject
-        {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-            {
-                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is childItem)
-                    return (childItem)child;
-                else
-                {
-                    childItem childOfChild = FindVisualChild<childItem>(child);
-                    if (childOfChild != null)
-                        return childOfChild;
-                }
-            }
-            return null;
-        }
+        
 
         public new List<OneDriveSyncFolder> Show()
         {

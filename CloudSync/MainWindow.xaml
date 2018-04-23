@@ -4,50 +4,64 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CloudSync"
+        xmlns:convert="clr-namespace:CloudSync.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
     <Window.Resources>
         <ResourceDictionary>
-            
+            <convert:WorkerToBackgroundConverter x:Key="WorkerConverter"/>
         </ResourceDictionary>
     </Window.Resources>
-	<Grid>
-		<StackPanel Background="Azure">
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">                
+    <Grid>
+        <StackPanel Background="Azure">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="do some"  Click="Button_Click"/>
                 <Button Content="do some 2"  Click="Button_Click_1"/>
                 <Button x:Name="CallGraphButton" Content="Add one drive" HorizontalAlignment="Right" Padding="5" Click="CallGraphButton_Click" Margin="5" FontFamily="Segoe Ui"/>
-				<Button x:Name="SignOutButton" Content="Sign-Out" HorizontalAlignment="Right" Padding="5" Click="SignOutButton_Click" Margin="5" Visibility="Collapsed" FontFamily="Segoe Ui"/>
-			</StackPanel>
+                <Button x:Name="SignOutButton" Content="Sign-Out" HorizontalAlignment="Right" Padding="5" Click="SignOutButton_Click" Margin="5" Visibility="Collapsed" FontFamily="Segoe Ui"/>
+            </StackPanel>
             <ListBox x:Name="users" />
             <TextBox x:Name="requestFiled" Text="https://graph.microsoft.com/v1.0/me"/>
-			<Label Content="API Call Results" Margin="0,0,0,-5" FontFamily="Segoe Ui" />
-			<TextBox x:Name="ResultText" TextWrapping="Wrap" MinHeight="120" Margin="5" FontFamily="Segoe Ui"/>
-			<Label Content="Token Info" Margin="0,0,0,-5" FontFamily="Segoe Ui" />
+            <Label Content="API Call Results" Margin="0,0,0,-5" FontFamily="Segoe Ui" />
+            <TextBox x:Name="ResultText" TextWrapping="Wrap" MinHeight="120" Margin="5" FontFamily="Segoe Ui"/>
+            <Label Content="Token Info" Margin="0,0,0,-5" FontFamily="Segoe Ui" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <ListBox x:Name="foldersListBox"  Grid.Column="0">                    
+                <ListBox x:Name="foldersListBox"  Grid.Column="0">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid x:Name="grid">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>                                    
-                                    <ColumnDefinition Width="Auto"/>                                    
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <CheckBox  Grid.ColumnSpan="3" Checked="folderName_Checked" DataContext="{Binding}" VerticalAlignment="Center" IsChecked="{Binding IsActive, Mode=TwoWay}"  Grid.Column="0"  x:Name="folderName"/>
                                 <TextBlock VerticalAlignment="Center" IsHitTestVisible="False" Margin="20,0,0,0" Grid.Column="0" Text="{Binding Name}"/>
                                 <TextBlock VerticalAlignment="Center" IsHitTestVisible="False" Margin="4,0,0,0" Grid.Column="1" Text="{Binding FormattedSize, StringFormat={}({0})}"/>
-                                <TextBlock VerticalAlignment="Center" IsHitTestVisible="False" Margin="4,0,10,0"  Grid.Column="2" Text="{Binding PathToSync}"  x:Name="folderPath"/>                                
+                                <TextBlock VerticalAlignment="Center" IsHitTestVisible="False" Margin="4,0,10,0"  Grid.Column="2" Text="{Binding PathToSync}"  x:Name="folderPath"/>
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
                 <TextBox Grid.Column="1" x:Name="TokenInfoText" TextWrapping="Wrap" MinHeight="70" Margin="5" FontFamily="Segoe Ui"/>
             </Grid>
+            <ListBox Height="300" HorizontalContentAlignment="Stretch"  x:Name="workers" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:MainWindow}, Path=currentWorkers}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding CompletedPercent}" Background="{Binding CompletedPercent, Converter={StaticResource WorkerConverter}}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding TaskName}" />
+                                <TextBlock x:Name="message"  Text="" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </StackPanel>
-	</Grid>
+    </Grid>
 </Window>

@@ -98,6 +98,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\WorkerToBackgroundConverter.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Settings.cs" />
     <Page Include="FolderSyncConfigurator.xaml">
       <SubType>Designer</SubType>
@@ -155,5 +157,6 @@
   <ItemGroup>
     <Resource Include="1.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

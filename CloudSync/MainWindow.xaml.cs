@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using CloudSync.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace CloudSync
 {
@@ -25,6 +26,8 @@ namespace CloudSync
             get { return Settings.Instance.FoldersForSync; }
             set { Settings.Instance.FoldersForSync = value; }
         }
+
+        public ObservableCollection<IProgressable> currentWorkers { get; set; } = new ObservableCollection<IProgressable>();
 		/// <summary>
 		/// OneDriveApi instance to work with
 		/// </summary>
@@ -39,15 +42,40 @@ namespace CloudSync
 			trayIcon = new System.Windows.Forms.NotifyIcon();			
 			trayIcon.DoubleClick += TrayIcon_DoubleClick;
 			StateChanged += MainWindow_StateChanged;
-			this.Loaded += MainWindow_Loaded;
+			this.Loaded += MainWindow_Loaded;            
             Settings.Instance.Load();
-            foldersListBox.ItemsSource = oneDriveFolders;
+            foldersListBox.ItemsSource = oneDriveFolders;            
 		}
 
-		private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private async void OnNewWorkerReady(IProgressable worker)
+        {
+            currentWorkers.Add(worker);
+            worker.Completed += OnWorkerCompleted;
+            worker.Failed += OnWorkerFailed;
+            await worker.DoWork();
+        }
+
+        private void OnWorkerFailed(IProgressable sender, string message)
+        {
+            ListBoxItem item = workers.ItemContainerGenerator.ContainerFromItem(sender) as ListBoxItem;
+            if (item == null) return;
+            TextBlock messageBox = item.FindVisualChildWithName<TextBlock>("message");
+            messageBox.Text = message;            
+        }
+
+        private void OnWorkerCompleted(IProgressable sender)
+        {
+            currentWorkers.Remove(sender);
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
 		{
 			//pwoxqniESAV467|(YOY35*|
-
 			//1040774072306-lrse4dhjchjotlf3e12nlk6tumvi6vv1.apps.googleusercontent.com
 			//A1JB6_bP36d8GtzxVPHEVSNI
 		}
@@ -76,7 +104,7 @@ namespace CloudSync
 		private void DisplayBasicTokenInfo(AuthenticationResult authResult)
 		{
 			TokenInfoText.Text = "";
-			if (authResult != null)
+			if (authResult == null)
 			{
 				TokenInfoText.Text += $"Name: {authResult.User.Name}" + Environment.NewLine;
 				TokenInfoText.Text += $"Username: {authResult.User.DisplayableId}" + Environment.NewLine;
@@ -109,15 +137,13 @@ namespace CloudSync
 			}
 		}        
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var result = await OneDrive.GetRootFolders(authResult.AccessToken);
-            ResultText.Text = JsonConvert.SerializeObject(result);
-            FolderSyncConfigurator window = new FolderSyncConfigurator(result);
-            oneDriveFolders = window.Show();
-            foldersListBox.ItemsSource = oneDriveFolders;
-            foldersListBox.SelectAll();
-            oneDriveFolders[0].Sync();
+            foreach (var folder in oneDriveFolders)
+            {
+                folder.NewWorkerReady += OnNewWorkerReady;
+                folder.Sync();
+            }
             //
         }
 
@@ -128,7 +154,7 @@ namespace CloudSync
             oneDriveFolders = window.Show();
             foldersListBox.ItemsSource = oneDriveFolders;
             foldersListBox.SelectAll();
-            oneDriveFolders[0].Sync();*/
+            oneDriveFolders[0].Sync();*/ //https://graph.microsoft.com/v1.0/me/drive/items/65FA3479348E5262!209837/content
             ResultText.Text = await OneDrive.GetHttpContentWithToken(requestFiled.Text, authResult.AccessToken);
         }
 
@@ -143,5 +169,7 @@ namespace CloudSync
             CheckBox box = sender as CheckBox;
             (box.DataContext as OneDriveSyncFolder).IsActive = box.IsChecked.Value;
         }
+
+        
     }
 }
