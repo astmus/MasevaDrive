@@ -40,12 +40,14 @@ namespace CloudSync.Models
         [JsonProperty("parentReference")]
         public JObject ParentReference { get; set; }
 
+        public object Folder { get; set; }
+
         public string ReferencePath
         {
             get
             {
                 string fullPath = ParentReference["path"].Value<String>();
-                return fullPath.Substring(fullPath.IndexOf(":") + 2).Replace("/","\\");
+                return fullPath.Replace("/drive/root:/","").Replace("/","\\");
                 //return fullPath.Substring(fullPath.IndexOf("/") + 1);
             }
         }

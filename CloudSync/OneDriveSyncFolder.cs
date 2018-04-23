@@ -42,10 +42,10 @@ namespace CloudSync
             deltaLink = jresult["@odata.deltaLink"]?.ToString();
             nextLink = jresult["@odata.nextLink"]?.ToString();                
             var allItems = jresult["value"].ToObject<List<OneDriveSyncItem>>();
-            allItems.Where(w => w.Link != null).ToList().ForEach(fe=> itemsForSync.Push(fe));
-            var folderItems = allItems.Where(w => w.Id != this.Id && w.Link == null);
+            allItems.Where(w => w.Folder == null).ToList().ForEach(fe=> itemsForSync.Push(fe));
+            var folderItems = allItems.Where(w => w.Id != this.Id && w.Folder != null);
             foreach (var folder in folderItems)
-                Directory.CreateDirectory(Path.Combine(PathToSync, Name, folder.Name));
+                Directory.CreateDirectory(Path.Combine(PathToSync, folder.ReferencePath, folder.Name));
 
             StartCreateWorkers();
         }

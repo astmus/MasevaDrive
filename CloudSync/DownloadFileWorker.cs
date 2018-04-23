@@ -19,49 +19,20 @@ namespace CloudSync
             this.link = link;
             this.destination = destination;
         }
+
         public async override Task DoWork()
         {
-            //return Task.Factory.StartNew(() =>            {
-            
             WebClient client = new WebClient();
             client.DownloadProgressChanged += Client_DownloadProgressChanged;
-            client.DownloadFileCompleted += Client_DownloadFileCompleted; 
+            client.DownloadFileCompleted += Client_DownloadFileCompleted;
+            client.Headers[HttpRequestHeader.Authorization] = "Bearer " + OneDrive.authResult.AccessToken;
             try
             {
-                await client.DownloadFileTaskAsync(link + "34", destination);
+                await client.DownloadFileTaskAsync(link, destination);
             }
             catch (System.Exception ex)
             {
-               
             }
-            
-            /*FileStream fileStream = File.Create(destination);
-            fileStream.Write(res, 0, res.Length);
-            fileStream.Close();
-            res.Clone();*/
-            /*using (var client = new HttpClient())
-            {
-                using (var stream = await client.GetStreamAsync(link))
-                {
-                    var t = stream.Length;
-                    FileStream fileStream = File.Create(destination);
-                    byte[] buffer = new byte[1024];
-                    double percent = 1024 * 100.0 / stream.Length;
-                    double totalPercent = 0;
-                    int readed;
-                    do
-                    {
-                        readed = stream.Read(buffer, 0, buffer.Length);
-                        stream.Write(buffer, 0, readed);
-                        totalPercent += percent;
-                        CompletedPercent = (int)totalPercent;
-                    }
-                    while (readed != 0);
-                    fileStream.Close();
-                    stream.Close();
-                }
-            }*/
-            //});
         }
 
         private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)

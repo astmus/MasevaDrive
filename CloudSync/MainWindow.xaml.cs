@@ -11,6 +11,7 @@ using CloudSync.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.ServiceModel;
 
 namespace CloudSync
 {
@@ -170,6 +171,11 @@ namespace CloudSync
             (box.DataContext as OneDriveSyncFolder).IsActive = box.IsChecked.Value;
         }
 
-        
+        private async void OnTryAgainPressed(object sender, RoutedEventArgs e)
+        {
+            IProgressable item = (e.Source as MenuItem).DataContext as IProgressable;
+            await item.DoWork();
+        }
+               
     }
 }
