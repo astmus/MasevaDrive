@@ -22,10 +22,19 @@ namespace CloudSync
     public partial class FolderSyncConfigurator : Window
     {
         
-        public FolderSyncConfigurator(List<OneDriveItem> driveFolders)
+        public FolderSyncConfigurator()
         {
             InitializeComponent();
-            folders.ItemsSource = driveFolders;
+            this.Loaded += OnWindowsLoaded;
+            
+        }
+
+        private async void OnWindowsLoaded(object sender, RoutedEventArgs e)
+        {
+            busyIndicator.IsBusy = true;
+            var rootFolders = await OneDrive.GetRootFolders(OneDrive.authResult.AccessToken);
+            folders.ItemsSource = rootFolders;
+            busyIndicator.IsBusy = false;
         }
 
         private void selectFolderButton_Click(object sender, RoutedEventArgs e)
@@ -42,21 +51,35 @@ namespace CloudSync
             }
         }
 
-        List<OneDriveSyncFolder> res = new List<OneDriveSyncFolder>();
+        List<OneDriveSyncFolder> res;
         private void Button_Click(object sender, RoutedEventArgs e)
-        {            
-            foreach (var item in folders.SelectedItems)
+        {
+            res = new List<OneDriveSyncFolder>();
+            foreach (OneDriveItem item in folders.SelectedItems)
             {
                 ListBoxItem container = folders.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
                 TextBox folderSyncPath = container.FindVisualChild<TextBox>();
-                var syncFolder = new OneDriveSyncFolder(item as OneDriveItem, folderSyncPath.Text);
-                res.Add(syncFolder);
-                Directory.CreateDirectory(Path.Combine(syncFolder.PathToSync, syncFolder.Name));
+                if (string.IsNullOrEmpty(folderSyncPath.Text))
+                {
+                    MessageBox.Show("Please select valid path for all directory");
+                    return;
+                }
+                string dirPath = Path.Combine(folderSyncPath.Text, item.Name);
+                if (!Directory.Exists(dirPath))
+                    try
+                    {
+                        Directory.CreateDirectory(dirPath);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        MessageBox.Show("Please select valid path for all directory");
+                        return;
+                    }                    
+                var syncFolder = new OneDriveSyncFolder(item, folderSyncPath.Text);
+                res.Add(syncFolder);               
             }
             this.Close();
-        }
-
-        
+        }        
 
         public new List<OneDriveSyncFolder> Show()
         {

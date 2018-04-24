@@ -14,11 +14,11 @@ using System.Collections.ObjectModel;
 using System.ServiceModel;
 
 namespace CloudSync
-{
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
+{    
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
 	{
 		private System.Windows.Forms.NotifyIcon trayIcon;
 		string _graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";//Set the scope for API call to user.read
@@ -45,7 +45,7 @@ namespace CloudSync
 			StateChanged += MainWindow_StateChanged;
 			this.Loaded += MainWindow_Loaded;            
             Settings.Instance.Load();
-            foldersListBox.ItemsSource = oneDriveFolders;            
+            foldersListBox.ItemsSource = oneDriveFolders;
 		}
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -138,7 +138,7 @@ namespace CloudSync
 			}
 		}        
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             foreach (var folder in oneDriveFolders)
             {
@@ -148,27 +148,21 @@ namespace CloudSync
             //
         }
 
-        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            /*List<OneDriveItem> f = new List<OneDriveItem>() { new OneDriveItem() { Size=549392,Name="Maxim" }, new OneDriveItem() { Size = 2495912, Name = "De ewr wer wer wer rtt" } };
-            FolderSyncConfigurator window = new FolderSyncConfigurator(f);
+            //List<OneDriveItem> f = new List<OneDriveItem>() { new OneDriveItem() { Size=549392,Name="Maxim" }, new OneDriveItem() { Size = 2495912, Name = "De ewr wer wer wer rtt" } };            
+            FolderSyncConfigurator window = new FolderSyncConfigurator();
             oneDriveFolders = window.Show();
-            foldersListBox.ItemsSource = oneDriveFolders;
-            foldersListBox.SelectAll();
-            oneDriveFolders[0].Sync();*/ //https://graph.microsoft.com/v1.0/me/drive/items/65FA3479348E5262!209837/content
-            ResultText.Text = await OneDrive.GetHttpContentWithToken(requestFiled.Text, authResult.AccessToken);
+            if (oneDriveFolders != null)
+                foldersListBox.ItemsSource = oneDriveFolders;            
+            //oneDriveFolders[0].Sync(); //https://graph.microsoft.com/v1.0/me/drive/items/65FA3479348E5262!209837/content
+            //ResultText.Text = await OneDrive.GetHttpContentWithToken(requestFiled.Text, authResult.AccessToken);
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
             Settings.Instance.Save();
-        }
-
-        private void folderName_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox box = sender as CheckBox;
-            (box.DataContext as OneDriveSyncFolder).IsActive = box.IsChecked.Value;
         }
 
         private async void OnTryAgainPressed(object sender, RoutedEventArgs e)

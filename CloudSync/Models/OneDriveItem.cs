@@ -41,6 +41,8 @@ namespace CloudSync.Models
         public JObject ParentReference { get; set; }
 
         public object Folder { get; set; }
+        public object File { get; set; }
+        public object Deleted { get; set; }
 
         public string ReferencePath
         {

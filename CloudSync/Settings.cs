@@ -32,7 +32,8 @@ namespace CloudSync
         }
 
         public void Load()
-        {                        
+        {
+            Properties.Settings.Default.Reset();
             if (!String.IsNullOrEmpty(Properties.Settings.Default.Folders))
                 FoldersForSync = JsonConvert.DeserializeObject<List<OneDriveSyncFolder>>(Properties.Settings.Default.Folders);
         }
