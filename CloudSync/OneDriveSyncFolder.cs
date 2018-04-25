@@ -58,7 +58,7 @@ namespace CloudSync
         {
             if (!IsActive) return;
             string deltaRequest = link ?? String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}/delta?select=id,name,size,folder,file,deleted,parentReference", Id);
-            string result = await OneDrive.GetHttpContentWithToken(deltaRequest);
+            string result = await OneDriveStat.GetHttpContentWithToken(deltaRequest);
             var jresult = JObject.Parse(result);
             deltaLink = jresult["@odata.deltaLink"]?.ToString();
             nextLink = jresult["@odata.nextLink"]?.ToString();

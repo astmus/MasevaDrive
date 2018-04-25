@@ -11,7 +11,7 @@ using System.IO;
 
 namespace CloudSync
 {
-    class OneDrive
+    class OneDriveStat
     {
         private static string ClientId = "32171e35-694f-4481-a8bc-0498cb7da487";
         public static PublicClientApplication PublicClientApp = new PublicClientApplication(ClientId);
@@ -22,7 +22,8 @@ namespace CloudSync
 
             try
             {
-                authResult = await OneDrive.PublicClientApp.AcquireTokenSilentAsync(_scopes, OneDrive.PublicClientApp.Users.FirstOrDefault());
+                string s = "https://login.microsoftonline.com/common/";
+                authResult = await OneDriveStat.PublicClientApp.AcquireTokenSilentAsync(_scopes, OneDriveStat.PublicClientApp.Users.FirstOrDefault(), s, true);
             }
             catch (MsalUiRequiredException ex)
             {
@@ -31,7 +32,7 @@ namespace CloudSync
 
                 try
                 {
-                    authResult = await OneDrive.PublicClientApp.AcquireTokenAsync(_scopes);
+                    authResult = await OneDriveStat.PublicClientApp.AcquireTokenAsync(_scopes);
                 }
                 catch (MsalException msalex)
                 {
@@ -132,11 +133,11 @@ namespace CloudSync
 
         public static void SignOut()
         {
-            if (OneDrive.PublicClientApp.Users.Any())
+            if (OneDriveStat.PublicClientApp.Users.Any())
             {
                 try
                 {
-                    OneDrive.PublicClientApp.Remove(OneDrive.PublicClientApp.Users.FirstOrDefault());
+                    OneDriveStat.PublicClientApp.Remove(OneDriveStat.PublicClientApp.Users.FirstOrDefault());
                     /*this.ResultText.Text = "User has signed-out";
                     this.CallGraphButton.Visibility = Visibility.Visible;
                     this.SignOutButton.Visibility = Visibility.Collapsed;*/

@@ -25,7 +25,7 @@ namespace CloudSync
             WebClient client = new WebClient();
             client.DownloadProgressChanged += Client_DownloadProgressChanged;
             client.DownloadFileCompleted += Client_DownloadFileCompleted;
-            client.Headers[HttpRequestHeader.Authorization] = "Bearer " + OneDrive.authResult.AccessToken;
+            client.Headers[HttpRequestHeader.Authorization] = "Bearer " + OneDriveStat.authResult.AccessToken;
             try
             {
                 await client.DownloadFileTaskAsync(link, destination);

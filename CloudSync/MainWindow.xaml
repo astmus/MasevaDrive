@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CloudSync"
         xmlns:convert="clr-namespace:CloudSync.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="MainWindow" Height="1080" Width="800" Loaded="Window_Loaded">
     <Window.Resources>
         <ResourceDictionary>
             <convert:WorkerToBackgroundConverter x:Key="WorkerConverter"/>
@@ -16,6 +16,8 @@
     <Grid>
         <StackPanel Background="Azure">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="new login"  Click="newLogin"/>
+                
                 <Button Content="do some"  Click="Button_Click"/>
                 <Button Content="do some 2"  Click="Button_Click_1"/>
                 <Button x:Name="CallGraphButton" Content="Add one drive" HorizontalAlignment="Right" Padding="5" Click="CallGraphButton_Click" Margin="5" FontFamily="Segoe Ui"/>
@@ -68,6 +70,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <WebBrowser x:Name="browser" Width="300" Height="300"/>
         </StackPanel>
     </Grid>
 </Window>

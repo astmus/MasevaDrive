@@ -32,7 +32,7 @@ namespace CloudSync
         private async void OnWindowsLoaded(object sender, RoutedEventArgs e)
         {
             busyIndicator.IsBusy = true;
-            var rootFolders = await OneDrive.GetRootFolders(OneDrive.authResult.AccessToken);
+            var rootFolders = await OneDriveStat.GetRootFolders(OneDriveStat.authResult.AccessToken);
             folders.ItemsSource = rootFolders;
             busyIndicator.IsBusy = false;
         }

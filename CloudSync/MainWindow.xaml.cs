@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.ServiceModel;
+using CloudSync.Windows;
+using CloudSync.OneDrive;
 
 namespace CloudSync
 {    
@@ -45,7 +47,7 @@ namespace CloudSync
 			StateChanged += MainWindow_StateChanged;
 			this.Loaded += MainWindow_Loaded;            
             Settings.Instance.Load();
-            foldersListBox.ItemsSource = oneDriveFolders;
+            foldersListBox.ItemsSource = oneDriveFolders;			
 		}
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -83,12 +85,12 @@ namespace CloudSync
         AuthenticationResult authResult;
         private async void CallGraphButton_Click(object sender, RoutedEventArgs e)
 		{
-             authResult = await OneDrive.Authenticate();
+             authResult = await OneDriveStat.Authenticate();
 
             if (authResult != null)
 			{
                 users.Items.Add(authResult.User.DisplayableId+" "+ authResult.User.Name);
-				ResultText.Text = await OneDrive.GetHttpContentWithToken(_graphAPIEndpoint, authResult.AccessToken);
+				ResultText.Text = await OneDriveStat.GetHttpContentWithToken(_graphAPIEndpoint, authResult.AccessToken);
 				DisplayBasicTokenInfo(authResult);
 				this.SignOutButton.Visibility = Visibility.Visible;                
 			}
@@ -99,7 +101,7 @@ namespace CloudSync
 		/// </summary>
 		private void SignOutButton_Click(object sender, RoutedEventArgs e)
 		{
-            OneDrive.SignOut();
+            OneDriveStat.SignOut();
 		}
 
 		private void DisplayBasicTokenInfo(AuthenticationResult authResult)
@@ -170,6 +172,12 @@ namespace CloudSync
             IProgressable item = (e.Source as MenuItem).DataContext as IProgressable;
             await item.DoWork();
         }
-               
+
+        private void newLogin(object sender, RoutedEventArgs e)
+        {
+			//wl.basic+wl.offline_access+wl.signin+wl.photos+wl.skydrive+wl.skydrive_update
+			OneDriveAuthorizationWindow auth = new OneDriveAuthorizationWindow();
+			var result = auth.Show();			
+        }
     }
 }
