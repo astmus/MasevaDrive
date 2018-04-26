@@ -45,6 +45,7 @@ namespace CloudSync
 		}
 		public OneDriveSyncFolder()
 		{
+			initTimer();
 		}
 		public OneDriveSyncFolder(OneDriveItem folder, string pathToSync) : base()
 		{
@@ -53,8 +54,7 @@ namespace CloudSync
 			this.Size = folder.Size;
 			this.PathToSync = pathToSync;
 			this.OwnerId = folder.OwnerId;
-			syncTimer.Tick += CheckUpdatesOnTheServer;
-			syncTimer.Interval = TimeSpan.FromMinutes(1);
+			initTimer();
 		}
 
 		public async void Sync(string link = null)
@@ -86,6 +86,12 @@ namespace CloudSync
 				var worker = MakeNextWorker();
 				NewWorkerReady?.Invoke(worker);
 			}
+		}
+
+		private void initTimer()
+		{
+			syncTimer.Tick += CheckUpdatesOnTheServer;
+			syncTimer.Interval = TimeSpan.FromMinutes(1);
 		}
 
 		private void OnActiveChanged(bool newValue)
