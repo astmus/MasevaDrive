@@ -24,6 +24,7 @@ namespace CloudSync
 	{
 		private System.Windows.Forms.NotifyIcon trayIcon;
 		string _graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";//Set the scope for API call to user.read
+		OneDriveClient currentClient;
 		List<OneDriveSyncFolder> oneDriveFolders
         {
             get { return Settings.Instance.FoldersForSync; }
@@ -82,18 +83,10 @@ namespace CloudSync
 			//1040774072306-lrse4dhjchjotlf3e12nlk6tumvi6vv1.apps.googleusercontent.com
 			//A1JB6_bP36d8GtzxVPHEVSNI
 		}
-        AuthenticationResult authResult;
         private async void CallGraphButton_Click(object sender, RoutedEventArgs e)
 		{
-             authResult = await OneDriveStat.Authenticate();
-
-            if (authResult != null)
-			{
-                users.Items.Add(authResult.User.DisplayableId+" "+ authResult.User.Name);
-				ResultText.Text = await OneDriveStat.GetHttpContentWithToken(_graphAPIEndpoint, authResult.AccessToken);
-				DisplayBasicTokenInfo(authResult);
-				this.SignOutButton.Visibility = Visibility.Visible;                
-			}
+			var result = currentClient.UserData.Id;
+			var r = currentClient.UserData.PrincipalName;
 		}		
 
 		/// <summary>
@@ -150,15 +143,15 @@ namespace CloudSync
             //
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
             //List<OneDriveItem> f = new List<OneDriveItem>() { new OneDriveItem() { Size=549392,Name="Maxim" }, new OneDriveItem() { Size = 2495912, Name = "De ewr wer wer wer rtt" } };            
-            FolderSyncConfigurator window = new FolderSyncConfigurator();
+            /*FolderSyncConfigurator window = new FolderSyncConfigurator(currentClient);
             oneDriveFolders = window.Show();
             if (oneDriveFolders != null)
-                foldersListBox.ItemsSource = oneDriveFolders;            
+                foldersListBox.ItemsSource = oneDriveFolders;            */
             //oneDriveFolders[0].Sync(); //https://graph.microsoft.com/v1.0/me/drive/items/65FA3479348E5262!209837/content
-            //ResultText.Text = await OneDrive.GetHttpContentWithToken(requestFiled.Text, authResult.AccessToken);
+            ResultText.Text = await currentClient.GetHttpContent(requestFiled.Text);
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -177,7 +170,7 @@ namespace CloudSync
         {
 			//wl.basic+wl.offline_access+wl.signin+wl.photos+wl.skydrive+wl.skydrive_update
 			OneDriveAuthorizationWindow auth = new OneDriveAuthorizationWindow();
-			var result = auth.Show();			
+			currentClient = auth.Show();			
         }
     }
 }

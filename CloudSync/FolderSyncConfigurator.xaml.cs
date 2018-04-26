@@ -1,4 +1,5 @@
 ﻿using CloudSync.Models;
+using CloudSync.OneDrive;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,18 +22,20 @@ namespace CloudSync
     /// </summary>
     public partial class FolderSyncConfigurator : Window
     {
-        
-        public FolderSyncConfigurator()
+
+		OneDriveClient client;
+
+		public FolderSyncConfigurator(OneDriveClient client)
         {
             InitializeComponent();
             this.Loaded += OnWindowsLoaded;
-            
+			this.client = client;
         }
 
         private async void OnWindowsLoaded(object sender, RoutedEventArgs e)
         {
             busyIndicator.IsBusy = true;
-            var rootFolders = await OneDriveStat.GetRootFolders(OneDriveStat.authResult.AccessToken);
+            var rootFolders = await client.GetRootFolders(OneDriveStat.authResult.AccessToken);
             folders.ItemsSource = rootFolders;
             busyIndicator.IsBusy = false;
         }

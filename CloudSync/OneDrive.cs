@@ -47,56 +47,9 @@ namespace CloudSync
             return authResult;
         }
 
-        /// <summary>
-		/// Perform an HTTP GET request to a URL using an HTTP Authorization header
-		/// </summary>
-		/// <param name="url">The URL</param>
-		/// <param name="token">The token</param>
-		/// <returns>String containing the results of the GET operation</returns>
-		public static async Task<string> GetHttpContentWithToken(string url, string token)
-        {
-            var httpClient = new System.Net.Http.HttpClient();
-            System.Net.Http.HttpResponseMessage response;
-            try
-            {
-                var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
-                //Add the token in Authorization header
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                response = await httpClient.SendAsync(request);
-                var content = await response.Content.ReadAsStringAsync();
-                return content;
-            }
-            catch (Exception ex)
-            {
-                return ex.ToString();
-            }
-        }
+        
 
-        /// <summary>
-		/// Perform an HTTP GET request to a URL using an HTTP Authorization header
-		/// </summary>
-		/// <param name="url">The URL</param>
-		/// <param name="token">The token</param>
-		/// <returns>String containing the results of the GET operation</returns>
-		public static async Task<string> GetHttpContentWithToken(string url)
-        {
-            var httpClient = new System.Net.Http.HttpClient();
-            System.Net.Http.HttpResponseMessage response;
-            try
-            {
-                var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
-                //Add the token in Authorization header
-                request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authResult.AccessToken);
-                response = await httpClient.SendAsync(request);
-                var content = await response.Content.ReadAsStringAsync();
-                return content;
-            }
-            catch (Exception ex)
-            {
-                return ex.ToString();
-            }
-        }
-
+       
 
         /// <summary>
 		/// Perform an HTTP GET request to a URL using an HTTP Authorization header
@@ -123,13 +76,7 @@ namespace CloudSync
             }
         }
         //
-        public async static Task<List<OneDriveItem>> GetRootFolders(string token)
-        {
-            var result = JObject.Parse(await GetHttpContentWithToken("https://graph.microsoft.com/v1.0/me/drive/root/children?select=id,name,size,folder", token));            
-            var data = result["value"]?.Where(w => w["folder"] != null); ;
-            List<OneDriveItem> folders = data.Select(s => s.ToObject<OneDriveItem>()).ToList();
-            return folders;
-        }
+        
 
         public static void SignOut()
         {
