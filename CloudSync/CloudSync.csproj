@@ -52,9 +52,6 @@
     <Reference Include="Google.Apis.PlatformServices, Version=1.33.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.33.0\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Identity.Client, Version=1.1.2.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Identity.Client.1.1.2-preview0008\lib\net45\Microsoft.Identity.Client.dll</HintPath>
-    </Reference>
     <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -117,6 +114,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CloudAccountManaged.cs" />
     <Compile Include="Converters\PercentCompletedToEnableConverter.cs" />
     <Compile Include="Converters\StringToListJsonConverter.cs" />
     <Compile Include="Converters\TimeSpanJsonConverter.cs" />
@@ -156,7 +154,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\OneDriveItem.cs" />
-    <Compile Include="OneDrive.cs" />
     <Compile Include="OneDriveSyncFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

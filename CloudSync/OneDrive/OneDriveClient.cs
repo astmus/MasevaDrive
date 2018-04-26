@@ -44,7 +44,12 @@ namespace CloudSync.OneDrive
 			}
 			try
 			{
-				return JsonConvert.DeserializeObject<OneDriveClient>(userResult);
+				OneDriveClient newClient = JsonConvert.DeserializeObject<OneDriveClient>(userResult);
+				if (CloudAccountManaged.Instance.ContainsKey(newClient.UserData.Id))
+					CloudAccountManaged.Instance[newClient.UserData.Id] = newClient;
+				else
+					CloudAccountManaged.Instance.Add(newClient.UserData.Id,newClient);
+				return newClient;
 			}
 			catch (System.Exception ex)
 			{
@@ -75,10 +80,11 @@ namespace CloudSync.OneDrive
 				return _userData ?? (_userData = new OwnerInfo(AccessToken));
 			}			
 		}
-		public async Task<List<OneDriveItem>> GetRootFolders(string token)
+
+		public async Task<List<OneDriveItem>> GetRootFolders()
 		{
-			var result = JObject.Parse(await GetHttpContent("https://graph.microsoft.com/v1.0/me/drive/root/children?select=id,name,size,folder"));
-			var data = result["value"]?.Where(w => w["folder"] != null); ;
+			var result = JObject.Parse(await GetHttpContent("https://graph.microsoft.com/v1.0/me/drive/root/children?select=id,name,size,folder,createdBy"));
+			var data = result["value"]?.Where(w => w["folder"] != null);
 			List<OneDriveItem> folders = data.Select(s => s.ToObject<OneDriveItem>()).ToList();
 			return folders;
 		}

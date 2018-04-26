@@ -7,6 +7,7 @@ using System.Threading;
 using System.Net.Http;
 using System.IO;
 using System.Net;
+using CloudSync.OneDrive;
 
 namespace CloudSync
 {
@@ -14,10 +15,12 @@ namespace CloudSync
     {
         private string link;
         private string destination;
-        public DownloadFileWorker(string link, string destination) : base()
+		private OneDriveClient owner;
+		public DownloadFileWorker(string link, string destination, OneDriveClient owner) : base()
         {
             this.link = link;
             this.destination = destination;
+			this.owner = owner;
         }
 
         public async override Task DoWork()
@@ -25,7 +28,7 @@ namespace CloudSync
             WebClient client = new WebClient();
             client.DownloadProgressChanged += Client_DownloadProgressChanged;
             client.DownloadFileCompleted += Client_DownloadFileCompleted;
-            client.Headers[HttpRequestHeader.Authorization] = "Bearer " + OneDriveStat.authResult.AccessToken;
+            client.Headers[HttpRequestHeader.Authorization] = "Bearer " + owner.AccessToken;
             try
             {
                 await client.DownloadFileTaskAsync(link, destination);

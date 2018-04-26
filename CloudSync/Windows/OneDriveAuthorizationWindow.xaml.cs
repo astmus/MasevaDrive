@@ -15,7 +15,6 @@ using System.Windows.Shapes;
 using CloudSync.OneDrive;
 using System.Net;
 using System.Net.Http;
-using Microsoft.Identity.Client;
 
 namespace CloudSync.Windows
 {

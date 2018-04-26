@@ -9,13 +9,23 @@ using System.IO;
 
 namespace CloudSync.Models
 {
-    public class OneDriveItem
+	[JsonObject]
+	public class OneDriveItem
     {
         public string Id { get; set; }
         public string Name { get; set; }
         public uint Size { get; set; }
-
-        [JsonIgnore]
+		
+		public string OwnerId { get; set; }
+		[JsonProperty("createdBy")]
+		private JObject createdBy
+		{
+			set
+			{
+				OwnerId = value["user"]["id"].ToString();
+			}
+		}
+		[JsonIgnore]
         public string FormattedSize
         {
             get {

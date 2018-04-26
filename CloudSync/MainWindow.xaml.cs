@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Identity.Client;
 using System.Linq;
 using Newtonsoft;
 using Newtonsoft.Json;
@@ -94,19 +93,7 @@ namespace CloudSync
 		/// </summary>
 		private void SignOutButton_Click(object sender, RoutedEventArgs e)
 		{
-            OneDriveStat.SignOut();
-		}
-
-		private void DisplayBasicTokenInfo(AuthenticationResult authResult)
-		{
-			TokenInfoText.Text = "";
-			if (authResult == null)
-			{
-				TokenInfoText.Text += $"Name: {authResult.User.Name}" + Environment.NewLine;
-				TokenInfoText.Text += $"Username: {authResult.User.DisplayableId}" + Environment.NewLine;
-				TokenInfoText.Text += $"Token Expires: {authResult.ExpiresOn.ToLocalTime()}" + Environment.NewLine;
-				TokenInfoText.Text += $"Access Token: {authResult.AccessToken}" + Environment.NewLine;
-			}
+            
 		}
 
 		private void TrayIcon_DoubleClick(object sender, EventArgs e)
@@ -146,12 +133,14 @@ namespace CloudSync
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
             //List<OneDriveItem> f = new List<OneDriveItem>() { new OneDriveItem() { Size=549392,Name="Maxim" }, new OneDriveItem() { Size = 2495912, Name = "De ewr wer wer wer rtt" } };            
-            /*FolderSyncConfigurator window = new FolderSyncConfigurator(currentClient);
-            oneDriveFolders = window.Show();
-            if (oneDriveFolders != null)
-                foldersListBox.ItemsSource = oneDriveFolders;            */
+            FolderSyncConfigurator window = new FolderSyncConfigurator(currentClient);
+			if (window.Show() != null)
+			{
+				oneDriveFolders = window.Result;
+				foldersListBox.ItemsSource = oneDriveFolders;
+			}
             //oneDriveFolders[0].Sync(); //https://graph.microsoft.com/v1.0/me/drive/items/65FA3479348E5262!209837/content
-            ResultText.Text = await currentClient.GetHttpContent(requestFiled.Text);
+            //ResultText.Text = await currentClient.GetHttpContent(requestFiled.Text);
         }
 
         protected override void OnClosing(CancelEventArgs e)

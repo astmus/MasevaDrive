@@ -35,7 +35,7 @@ namespace CloudSync
         private async void OnWindowsLoaded(object sender, RoutedEventArgs e)
         {
             busyIndicator.IsBusy = true;
-            var rootFolders = await client.GetRootFolders(OneDriveStat.authResult.AccessToken);
+            var rootFolders = await client.GetRootFolders();
             folders.ItemsSource = rootFolders;
             busyIndicator.IsBusy = false;
         }
@@ -54,10 +54,10 @@ namespace CloudSync
             }
         }
 
-        List<OneDriveSyncFolder> res;
+        public List<OneDriveSyncFolder> Result;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            res = new List<OneDriveSyncFolder>();
+            Result = new List<OneDriveSyncFolder>();
             foreach (OneDriveItem item in folders.SelectedItems)
             {
                 ListBoxItem container = folders.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
@@ -65,6 +65,7 @@ namespace CloudSync
                 if (string.IsNullOrEmpty(folderSyncPath.Text))
                 {
                     MessageBox.Show("Please select valid path for all directory");
+					Result = null;
                     return;
                 }
                 string dirPath = Path.Combine(folderSyncPath.Text, item.Name);
@@ -76,10 +77,11 @@ namespace CloudSync
                     catch (System.Exception ex)
                     {
                         MessageBox.Show("Please select valid path for all directory");
-                        return;
+						Result = null;
+						return;
                     }                    
                 var syncFolder = new OneDriveSyncFolder(item, folderSyncPath.Text);
-                res.Add(syncFolder);               
+                Result.Add(syncFolder);               
             }
             this.Close();
         }        
@@ -87,7 +89,7 @@ namespace CloudSync
         public new List<OneDriveSyncFolder> Show()
         {
             this.ShowDialog();
-            return res;
+            return Result;
         }
     }
 }
