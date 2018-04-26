@@ -21,8 +21,10 @@ namespace CloudSync.Converters
 		{
 			if (objectType != typeof(TimeSpan))
 				throw new ArgumentException();
-
-			return TimeSpan.FromSeconds((long)reader.Value);
+			if (reader.Value is string)
+				return TimeSpan.FromSeconds(int.Parse(reader.Value as string));
+			else
+				return TimeSpan.FromSeconds((long)reader.Value);
 		}
 
 		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

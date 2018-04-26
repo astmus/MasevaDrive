@@ -27,7 +27,7 @@ namespace CloudSync.Converters
 
 		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 		{
-			String.Join(" ", (value as IEnumerable<string>));
+			writer.WriteValue(String.Join(" ", (value as IEnumerable<string>)));
 		}
 	}
 }

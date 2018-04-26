@@ -34,5 +34,17 @@ namespace CloudSync.Properties {
                 this["Folders"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Clouds {
+            get {
+                return ((string)(this["Clouds"]));
+            }
+            set {
+                this["Clouds"] = value;
+            }
+        }
     }
 }

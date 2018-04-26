@@ -22,7 +22,6 @@ namespace CloudSync
     public partial class MainWindow : Window
 	{
 		private System.Windows.Forms.NotifyIcon trayIcon;
-		string _graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";//Set the scope for API call to user.read
 		OneDriveClient currentClient;
 		List<OneDriveSyncFolder> oneDriveFolders
         {
@@ -41,19 +40,22 @@ namespace CloudSync
 		public string RefreshToken;
 		public MainWindow()
 		{
-			InitializeComponent();
+			InitializeComponent();			
 			trayIcon = new System.Windows.Forms.NotifyIcon();			
 			trayIcon.DoubleClick += TrayIcon_DoubleClick;
 			StateChanged += MainWindow_StateChanged;
-			this.Loaded += MainWindow_Loaded;            
-            Settings.Instance.Load();
+			this.Loaded += MainWindow_Loaded;                        
             foldersListBox.ItemsSource = oneDriveFolders;			
 		}
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
-        }
+			foreach (var folder in oneDriveFolders)
+			{
+				folder.NewWorkerReady += OnNewWorkerReady;
+				folder.Sync();
+			}
+		}
 
         private async void OnNewWorkerReady(IProgressable worker)
         {
@@ -122,23 +124,18 @@ namespace CloudSync
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var folder in oneDriveFolders)
+            /*foreach (var folder in oneDriveFolders)
             {
                 folder.NewWorkerReady += OnNewWorkerReady;
                 folder.Sync();
-            }
+            }*/
             //
         }
 
         private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
             //List<OneDriveItem> f = new List<OneDriveItem>() { new OneDriveItem() { Size=549392,Name="Maxim" }, new OneDriveItem() { Size = 2495912, Name = "De ewr wer wer wer rtt" } };            
-            FolderSyncConfigurator window = new FolderSyncConfigurator(currentClient);
-			if (window.Show() != null)
-			{
-				oneDriveFolders = window.Result;
-				foldersListBox.ItemsSource = oneDriveFolders;
-			}
+            
             //oneDriveFolders[0].Sync(); //https://graph.microsoft.com/v1.0/me/drive/items/65FA3479348E5262!209837/content
             //ResultText.Text = await currentClient.GetHttpContent(requestFiled.Text);
         }
@@ -157,9 +154,22 @@ namespace CloudSync
 
         private void newLogin(object sender, RoutedEventArgs e)
         {
-			//wl.basic+wl.offline_access+wl.signin+wl.photos+wl.skydrive+wl.skydrive_update
 			OneDriveAuthorizationWindow auth = new OneDriveAuthorizationWindow();
 			currentClient = auth.Show();			
+			if (currentClient != null)
+			{
+				FolderSyncConfigurator window = new FolderSyncConfigurator(currentClient);
+				if (window.Show() != null)
+				{
+					oneDriveFolders = window.Result;
+					foldersListBox.ItemsSource = oneDriveFolders;
+					foreach (var folder in oneDriveFolders)
+					{
+						folder.NewWorkerReady += OnNewWorkerReady;
+						folder.Sync();
+					}
+				}
+			}
         }
     }
 }

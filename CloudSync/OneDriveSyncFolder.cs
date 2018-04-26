@@ -18,7 +18,7 @@ namespace CloudSync
 		private string deltaLink;
 		[JsonProperty]
 		private string nextLink;
-		[JsonProperty]
+		[JsonIgnore]
 		Stack<OneDriveSyncItem> itemsForSync = new Stack<OneDriveSyncItem>();
 		[JsonIgnore]
 		public bool IsActive
@@ -40,7 +40,7 @@ namespace CloudSync
 		{
 			get
 			{
-				return _owner ?? (_owner = CloudAccountManaged.Instance[OwnerId]);
+				return _owner ?? (_owner = Settings.Instance.Accounts[OwnerId]);
 			}
 		}
 		public OneDriveSyncFolder()
@@ -81,11 +81,16 @@ namespace CloudSync
 
 		public void StartCreateWorkers()
 		{
-			for (int i = 0; i < 4 && itemsForSync.Count != 0; i++)
+			bool atLeastOneWorkerStarted = false;
+			int i = 0;
+			for (var worker = MakeNextWorker(); worker != null && i < 4; worker = MakeNextWorker(), i++)
 			{
-				var worker = MakeNextWorker();
+				atLeastOneWorkerStarted = true;
 				NewWorkerReady?.Invoke(worker);
 			}
+
+			if (atLeastOneWorkerStarted == false)
+				StartSyncTimer();
 		}
 
 		private void initTimer()
@@ -139,10 +144,14 @@ namespace CloudSync
 
 		private DownloadFileWorker MakeNextWorker()
 		{
-			if (itemsForSync.Count != 0)
+			while (itemsForSync.Count != 0)
 			{
-				var syncItem = itemsForSync.Pop();
-				DownloadFileWorker worker = new DownloadFileWorker(syncItem.Link, Path.Combine(PathToSync, syncItem.ReferencePath, syncItem.Name), Owner);
+				OneDriveSyncItem syncItem = itemsForSync.Pop();
+				string destFileName = Path.Combine(PathToSync, syncItem.ReferencePath, syncItem.Name);
+				FileInfo info = new FileInfo(destFileName);
+				if (info.Exists)
+					continue;				
+				DownloadFileWorker worker = new DownloadFileWorker(syncItem.Link, destFileName, Owner);
 				worker.TaskName = String.Format("{0} ({1})", syncItem.Name, syncItem.FormattedSize);
 				worker.Completed += OnWorkerCompleted;
 				return worker;

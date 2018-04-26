@@ -30,7 +30,7 @@ namespace CloudSync
             client.DownloadFileCompleted += Client_DownloadFileCompleted;
             client.Headers[HttpRequestHeader.Authorization] = "Bearer " + owner.AccessToken;
             try
-            {
+            {				
                 await client.DownloadFileTaskAsync(link, destination);
             }
             catch (System.Exception ex)

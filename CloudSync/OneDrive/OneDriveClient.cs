@@ -45,10 +45,10 @@ namespace CloudSync.OneDrive
 			try
 			{
 				OneDriveClient newClient = JsonConvert.DeserializeObject<OneDriveClient>(userResult);
-				if (CloudAccountManaged.Instance.ContainsKey(newClient.UserData.Id))
-					CloudAccountManaged.Instance[newClient.UserData.Id] = newClient;
+				if (Settings.Instance.Accounts.ContainsKey(newClient.UserData.Id))
+					Settings.Instance.Accounts[newClient.UserData.Id] = newClient;
 				else
-					CloudAccountManaged.Instance.Add(newClient.UserData.Id,newClient);
+					Settings.Instance.Accounts.Add(newClient.UserData.Id,newClient);
 				return newClient;
 			}
 			catch (System.Exception ex)
@@ -78,7 +78,11 @@ namespace CloudSync.OneDrive
 			get
 			{
 				return _userData ?? (_userData = new OwnerInfo(AccessToken));
-			}			
+			}
+			set
+			{
+				_userData = value;
+			}
 		}
 
 		public async Task<List<OneDriveItem>> GetRootFolders()
@@ -191,10 +195,6 @@ namespace CloudSync.OneDrive
 					}
 				}
 			}
-
 		}
-
-	}
-
-	
+	}	
 }
