@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CloudSync
 {
-    public class CloudWorker : IProgressable
+    public abstract class CloudWorker : IProgressable
     {
         public string TaskName { get; set; }
         private int completedPercent;
@@ -30,10 +30,8 @@ namespace CloudSync
         public event PropertyChangedEventHandler PropertyChanged;
         public event Action<IProgressable, string> Failed;
 
-        public virtual Task DoWork()
-        {
-            return new Task(()=> { });
-        }
+		public abstract void DoWork();
+        
         protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -14,7 +14,7 @@ namespace CloudSync
         event Action<int> PercentCompleted;
         event Action<IProgressable> Completed;
         event Action<IProgressable, string> Failed;
-        Task DoWork();
+        void DoWork();
         int CompletedPercent { get; set; }
     }
 }

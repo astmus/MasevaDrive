@@ -73,10 +73,7 @@ namespace CloudSync
 			foreach (var folder in folderItems)
 				Directory.CreateDirectory(Path.Combine(PathToSync, folder.ReferencePath, folder.Name));
 
-			if (itemsForSync.Count > 0)
-				StartCreateWorkers();
-			else
-				StartSyncTimer();
+			StartCreateWorkers();
 		}
 
 		public void StartCreateWorkers()
@@ -90,7 +87,7 @@ namespace CloudSync
 			}
 
 			if (atLeastOneWorkerStarted == false)
-				StartSyncTimer();
+				StartSyncTimer();				
 		}
 
 		private void initTimer()
