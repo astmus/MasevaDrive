@@ -57,12 +57,12 @@ namespace CloudSync
 			}
 		}
 
-        private async void OnNewWorkerReady(IProgressable worker)
+        private void OnNewWorkerReady(IProgressable worker)
         {
             currentWorkers.Add(worker);
             worker.Completed += OnWorkerCompleted;
             worker.Failed += OnWorkerFailed;
-            await worker.DoWork();
+            worker.DoWork();
         }
 
         private void OnWorkerFailed(IProgressable sender, string message)
@@ -146,10 +146,10 @@ namespace CloudSync
             Settings.Instance.Save();
         }
 
-        private async void OnTryAgainPressed(object sender, RoutedEventArgs e)
+        private void OnTryAgainPressed(object sender, RoutedEventArgs e)
         {
             IProgressable item = (e.Source as MenuItem).DataContext as IProgressable;
-            await item.DoWork();
+            item.DoWork();
         }
 
         private void newLogin(object sender, RoutedEventArgs e)

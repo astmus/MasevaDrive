@@ -23,7 +23,7 @@ namespace CloudSync
 			this.owner = owner;
         }
 
-        public async override Task DoWork()
+        public override void DoWork()
         {
             WebClient client = new WebClient();
             client.DownloadProgressChanged += Client_DownloadProgressChanged;
@@ -31,7 +31,7 @@ namespace CloudSync
             client.Headers[HttpRequestHeader.Authorization] = "Bearer " + owner.AccessToken;
             try
             {				
-                await client.DownloadFileTaskAsync(link, destination);
+                client.DownloadFileTaskAsync(link, destination);
             }
             catch (System.Exception ex)
             {
