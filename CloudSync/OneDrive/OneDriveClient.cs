@@ -93,6 +93,31 @@ namespace CloudSync.OneDrive
 			return folders;
 		}
 
+		public async Task<bool> DeleteItem(string itemId)
+		{
+			string deleteUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}", itemId);
+			using (HttpClient client = new HttpClient())
+			{
+				System.Net.Http.HttpResponseMessage response;
+				try
+				{
+					HttpRequestMessage request = CreateRequestWithAuthorizationData(deleteUrl, HttpMethod.Delete);
+					response = await client.SendAsync(request);
+					if (response.StatusCode == HttpStatusCode.Unauthorized)
+					{
+						RenewAccessToken();
+						request = CreateRequestWithAuthorizationData(deleteUrl, HttpMethod.Delete);
+						response = await client.SendAsync(request);						
+					}
+					return response.StatusCode == HttpStatusCode.NoContent;
+				}
+				catch (System.Exception ex)
+				{
+					return false;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Perform an HTTP GET request to a URL using an HTTP Authorization header
 		/// </summary>
@@ -106,12 +131,12 @@ namespace CloudSync.OneDrive
 				System.Net.Http.HttpResponseMessage response;
 				try
 				{
-					var request = CreateRequestWithAuthorizationData(url);
+					var request = CreateRequestWithAuthorizationData(url, HttpMethod.Get);
 					response = await httpClient.SendAsync(request);
 					if (response.StatusCode == HttpStatusCode.Unauthorized)
 					{
 						RenewAccessToken();
-						request = CreateRequestWithAuthorizationData(url);
+						request = CreateRequestWithAuthorizationData(url, HttpMethod.Get);
 						response = await httpClient.SendAsync(request);
 					}
 					var content = await response.Content.ReadAsStringAsync();
@@ -124,9 +149,9 @@ namespace CloudSync.OneDrive
 			}			
 		}		
 
-		private HttpRequestMessage CreateRequestWithAuthorizationData(string url)
+		private HttpRequestMessage CreateRequestWithAuthorizationData(string url, HttpMethod methodType)
 		{
-			var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
+			var request = new System.Net.Http.HttpRequestMessage(methodType, url);
 			request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", AccessToken);
 			return request;
 		}

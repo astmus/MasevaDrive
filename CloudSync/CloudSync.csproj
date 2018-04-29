@@ -154,7 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\OneDriveItem.cs" />
-    <Compile Include="OneDriveSyncFolder.cs" />
+    <Compile Include="OneDrive\OneDriveSyncFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

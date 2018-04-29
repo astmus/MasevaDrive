@@ -22,7 +22,13 @@ namespace CloudSync
     public partial class MainWindow : Window
 	{
 		private System.Windows.Forms.NotifyIcon trayIcon;
-		OneDriveClient currentClient;
+		OneDriveClient _currentClient;
+		OneDriveClient currentClient
+		{
+			get { return _currentClient ?? (_currentClient = Settings.Instance.Accounts.Values.First()); }
+			set { _currentClient = value; }
+		}
+
 		List<OneDriveSyncFolder> oneDriveFolders
         {
             get { return Settings.Instance.FoldersForSync; }
@@ -137,7 +143,7 @@ namespace CloudSync
             //List<OneDriveItem> f = new List<OneDriveItem>() { new OneDriveItem() { Size=549392,Name="Maxim" }, new OneDriveItem() { Size = 2495912, Name = "De ewr wer wer wer rtt" } };            
             
             //oneDriveFolders[0].Sync(); //https://graph.microsoft.com/v1.0/me/drive/items/65FA3479348E5262!209837/content
-            //ResultText.Text = await currentClient.GetHttpContent(requestFiled.Text);
+            ResultText.Text = await currentClient.GetHttpContent(requestFiled.Text);
         }
 
         protected override void OnClosing(CancelEventArgs e)

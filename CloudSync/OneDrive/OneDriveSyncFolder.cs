@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Threading;
 using CloudSync.OneDrive;
+using System.Threading;
 
 namespace CloudSync
 {
@@ -67,6 +68,7 @@ namespace CloudSync
 			nextLink = jresult["@odata.nextLink"]?.ToString();
 
 			var allItems = jresult["value"].ToObject<List<OneDriveSyncItem>>();
+			allItems = allItems.Where(w => w.Deleted == null).ToList();
 			foreach (var item in allItems.Where(w => w.File != null))
 				itemsForSync.Push(item);
 			var folderItems = allItems.Where(w => w.Id != this.Id && w.Folder != null);
@@ -87,13 +89,13 @@ namespace CloudSync
 			}
 
 			if (atLeastOneWorkerStarted == false)
-				StartSyncTimer();				
+				StartSyncTimer();
 		}
 
 		private void initTimer()
 		{
 			syncTimer.Tick += CheckUpdatesOnTheServer;
-			syncTimer.Interval = TimeSpan.FromMinutes(1);
+			syncTimer.Interval = TimeSpan.FromSeconds(15);
 		}
 
 		private void OnActiveChanged(bool newValue)
@@ -109,8 +111,16 @@ namespace CloudSync
 				syncTimer.Stop();
 		}
 
-		private void OnWorkerCompleted(object sender)
+		private void OnWorkerCompleted(IProgressable sender)
 		{
+			if (sender is DownloadFileWorker)
+			{
+				string folderId = (sender as DownloadFileWorker).SyncItem.ParentId;				
+				var task = RemoveOldestFiles(folderId).ContinueWith(action => 
+				{
+					bool result = action.Result;
+				});					
+			}
 			if (!IsActive) return;
 			var worker = MakeNextWorker();
 			if (worker != null)
@@ -125,6 +135,44 @@ namespace CloudSync
 				}
 				else StartSyncTimer();
 			}
+
+		}
+
+		private System.Object lockThis = new System.Object();
+		private SemaphoreSlim sema = new SemaphoreSlim(1);
+		private Queue<OneDriveItem> _itemsForDeletePool = new Queue<OneDriveItem>();
+		private async Task<Queue<OneDriveItem>> GetItemsForDeletePool(string folderId)
+		{
+			string getItemsUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}/children?orderby=lastModifiedDateTime", folderId);
+
+			await sema.WaitAsync();
+			try
+			{
+				if (_itemsForDeletePool.Count == 0)
+				{
+					string result = await Owner.GetHttpContent(getItemsUrl);
+					var jres = JObject.Parse(result);
+					_itemsForDeletePool = jres["value"].ToObject<Queue<OneDriveItem>>();
+					return _itemsForDeletePool;
+				}				
+			}
+			finally
+			{
+				sema.Release();
+			}
+			return _itemsForDeletePool;
+		}
+
+		private async Task<bool> RemoveOldestFiles(string folderId)
+		{
+			//string getItemsUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}/children?orderby=lastModifiedDateTime",folderId);
+			//string result = await GetItemsForDeletePool(folderId);
+			//var jres = JObject.Parse(result);
+			//var allItems = jres["value"].ToObject<List<OneDriveItem>>();
+			//allItems.	
+				var allItems = await GetItemsForDeletePool(folderId);
+				OneDriveItem itemForDelete = allItems.Dequeue();
+				return await Owner.DeleteItem(itemForDelete.Id);			
 		}
 
 		private void StartSyncTimer()
@@ -147,8 +195,8 @@ namespace CloudSync
 				string destFileName = Path.Combine(PathToSync, syncItem.ReferencePath, syncItem.Name);
 				FileInfo info = new FileInfo(destFileName);
 				if (info.Exists)
-					continue;				
-				DownloadFileWorker worker = new DownloadFileWorker(syncItem.Link, destFileName, Owner);
+					continue;
+				DownloadFileWorker worker = new DownloadFileWorker(syncItem, destFileName, Owner);
 				worker.TaskName = String.Format("{0} ({1})", syncItem.Name, syncItem.FormattedSize);
 				worker.Completed += OnWorkerCompleted;
 				return worker;

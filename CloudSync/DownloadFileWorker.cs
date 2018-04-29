@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.IO;
 using System.Net;
 using CloudSync.OneDrive;
+using CloudSync.Models;
 
 namespace CloudSync
 {
@@ -16,11 +17,13 @@ namespace CloudSync
         private string link;
         private string destination;
 		private OneDriveClient owner;
-		public DownloadFileWorker(string link, string destination, OneDriveClient owner) : base()
+		public OneDriveSyncItem SyncItem;
+		public DownloadFileWorker(OneDriveSyncItem syncItem, string destination, OneDriveClient owner) : base()
         {
-            this.link = link;
+            this.link = syncItem.Link;
             this.destination = destination;
 			this.owner = owner;
+			this.SyncItem = syncItem;
         }
 
         public override void DoWork()

@@ -15,7 +15,9 @@ namespace CloudSync.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public uint Size { get; set; }
-		
+		public JObject Folder { get; set; }
+		public JObject File { get; set; }
+		public JObject Deleted { get; set; }
 		public string OwnerId { get; set; }
 		[JsonProperty("createdBy")]
 		private JObject createdBy
@@ -49,12 +51,9 @@ namespace CloudSync.Models
         }
         [JsonProperty("parentReference")]
         public JObject ParentReference { get; set; }
-
-        public object Folder { get; set; }
-        public object File { get; set; }
-        public object Deleted { get; set; }
-
-        public string ReferencePath
+        
+		[JsonIgnore]
+		public string ReferencePath
         {
             get
             {
@@ -63,5 +62,15 @@ namespace CloudSync.Models
                 //return fullPath.Substring(fullPath.IndexOf("/") + 1);
             }
         }
+		[JsonIgnore]
+		public string ParentId
+		{
+			get { return ParentReference["id"].Value<String>(); }
+		}
+		[JsonIgnore]
+		public string HashCRC32
+		{
+			get { return File["hashes"]["crc32Hash"]?.ToString(); }
+		}
     }
 }
