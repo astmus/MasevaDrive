@@ -90,6 +90,13 @@ namespace CloudSync
 
 			if (atLeastOneWorkerStarted == false)
 				StartSyncTimer();
+				
+			/*for (int i = 0; i < 4 && itemsForSync.Count != 0; i++)
+			{
+				var worker = MakeNextWorker();
+				if (worker != null)
+					NewWorkerReady?.Invoke(worker);
+			}*/
 		}
 
 		private void initTimer()
