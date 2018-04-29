@@ -12,9 +12,14 @@ namespace CloudSync
     {
         string TaskName { get; set; }
         event Action<int> PercentCompleted;
-        event Action<IProgressable> Completed;
-        event Action<IProgressable, string> Failed;
+        event Action<IProgressable, ProgressableEventArgs> Completed;
         void DoWork();
         int CompletedPercent { get; set; }
     }
+
+	public class ProgressableEventArgs : EventArgs
+	{
+		public bool Successfull { get; set; }
+		public Exception Error { get; set; }
+	}
 }

@@ -67,21 +67,22 @@ namespace CloudSync
         {
             currentWorkers.Add(worker);
             worker.Completed += OnWorkerCompleted;
-            worker.Failed += OnWorkerFailed;
+        
             worker.DoWork();
         }
+		
 
-        private void OnWorkerFailed(IProgressable sender, string message)
+        private void OnWorkerCompleted(IProgressable sender, ProgressableEventArgs args)
         {
-            ListBoxItem item = workers.ItemContainerGenerator.ContainerFromItem(sender) as ListBoxItem;
-            if (item == null) return;
-            TextBlock messageBox = item.FindVisualChildWithName<TextBlock>("message");
-            messageBox.Text = message;            
-        }
-
-        private void OnWorkerCompleted(IProgressable sender)
-        {
-            currentWorkers.Remove(sender);
+			if (args.Successfull)
+				currentWorkers.Remove(sender);
+			else
+			{
+				ListBoxItem item = workers.ItemContainerGenerator.ContainerFromItem(sender) as ListBoxItem;
+				if (item == null) return;
+				TextBlock messageBox = item.FindVisualChildWithName<TextBlock>("message");
+				messageBox.Text = args.Error.Message;
+			}
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)

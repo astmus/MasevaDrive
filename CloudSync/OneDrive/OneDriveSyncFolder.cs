@@ -37,6 +37,7 @@ namespace CloudSync
 		public event Action<IProgressable> NewWorkerReady;
 		private DispatcherTimer syncTimer = new DispatcherTimer();
 		private OneDriveClient _owner;
+		private bool shouldDeleteOldestFile = false;
 		private OneDriveClient Owner
 		{
 			get
@@ -88,15 +89,8 @@ namespace CloudSync
 				NewWorkerReady?.Invoke(worker);
 			}
 
-			if (atLeastOneWorkerStarted == false)
+			if (!atLeastOneWorkerStarted)
 				StartSyncTimer();
-				
-			/*for (int i = 0; i < 4 && itemsForSync.Count != 0; i++)
-			{
-				var worker = MakeNextWorker();
-				if (worker != null)
-					NewWorkerReady?.Invoke(worker);
-			}*/
 		}
 
 		private void initTimer()
@@ -118,15 +112,15 @@ namespace CloudSync
 				syncTimer.Stop();
 		}
 
-		private void OnWorkerCompleted(IProgressable sender)
+		private void OnWorkerCompleted(IProgressable sender, ProgressableEventArgs args)
 		{
-			if (sender is DownloadFileWorker)
+			if (sender is DownloadFileWorker && shouldDeleteOldestFile && args.Successfull)
 			{
-				string folderId = (sender as DownloadFileWorker).SyncItem.ParentId;				
-				var task = RemoveOldestFiles(folderId).ContinueWith(action => 
+				string folderId = (sender as DownloadFileWorker).SyncItem.ParentId;
+				var task = RemoveOldestFiles(folderId).ContinueWith(action =>
 				{
 					bool result = action.Result;
-				});					
+				});
 			}
 			if (!IsActive) return;
 			var worker = MakeNextWorker();
@@ -161,7 +155,7 @@ namespace CloudSync
 					var jres = JObject.Parse(result);
 					_itemsForDeletePool = jres["value"].ToObject<Queue<OneDriveItem>>();
 					return _itemsForDeletePool;
-				}				
+				}
 			}
 			finally
 			{
@@ -176,16 +170,19 @@ namespace CloudSync
 			//string result = await GetItemsForDeletePool(folderId);
 			//var jres = JObject.Parse(result);
 			//var allItems = jres["value"].ToObject<List<OneDriveItem>>();
-			//allItems.	
-				var allItems = await GetItemsForDeletePool(folderId);
-				OneDriveItem itemForDelete = allItems.Dequeue();
-				return await Owner.DeleteItem(itemForDelete.Id);			
+			//allItems.				
+			var allItems = await GetItemsForDeletePool(folderId);
+			OneDriveItem itemForDelete = allItems.Dequeue();
+			return await Owner.DeleteItem(itemForDelete.Id);
 		}
 
 		private void StartSyncTimer()
 		{
 			if (!syncTimer.IsEnabled)
+			{
 				syncTimer.Start();
+				shouldDeleteOldestFile = true;
+			}
 		}
 
 		private void CheckUpdatesOnTheServer(object sender, EventArgs e)
