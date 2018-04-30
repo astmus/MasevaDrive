@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CloudSync"
         xmlns:convert="clr-namespace:CloudSync.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="710" Width="400" Loaded="Window_Loaded">
+        Title="MainWindow" Height="695" Width="400" Loaded="Window_Loaded">
     <Window.Resources>
         <ResourceDictionary>
             <convert:WorkerToBackgroundConverter x:Key="WorkerConverter"/>
@@ -15,15 +15,24 @@
     </Window.Resources>
     <Grid>
         <StackPanel Background="Azure">
+            <Menu>
+                <MenuItem Header="_File">
+                    <MenuItem Header="_New" />
+                    <MenuItem Header="_Open" />
+                    <MenuItem Header="_Save" />
+                    <Separator />
+                    <MenuItem Header="_Exit" />
+                </MenuItem>
+            </Menu>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="new login"  Click="newLogin"/>
-                
+
                 <Button Content="do some"  Click="Button_Click"/>
                 <Button Content="do some 2"  Click="Button_Click_1"/>
                 <Button x:Name="CallGraphButton" Content="Add one drive" HorizontalAlignment="Right" Padding="5" Click="CallGraphButton_Click" Margin="5" FontFamily="Segoe Ui"/>
                 <Button x:Name="SignOutButton" Content="Sign-Out" HorizontalAlignment="Right" Padding="5" Click="SignOutButton_Click" Margin="5" Visibility="Collapsed" FontFamily="Segoe Ui"/>
             </StackPanel>
-            
+
             <TextBox x:Name="requestFiled" Margin="5"  Text="https://graph.microsoft.com/v1.0/me"/>
             <Label Content="Plugged accounts" Margin="0,0,0,-5"/>
             <ListBox MinHeight="80" Margin="5" />
@@ -49,7 +58,7 @@
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
-                </ListBox>                
+                </ListBox>
             </Grid>
             <TextBlock Text="Current workers" Margin="5" />
             <ListBox Margin="5"  Height="300" HorizontalContentAlignment="Stretch"  x:Name="workers" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:MainWindow}, Path=currentWorkers}">
@@ -70,6 +79,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
         </StackPanel>
     </Grid>
 </Window>

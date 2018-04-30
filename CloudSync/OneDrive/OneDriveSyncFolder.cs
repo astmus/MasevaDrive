@@ -141,27 +141,31 @@ namespace CloudSync
 
 		private System.Object lockThis = new System.Object();
 		private SemaphoreSlim sema = new SemaphoreSlim(1);
-		private Queue<OneDriveItem> _itemsForDeletePool = new Queue<OneDriveItem>();
+		private Dictionary<string, Queue<OneDriveItem>> pools = new Dictionary<string, Queue<OneDriveItem>>();
 		private async Task<Queue<OneDriveItem>> GetItemsForDeletePool(string folderId)
 		{
 			string getItemsUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}/children?orderby=lastModifiedDateTime", folderId);
 
 			await sema.WaitAsync();
+			Queue<OneDriveItem> itemsForDeletePool = null;
 			try
 			{
-				if (_itemsForDeletePool.Count == 0)
+				if (pools.ContainsKey(folderId) == false)
+					pools.Add(folderId, new Queue<OneDriveItem>());
+				itemsForDeletePool = pools[folderId];
+				if (itemsForDeletePool.Count == 0)
 				{
 					string result = await Owner.GetHttpContent(getItemsUrl);
 					var jres = JObject.Parse(result);
-					_itemsForDeletePool = jres["value"].ToObject<Queue<OneDriveItem>>();
-					return _itemsForDeletePool;
+					itemsForDeletePool = jres["value"].ToObject<Queue<OneDriveItem>>();
+					return itemsForDeletePool;
 				}
 			}
 			finally
 			{
 				sema.Release();
 			}
-			return _itemsForDeletePool;
+			return itemsForDeletePool;
 		}
 
 		private async Task<bool> RemoveOldestFiles(string folderId)
