@@ -22,6 +22,7 @@ namespace CloudSync
     public partial class MainWindow : Window
 	{
 		private System.Windows.Forms.NotifyIcon trayIcon;
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		OneDriveClient _currentClient;
 		OneDriveClient currentClient
 		{
@@ -50,17 +51,24 @@ namespace CloudSync
 			trayIcon = new System.Windows.Forms.NotifyIcon();			
 			trayIcon.DoubleClick += TrayIcon_DoubleClick;
 			StateChanged += MainWindow_StateChanged;
-			this.Loaded += MainWindow_Loaded;                        
-            foldersListBox.ItemsSource = oneDriveFolders;			
+			this.Loaded += MainWindow_Loaded;            
+			
 		}
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+			foldersListBox.ItemsSource = oneDriveFolders;
 			foreach (var folder in oneDriveFolders)
 			{
 				folder.NewWorkerReady += OnNewWorkerReady;
 				folder.Sync();
-			}
+			}			
+			logger.Trace("Sample trace message");
+			logger.Debug("Sample debug message");
+			logger.Info("Sample informational message");
+			logger.Warn("Sample warning message");
+			logger.Error("Sample error message");
+			logger.Fatal("Sample fatal error message");			
 		}
 
         private void OnNewWorkerReady(IProgressable worker)
@@ -91,7 +99,7 @@ namespace CloudSync
 			//1040774072306-lrse4dhjchjotlf3e12nlk6tumvi6vv1.apps.googleusercontent.com
 			//A1JB6_bP36d8GtzxVPHEVSNI
 		}
-        private async void CallGraphButton_Click(object sender, RoutedEventArgs e)
+        private void CallGraphButton_Click(object sender, RoutedEventArgs e)
 		{
 			var result = currentClient.UserData.Id;
 			var r = currentClient.UserData.PrincipalName;

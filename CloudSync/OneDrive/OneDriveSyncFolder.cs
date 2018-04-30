@@ -83,7 +83,7 @@ namespace CloudSync
 		{
 			bool atLeastOneWorkerStarted = false;
 			int i = 0;
-			for (var worker = MakeNextWorker(); worker != null && i < 4; worker = MakeNextWorker(), i++)
+			for (var worker = MakeNextWorker(); worker != null && i < 3; worker = MakeNextWorker(), i++)
 			{
 				atLeastOneWorkerStarted = true;
 				NewWorkerReady?.Invoke(worker);
