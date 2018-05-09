@@ -12,16 +12,18 @@ using CloudSync.Models;
 
 namespace CloudSync
 {
-    public class DownloadFileWorker : CloudWorker
-    {
-        private string link;
-        private string destination;
+	public class DownloadFileWorker : CloudWorker
+	{
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		public string Link { get; set; }
+		public string Destination { get; set; }
 		private OneDriveClient owner;
 		public OneDriveSyncItem SyncItem;
+		public bool DeleteOldestFileOnSuccess { get; set; } = false;
 		public DownloadFileWorker(OneDriveSyncItem syncItem, string destination, OneDriveClient owner) : base()
         {
-            this.link = syncItem.Link;
-            this.destination = destination;
+            this.Link = syncItem.Link;
+            this.Destination = destination;
 			this.owner = owner;
 			this.SyncItem = syncItem;
         }
@@ -33,25 +35,32 @@ namespace CloudSync
             client.DownloadFileCompleted += Client_DownloadFileCompleted;
             client.Headers[HttpRequestHeader.Authorization] = "Bearer " + owner.AccessToken;
             try
-            {				
-                client.DownloadFileTaskAsync(link, destination);
+            {
+				logger.Debug("start download of file " + Destination);
+                client.DownloadFileTaskAsync(Link, Destination);
             }
             catch (System.Exception ex)
             {
+				logger.Warn(ex, "DoWork failed reason = {0}", ex);
             }
         }
 
         private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            if (e.Error == null)
-                RaiseCompleted();
-            else
-                RaiseFailed(e.Error.Message);
+			if (e.Error == null)
+				RaiseCompleted();
+			else
+				RaiseFailed(e.Error.Message);
         }
 
         private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             CompletedPercent = e.ProgressPercentage;
         }
-    }
+
+		public override string ToString()
+		{
+			return String.Format("{0}",SyncItem);
+		}
+	}
 }

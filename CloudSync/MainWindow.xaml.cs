@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.ServiceModel;
 using CloudSync.Windows;
 using CloudSync.OneDrive;
+using System.Runtime.InteropServices;
 
 namespace CloudSync
 {    
@@ -51,8 +52,7 @@ namespace CloudSync
 			trayIcon = new System.Windows.Forms.NotifyIcon();			
 			trayIcon.DoubleClick += TrayIcon_DoubleClick;
 			StateChanged += MainWindow_StateChanged;
-			this.Loaded += MainWindow_Loaded;            
-			
+			this.Loaded += MainWindow_Loaded;			
 		}
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -63,19 +63,12 @@ namespace CloudSync
 				folder.NewWorkerReady += OnNewWorkerReady;
 				folder.Sync();
 			}			
-			logger.Trace("Sample trace message");
-			logger.Debug("Sample debug message");
-			logger.Info("Sample informational message");
-			logger.Warn("Sample warning message");
-			logger.Error("Sample error message");
-			logger.Fatal("Sample fatal error message");			
 		}
 
         private void OnNewWorkerReady(IProgressable worker)
         {
             currentWorkers.Add(worker);
-            worker.Completed += OnWorkerCompleted;
-        
+            worker.Completed += OnWorkerCompleted;        
             worker.DoWork();
         }
 		

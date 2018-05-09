@@ -14,7 +14,8 @@ namespace CloudSync.OneDrive
 {
 	public class OneDriveClient
 	{
-#region Static functionality
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		#region Static functionality
 
 		public static string ClientID = "32171e35-694f-4481-a8bc-0498cb7da487";
 		public static string RedirectUri = "msal32171e35-694f-4481-a8bc-0498cb7da487://auth";
@@ -93,9 +94,9 @@ namespace CloudSync.OneDrive
 			return folders;
 		}
 
-		public async Task<bool> DeleteItem(string itemId)
+		public async Task<bool> DeleteItem(OneDriveItem item)
 		{
-			string deleteUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}", itemId);
+			string deleteUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}", item.Id);
 			using (HttpClient client = new HttpClient())
 			{
 				System.Net.Http.HttpResponseMessage response;
@@ -109,10 +110,15 @@ namespace CloudSync.OneDrive
 						request = CreateRequestWithAuthorizationData(deleteUrl, HttpMethod.Delete);
 						response = await client.SendAsync(request);						
 					}
+					if (response.StatusCode != HttpStatusCode.NoContent)
+						logger.Warn("Delete file failed StatusCode = " + response.StatusCode + " for item " + item.ToString());
+					else
+						logger.Debug("File delete success for item = {0}", item);
 					return response.StatusCode == HttpStatusCode.NoContent;
 				}
 				catch (System.Exception ex)
 				{
+					logger.Warn(ex, "Delete item failed reason {0}", ex);
 					return false;
 				}
 			}

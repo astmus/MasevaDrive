@@ -40,7 +40,12 @@ namespace CloudSync.Models
                 return (Math.Sign(Size) * num)+ " "+ suf[place];
             }
         }
-    }
+
+		public override string ToString()
+		{
+			return String.Format("Name = {0}; Size = {1}; Owner = {2}",Name,Size,OwnerId);
+		}
+	}
     
     public class OneDriveSyncItem : OneDriveItem
     {           

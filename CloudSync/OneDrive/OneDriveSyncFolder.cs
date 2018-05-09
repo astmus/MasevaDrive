@@ -15,12 +15,13 @@ namespace CloudSync
 {
 	public class OneDriveSyncFolder : OneDriveItem
 	{
+		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		[JsonProperty]
 		private string deltaLink;
 		[JsonProperty]
 		private string nextLink;
 		[JsonIgnore]
-		Stack<OneDriveSyncItem> itemsForSync = new Stack<OneDriveSyncItem>();
+		Queue<OneDriveSyncItem> itemsForSync = new Queue<OneDriveSyncItem>();
 		[JsonIgnore]
 		public bool IsActive
 		{
@@ -69,9 +70,16 @@ namespace CloudSync
 			nextLink = jresult["@odata.nextLink"]?.ToString();
 
 			var allItems = jresult["value"].ToObject<List<OneDriveSyncItem>>();
+			if (allItems.Count == 0)
+			{
+				StartSyncTimer();
+				return;
+			}
+
+			logger.Trace("Sync function for {0} items; Deleted = {1}; Files = {2}; Folders = {3}; for folder {4}", allItems.Count, allItems.Where(w => w.Deleted != null).Count(), allItems.Where(w => w.File != null).Count(), allItems.Where(w => w.Folder != null).Count(),this.Name);
 			allItems = allItems.Where(w => w.Deleted == null).ToList();
 			foreach (var item in allItems.Where(w => w.File != null))
-				itemsForSync.Push(item);
+				itemsForSync.Enqueue(item);
 			var folderItems = allItems.Where(w => w.Id != this.Id && w.Folder != null);
 			foreach (var folder in folderItems)
 				Directory.CreateDirectory(Path.Combine(PathToSync, folder.ReferencePath, folder.Name));
@@ -82,12 +90,12 @@ namespace CloudSync
 		public void StartCreateWorkers()
 		{
 			bool atLeastOneWorkerStarted = false;
-			int i = 0;
-			for (var worker = MakeNextWorker(); worker != null && i < 3; worker = MakeNextWorker(), i++)
-			{
+			DownloadFileWorker worker = null;
+			for  (int i = 0; i < 3 && (worker = MakeNextWorker()) != null; i++)
+			{				
 				atLeastOneWorkerStarted = true;
 				NewWorkerReady?.Invoke(worker);
-			}
+			}			
 
 			if (!atLeastOneWorkerStarted)
 				StartSyncTimer();
@@ -96,11 +104,12 @@ namespace CloudSync
 		private void initTimer()
 		{
 			syncTimer.Tick += CheckUpdatesOnTheServer;
-			syncTimer.Interval = TimeSpan.FromSeconds(15);
+			syncTimer.Interval = TimeSpan.FromSeconds(60);
 		}
 
 		private void OnActiveChanged(bool newValue)
 		{
+			logger.Trace("Active of folder {0} changed changed to {1}", this.Name,newValue);
 			if (newValue)
 			{
 				if (itemsForSync.Count > 0)
@@ -114,14 +123,21 @@ namespace CloudSync
 
 		private void OnWorkerCompleted(IProgressable sender, ProgressableEventArgs args)
 		{
-			if (sender is DownloadFileWorker && shouldDeleteOldestFile && args.Successfull)
+			logger.Debug("Worker completed {0} with success = {1}", sender, args.Successfull);
+			if (sender is DownloadFileWorker && args.Successfull && (sender as DownloadFileWorker).DeleteOldestFileOnSuccess)
 			{
-				string folderId = (sender as DownloadFileWorker).SyncItem.ParentId;
+				var work = (sender as DownloadFileWorker);
+				string folderId = work.SyncItem.ParentId;
+				//logger.Trace("Delete old file started name:{0} folderId {1}", work.SyncItem.Name, folderId);
 				var task = RemoveOldestFiles(folderId).ContinueWith(action =>
 				{
-					bool result = action.Result;
+					bool result = action.Result;					
 				});
 			}
+			else
+				if (args.Error != null)
+					logger.Warn("Worker failed with error {0} for items {1}", args.Error.Message, sender.TaskName);
+
 			if (!IsActive) return;
 			var worker = MakeNextWorker();
 			if (worker != null)
@@ -136,13 +152,11 @@ namespace CloudSync
 				}
 				else StartSyncTimer();
 			}
-
 		}
-
-		private System.Object lockThis = new System.Object();
+				
 		private SemaphoreSlim sema = new SemaphoreSlim(1);
 		private Dictionary<string, Queue<OneDriveItem>> pools = new Dictionary<string, Queue<OneDriveItem>>();
-		private async Task<Queue<OneDriveItem>> GetItemsForDeletePool(string folderId)
+		private async Task<OneDriveItem> GetItemsForDeletePool(string folderId)
 		{
 			string getItemsUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}/children?orderby=lastModifiedDateTime", folderId);
 
@@ -157,33 +171,31 @@ namespace CloudSync
 				{
 					string result = await Owner.GetHttpContent(getItemsUrl);
 					var jres = JObject.Parse(result);
-					itemsForDeletePool = jres["value"].ToObject<Queue<OneDriveItem>>();
-					return itemsForDeletePool;
+					pools[folderId] = jres["value"].ToObject<Queue<OneDriveItem>>();
+					return pools[folderId].Dequeue();
 				}
+				else				
+					return itemsForDeletePool.Dequeue();				
 			}
 			finally
 			{
 				sema.Release();
-			}
-			return itemsForDeletePool;
+			}			
 		}
 
 		private async Task<bool> RemoveOldestFiles(string folderId)
 		{
-			//string getItemsUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}/children?orderby=lastModifiedDateTime",folderId);
-			//string result = await GetItemsForDeletePool(folderId);
-			//var jres = JObject.Parse(result);
-			//var allItems = jres["value"].ToObject<List<OneDriveItem>>();
-			//allItems.				
-			var allItems = await GetItemsForDeletePool(folderId);
-			OneDriveItem itemForDelete = allItems.Dequeue();
-			return await Owner.DeleteItem(itemForDelete.Id);
+			OneDriveItem itemForDelete = await GetItemsForDeletePool(folderId);
+			//logger.Debug("Items for delete = {0}", itemForDelete);
+			logger.Debug("Dequeued item = {0}", itemForDelete);
+			return await Owner.DeleteItem(itemForDelete);
 		}
 
 		private void StartSyncTimer()
 		{
 			if (!syncTimer.IsEnabled)
 			{
+				logger.Trace("Sync timer staeted fo folder {0}",this.Name);
 				syncTimer.Start();
 				shouldDeleteOldestFile = true;
 			}
@@ -199,14 +211,19 @@ namespace CloudSync
 		{
 			while (itemsForSync.Count != 0)
 			{
-				OneDriveSyncItem syncItem = itemsForSync.Pop();
+				OneDriveSyncItem syncItem = itemsForSync.Dequeue();
 				string destFileName = Path.Combine(PathToSync, syncItem.ReferencePath, syncItem.Name);
 				FileInfo info = new FileInfo(destFileName);
 				if (info.Exists)
+				{
+					logger.Trace("File already exist. Name = {0}",info.FullName);
 					continue;
+				}
 				DownloadFileWorker worker = new DownloadFileWorker(syncItem, destFileName, Owner);
+				worker.DeleteOldestFileOnSuccess = shouldDeleteOldestFile;
 				worker.TaskName = String.Format("{0} ({1})", syncItem.Name, syncItem.FormattedSize);
 				worker.Completed += OnWorkerCompleted;
+				logger.Debug("New worker ready for file {0} save to {1}", worker.SyncItem.Name, worker.Destination);
 				return worker;
 			}
 			return null;

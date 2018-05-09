@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -19,6 +20,11 @@ namespace CloudSync
 		{
 			Log.Fatal(e.Exception, "Unhandled exception: {0}", e.Exception);
 			LogManager.Flush();
+		}
+
+		private void Application_Startup(object sender, StartupEventArgs e)
+		{
+			System.Diagnostics.Trace.WriteLine("App is start");
 		}
 	}
 }
