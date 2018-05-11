@@ -10,6 +10,7 @@ using System.IO;
 using System.Windows.Threading;
 using CloudSync.OneDrive;
 using System.Threading;
+using CloudSync.Extensions;
 
 namespace CloudSync
 {
@@ -124,6 +125,7 @@ namespace CloudSync
 		private void OnWorkerCompleted(IProgressable sender, ProgressableEventArgs args)
 		{
 			logger.Debug("Worker completed {0} with success = {1}", sender, args.Successfull);
+			logger.Info("{0} completed with success = {1}", sender.TaskName, args.Successfull);
 			if (sender is DownloadFileWorker && args.Successfull && (sender as DownloadFileWorker).DeleteOldestFileOnSuccess)
 			{
 				var work = (sender as DownloadFileWorker);
@@ -158,8 +160,6 @@ namespace CloudSync
 		private Dictionary<string, Queue<OneDriveItem>> pools = new Dictionary<string, Queue<OneDriveItem>>();
 		private async Task<OneDriveItem> GetItemsForDeletePool(string folderId)
 		{
-			string getItemsUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}/children?orderby=lastModifiedDateTime", folderId);
-
 			await sema.WaitAsync();
 			Queue<OneDriveItem> itemsForDeletePool = null;
 			try
@@ -168,11 +168,10 @@ namespace CloudSync
 					pools.Add(folderId, new Queue<OneDriveItem>());
 				itemsForDeletePool = pools[folderId];
 				if (itemsForDeletePool.Count == 0)
-				{
-					string result = await Owner.GetHttpContent(getItemsUrl);
-					var jres = JObject.Parse(result);
-					pools[folderId] = jres["value"].ToObject<Queue<OneDriveItem>>();
-					return pools[folderId].Dequeue();
+				{					
+					var result = await Owner.GetListOfItemsInFolder(folderId);
+					pools[folderId] = result;
+					return result.Count > 0 ? pools[folderId].Dequeue() : null;
 				}
 				else				
 					return itemsForDeletePool.Dequeue();				
@@ -187,7 +186,7 @@ namespace CloudSync
 		{
 			OneDriveItem itemForDelete = await GetItemsForDeletePool(folderId);
 			//logger.Debug("Items for delete = {0}", itemForDelete);
-			logger.Debug("Dequeued item = {0}", itemForDelete);
+			logger.Debug("Delete item = {0}", itemForDelete);
 			return await Owner.DeleteItem(itemForDelete);
 		}
 
@@ -213,8 +212,8 @@ namespace CloudSync
 			{
 				OneDriveSyncItem syncItem = itemsForSync.Dequeue();
 				string destFileName = Path.Combine(PathToSync, syncItem.ReferencePath, syncItem.Name);
-				FileInfo info = new FileInfo(destFileName);
-				if (info.Exists)
+				FileInfo info = new FileInfo(destFileName);				
+				if (info.Exists && info.GetSHA1Hash() == syncItem.SHA1Hash)
 				{
 					logger.Trace("File already exist. Name = {0}",info.FullName);
 					continue;

@@ -96,6 +96,8 @@ namespace CloudSync.OneDrive
 
 		public async Task<bool> DeleteItem(OneDriveItem item)
 		{
+			if (item == null)
+				return false;
 			string deleteUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}", item.Id);
 			using (HttpClient client = new HttpClient())
 			{
@@ -122,6 +124,30 @@ namespace CloudSync.OneDrive
 					return false;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Return list of items in folder which sorted by lastModifiedDateTime property
+		/// </summary>
+		/// <param name="folderId"></param>
+		/// <returns></returns>
+		public async Task<Queue<OneDriveItem>> GetListOfItemsInFolder(string folderId)
+		{
+			string getItemsUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}/children?orderby=lastModifiedDateTime", folderId);
+			string result = await GetHttpContent(getItemsUrl);
+			var jres = JObject.Parse(result);
+			Queue<OneDriveItem> res = null;
+			try
+			{
+				res = jres["value"].ToObject<Queue<OneDriveItem>>();
+			}
+			catch (System.Exception ex)
+			{
+				logger.Warn(ex, "Extract of items from 'value' property exception. Message {0}", ex.Message);
+				return res;
+
+			}
+			return res;				
 		}
 
 		/// <summary>
@@ -189,7 +215,7 @@ namespace CloudSync.OneDrive
 		public void LogOut()
 		{
 			//GET https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri={redirect-uri}
-		}
+		}		
 
 		public class OwnerInfo
 		{

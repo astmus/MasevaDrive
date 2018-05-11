@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace CloudSync
 {
-    static class Extensions
+    static class VisualExtensions
     {
         public static T FindVisualChild<T>(this DependencyObject obj)
                   where T : DependencyObject

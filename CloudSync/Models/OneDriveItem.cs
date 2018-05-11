@@ -73,9 +73,9 @@ namespace CloudSync.Models
 			get { return ParentReference["id"].Value<String>(); }
 		}
 		[JsonIgnore]
-		public string HashCRC32
+		public string SHA1Hash
 		{
-			get { return File["hashes"]["crc32Hash"]?.ToString(); }
+			get { return File["hashes"]["sha1Hash"]?.ToString(); }
 		}
     }
 }
