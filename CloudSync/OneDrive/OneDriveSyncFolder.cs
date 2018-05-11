@@ -39,7 +39,7 @@ namespace CloudSync
 		public event Action<IProgressable> NewWorkerReady;
 		private DispatcherTimer syncTimer = new DispatcherTimer();
 		private OneDriveClient _owner;
-		private bool shouldDeleteOldestFile = false;
+		private bool firstSyncCompleted { get; set; } = false;
 		private OneDriveClient Owner
 		{
 			get
@@ -196,7 +196,7 @@ namespace CloudSync
 			{
 				logger.Trace("Sync timer staeted fo folder {0}",this.Name);
 				syncTimer.Start();
-				shouldDeleteOldestFile = true;
+				firstSyncCompleted = true;
 			}
 		}
 
@@ -219,7 +219,7 @@ namespace CloudSync
 					continue;
 				}
 				DownloadFileWorker worker = new DownloadFileWorker(syncItem, destFileName, Owner);
-				worker.DeleteOldestFileOnSuccess = shouldDeleteOldestFile;
+				worker.DeleteOldestFileOnSuccess = firstSyncCompleted && (!info.Exists);
 				worker.TaskName = String.Format("{0} ({1})", syncItem.Name, syncItem.FormattedSize);
 				worker.Completed += OnWorkerCompleted;
 				logger.Debug("New worker ready for file {0} save to {1}", worker.SyncItem.Name, worker.Destination);
