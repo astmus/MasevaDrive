@@ -11,6 +11,7 @@
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<Grid>
 			<Grid.ColumnDefinitions>
@@ -63,8 +64,33 @@
 						</Style>
 					</Button.Style>
 				</Button>
-			</StackPanel>
-		</Grid>		
+			</StackPanel>			
+		</Grid>
+		<Button Grid.Row="2" Width="160" Height="80" BorderBrush="#FF323232" Background="#FF303030" BorderThickness="1"  Content="Connect" FontSize="18" FontWeight="Heavy"  Foreground="#FF505050">
+			<Button.Style>
+				<Style TargetType="{x:Type Button}">
+					<Setter Property="Template">
+						<Setter.Value>
+							<ControlTemplate TargetType="{x:Type Button}">
+								<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+									<Border x:Name="Main" Background="{TemplateBinding Background}">
+										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+									</Border>
+								</Border>
+								<ControlTemplate.Triggers>
+									<Trigger Property="IsMouseOver" Value="True">
+										<Setter Property="Background" Value="#FF363636" TargetName="Main" />
+									</Trigger>
+									<Trigger Property="IsPressed" Value="True">
+										<Setter Property="BorderBrush" Value="#FF505050" TargetName="Border" />
+									</Trigger>
+								</ControlTemplate.Triggers>
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</Button.Style>
+		</Button>
 	</Grid>
 	
 

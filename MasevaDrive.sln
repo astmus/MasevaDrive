@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetImageService", "GetImageService\GetImageService.csproj", "{C849F61C-BEA0-4B09-A58C-74C86AC85AC6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudSync", "CloudSync\CloudSync.csproj", "{39AE4133-B74B-4623-99A2-18A3C23F4491}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp1", "WpfApp1\WpfApp1.csproj", "{2D5BA715-EADD-459A-8983-6C78C6FDF9E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneDriveDownloader", "WpfApp1\OneDriveDownloader.csproj", "{2D5BA715-EADD-459A-8983-6C78C6FDF9E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
