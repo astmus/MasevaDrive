@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.ServiceModel;
-using CloudSync.Windows;
 using CloudSync.OneDrive;
 using System.Runtime.InteropServices;
 
@@ -162,8 +161,8 @@ namespace CloudSync
 
         private void newLogin(object sender, RoutedEventArgs e)
         {
-			OneDriveAuthorizationWindow auth = new OneDriveAuthorizationWindow();
-			currentClient = auth.Show();			
+			//OneDriveAuthorizationWindow auth = new OneDriveAuthorizationWindow();
+			//currentClient = auth.Show();			
 			if (currentClient != null)
 			{
 				FolderSyncConfigurator window = new FolderSyncConfigurator(currentClient);
