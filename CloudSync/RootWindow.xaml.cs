@@ -61,6 +61,11 @@ namespace CloudSync
 		private void OnCloseButtonClick(object sender, RoutedEventArgs e)
 		{
 			this.Close();
-		}		
+		}
+
+		private void OnConnectButtonClick(object sender, RoutedEventArgs e)
+		{
+			BrowserHolder.Visibility = Visibility.Visible;			
+		}
 	}
 }

@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:CloudSync"
 		xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
-        Title="Authorize" Height="600" Width="800" WindowStyle="None" AllowsTransparency="True"  ResizeMode="NoResize" WindowStartupLocation="CenterScreen" BorderThickness="4,4,4,4" BorderBrush="#FF323232" Background="#FF282828" StateChanged="OnWindowStateChanged"  >
-	
+        Title="Authorize" Height="600" Width="800" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" BorderThickness="4,4,4,4" BorderBrush="#FF323232" Background="#FF282828" StateChanged="OnWindowStateChanged"  >
+
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
@@ -16,30 +16,30 @@
 		<Grid>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="Auto"/>				
+				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 			<Label Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FF505050" Padding="-5" Margin="68,0,0,0"  FontSize="20" FontWeight="Heavy"  Content="Authorization"/>
 			<StackPanel Orientation="Horizontal" Grid.Column="1">
 				<Button Width="34" Height="34" BorderBrush="#FF323232"  BorderThickness="4,0,0,4"  Background="#FF242424" Click="Button_Click">
 					<Button.Style>
-					<Style TargetType="{x:Type Button}">						
-						<Setter Property="Template">
-							<Setter.Value>
-								<ControlTemplate TargetType="{x:Type Button}">
-									<Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
-										<Border x:Name="Border" Background="{TemplateBinding Background}">
-											<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+						<Style TargetType="{x:Type Button}">
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="{x:Type Button}">
+										<Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+											<Border x:Name="Border" Background="{TemplateBinding Background}">
+												<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+											</Border>
 										</Border>
-									</Border>
-									<ControlTemplate.Triggers>
-										<Trigger Property="IsMouseOver" Value="True">
-											<Setter Property="Background" Value="DarkGreen" TargetName="Border" />
-										</Trigger>
-									</ControlTemplate.Triggers>
-								</ControlTemplate>
-							</Setter.Value>
-						</Setter>
-					</Style>
+										<ControlTemplate.Triggers>
+											<Trigger Property="IsMouseOver" Value="True">
+												<Setter Property="Background" Value="DarkGreen" TargetName="Border" />
+											</Trigger>
+										</ControlTemplate.Triggers>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+						</Style>
 					</Button.Style>
 				</Button>
 				<Button Width="34" Height="34" BorderBrush="#FF323232" BorderThickness="4,0,0,4" Background="#FF242424" Click="OnCloseButtonClick">
@@ -64,9 +64,9 @@
 						</Style>
 					</Button.Style>
 				</Button>
-			</StackPanel>			
+			</StackPanel>
 		</Grid>
-		<Button Grid.Row="2" Width="160" Height="80" BorderBrush="#FF323232" Background="#FF303030" BorderThickness="1"  Content="Connect" FontSize="18" FontWeight="Heavy"  Foreground="#FF505050">
+		<Button Grid.Row="2" Width="160" Height="80" BorderBrush="#FF323232" Background="#FF303030" BorderThickness="1"  Content="Connect" FontSize="18" FontWeight="Heavy"  Foreground="#FF505050" Click="OnConnectButtonClick">
 			<Button.Style>
 				<Style TargetType="{x:Type Button}">
 					<Setter Property="Template">
@@ -91,7 +91,9 @@
 				</Style>
 			</Button.Style>
 		</Button>
-	</Grid>
-	
 
+		<Border  Name="BrowserHolder" Visibility="Hidden"  Grid.Row="2" Padding="100">
+			<WebBrowser x:Name="Browser" Source="http://msdn.com"  Grid.Row="2"/>
+		</Border>
+	</Grid>
 </Window>
