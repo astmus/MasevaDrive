@@ -35,7 +35,7 @@ namespace CloudSync
         }
 
         public void Load()
-        {
+        {			
 			if (!String.IsNullOrEmpty(Properties.Settings.Default.Clouds))
 				Accounts = JsonConvert.DeserializeObject<CloudAccountManager>(Properties.Settings.Default.Clouds);
 			if (!String.IsNullOrEmpty(Properties.Settings.Default.Folders))
