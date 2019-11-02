@@ -1,5 +1,4 @@
 ﻿using CloudSync.Models;
-using CloudSync.OneDrive;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,21 +21,21 @@ namespace CloudSync
     /// </summary>
     public partial class FolderSyncConfigurator : Window
     {
+		OneDriveAccount account;
 
-		OneDriveClient client;
-
-		public FolderSyncConfigurator(OneDriveClient client)
+		public FolderSyncConfigurator(OneDriveAccount account)
         {
             InitializeComponent();
             this.Loaded += OnWindowsLoaded;
-			this.client = client;
+			this.account = account;
         }
 
         private async void OnWindowsLoaded(object sender, RoutedEventArgs e)
         {
-            busyIndicator.IsBusy = true;
-            var rootFolders = await client.GetRootFolders();
-            folders.ItemsSource = rootFolders;
+			this.Loaded -= OnWindowsLoaded;
+			busyIndicator.IsBusy = true;
+			var rootFolders = await account.RootDirectories();
+			folders.ItemsSource = rootFolders;
             busyIndicator.IsBusy = false;
         }
 
@@ -54,10 +53,10 @@ namespace CloudSync
             }
         }
 
-        public List<OneDriveSyncFolder> Result;
+        public List<OneDriveFolder> Result;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Result = new List<OneDriveSyncFolder>();
+            Result = new List<OneDriveFolder>();
             foreach (OneDriveItem item in folders.SelectedItems)
             {
                 ListBoxItem container = folders.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
@@ -80,13 +79,13 @@ namespace CloudSync
 						Result = null;
 						return;
                     }                    
-                var syncFolder = new OneDriveSyncFolder(item, folderSyncPath.Text);
+                var syncFolder = new OneDriveFolder(item, folderSyncPath.Text);
                 Result.Add(syncFolder);               
             }
             this.Close();
         }        
 
-        public new List<OneDriveSyncFolder> Show()
+        public new List<OneDriveFolder> Show()
         {
             this.ShowDialog();
             return Result;
