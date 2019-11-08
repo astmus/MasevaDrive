@@ -57,9 +57,7 @@ namespace CloudSync
 				return null;
 			}
 		}
-		#endregion
-
-		
+		#endregion		
 
 		public OwnerInfo _userData;
 		public OwnerInfo UserData {
@@ -87,24 +85,39 @@ namespace CloudSync
 		}
 
 		private HttpClient inetClient;
+		private HttpClientHandler clientHandler;
 
 		public OneDriveClient()
 		{
 			inetClient = new HttpClient();
+			clientHandler = new HttpClientHandler();
+		}
+
+		~OneDriveClient()
+		{
+			inetClient.Dispose();
+			clientHandler.Dispose();
+			inetClient = null;
+			clientHandler = null;
 		}
 
 		public OneDriveClient(Credentials accessData)
 		{
 			credentialData = accessData;
-			if (accessData.AccessToken != null)
+			if (accessData?.AccessToken != null)
+			{
+				clientHandler = new HttpClientHandler();
+				clientHandler.MaxConnectionsPerServer = 40;
 				inetClient = new HttpClient()
 				{
 					DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Bearer", accessData.AccessToken) }
 				};
+				var result = inetClient.GetAsync(PersonalDataUrl).Result;
+				UserData = JsonConvert.DeserializeObject<OwnerInfo>(result.Content.ReadAsStringAsync().Result);				
+			}
 			else
 				throw new Exception("Wrong credentials");
-			var result = inetClient.GetAsync(PersonalDataUrl).Result;
-			UserData = JsonConvert.DeserializeObject<OwnerInfo>(result.Content.ReadAsStringAsync().Result);
+			
 		}
 
 		public async Task<List<OneDriveFolder>> RequestRootFolders()
@@ -114,8 +127,6 @@ namespace CloudSync
 			List<OneDriveFolder> folders = data.Select(s => s.ToObject<OneDriveFolder>()).ToList();
 			return folders;
 		}
-
-
 
 		public async Task<bool> DeleteItem(OneDriveItem item)
 		{
@@ -165,7 +176,7 @@ namespace CloudSync
 			}
 			catch (System.Exception ex)
 			{
-				logger.Warn(ex, "Extract of items from 'value' property exception. Message {0}", ex.Message);
+				logger.Error(ex, "Extract of items from 'value' property exception. Message {0}", ex.Message);
 				return res;
 
 			}
@@ -184,7 +195,7 @@ namespace CloudSync
 				try
 				{
 					//var request = CreateRequestWithAuthorizationData(url, HttpMethod.Get);
-					response = await inetClient.GetAsync(url);
+					response = await inetClient.GetAsync(url);				
 					if (response.StatusCode == HttpStatusCode.Unauthorized)
 					{
 						RenewAccessToken();						
@@ -202,13 +213,6 @@ namespace CloudSync
 			return null;
 						
 		}		
-
-		/*private HttpRequestMessage CreateRequestWithAuthorizationData(string url, HttpMethod methodType)
-		{
-			var request = new System.Net.Http.HttpRequestMessage(methodType, url);
-			request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", AccessToken);
-			return request;
-		}*/
 
 		private void RenewAccessToken()
 		{
@@ -267,26 +271,7 @@ namespace CloudSync
 			
 			public OwnerInfo()
 			{
-				/*if (accessToken == null) return;
 				
-					System.Net.Http.HttpResponseMessage response;
-					try
-					{
-						var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, "https://graph.microsoft.com/v1.0/me");
-						//Add the token in Authorization header
-						request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-						response = inetClient.SendAsync(request).Result;
-						var content = response.Content.ReadAsStringAsync().Result;
-						OwnerInfo oi = JsonConvert.DeserializeObject<OwnerInfo>(content);
-						this.DisplayName = oi.DisplayName;
-						this.Id = oi.Id;
-						this.PrincipalName = oi.PrincipalName;
-					}
-					catch (Exception ex)
-					{
-
-					}
-				*/
 			}
 		}
 	}	

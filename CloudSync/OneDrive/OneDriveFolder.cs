@@ -55,7 +55,6 @@ namespace CloudSync
 			}
 		}
 
-		private bool firstSyncCompleted { get; set; } = false;
 		public bool HasWorkerReadySubscribers { get { return NewWorkerReady != null; } }
 		public event Action<CloudWorker> NewWorkerReady;
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -72,17 +71,7 @@ namespace CloudSync
 		public OneDriveFolder()
 		{
 			initTimer();
-		}
-		/*public OneDriveFolder(OneDriveItem folder, string pathToSync, bool isActive) : base()
-		{
-			this.Id = folder.Id;
-			this.Name = folder.Name;
-			this.Size = folder.Size;
-			this.PathToSync = pathToSync;
-			this.OwnerId = folder.OwnerId;
-			this.IsActive = isActive;
-			initTimer();
-		}*/
+		}		
 
 		protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
@@ -240,7 +229,6 @@ namespace CloudSync
 			{
 				logger.Trace("Sync timer staeted fo folder {0}",this.Name);
 				syncTimer.Start();
-				firstSyncCompleted = true;
 			}
 		}
 
