@@ -8,13 +8,15 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Threading;
-using CloudSync.OneDrive;
 using System.Threading;
 using CloudSync.Extensions;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Net;
 
 namespace CloudSync
 {
-	public class OneDriveSyncFolder : OneDriveItem
+	public class OneDriveFolder : OneDriveItem, INotifyPropertyChanged
 	{
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		[JsonProperty]
@@ -22,50 +24,76 @@ namespace CloudSync
 		[JsonProperty]
 		private string nextLink;
 		[JsonIgnore]
-		Queue<OneDriveSyncItem> itemsForSync = new Queue<OneDriveSyncItem>();
+		Queue<OneDriveSyncItem> itemsForSync = new Queue<OneDriveSyncItem>();		
 		[JsonIgnore]
 		public bool IsActive
 		{
 			get { return _isActive; }
 			set
 			{
+				if (_isActive == value) return;
 				_isActive = value;
-				OnActiveChanged(value);
+				if (PathToSync != null)
+					OnActiveChanged(value);
+				NotifyPropertyChanged();
 			}
 		}
 		[JsonProperty("IsActive")]
-		private bool _isActive = true;
-		public string PathToSync { get; set; }
-		public event Action<IProgressable> NewWorkerReady;
-		private DispatcherTimer syncTimer = new DispatcherTimer();
-		private OneDriveClient _owner;
+		private bool _isActive = false;
+
+		[JsonProperty("PathToSync")]
+		private string _pathToSync { get; set; }
+		[JsonIgnore]
+		public string PathToSync
+		{
+			get { return _pathToSync; }
+			set
+			{
+				if (_pathToSync == value) return;
+				_pathToSync = value;
+				NotifyPropertyChanged();
+			}
+		}
+
 		private bool firstSyncCompleted { get; set; } = false;
+		public bool HasWorkerReadySubscribers { get { return NewWorkerReady != null; } }
+		public event Action<CloudWorker> NewWorkerReady;
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		private DispatcherTimer syncTimer = new DispatcherTimer();
+		private OneDriveClient _owner;		
 		private OneDriveClient Owner
 		{
 			get
 			{
-				return _owner ?? (_owner = Settings.Instance.Accounts[OwnerId]);
+				return _owner ?? (_owner = Settings.Instance.Accounts.FirstOrDefault((a) => { return a.Client.UserData.Id == OwnerId; })?.Client);
 			}
 		}
-		public OneDriveSyncFolder()
+		public OneDriveFolder()
 		{
 			initTimer();
 		}
-		public OneDriveSyncFolder(OneDriveItem folder, string pathToSync) : base()
+		/*public OneDriveFolder(OneDriveItem folder, string pathToSync, bool isActive) : base()
 		{
 			this.Id = folder.Id;
 			this.Name = folder.Name;
 			this.Size = folder.Size;
 			this.PathToSync = pathToSync;
 			this.OwnerId = folder.OwnerId;
+			this.IsActive = isActive;
 			initTimer();
+		}*/
+
+		protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		public async void Sync(string link = null)
 		{
 			if (!IsActive) return;
 			string deltaRequest = link ?? String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}/delta?select=id,name,size,folder,file,deleted,parentReference,createdBy", Id);
-			string result = await Owner.GetHttpContent(deltaRequest);
+			string result = await Owner.GetHttpContent(deltaRequest);			
 			var jresult = JObject.Parse(result);
 			deltaLink = jresult["@odata.deltaLink"]?.ToString();
 			nextLink = jresult["@odata.nextLink"]?.ToString();
@@ -87,8 +115,8 @@ namespace CloudSync
 
 			StartCreateWorkers();
 		}
-
-		public void StartCreateWorkers()
+		
+		private void StartCreateWorkers()
 		{
 			bool atLeastOneWorkerStarted = false;
 			DownloadFileWorker worker = null;
@@ -122,11 +150,10 @@ namespace CloudSync
 				syncTimer.Stop();
 		}
 
-		private void OnWorkerCompleted(IProgressable sender, ProgressableEventArgs args)
-		{
-			logger.Debug("Worker completed {0} with success = {1}", sender, args.Successfull);
+		private void OnWorkerCompleted(CloudWorker sender, ProgressableEventArgs args)
+		{			
 			logger.Info("{0} completed with success = {1}", sender.TaskName, args.Successfull);
-			if (sender is DownloadFileWorker && args.Successfull && (sender as DownloadFileWorker).DeleteOldestFileOnSuccess)
+			/*if (sender is DownloadFileWorker && args.Successfull && (sender as DownloadFileWorker).DeleteOldestFileOnSuccess)
 			{
 				var work = (sender as DownloadFileWorker);
 				string folderId = work.SyncItem.ParentId;
@@ -136,9 +163,26 @@ namespace CloudSync
 					bool result = action.Result;					
 				});
 			}
-			else
-				if (args.Error != null)
-					logger.Warn("Worker failed with error {0} for items {1}", args.Error.Message, sender.TaskName);
+			else*/
+			if (args.Successfull == false)
+			{
+				logger.Error(args.Error, "Worker failed for items " + sender.TaskName);
+				if (args.Error is WebException)
+				{
+					WebException ex = args.Error as WebException;
+					var response = ex.Response as HttpWebResponse;
+					if (response != null)
+					{
+						switch ((int)response.StatusCode)
+						{
+							//case: HttpStatusCode.Unauthorized
+						}
+						
+					}
+				}
+
+			}
+				
 
 			if (!IsActive) return;
 			var worker = MakeNextWorker();
@@ -211,18 +255,18 @@ namespace CloudSync
 			while (itemsForSync.Count != 0)
 			{
 				OneDriveSyncItem syncItem = itemsForSync.Dequeue();
-				string destFileName = Path.Combine(PathToSync, syncItem.ReferencePath, syncItem.Name);
-				FileInfo info = new FileInfo(destFileName);				
+				string destinationPath = Path.Combine(PathToSync, syncItem.ReferencePath, syncItem.Name);
+				FileInfo info = new FileInfo(destinationPath);				
 				if (info.Exists && info.GetSHA1Hash() == syncItem.SHA1Hash)
 				{
 					logger.Trace("File already exist. Name = {0}",info.FullName);
 					continue;
 				}
-				DownloadFileWorker worker = new DownloadFileWorker(syncItem, destFileName, Owner);
-				worker.DeleteOldestFileOnSuccess = firstSyncCompleted && (!info.Exists);
+				DownloadFileWorker worker = new DownloadFileWorker(syncItem.Link, destinationPath, Owner.CredentialData.AccessToken);
+				//worker.DeleteOldestFileOnSuccess = firstSyncCompleted && (!info.Exists);
 				worker.TaskName = String.Format("{0} ({1})", syncItem.Name, syncItem.FormattedSize);
 				worker.Completed += OnWorkerCompleted;
-				logger.Debug("New worker ready for file {0} save to {1}", worker.SyncItem.Name, worker.Destination);
+				logger.Debug("New worker ready for file {0} save to {1}", syncItem.Name, worker.Destination);
 				return worker;
 			}
 			return null;

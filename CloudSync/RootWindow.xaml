@@ -5,14 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CloudSync"
 		xmlns:tb="http://www.hardcodet.net/taskbar"
+		xmlns:convert="clr-namespace:CloudSync.Converters"
         mc:Ignorable="d"
-		Name="_this"
-        Title="Authorize" Height="600" Width="800" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" BorderThickness="4,4,4,4" BorderBrush="#FF323232" Background="#FF282828" StateChanged="OnWindowStateChanged"  >
-	
+		x:Name="_this"
+        Title="Synchronizer" Loaded="OnWindowLoaded"  Height="600" Width="800" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" BorderThickness="4,4,4,4" BorderBrush="#FF323232" Background="#FF282828" StateChanged="OnWindowStateChanged"  >
+	<Window.Resources>
+		<ResourceDictionary>
+			<convert:WorkerToBackgroundConverter x:Key="WorkerConverter"/>
+			<convert:PercentCompletedToEnableConverter x:Key="PerecentConverter"/>
+			<Style TargetType="{x:Type ListBoxItem}" x:Key="AccountButton" >
+				<Setter Property="Height" Value="60"/>
+				<Setter Property="HorizontalContentAlignment" Value="Center"/>
+				<Setter Property="BorderThickness" Value="2"/>
+				<Setter Property="Background" Value="#FF303030"/>
+				<Setter Property="Margin" Value="1,0,0,0"/>
+				<Setter Property="FontSize" Value="17"/>
+				<Setter Property="FontWeight" Value="Bold"/>
+				<Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=BorderBrush}"/>
+			</Style>
+		</ResourceDictionary>
+	</Window.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<Grid>
 			<Grid.ColumnDefinitions>
@@ -23,9 +40,9 @@
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
-			<Label Name="Caption" MouseDown="Caption_MouseDown" MouseUp="Caption_MouseUp" MouseMove="Caption_MouseMove" Background="#FF383838" BorderThickness="0,0,0,4" BorderBrush="#FF323232"  Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FF505050" Padding="-5" FontSize="20" FontWeight="Heavy"  Content="Authorization"/>
+			<Label Name="Caption" MouseDown="Caption_MouseDown"  Background="#FF383838" BorderThickness="0,0,0,4" BorderBrush="#FF323232"  Grid.Column="0" Grid.ColumnSpan="2"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FF888888" Padding="-5" FontSize="20" FontWeight="Heavy"  Content="Synchronizer"/>
 			<StackPanel Orientation="Horizontal" Grid.Column="1">
-				<Button Width="34" Height="34" BorderBrush="#FF323232"  BorderThickness="4,0,0,4"  Background="#FF242424" Click="Button_Click">
+				<Button Width="34" Height="34" BorderBrush="#FF323232"  BorderThickness="4,0,0,4"  Background="#FF383838" Click="Button_Click">
 					<Button.Style>
 						<Style TargetType="{x:Type Button}">
 							<Setter Property="Template">
@@ -47,7 +64,7 @@
 						</Style>
 					</Button.Style>
 				</Button>
-				<Button Width="34" Height="34" BorderBrush="#FF323232" BorderThickness="4,0,0,4" Background="#FF242424" Click="OnCloseButtonClick">
+				<Button Width="34" Height="34" BorderBrush="#FF323232" BorderThickness="4,0,0,4" Background="#FF383838" Click="OnCloseButtonClick">
 					<Button.Style>
 						<Style TargetType="{x:Type Button}">
 							<Setter Property="Template">
@@ -70,63 +87,108 @@
 					</Button.Style>
 				</Button>
 			</StackPanel>
-			<Border Grid.Row="1" Background="#FF282828" HorizontalAlignment="Left" BorderBrush="#FF323232" BorderThickness="0,0,4,4" Width="200">
-			<StackPanel Orientation="Vertical" >
-					<ListBox Width="200" Name="ConnectedAccounts" Padding="0,0,3,0"  Background="#FF282828" Foreground="#FF505050" BorderBrush="#FF323232" DisplayMemberPath="UserData.DisplayName"  ItemsSource="{Binding ElementName=_this, Path=Clients}"  HorizontalAlignment="Left">
-					<ListBox.ItemContainerStyle>						
-						<Style TargetType="{x:Type ListBoxItem}">
-							<Setter Property="Foreground" Value="#FF505050"/>
-								<Setter Property="FontSize" Value="18"/>
-								<Setter Property="HorizontalContentAlignment" Value="Center"/>
-								<Setter Property="Background" Value="#FF282828"/>
-								<Style.Triggers>
-									<Trigger Property="IsMouseOver" Value="True">
-										<Setter Property="Foreground" Value="White"/>
-										<Setter Property="BorderThickness" Value="0"/>
-										<Setter Property="Background" Value="#FF181818"/>
-									</Trigger>
-									<Trigger Property="IsSelected" Value="True">
-										<Setter Property="BorderThickness" Value="0"/>
-										<Setter Property="Background" Value="#FF181818"/>
-										<Setter Property="Foreground" Value="White"/>
-									</Trigger>
-								</Style.Triggers>
-							</Style>
-					</ListBox.ItemContainerStyle>
-				</ListBox>
-				<Button Name="ConnectButton" HorizontalAlignment="Stretch" Height="80" BorderThickness="0"  Background="#FF303030"  Content="Connect" FontSize="18" FontWeight="Heavy"  Foreground="#FF505050" Click="OnConnectButtonClick">
-					<Button.Style>
-						<Style TargetType="{x:Type Button}">
-							<Setter Property="Template">
-								<Setter.Value>
-									<ControlTemplate TargetType="{x:Type Button}">
-										<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
-											<Border x:Name="Main" Background="{TemplateBinding Background}">
-												<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+			<Border Grid.Row="1" Grid.ColumnSpan="2" Background="Transparent" BorderBrush="#FF323232" BorderThickness="0,0,0,4">
+				<DockPanel LastChildFill="True">
+					<Button Name="ConnectButton" Width="60" Height="60"  VerticalAlignment="Stretch"  BorderThickness="2" HorizontalAlignment="Left"  Background="#FF303030"  Content="Add" FontSize="18" FontWeight="Heavy"  Foreground="#FF888888" Click="OnConnectButtonClick">
+						<Button.Style>
+							<Style TargetType="{x:Type Button}">
+								<Setter Property="Template">
+									<Setter.Value>
+										<ControlTemplate TargetType="{x:Type Button}">
+											<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+												<Border x:Name="Main" Background="{TemplateBinding Background}">
+													<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+												</Border>
 											</Border>
-										</Border>
-										<ControlTemplate.Triggers>
-											<Trigger Property="IsMouseOver" Value="True">
-												<Setter Property="Background" Value="#FF363636" TargetName="Main" />
-											</Trigger>
-											<Trigger Property="IsPressed" Value="True">
-												<Setter Property="BorderBrush" Value="#FF505050" TargetName="Border" />
-											</Trigger>
-										</ControlTemplate.Triggers>
-									</ControlTemplate>
-								</Setter.Value>
-							</Setter>
-						</Style>
-					</Button.Style>
-				</Button>
-			</StackPanel>
+											<ControlTemplate.Triggers>
+												<Trigger Property="IsMouseOver" Value="True">
+													<Setter Property="Background" Value="#FF454545" TargetName="Main" />
+												</Trigger>
+												<Trigger Property="IsPressed" Value="True">
+													<Setter Property="BorderBrush" Value="#FF888888" TargetName="Border" />
+												</Trigger>
+											</ControlTemplate.Triggers>
+										</ControlTemplate>
+									</Setter.Value>
+								</Setter>
+							</Style>
+						</Button.Style>
+					</Button>
+					<ListBox DisplayMemberPath="Client.UserData.DisplayName" HorizontalContentAlignment="Stretch" ItemContainerStyle="{StaticResource ResourceKey=AccountButton}" Padding="0" Background="Transparent"  BorderBrush="{Binding ElementName=ConnectButton, Path=BorderBrush}"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="ConnectedAccounts" SelectionChanged="OnSelectedAccountChanged"  Foreground="#FF888888" BorderThickness="0"   ItemsSource="{Binding ElementName=_this, Path=Clients}" >
+						<ListBox.ItemsPanel>
+							<ItemsPanelTemplate>
+								<UniformGrid Rows="1" IsItemsHost="True"/>
+							</ItemsPanelTemplate>
+						</ListBox.ItemsPanel>
+					</ListBox>
+				</DockPanel>
 			</Border>
 		</Grid>
+		
+		<Grid Grid.Row="1" Grid.ColumnSpan="2" >
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="60"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
 
 
-
-		<Border  Name="BrowserHolder" Visibility="Hidden"  Grid.Row="2" Padding="50">
-			<WebBrowser x:Name="Browser" Navigated="OnWebBrowserNavigated"  Grid.Row="2"/>
+			<ItemsControl Grid.Column="1" x:Name="OneDriveWorkersBoard" ItemsSource="{Binding Source={x:Static local:Settings.Instance}, Path=Accounts}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<UniformGrid VerticalAlignment="Top"  Rows="1" IsItemsHost="True"/>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Border BorderBrush="#FF323232" BorderThickness="4,0,0,0" Margin="-1,0,0,0">
+							<ListBox Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  BorderThickness="0" HorizontalContentAlignment="Stretch"  x:Name="workers"  Height="{Binding ElementName=OneDriveWorkersBoard, Path=ActualHeight}" ItemsSource="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.CurrentWorkers}">
+								<ListBox.ItemContainerStyle>
+									<Style TargetType="ListBoxItem">
+										<Setter Property="BorderThickness" Value="0"/>
+										<Setter Property="Padding" Value="10,0,10,7"/>
+										<Style.Triggers>
+											<Trigger Property="IsMouseOver" Value="True">
+												<Setter Property="BorderThickness" Value="0"/>
+											</Trigger>
+											<Trigger Property="IsSelected" Value="True">
+												<Setter Property="BorderThickness" Value="0"/>
+											</Trigger>
+										</Style.Triggers>
+									</Style>
+								</ListBox.ItemContainerStyle>
+								<ListBox.ItemTemplate>
+									<DataTemplate>
+										<Border BorderBrush="#FF666666" Padding="4,6,4,2"  BorderThickness="0,0,0,1">
+											<Grid>
+												<Grid.ContextMenu>
+													<ContextMenu>
+														<MenuItem Header="Try again" Click="OnTryAgainPressed"  IsEnabled="{Binding Path=CompletedPercent, Converter={StaticResource PerecentConverter}}"  />
+													</ContextMenu>
+												</Grid.ContextMenu>
+												<ProgressBar Height="1" Margin="-5,0,-5,-3" VerticalAlignment="Bottom"  BorderThickness="0" Minimum="0" Maximum="100" Value="{Binding CompletedPercent}" Background="{Binding CompletedPercent, Converter={StaticResource WorkerConverter}}"/>
+												<StackPanel Orientation="Horizontal" >
+													<Label  Foreground="#FF888888" FontSize="15" FontWeight="Medium"  Content="{Binding TaskName}" />
+													<TextBlock Margin="5,0,0,1" VerticalAlignment="Bottom"  Foreground="#FF666666" FontSize="12" x:Name="message"  Text="{Binding AdditionalInfo}" />
+												</StackPanel>
+											</Grid>
+										</Border>
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
+						</Border>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+		</Grid>
+		<Border  IsHitTestVisible="False" Name="BrowserHolder" Grid.Row="1" Visibility="Hidden" Margin="170,0,170,20"  Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2">
+			<Grid Height="{Binding ElementName=BrowserHolder,Path=Height}">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				<TextBlock Padding="10" FontSize="16"  VerticalAlignment="Center"  Foreground="#FF888888" Background="#FF383838" x:Name="BrowserTitle"/>
+				<WebBrowser x:Name="Browser" Grid.Row="1"  Navigated="OnWebBrowserNavigated"/>
+			</Grid>
 		</Border>
 	</Grid>
 </Window>

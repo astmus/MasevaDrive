@@ -34,61 +34,55 @@ namespace CloudSync
         {
 			this.Loaded -= OnWindowsLoaded;
 			busyIndicator.IsBusy = true;
-			var rootFolders = await account.RootDirectories();
-			folders.ItemsSource = rootFolders;
-            busyIndicator.IsBusy = false;
+
+			if (account.RootFolders == null || account.RootFolders.Count == 0)
+				account.RootFolders = await account.RequestRootFolders();
+			folders.ItemsSource = account.RootFolders;
+			busyIndicator.IsBusy = false;
         }
 
         private void selectFolderButton_Click(object sender, RoutedEventArgs e)
         {
             Button b = sender as Button;
             Grid parent = b.Parent as Grid;
-            TextBox folderPath = parent.FindName("folderPath") as TextBox;
+            Label folderPath = (parent.FindName("StackHolder") as StackPanel).FindName("folderPath") as Label;
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    folderPath.Text = dialog.SelectedPath;
-                } 
+                    folderPath.Content = dialog.SelectedPath;
             }
         }
 
-        public List<OneDriveFolder> Result;
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Result = new List<OneDriveFolder>();
-            foreach (OneDriveItem item in folders.SelectedItems)
+            foreach (OneDriveFolder item in folders.ItemsSource)
             {
-                ListBoxItem container = folders.ItemContainerGenerator.ContainerFromItem(item) as ListBoxItem;
-                TextBox folderSyncPath = container.FindVisualChild<TextBox>();
-                if (string.IsNullOrEmpty(folderSyncPath.Text))
-                {
-                    MessageBox.Show("Please select valid path for all directory");
-					Result = null;
-                    return;
-                }
-                string dirPath = Path.Combine(folderSyncPath.Text, item.Name);
-                if (!Directory.Exists(dirPath))
-                    try
-                    {
-                        Directory.CreateDirectory(dirPath);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        MessageBox.Show("Please select valid path for all directory");
-						Result = null;
-						return;
-                    }                    
-                var syncFolder = new OneDriveFolder(item, folderSyncPath.Text);
-                Result.Add(syncFolder);               
+				if (item.IsActive && item.PathToSync == null)
+				{
+					using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+					{
+						if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+							item.PathToSync = dialog.SelectedPath;
+					}
+				}
+
+				if (item.PathToSync != null)
+				{
+					var dirPath = Path.Combine(item.PathToSync as String, item.Name);
+					if (!Directory.Exists(dirPath))
+						try
+						{
+							Directory.CreateDirectory(dirPath);
+						}
+						catch (System.Exception ex)
+						{
+							MessageBox.Show("Please select valid path for all directory");
+							return;
+						}
+				}             
             }
+			DialogResult = true;
             this.Close();
         }        
-
-        public new List<OneDriveFolder> Show()
-        {
-            this.ShowDialog();
-            return Result;
-        }
     }
 }

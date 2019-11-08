@@ -128,18 +128,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CloudAccountManaged.cs" />
+    <Compile Include="OneDrive\OneDriveAccount.cs" />
     <Compile Include="Converters\PercentCompletedToEnableConverter.cs" />
     <Compile Include="Converters\StringToListJsonConverter.cs" />
     <Compile Include="Converters\TimeSpanJsonConverter.cs" />
     <Compile Include="Converters\WorkerToBackgroundConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\FileInfoExtension.cs" />
+    <Compile Include="OneDriveFolderSelector.xaml.cs">
+      <DependentUpon>OneDriveFolderSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OneDrive\OneDriveClient.cs" />
     <Compile Include="RootWindow.xaml.cs">
       <DependentUpon>RootWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Page Include="OneDriveFolderSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RootWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -156,12 +163,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CloudWorker.cs" />
-    <Compile Include="DownloadFileWorker.cs" />
+    <Compile Include="OneDrive\CloudWorker.cs" />
+    <Compile Include="OneDrive\DownloadFileWorker.cs" />
     <Compile Include="Windows\FolderSyncConfigurator.xaml.cs">
       <DependentUpon>FolderSyncConfigurator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IProgressable.cs" />
+    <Compile Include="OneDrive\IProgressable.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Win32;
 
 namespace CloudSync
 {
@@ -25,6 +26,20 @@ namespace CloudSync
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
 			System.Diagnostics.Trace.WriteLine("App is start");
+			var t = Application.ResourceAssembly.GetName().Name;
+			var t2 = Application.ResourceAssembly.Location;
+			
 		}
+		/*
+		private void SetStartup()
+		{
+			RegistryKey rk = Registry.CurrentUser.OpenSubKey
+				("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+			if (chkStartUp.Checked)
+				rk.SetValue(AppName, Application.ExecutablePath);
+			else
+				rk.DeleteValue(AppName, false);
+		}*/
 	}
 }

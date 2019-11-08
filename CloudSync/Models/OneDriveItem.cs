@@ -75,7 +75,7 @@ namespace CloudSync.Models
 		[JsonIgnore]
 		public string SHA1Hash
 		{
-			get { return File["hashes"]["sha1Hash"]?.ToString(); }
+			get { return File["hashes"]?["sha1Hash"]?.ToString(); }
 		}
     }
 }

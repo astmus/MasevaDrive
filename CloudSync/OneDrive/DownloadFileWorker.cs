@@ -7,7 +7,7 @@ using System.Threading;
 using System.Net.Http;
 using System.IO;
 using System.Net;
-using CloudSync.OneDrive;
+using CloudSync;
 using CloudSync.Models;
 
 namespace CloudSync
@@ -17,15 +17,20 @@ namespace CloudSync
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		public string Link { get; set; }
 		public string Destination { get; set; }
-		private OneDriveClient owner;
-		public OneDriveSyncItem SyncItem;
+		public string Token { get; set; }
+		//private OneDriveClient owner;
+		//public OneDriveSyncItem SyncItem;
 		public bool DeleteOldestFileOnSuccess { get; set; } = false;
-		public DownloadFileWorker(OneDriveSyncItem syncItem, string destination, OneDriveClient owner) : base()
+
+		public DownloadFileWorker()
+		{
+		}
+
+		public DownloadFileWorker(string link, string destination, string token) : base()
         {
-            this.Link = syncItem.Link;
+            this.Link = link;
             this.Destination = destination;
-			this.owner = owner;
-			this.SyncItem = syncItem;
+			this.Token = token;
         }
 
         public override void DoWork()
@@ -33,7 +38,7 @@ namespace CloudSync
             WebClient client = new WebClient();
             client.DownloadProgressChanged += Client_DownloadProgressChanged;
             client.DownloadFileCompleted += Client_DownloadFileCompleted;
-            client.Headers[HttpRequestHeader.Authorization] = "Bearer " + owner.AccessToken;
+            client.Headers[HttpRequestHeader.Authorization] = "Bearer " + Token;
             try
             {
 				logger.Debug("start download of file " + Destination);
@@ -50,7 +55,7 @@ namespace CloudSync
 			if (e.Error == null)
 				RaiseCompleted();
 			else
-				RaiseFailed(e.Error.Message);
+				RaiseFailed(e.Error);
         }
 
         private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
@@ -60,7 +65,7 @@ namespace CloudSync
 
 		public override string ToString()
 		{
-			return String.Format("{0}",SyncItem);
+			return String.Format("{0}",Path.GetFileName(Destination));
 		}
 	}
 }

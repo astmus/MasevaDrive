@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="CloudSync.OneDriveFolderSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CloudSync"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<ListBox Margin="5"  x:Name="foldersListBox" MinHeight="100"  Grid.Column="0">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Grid x:Name="grid">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<CheckBox  Grid.ColumnSpan="3" DataContext="{Binding}" VerticalAlignment="Center" IsChecked="{Binding IsActive, Mode=TwoWay}"  Grid.Column="0"  x:Name="folderName"/>
+							<TextBlock VerticalAlignment="Center" IsHitTestVisible="False" Margin="20,0,0,0" Grid.Column="0" Text="{Binding Name}"/>
+							<TextBlock VerticalAlignment="Center" IsHitTestVisible="False" Margin="4,0,0,0" Grid.Column="1" Text="{Binding FormattedSize, StringFormat={}({0})}"/>
+							<TextBlock VerticalAlignment="Center" IsHitTestVisible="False" Margin="4,0,10,0"  Grid.Column="2" Text="{Binding PathToSync}"  x:Name="folderPath"/>
+						</Grid>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</Grid>
+	</Grid>
+</UserControl>

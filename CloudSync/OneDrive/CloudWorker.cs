@@ -15,19 +15,21 @@ namespace CloudSync
         public int CompletedPercent
         {
             get { return completedPercent; }
-            set
-            {
-                if (value != completedPercent)
-                {
-                    completedPercent = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }        
 
-        public virtual event Action<int> PercentCompleted;
-        public virtual event Action<IProgressable, ProgressableEventArgs> Completed;
-        public event PropertyChangedEventHandler PropertyChanged;        
+            set { if (value != completedPercent) { completedPercent = value; NotifyPropertyChanged(); } }
+        }
+
+		private string additionalInfo;
+		public string AdditionalInfo
+		{
+			get { return additionalInfo; }
+
+			set { if (value != additionalInfo) { additionalInfo = value; NotifyPropertyChanged(); } }
+		}
+
+		public virtual event Action<int> PercentCompleted;
+        public virtual event Action<CloudWorker, ProgressableEventArgs> Completed;
+		public event PropertyChangedEventHandler PropertyChanged;        
 
 		public abstract void DoWork();
         
@@ -36,10 +38,10 @@ namespace CloudSync
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        protected void RaiseFailed(string error)
+        protected void RaiseFailed(Exception error)
         {
             CompletedPercent = -1;
-			Completed?.Invoke(this, new ProgressableEventArgs() { Successfull = false, Error = new Exception(error) });  
+			Completed?.Invoke(this, new ProgressableEventArgs() { Successfull = false, Error = error });  
         }
 
         protected void RaisePercentCompleted(int i)

@@ -6,19 +6,19 @@
         xmlns:local="clr-namespace:CloudSync"
         xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="FolderSyncConfigurator" Height="600" Background="#FF303030"  Width="800" WindowStyle="None" BorderThickness="4" BorderBrush="#FF323232"  ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True">
+        Title="FolderSyncConfigurator" Height="650" Background="#FF303030"  Width="500" WindowStyle="None" BorderThickness="4" BorderBrush="#FF323232"  ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True">
 	<Window.Resources>
 		<Style TargetType="{x:Type Button}" x:Key="DefaultButton">
 			<Setter Property="Height" Value="45"/>
 			<Setter Property="Background" Value="#FF303030"/>
 			<Setter Property="Foreground" Value="#FF505050"/>
-			<Setter Property="FontSize" Value="18"/>
+			<Setter Property="FontSize" Value="16"/>
 			<Setter Property="FontWeight" Value="Heavy"/>
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="{x:Type Button}">
 						<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
-							<Border x:Name="Main" Background="{TemplateBinding Background}">
+							<Border x:Name="Main" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
 								<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
 							</Border>
 						</Border>
@@ -41,10 +41,11 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<ListBox Grid.Row="0" Grid.Column="0" BorderThickness="0,0,0,4" BorderBrush="#FF323232" SelectionMode="Multiple" Background="#FF282828"  x:Name="folders" HorizontalAlignment="Stretch" >
+		<ListBox Grid.Row="0" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Hidden"  BorderThickness="0,0,0,4" BorderBrush="#FF323232" SelectionMode="Multiple" Background="#FF282828"  x:Name="folders" HorizontalAlignment="Stretch" >
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="ListBoxItem">
 					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+					<Setter Property="IsSelected" Value="{Binding IsActive, Mode=TwoWay}"/>
 				</Style>
 			</ListBox.ItemContainerStyle>
 			<ListBox.ItemTemplate>
@@ -55,7 +56,7 @@
 								<ColumnDefinition Width="Auto"/>
 								<ColumnDefinition Width="Auto"/>
 								<ColumnDefinition Width="*"/>
-								<ColumnDefinition Width="Auto"/>
+								<ColumnDefinition Width="*"/>
 							</Grid.ColumnDefinitions>
 							<Grid.RowDefinitions>
 								<RowDefinition Height="Auto"/>
@@ -63,11 +64,11 @@
 							</Grid.RowDefinitions>
 							<CheckBox VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="4,0,0,0" Foreground="Gray" IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"  Grid.Column="0"  x:Name="folderName" Content="{Binding Name}"/>
 							<Label Foreground="Gray"  VerticalAlignment="Center" HorizontalAlignment="Left"  Margin="4,0,0,0" Grid.Column="1" Content="{Binding FormattedSize, StringFormat={}({0})}"/>
-							<StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3">
+							<StackPanel Name="StackHolder"  Orientation="Horizontal" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3">
 								<Label Foreground="Gray" Content="Destination path: " HorizontalAlignment="Left"/>
-								<Label Foreground="Gray"  VerticalAlignment="Center" Margin="4,0,0,0" HorizontalContentAlignment="Stretch" x:Name="folderPath"/>
+								<Label Foreground="Gray"  VerticalAlignment="Center" Margin="4,0,0,0" x:Name="folderPath" Content="{Binding Path=PathToSync, Mode=TwoWay}"/>
 							</StackPanel>
-							<Button Grid.Column="3" Padding="5,0,5,0" Margin="0,0,2,0"  Style="{StaticResource DefaultButton}" FontSize="16" FontWeight="Bold"  Grid.RowSpan="2"  x:Name="selectFolderButton" IsEnabled="{Binding ElementName=folderName, Path=IsChecked}"  Content="Select folder" Click="selectFolderButton_Click"/>
+							<Button Grid.Column="3"  HorizontalAlignment="Right"  Padding="10,0,10,0"  Style="{StaticResource DefaultButton}" FontSize="16" FontWeight="Bold"  Grid.RowSpan="2"  x:Name="selectFolderButton" IsEnabled="{Binding ElementName=folderName, Path=IsChecked}"  Content="Select folder" Click="selectFolderButton_Click"/>
 						</Grid>
 					</Border>
 				</DataTemplate>

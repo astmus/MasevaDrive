@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.ServiceModel;
-using CloudSync.OneDrive;
 using System.Runtime.InteropServices;
 
 namespace CloudSync
@@ -26,14 +25,14 @@ namespace CloudSync
 		OneDriveClient _currentClient;
 		OneDriveClient currentClient
 		{
-			get { return _currentClient ?? (_currentClient = Settings.Instance.Accounts.Values.First()); }
+			get { return _currentClient ?? (_currentClient = /*Settings.Instance.Accounts.Values.First())*/null); }
 			set { _currentClient = value; }
 		}
 
-		List<OneDriveSyncFolder> oneDriveFolders
+		List<OneDriveFolder> oneDriveFolders
         {
-            get { return Settings.Instance.FoldersForSync; }
-            set { Settings.Instance.FoldersForSync = value; }
+            get { return null;/*Settings.Instance.FoldersForSync;*/ }
+            set { Settings.Instance.Accounts = null; }
         }
 
         public ObservableCollection<IProgressable> currentWorkers { get; set; } = new ObservableCollection<IProgressable>();
@@ -56,15 +55,15 @@ namespace CloudSync
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-			foldersListBox.ItemsSource = oneDriveFolders;
+			/*foldersListBox.ItemsSource = oneDriveFolders;
 			foreach (var folder in oneDriveFolders)
 			{
 				folder.NewWorkerReady += OnNewWorkerReady;
 				folder.Sync();
-			}			
+			}*/			
 		}
 
-        private void OnNewWorkerReady(IProgressable worker)
+        private void OnNewWorkerReady(CloudWorker worker)
         {
             currentWorkers.Add(worker);
             worker.Completed += OnWorkerCompleted;        
@@ -72,7 +71,7 @@ namespace CloudSync
         }
 		
 
-        private void OnWorkerCompleted(IProgressable sender, ProgressableEventArgs args)
+        private void OnWorkerCompleted(CloudWorker sender, ProgressableEventArgs args)
         {
 			if (args.Successfull)
 				currentWorkers.Remove(sender);
@@ -163,7 +162,7 @@ namespace CloudSync
         {
 			//OneDriveAuthorizationWindow auth = new OneDriveAuthorizationWindow();
 			//currentClient = auth.Show();			
-			if (currentClient != null)
+			/*if (currentClient != null)
 			{
 				FolderSyncConfigurator window = new FolderSyncConfigurator(currentClient);
 				if (window.Show() != null)
@@ -176,7 +175,7 @@ namespace CloudSync
 						folder.Sync();
 					}
 				}
-			}
-        }
+			}*/
+		}
     }
 }

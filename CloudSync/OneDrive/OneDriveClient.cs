@@ -9,8 +9,10 @@ using System.Net;
 using CloudSync.Models;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Web;
 
-namespace CloudSync.OneDrive
+namespace CloudSync
 {
 	public class OneDriveClient
 	{
@@ -34,51 +36,33 @@ namespace CloudSync.OneDrive
 			return String.Format("client_id={0}&redirect_uri={1}&refresh_token={2}&grant_type=refresh_token",ClientID,RedirectUri,refreshToken);
 		}
 
-		public static OneDriveClient AcquireUserByAuthorizationCode(string code)
+		public static OneDriveClient AcquireAuthorizationData(string code)
 		{
-			string userResult;
+			string dataResult;
 			using (var wc = new WebClient())
 			{
 				string body = OneDriveClient.MakeAcquireTokenByAuthorizationCodeContent(code);
 				wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-				userResult = wc.UploadString("https://login.microsoftonline.com/common/oauth2/v2.0/token", body);
+				dataResult = wc.UploadString("https://login.microsoftonline.com/common/oauth2/v2.0/token", body);
 			}
 			try
 			{
-				OneDriveClient newClient = JsonConvert.DeserializeObject<OneDriveClient>(userResult);
-				if (Settings.Instance.Accounts.ContainsKey(newClient.UserData.Id))
-					Settings.Instance.Accounts[newClient.UserData.Id] = newClient;
-				else
-					Settings.Instance.Accounts.Add(newClient.UserData.Id,newClient);
-				return newClient;
+				return new OneDriveClient(JsonConvert.DeserializeObject<Credentials>(dataResult));				
 			}
 			catch (System.Exception ex)
 			{
 				return null;
 			}
 		}
-#endregion
+		#endregion
 
-		[JsonProperty("token_type")]
-		public string TokenType { get; set; }
-		[JsonProperty("scope")]
-		[JsonConverter(typeof(StringToListJsonConverter))]
-		public string[] Scopes { get; set; }
-		[JsonProperty("expires_in")]
-		[JsonConverter(typeof(TimeSpanJsonConverter))]
-		public TimeSpan Expires { get; set; }
-		[JsonProperty("ext_expires_in")]
-		public int ExpiresIn { get; set; }
-		[JsonProperty("access_token")]
-		public string AccessToken { get; set; }
-		[JsonProperty("refresh_token")]
-		public string RefreshToken { get; set; }
+		
 
 		public OwnerInfo _userData;
 		public OwnerInfo UserData {
 			get
 			{
-				return _userData ?? (_userData = new OwnerInfo(AccessToken));
+				return _userData ?? (_userData = CredentialData?.AccessToken != null ? new OwnerInfo(CredentialData?.AccessToken) : null);
 			}
 			set
 			{
@@ -86,11 +70,43 @@ namespace CloudSync.OneDrive
 			}
 		}
 
-		public async Task<List<OneDriveItem>> GetRootFolders()
+		private Credentials credentialData;
+		public Credentials CredentialData
+		{
+			get	{ return credentialData; }
+
+			set	{
+
+				credentialData = value;
+				if (credentialData != null)
+					inetClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", credentialData.AccessToken);
+			}
+		}
+
+		private HttpClient inetClient;
+
+		public OneDriveClient()
+		{
+			inetClient = new HttpClient();
+		}
+
+		public OneDriveClient(Credentials accessData)
+		{
+			credentialData = accessData;
+			if (accessData.AccessToken != null)
+				inetClient = new HttpClient()
+				{
+					DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Bearer", accessData.AccessToken) }
+				};
+			else
+				throw new Exception("Wrong credentials");
+		}
+
+		public async Task<List<OneDriveFolder>> RequestRootFolders()
 		{
 			var result = JObject.Parse(await GetHttpContent("https://graph.microsoft.com/v1.0/me/drive/root/children?select=id,name,size,folder,createdBy"));
 			var data = result["value"]?.Where(w => w["folder"] != null);
-			List<OneDriveItem> folders = data.Select(s => s.ToObject<OneDriveItem>()).ToList();
+			List<OneDriveFolder> folders = data.Select(s => s.ToObject<OneDriveFolder>()).ToList();
 			return folders;
 		}
 
@@ -99,19 +115,18 @@ namespace CloudSync.OneDrive
 			if (item == null)
 				return false;
 			string deleteUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}", item.Id);
-			using (HttpClient client = new HttpClient())
-			{
+			
 				System.Net.Http.HttpResponseMessage response;
 				try
 				{
-					HttpRequestMessage request = CreateRequestWithAuthorizationData(deleteUrl, HttpMethod.Delete);
-					response = await client.SendAsync(request);
+					//HttpRequestMessage request = CreateRequestWithAuthorizationData(deleteUrl, HttpMethod.Delete);
+					response = await inetClient.DeleteAsync(deleteUrl);
 					if (response.StatusCode == HttpStatusCode.Unauthorized)
 					{
 						RenewAccessToken();
-						request = CreateRequestWithAuthorizationData(deleteUrl, HttpMethod.Delete);
-						response = await client.SendAsync(request);						
-					}
+						//request = CreateRequestWithAuthorizationData(deleteUrl, HttpMethod.Delete);
+						response = await inetClient.DeleteAsync(deleteUrl);
+				}
 					if (response.StatusCode != HttpStatusCode.NoContent)
 						logger.Warn("Delete file failed StatusCode = " + response.StatusCode + " for item " + item.ToString());
 					else
@@ -123,7 +138,7 @@ namespace CloudSync.OneDrive
 					logger.Warn(ex, "Delete item failed reason {0}", ex);
 					return false;
 				}
-			}
+			
 		}
 
 		/// <summary>
@@ -158,64 +173,81 @@ namespace CloudSync.OneDrive
 		/// <returns>String containing the results of the GET operation</returns>
 		public async Task<string> GetHttpContent(string url)
 		{
-			using (var httpClient = new System.Net.Http.HttpClient())
-			{
 				System.Net.Http.HttpResponseMessage response;
 				try
 				{
-					var request = CreateRequestWithAuthorizationData(url, HttpMethod.Get);
-					response = await httpClient.SendAsync(request);
+					//var request = CreateRequestWithAuthorizationData(url, HttpMethod.Get);
+					response = await inetClient.GetAsync(url);
 					if (response.StatusCode == HttpStatusCode.Unauthorized)
 					{
-						RenewAccessToken();
-						request = CreateRequestWithAuthorizationData(url, HttpMethod.Get);
-						response = await httpClient.SendAsync(request);
+						RenewAccessToken();						
+						//request = CreateRequestWithAuthorizationData(url, HttpMethod.Get);
+						response = await inetClient.GetAsync(url);
 					}
 					var content = await response.Content.ReadAsStringAsync();
 					return content;
 				}
 				catch (Exception ex)
 				{
-					return ex.ToString();
+					if (ex is HttpException)
+						throw ex;
 				}
-			}			
+			return null;
+						
 		}		
 
-		private HttpRequestMessage CreateRequestWithAuthorizationData(string url, HttpMethod methodType)
+		/*private HttpRequestMessage CreateRequestWithAuthorizationData(string url, HttpMethod methodType)
 		{
 			var request = new System.Net.Http.HttpRequestMessage(methodType, url);
 			request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", AccessToken);
 			return request;
-		}
+		}*/
 
 		private void RenewAccessToken()
 		{
 			string userResult;
 			using (var wc = new WebClient())
 			{
-				string body = OneDriveClient.MakeRefreshTokenRequestBody(RefreshToken);
+				if (CredentialData == null)
+					throw new HttpException((int)HttpStatusCode.Unauthorized," Credential data is empty");
+				string body = OneDriveClient.MakeRefreshTokenRequestBody(CredentialData.RefreshToken);
 				wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
 				userResult = wc.UploadString("https://login.microsoftonline.com/common/oauth2/v2.0/token", body);
 			}
 			try
 			{
-				var client = JsonConvert.DeserializeObject<OneDriveClient>(userResult);
-				this.AccessToken = client.AccessToken;
-				this.Expires = client.Expires;
-				this.ExpiresIn = client.ExpiresIn;
-				this.RefreshToken = client.RefreshToken;
-				this.Scopes = client.Scopes;
-				this.TokenType = client.TokenType;
+				CredentialData = JsonConvert.DeserializeObject<Credentials>(userResult);				
 			}
 			catch (System.Exception ex)
 			{				
+				if (ex is WebException)
+					throw ex;
 			}
 		}
 
 		public void LogOut()
 		{
 			//GET https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri={redirect-uri}
-		}		
+		}
+
+		[JsonObject]
+		public class Credentials
+		{
+			[JsonProperty("token_type")]
+			public string TokenType { get; set; }
+			[JsonProperty("scope")]
+			[JsonConverter(typeof(StringToListJsonConverter))]
+			public string[] Scopes { get; set; }
+			[JsonProperty("expires_in")]
+			[JsonConverter(typeof(TimeSpanJsonConverter))]
+			public TimeSpan Expires { get; set; }
+			[JsonProperty("ext_expires_in")]
+			public int ExpiresIn { get; set; }
+			[JsonProperty("access_token")]
+			public string AccessToken { get; set; }
+			[JsonProperty("refresh_token")]
+			public string RefreshToken { get; set; }
+		}
 
 		public class OwnerInfo
 		{
@@ -231,6 +263,7 @@ namespace CloudSync.OneDrive
 			}
 			public OwnerInfo(string accessToken)
 			{
+				if (accessToken == null) return;
 				using (var httpClient = new System.Net.Http.HttpClient())
 				{
 					System.Net.Http.HttpResponseMessage response;

@@ -1,4 +1,4 @@
-﻿using CloudSync.OneDrive;
+﻿using CloudSync;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.Identity;
+using System.Diagnostics;
+using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace CloudSync
 {
@@ -25,8 +29,7 @@ namespace CloudSync
 		{
 			Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/1.ico")).Stream),
 			Text = "Cloud Sync"
-		};
-		OneDriveClient Client;
+		};		
 
 		private Xceed.Wpf.Toolkit.MessageBox InitializeErrorMessageBox()
 		{
@@ -57,6 +60,22 @@ namespace CloudSync
 		{
 			InitializeComponent();
 			trayIcon.Click += RestoreWindow;
+			foreach (var acount in Settings.Instance.Accounts)
+				acount.NeedAuthorization += OnAcountNeedAuthorization;
+			ConnectedAccounts.ItemsSource = Settings.Instance.Accounts;			
+			this.Closing += OnRootWindowClosing;
+		}			
+		
+		private void OnAcountNeedAuthorization(OneDriveAccount account)
+		{
+			BrowserTitle.Text = "Reauthorization for " + account.Client.UserData.DisplayName;
+			Settings.Instance.Accounts.Remove(account);
+			OnConnectButtonClick(null, null);
+		}
+
+		private void OnRootWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			Settings.Instance.Save();
 		}
 
 		private void RestoreWindow(object sender, EventArgs e)
@@ -91,12 +110,59 @@ namespace CloudSync
 		{
 			this.Close();
 		}
-
+		
+		//public static IPublicClientApplication PublicClientApp;
 		private void OnConnectButtonClick(object sender, RoutedEventArgs e)
-		{
+		{			
 			BrowserHolder.Visibility = Visibility.Visible;
-			var authStr = OneDriveClient.GetAuthorizationRequestUrl();
+			var authStr = OneDriveClient.GetAuthorizationRequestUrl();			
 			Browser.Navigate(authStr);
+			
+
+			/*	PublicClientApp = PublicClientApplicationBuilder.Create(ClientId).WithAuthority(AzureCloudInstance.AzurePublic, Tenant).Build();
+				var CopyauthResult = await PublicClientApp.AcquireTokenInteractive(new List<string>() { "user.read", "files.readwrite", "offline_access" }).ExecuteAsync();
+
+				string Secret = "GsMUnEBN6CYR7PqhE4VAjGneX]cS.4=_";
+
+				//In this example, I am attempting to access the Graph API
+				string[] scopes = new string[] { "https://graph.microsoft.com/.default"};
+				string url = String.Format("https://login.microsoftonline.com/common/oauth2/v2.0/token");
+				string redirectURI = "https://login.live.com/oauth20_desktop.srf";
+
+			//Instantiating and adding properties to Confidential Client
+
+			IConfidentialClientApplication app = ConfidentialClientApplicationBuilder.Create("73b0cdce-a88e-414a-8bb6-571accae6e8a").WithClientSecret(Secret).WithRedirectUri(redirectURI).Build();
+				/*Task<Uri> authCodeURL = app.GetAuthorizationRequestUrl(scopes).WithAuthority(url, true).ExecuteAsync();
+				var r = await authCodeURL;*/
+			//Acquiring token using Client Credentials
+
+			/*Task<AuthenticationResult> tokenTask = app.AcquireTokenForClient(scopes).WithAuthority(url, true).ExecuteAsync();
+			var CopyauthResult = await tokenTask;
+			app.GetAccountAsync(app.UserTokenCache);*/
+		}
+
+		private void ClearIECache()
+		{
+			ProcessStartInfo p = new ProcessStartInfo("rundll32.exe", "InetCpl.cpl,ClearMyTracksByProcess 8");
+			p.CreateNoWindow = true;
+			p.UseShellExecute = false;
+			p.RedirectStandardOutput = true;
+			p.RedirectStandardInput = true;
+			p.RedirectStandardError = true;
+			p.WindowStyle = ProcessWindowStyle.Hidden;
+			
+			System.Diagnostics.Process.Start(p);
+			//Cookies
+			p.Arguments = "InetCpl.cpl,ClearMyTracksByProcess 2";			
+			//History
+			//System.Diagnostics.Process.Start(p);
+			//p.Arguments = "InetCpl.cpl,ClearMyTracksByProcess 16";
+			//Form(Data)
+			System.Diagnostics.Process.Start(p);
+			p.Arguments = "InetCpl.cpl,ClearMyTracksByProcess 32";
+			//Passwords
+			var result = System.Diagnostics.Process.Start(p);
+			result.WaitForExit();
 		}
 
 		private void OnWebBrowserNavigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
@@ -107,22 +173,60 @@ namespace CloudSync
 			{
 				try
 				{
-					Client = OneDriveClient.AcquireUserByAuthorizationCode(code);
+					var newAccount = new OneDriveAccount(OneDriveClient.AcquireAuthorizationData(code));
+					var userId = newAccount.Client.UserData.Id;
+					var existingConnectedUser = Settings.Instance.Accounts.FirstOrDefault(a => a.Client.UserData.Id == userId);
+					if (existingConnectedUser == null)
+						Settings.Instance.Accounts.Add(newAccount);
+					else
+						existingConnectedUser.Client.CredentialData = newAccount.Client.CredentialData;
+
 					BrowserHolder.Visibility = Visibility.Collapsed;
-					ConnectButton.Visibility = Visibility.Collapsed;
+					ClearIECache();
 				}
 				catch (System.Exception ex)
 				{
 					ErrorMessageBox.ShowDialog();
-				}
+				}				
 			}			
 			if (dict.Get("error") != null)
-			{
-				
+			{				
 				BrowserHolder.Visibility = Visibility.Collapsed;
 				ErrorMessageBox.ShowDialog();
+				Monitor.Exit(Browser);
 			}
+			
+		}
 
+		private void Caption_MouseDown(object sender, MouseButtonEventArgs e)
+		{
+			this.DragMove();
+		}
+
+		private void OnSelectedAccountChanged(object sender, SelectionChangedEventArgs e)
+		{
+			var SelectedAccount = ConnectedAccounts.SelectedItem as OneDriveAccount;
+			if (SelectedAccount != null)
+			{
+				FolderSyncConfigurator window = new FolderSyncConfigurator(SelectedAccount);
+				if (window.ShowDialog() == true)
+				{
+					SelectedAccount.StartSyncActiveFolders();
+				}
+			}
+			ConnectedAccounts.SelectedItem = null;
+		}
+
+		private void OnTryAgainPressed(object sender, RoutedEventArgs e)
+		{
+			
+
+		}	
+
+		private void OnWindowLoaded(object sender, RoutedEventArgs e)
+		{
+			foreach (var account in Settings.Instance.Accounts.ToList())
+				account.StartSyncActiveFolders();
 		}
 	}
 }

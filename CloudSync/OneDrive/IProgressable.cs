@@ -11,8 +11,8 @@ namespace CloudSync
     public interface IProgressable : INotifyPropertyChanged
     {
         string TaskName { get; set; }
-        event Action<int> PercentCompleted;
-        event Action<IProgressable, ProgressableEventArgs> Completed;
+		string AdditionalInfo { get; set; }
+        event Action<int> PercentCompleted;        
         void DoWork();
         int CompletedPercent { get; set; }
     }
