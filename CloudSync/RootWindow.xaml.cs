@@ -1,22 +1,10 @@
-﻿using CloudSync;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Microsoft.Identity;
-using System.Diagnostics;
-using System.Collections.ObjectModel;
-using System.Threading;
 
 namespace CloudSync
 {
@@ -173,7 +161,7 @@ namespace CloudSync
 			{
 				try
 				{
-					var newAccount = new OneDriveAccount(OneDriveClient.AcquireAuthorizationData(code));
+					var newAccount = new OneDriveAccount(OneDriveClient.AcquireClientByCode(code));
 					var userId = newAccount.Client.UserData.Id;
 					var existingConnectedUser = Settings.Instance.Accounts.FirstOrDefault(a => a.Client.UserData.Id == userId);
 					if (existingConnectedUser == null)
@@ -193,9 +181,7 @@ namespace CloudSync
 			{				
 				BrowserHolder.Visibility = Visibility.Collapsed;
 				ErrorMessageBox.ShowDialog();
-				Monitor.Exit(Browser);
-			}
-			
+			}			
 		}
 
 		private void Caption_MouseDown(object sender, MouseButtonEventArgs e)
