@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
+using System.Net;
 
 namespace CloudSync
 {
@@ -21,6 +22,7 @@ namespace CloudSync
 		{
 			Log.Fatal(e.Exception, "Unhandled exception: {0}", e.Exception);
 			LogManager.Flush();
+			
 		}
 
 		private void Application_Startup(object sender, StartupEventArgs e)

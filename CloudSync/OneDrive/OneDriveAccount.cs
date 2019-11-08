@@ -41,10 +41,11 @@ namespace CloudSync
 			if (RootFolders != null)
 				foreach (var folder in RootFolders)
 				{
-					if (folder.IsActive && Directory.Exists(folder.PathToSync) && !folder.HasWorkerReadySubscribers)
+					if (folder.IsActive && Directory.Exists(folder.PathToSync))
 					{						
-						folder.NewWorkerReady += OnNewWorkerReady;
-						folder.Sync();
+						if (!folder.HasWorkerReadySubscribers)
+							folder.NewWorkerReady += OnNewWorkerReady;
+						folder.StartSync();
 					}
 				}
 		}

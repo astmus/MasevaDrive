@@ -128,6 +128,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Interfaces\ICloudStreamProvider.cs" />
     <Compile Include="OneDrive\OneDriveAccount.cs" />
     <Compile Include="Converters\PercentCompletedToEnableConverter.cs" />
     <Compile Include="Converters\StringToListJsonConverter.cs" />
@@ -168,7 +169,7 @@
     <Compile Include="Windows\FolderSyncConfigurator.xaml.cs">
       <DependentUpon>FolderSyncConfigurator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OneDrive\IProgressable.cs" />
+    <Compile Include="Interfaces\IProgressable.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -176,7 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\OneDriveItem.cs" />
-    <Compile Include="OneDrive\OneDriveSyncFolder.cs" />
+    <Compile Include="OneDrive\OneDriveFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

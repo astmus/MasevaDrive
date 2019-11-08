@@ -46,6 +46,24 @@ namespace CloudSync.Models
 			return String.Format("Name = {0}; Size = {1}; Owner = {2}",Name,Size,OwnerId);
 		}
 	}
+
+	public static class UIntExt
+	{
+		public static uint AsKB(this uint value)
+		{
+			return (uint)Math.Round(value / 1024.0);
+		}
+
+		public static uint AsMB(this uint value)
+		{
+			return (uint)Math.Round(value.AsKB() / 1024.0);
+		}
+
+		public static uint AsGB(this uint value)
+		{
+			return (uint)Math.Round(value.AsMB() / 1024.0);
+		}
+	}
     
     public class OneDriveSyncItem : OneDriveItem
     {           
