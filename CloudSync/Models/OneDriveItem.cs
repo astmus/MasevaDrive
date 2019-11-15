@@ -6,15 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace CloudSync.Models
 {
 	[JsonObject]
-	public class OneDriveItem
+	public class OneDriveItem : IEqualityComparer<OneDriveItem>
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public uint Size { get; set; }
+        public long Size { get; set; }
 		public JObject Folder { get; set; }
 		public JObject File { get; set; }
 		public JObject Deleted { get; set; }
@@ -39,29 +40,39 @@ namespace CloudSync.Models
                 double num = Math.Round(bytes / Math.Pow(1024, place), 1);
                 return (Math.Sign(Size) * num)+ " "+ suf[place];
             }
-        }
+        }		
 
 		public override string ToString()
 		{
 			return String.Format("Name = {0}; Size = {1}; Owner = {2}",Name,Size,OwnerId);
 		}
+
+		bool IEqualityComparer<OneDriveItem>.Equals(OneDriveItem x, OneDriveItem y)
+		{
+			return x.Id == y.Id;
+		}
+
+		int IEqualityComparer<OneDriveItem>.GetHashCode(OneDriveItem obj)
+		{
+			return obj.Id.GetHashCode();
+		}
 	}
 
 	public static class UIntExt
 	{
-		public static uint AsKB(this uint value)
+		public static long AsKB(this long value)
 		{
-			return (uint)Math.Round(value / 1024.0);
+			return (long)Math.Round(value / 1024.0);
 		}
 
-		public static uint AsMB(this uint value)
+		public static long AsMB(this long value)
 		{
-			return (uint)Math.Round(value.AsKB() / 1024.0);
+			return (long)Math.Round(value.AsKB() / 1024.0);
 		}
 
-		public static uint AsGB(this uint value)
+		public static long AsGB(this long value)
 		{
-			return (uint)Math.Round(value.AsMB() / 1024.0);
+			return (long)Math.Round(value.AsMB() / 1024.0);
 		}
 	}
     

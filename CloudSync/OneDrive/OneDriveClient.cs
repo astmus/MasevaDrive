@@ -64,8 +64,8 @@ namespace CloudSync
 		public OwnerInfo _userData;
 		public OwnerInfo UserData
 		{
-			get { return _userData;	}
-			set	{ _userData = value; }
+			get { return _userData; }
+			set { _userData = value; }
 		}
 
 		private Credentials credentialData;
@@ -92,9 +92,9 @@ namespace CloudSync
 		public OneDriveClient()
 		{
 			clientHandler = new HttpClientHandler();
-			clientHandler.MaxConnectionsPerServer = 40;			
+			clientHandler.MaxConnectionsPerServer = 40;
 			//clientHandler.MaxRequestContentBufferSize = 16348;
-			inetClient = new HttpClient(clientHandler);			
+			inetClient = new HttpClient(clientHandler);
 		}
 
 		~OneDriveClient()
@@ -143,7 +143,7 @@ namespace CloudSync
 				response = await inetClient.DeleteAsync(deleteUrl);
 				if (response.StatusCode == HttpStatusCode.Unauthorized)
 				{
-					RenewAccessToken();
+					await RenewAccessToken();
 					//request = CreateRequestWithAuthorizationData(deleteUrl, HttpMethod.Delete);
 					response = await inetClient.DeleteAsync(deleteUrl);
 				}
@@ -200,7 +200,7 @@ namespace CloudSync
 				response = await inetClient.GetAsync(url);
 				if (response.StatusCode == HttpStatusCode.Unauthorized)
 				{
-					RenewAccessToken();
+					await RenewAccessToken();
 					//request = CreateRequestWithAuthorizationData(url, HttpMethod.Get);
 					response = await inetClient.GetAsync(url);
 				}
@@ -215,26 +215,35 @@ namespace CloudSync
 			return null;
 		}
 
-		private void RenewAccessToken()
+		private Task currentRenewer = null;
+		private Task RenewAccessToken()
 		{
-			string userResult;
-			using (var wc = new WebClient())
+			if (currentRenewer != null)
+				return currentRenewer;
+			else
+				currentRenewer = Task.Run(() =>
 			{
-				if (CredentialData == null)
-					throw new HttpException((int)HttpStatusCode.Unauthorized, " Credential data is empty");
-				string body = OneDriveClient.MakeRefreshTokenRequestBody(CredentialData.RefreshToken);
-				wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-				userResult = wc.UploadString("https://login.microsoftonline.com/common/oauth2/v2.0/token", body);
-			}
-			try
-			{
-				CredentialData = JsonConvert.DeserializeObject<Credentials>(userResult);
-			}
-			catch (System.Exception ex)
-			{
-				if (ex is WebException)
-					throw ex;
-			}
+				string userResult;
+				using (var wc = new WebClient())
+				{
+					if (CredentialData == null)
+						throw new HttpException((int)HttpStatusCode.Unauthorized, " Credential data is empty");
+					string body = OneDriveClient.MakeRefreshTokenRequestBody(CredentialData.RefreshToken);
+					wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+					userResult = wc.UploadString("https://login.microsoftonline.com/common/oauth2/v2.0/token", body);
+				}
+				try
+				{
+					CredentialData = JsonConvert.DeserializeObject<Credentials>(userResult);
+					CredentialData.ObtainedTime = DateTime.Now;
+				}
+				catch (System.Exception ex)
+				{
+					if (ex is WebException)
+						throw ex;
+				}
+			}).ContinueWith((t) => currentRenewer = null);
+			return currentRenewer;
 		}
 
 		public void LogOut()
@@ -242,10 +251,21 @@ namespace CloudSync
 			//GET https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri={redirect-uri}
 		}
 
-		public Task<Stream> GetStreamToFileAsync(string url)
+		public async Task<Stream> GetStreamToFileAsync(string url)
 		{
-			return inetClient.GetStreamAsync(url);
-			
+			//return inetClient.GetStreamAsync(url);
+			//return Task.Run<Stream>(() =>
+			//{
+			if (currentRenewer != null)
+				currentRenewer.Wait();
+			if (CredentialData.IsValid())
+				return await inetClient.GetStreamAsync(url);
+			else
+				await RenewAccessToken();
+			return await inetClient.GetStreamAsync(url);
+			//});
+
+
 			/*return Task.Run<Stream>(() =>
 			{
 				return inetClient.GetStreamAsync(url);
@@ -279,6 +299,12 @@ namespace CloudSync
 			public string AccessToken { get; set; }
 			[JsonProperty("refresh_token")]
 			public string RefreshToken { get; set; }
+			[JsonProperty]
+			public DateTime ObtainedTime { get; set; }
+			public bool IsValid()
+			{
+				return (DateTime.Now - ObtainedTime) < Expires;
+			}			
 		}
 
 		public class OwnerInfo

@@ -8,7 +8,7 @@
 		xmlns:convert="clr-namespace:CloudSync.Converters"
         mc:Ignorable="d"
 		x:Name="_this"
-        Title="Synchronizer" Loaded="OnWindowLoaded"  Height="600" Width="800" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" BorderThickness="4,4,4,4" BorderBrush="#FF323232" Background="#FF282828" StateChanged="OnWindowStateChanged"  >
+        Title="Synchronizer" Height="600" Width="800" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" BorderThickness="4,4,4,4" BorderBrush="#FF323232" Background="#FF282828" StateChanged="OnWindowStateChanged"  >
 	<Window.Resources>
 		<ResourceDictionary>
 			<convert:WorkerToBackgroundConverter x:Key="WorkerConverter"/>

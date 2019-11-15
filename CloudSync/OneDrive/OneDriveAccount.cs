@@ -43,6 +43,7 @@ namespace CloudSync
 				foreach (var worker in CurrentWorkers.Where(worker => (worker.CompletedPercent < 100)))
 				{
 					worker.CancelWork();
+					worker.Dismantle();
 				}
 			}
 		}

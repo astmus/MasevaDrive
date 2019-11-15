@@ -53,7 +53,16 @@ namespace CloudSync
 				acount.NeedAuthorization += OnAcountNeedAuthorization;
 			ConnectedAccounts.ItemsSource = Settings.Instance.Accounts;			
 			System.Windows.Application.Current.Exit += OnApplicationExit;
+			System.Windows.Application.Current.MainWindow.Loaded += OnMainWindowLoaded;
 		}
+
+		private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+		{
+			Settings.Instance.Accounts.ToList().ForEach(account =>
+			{
+				account.StartSyncActiveFolders();
+			});
+		}		
 
 		private void OnApplicationExit(object sender, ExitEventArgs e)
 		{
@@ -210,12 +219,6 @@ namespace CloudSync
 		{
 			
 
-		}	
-
-		private void OnWindowLoaded(object sender, RoutedEventArgs e)
-		{
-			foreach (var account in Settings.Instance.Accounts.ToList())
-				account.StartSyncActiveFolders();
-		}
+		}		
 	}
 }

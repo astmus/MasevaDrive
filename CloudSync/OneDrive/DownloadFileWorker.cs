@@ -11,6 +11,7 @@ using CloudSync;
 using CloudSync.Models;
 using CloudSync.Interfaces;
 using System.Windows.Threading;
+using CloudSync.Framework.Exceptions;
 
 namespace CloudSync
 {
@@ -45,6 +46,11 @@ namespace CloudSync
 			System.Diagnostics.Debug.WriteLine(DateTime.Now.TimeOfDay.ToString()+"("+TaskWithWork.Id+")" + TaskWithWork.IsCompleted.ToString() + TaskWithWork.Status);
 			TaskWithWork.ContinueWith((t) => { System.Diagnostics.Debug.WriteLine(DateTime.Now.TimeOfDay.ToString()+ "(" + TaskWithWork.Id + ")" + t.IsCompleted.ToString() + t.Status); });
 			return TaskWithWork;
+		}
+
+		public override void Dismantle()
+		{
+			RaiseFailed(new DismantileWorkerException());
 		}
 
 		public override void CancelWork()

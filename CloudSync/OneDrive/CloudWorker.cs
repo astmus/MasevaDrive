@@ -36,6 +36,7 @@ namespace CloudSync
 		public event PropertyChangedEventHandler PropertyChanged;
 		public virtual Task TaskWithWork { get; protected set; }
 		public abstract void CancelWork();
+		public abstract void Dismantle();
 		public abstract Task DoWorkAsync();
         
         protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
