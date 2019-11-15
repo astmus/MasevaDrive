@@ -11,6 +11,10 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Web;
 using System.Net;
+using System.Collections.Concurrent;
+using System.Windows.Threading;
+using System.Threading;
+using System.Windows.Data;
 
 namespace CloudSync
 {
@@ -23,11 +27,24 @@ namespace CloudSync
 
 		[JsonIgnore]
 		public ObservableCollection<CloudWorker> CurrentWorkers { get; set; } = new ObservableCollection<CloudWorker>();
-		#endregion		
+		#endregion
+		private object currentWorkersLock = new object();
 
 		public OneDriveAccount(OneDriveClient client)
 		{
-			Client = client;			
+			Client = client;
+			BindingOperations.EnableCollectionSynchronization(CurrentWorkers, currentWorkersLock);
+		}		
+
+		public void CancelAndDestructAllActiveWorkers()
+		{
+			lock (currentWorkersLock)
+			{
+				foreach (var worker in CurrentWorkers.Where(worker => (worker.CompletedPercent < 100)))
+				{
+					worker.CancelWork();
+				}
+			}
 		}
 
 		public Task<List<OneDriveFolder>> RequestRootFolders()
@@ -50,18 +67,29 @@ namespace CloudSync
 				}
 		}
 
+		static Dispatcher UIdispatcher = System.Windows.Application.Current.Dispatcher as Dispatcher;
 		private void OnNewWorkerReady(CloudWorker worker)
 		{
-			CurrentWorkers.Add(worker);
-			worker.Completed += OnWorkerCompleted;
-			worker.DoWork();
+			worker.Completed += OnWorkerCompleted;			
+			worker.DoWorkAsync();			
+
+			//if (UIdispatcher.CheckAccess())
+				CurrentWorkers.Add(worker);
+			//else
+				//UIdispatcher.Invoke(() => { CurrentWorkers.Add(worker); });
 		}
 
 		private void OnWorkerCompleted(CloudWorker worker, ProgressableEventArgs e)
 		{
-			if (e.Successfull)
+			if (worker is DownloadFileWorker)
 			{
-				CurrentWorkers.Remove(worker);			
+				if (e.Successfull)
+				{
+					//if (UIdispatcher.CheckAccess())
+						CurrentWorkers.Remove(worker);
+					//else
+					//	UIdispatcher.Invoke(() => { CurrentWorkers.Remove(worker); });
+				}				
 			}			
 		}
 	}

@@ -59,7 +59,7 @@ namespace CloudSync
 				return null;
 			}
 		}
-		#endregion		
+		#endregion
 
 		public OwnerInfo _userData;
 		public OwnerInfo UserData
@@ -95,7 +95,6 @@ namespace CloudSync
 			clientHandler.MaxConnectionsPerServer = 40;			
 			//clientHandler.MaxRequestContentBufferSize = 16348;
 			inetClient = new HttpClient(clientHandler);			
-			clientHandler = new HttpClientHandler();
 		}
 
 		~OneDriveClient()
@@ -203,7 +202,7 @@ namespace CloudSync
 				{
 					RenewAccessToken();
 					//request = CreateRequestWithAuthorizationData(url, HttpMethod.Get);
-					response = await inetClient.GetAsync(url);				
+					response = await inetClient.GetAsync(url);
 				}
 				var content = await response.Content.ReadAsStringAsync();
 				return content;
@@ -246,6 +245,7 @@ namespace CloudSync
 		public Task<Stream> GetStreamToFileAsync(string url)
 		{
 			return inetClient.GetStreamAsync(url);
+			
 			/*return Task.Run<Stream>(() =>
 			{
 				return inetClient.GetStreamAsync(url);
@@ -259,7 +259,7 @@ namespace CloudSync
 				}
 				return null;*/
 			//});
-			
+
 		}
 
 		[JsonObject]

@@ -10,6 +10,7 @@ using System.Net;
 using CloudSync;
 using CloudSync.Models;
 using CloudSync.Interfaces;
+using System.Windows.Threading;
 
 namespace CloudSync
 {
@@ -18,13 +19,11 @@ namespace CloudSync
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		public string Link { get; set; }
 		public string Destination { get; private set; }
-		public string Token { get; set; }
 		public Exception LastException { get; private set; }
-		//private OneDriveClient owner;
 
-		public bool DeleteOldestFileOnSuccess { get; set; } = false;
 		private ICloudStreamProvider streamProvider;
-		private OneDriveSyncItem syncItem;
+		private CancellationTokenSource cancelTokenSource;		
+		public OneDriveSyncItem SyncItem { get; private set; }
 
 		public DownloadFileWorker()
 		{
@@ -32,64 +31,67 @@ namespace CloudSync
 
 		public DownloadFileWorker(OneDriveSyncItem item, string destination, ICloudStreamProvider provider) : base()
         {
-            this.syncItem = item;
+            this.SyncItem = item;
             this.Destination = destination;
 			this.streamProvider = provider;
         }
 
-        public async override void DoWork()
-        {
-			int bufferSize = 4096;
-
-			if (syncItem.Size.AsMB() > 50)
-				bufferSize = 16384;
-			else
-			if (syncItem.Size.AsMB() > 10)
-				bufferSize = 8192;
-
-			using (Stream contentStream = await streamProvider.GetStreamToFileAsync(syncItem.Link), fileStream = new FileStream(Destination, FileMode.Create, FileAccess.Write, FileShare.None, 8192, true))
-			{
-				var totalRead = 0L;
-				int readed = 0;
-				var buffer = new byte[bufferSize];
-
-				while ((readed = await contentStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
-				{
-					await fileStream.WriteAsync(buffer, 0, readed);
-					totalRead += readed;
-					CompletedPercent = (int)Math.Truncate(((double)totalRead / syncItem.Size) * 100);
-				}
-				contentStream.Close();
-			}
-			/*WebClient client = new WebClient();
-            client.DownloadProgressChanged += Client_DownloadProgressChanged;
-            client.DownloadFileCompleted += Client_DownloadFileCompleted;
-            client.Headers[HttpRequestHeader.Authorization] = "Bearer " + Token;
-            try
-            {
-				logger.Debug("start download of file " + Destination);
-                client.DownloadFileTaskAsync(Link, Destination);
-            }
-            catch (System.Exception ex)
-            {
-				logger.Warn(ex, "DoWork failed reason = {0}", ex);
-            }*/
-
+		public override Task DoWorkAsync()
+		{
+			cancelTokenSource = new CancellationTokenSource();
+			var cancelToken = cancelTokenSource.Token;
+			currentContext = SynchronizationContext.Current as DispatcherSynchronizationContext;
+			TaskWithWork = Task.Run(() => { DoWork(cancelToken); }, cancelToken);
+			System.Diagnostics.Debug.WriteLine(DateTime.Now.TimeOfDay.ToString()+"("+TaskWithWork.Id+")" + TaskWithWork.IsCompleted.ToString() + TaskWithWork.Status);
+			TaskWithWork.ContinueWith((t) => { System.Diagnostics.Debug.WriteLine(DateTime.Now.TimeOfDay.ToString()+ "(" + TaskWithWork.Id + ")" + t.IsCompleted.ToString() + t.Status); });
+			return TaskWithWork;
 		}
 
-        private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-        {
-			if (e.Error == null)
-				RaiseCompleted();
-			else
-				LastException = e.Error;
-				RaiseFailed(e.Error);
-        }
+		public override void CancelWork()
+		{
+			cancelTokenSource.Cancel(true);
+		}
 
-        private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            CompletedPercent = e.ProgressPercentage;
-        }
+		private async void DoWork(CancellationToken token)
+        {			
+			int bufferSize = 4096;			
+			if (SyncItem.Size.AsMB() > 50)
+				bufferSize = 16384;
+			else
+			if (SyncItem.Size.AsMB() > 10)
+				bufferSize = 8192;			
+			Stream contentStream = null;
+			try
+			{				
+				contentStream = await streamProvider.GetStreamToFileAsync(SyncItem.Link);
+				using (var fileStream = new FileStream(Destination, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true))
+				{
+					var totalRead = 0L;
+					int readed = 0;
+					var buffer = new byte[bufferSize];
+					while ((readed = await contentStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+					{
+						await fileStream.WriteAsync(buffer, 0, readed);
+						if (token.IsCancellationRequested)
+						{
+							fileStream.Flush();
+							fileStream.Close();
+							contentStream.Close();
+							token.ThrowIfCancellationRequested();
+						}
+						totalRead += readed;
+						CompletedPercent = (int)Math.Truncate(((double)totalRead / SyncItem.Size) * 100);
+					}
+					fileStream.Close();
+				}
+				RaiseCompleted();				
+			}
+			catch (System.Exception ex)
+			{
+				contentStream?.Close();
+				RaiseFailed(ex);				
+			}
+		}
 
 		public override string ToString()
 		{

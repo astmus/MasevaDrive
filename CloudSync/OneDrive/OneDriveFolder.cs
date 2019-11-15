@@ -24,8 +24,8 @@ namespace CloudSync
 		private string deltaLink;
 		[JsonProperty]
 		private string nextLink;
-		[JsonIgnore]
-		Queue<OneDriveSyncItem> itemsForSync = new Queue<OneDriveSyncItem>();		
+		[JsonProperty]
+		Queue<OneDriveSyncItem> itemsForSync { get; set; } = new Queue<OneDriveSyncItem>();		
 		[JsonIgnore]
 		public bool IsActive
 		{
@@ -68,6 +68,7 @@ namespace CloudSync
 			}
 		}
 
+		[JsonIgnore]
 		public bool HasWorkerReadySubscribers { get { return NewWorkerReady != null; } }
 		public event Action<CloudWorker> NewWorkerReady;
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -83,7 +84,7 @@ namespace CloudSync
 		}
 		public OneDriveFolder()
 		{
-			initTimer();
+			initTimer();			
 		}		
 
 		protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
@@ -93,6 +94,7 @@ namespace CloudSync
 
 		public void StartSync()
 		{
+			itemsForSync.Clear();
 			Suspended = false;
 		}
 
@@ -105,11 +107,7 @@ namespace CloudSync
 			deltaLink = jresult["@odata.deltaLink"]?.ToString();
 			nextLink = jresult["@odata.nextLink"]?.ToString();
 
-			Stopwatch stopwatch = new Stopwatch();
-			stopwatch.Start();
 			var allItems = jresult["value"].ToObject<List<OneDriveSyncItem>>();
-			stopwatch.Stop();
-			System.Diagnostics.Debug.WriteLine("-------------------------------- parse folder items " + stopwatch.ElapsedMilliseconds);
 
 			if (allItems.Count == 0)
 			{
@@ -118,11 +116,11 @@ namespace CloudSync
 			}
 
 			logger.Trace("Sync function for {0} items; Deleted = {1}; Files = {2}; Folders = {3}; for folder {4}", allItems.Count, allItems.Where(w => w.Deleted != null).Count(), allItems.Where(w => w.File != null).Count(), allItems.Where(w => w.Folder != null).Count(),this.Name);
-			allItems = allItems.Where(w => w.Deleted == null).ToList();
-			foreach (var item in allItems.Where(w => w.File != null).ToList())
-				itemsForSync.Enqueue(item);
-			var folderItems = allItems.Where(w => w.Id != this.Id && w.Folder != null).ToList();
-			foreach (var folder in folderItems)
+			var withOutDeletedItems = allItems.Where(w => w.Deleted == null);
+			foreach (var file in withOutDeletedItems.Where(w => w.File != null))
+				itemsForSync.Enqueue(file);
+			var folders = withOutDeletedItems.Where(w => w.Id != this.Id && w.Folder != null);
+			foreach (var folder in folders)
 				Directory.CreateDirectory(Path.Combine(PathToSync, folder.ReferencePath, folder.Name));
 
 			StartCreateWorkers();
@@ -130,15 +128,11 @@ namespace CloudSync
 		
 		private void StartCreateWorkers()
 		{
-			bool atLeastOneWorkerStarted = false; //replace to chech count of itemsForSync
 			DownloadFileWorker worker = null;
 			for  (int i = 0; i < 10 && (worker = MakeNextWorker()) != null; i++)
-			{				
-				atLeastOneWorkerStarted = true;
 				NewWorkerReady?.Invoke(worker);
-			}			
 
-			if (!atLeastOneWorkerStarted)
+			if (itemsForSync.Count == 0)
 				StartSyncTimer();
 		}
 
@@ -178,7 +172,7 @@ namespace CloudSync
 			else*/
 			if (args.Successfull == false)
 			{
-				logger.Error(args.Error, "Worker failed for items " + sender.TaskName);
+				logger.Info("Worker failed for items " + sender.TaskName);
 				if (args.Error is WebException)
 				{
 					WebException ex = args.Error as WebException;
@@ -188,8 +182,14 @@ namespace CloudSync
 						switch ((int)response.StatusCode)
 						{
 							//case: HttpStatusCode.Unauthorized
-						}					
+						}
 					}
+				}
+				if (args.Error is TaskCanceledException || args.Error is OperationCanceledException)
+				{
+					logger.Error(args.Error, sender.TaskName);
+					itemsForSync.Enqueue((sender as DownloadFileWorker).SyncItem);
+					return;
 				}
 
 			}
@@ -273,7 +273,6 @@ namespace CloudSync
 					continue;
 				}
 				DownloadFileWorker worker = new DownloadFileWorker(syncItem, destinationPath, Owner);
-				//worker.DeleteOldestFileOnSuccess = firstSyncCompleted && (!info.Exists);
 				worker.TaskName = String.Format("{0} ({1})", syncItem.Name, syncItem.FormattedSize);
 				worker.Completed += OnWorkerCompleted;
 				logger.Debug("New worker ready for file {0} save to {1}", syncItem.Name, worker.Destination);

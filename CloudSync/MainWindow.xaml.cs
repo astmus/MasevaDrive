@@ -67,7 +67,7 @@ namespace CloudSync
         {
             currentWorkers.Add(worker);
             worker.Completed += OnWorkerCompleted;        
-            worker.DoWork();
+            //worker.DoWork();
         }
 		
 
@@ -155,7 +155,7 @@ namespace CloudSync
         private void OnTryAgainPressed(object sender, RoutedEventArgs e)
         {
             IProgressable item = (e.Source as MenuItem).DataContext as IProgressable;
-            item.DoWork();
+            item.DoWorkAsync();
         }
 
         private void newLogin(object sender, RoutedEventArgs e)

@@ -5,6 +5,7 @@ using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Threading.Tasks;
 
 namespace CloudSync
 {
@@ -51,20 +52,21 @@ namespace CloudSync
 			foreach (var acount in Settings.Instance.Accounts)
 				acount.NeedAuthorization += OnAcountNeedAuthorization;
 			ConnectedAccounts.ItemsSource = Settings.Instance.Accounts;			
-			this.Closing += OnRootWindowClosing;
-		}			
-		
+			System.Windows.Application.Current.Exit += OnApplicationExit;
+		}
+
+		private void OnApplicationExit(object sender, ExitEventArgs e)
+		{
+			var res = Parallel.ForEach<OneDriveAccount>(from account in Settings.Instance.Accounts select account, new Action<OneDriveAccount>((curAccount) => { curAccount.CancelAndDestructAllActiveWorkers(); }));
+			Settings.Instance.Save();
+		}
+
 		private void OnAcountNeedAuthorization(OneDriveAccount account)
 		{
 			BrowserTitle.Text = "Reauthorization for " + account.Client.UserData.DisplayName;
 			Settings.Instance.Accounts.Remove(account);
 			OnConnectButtonClick(null, null);
-		}
-
-		private void OnRootWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			Settings.Instance.Save();
-		}
+		}		
 
 		private void RestoreWindow(object sender, EventArgs e)
 		{
@@ -95,10 +97,11 @@ namespace CloudSync
 		}
 
 		private void OnCloseButtonClick(object sender, RoutedEventArgs e)
-		{
+		{			
 			this.Close();
+			//Application.Current.Shutdown();
 		}
-		
+
 		//public static IPublicClientApplication PublicClientApp;
 		private void OnConnectButtonClick(object sender, RoutedEventArgs e)
 		{			

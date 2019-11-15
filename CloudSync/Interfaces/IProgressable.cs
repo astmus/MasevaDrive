@@ -13,7 +13,7 @@ namespace CloudSync
         string TaskName { get; set; }
 		string AdditionalInfo { get; set; }
         event Action<int> PercentCompleted;        
-        void DoWork();
+        Task DoWorkAsync();
         int CompletedPercent { get; set; }
     }
 
