@@ -12,9 +12,11 @@ namespace CloudSync.Converters
     [ValueConversion(typeof(int), typeof(Brush))]
     class WorkerToBackgroundConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		private static SolidColorBrush FailColorBrush = new SolidColorBrush(Colors.OrangeRed);
+		private static SolidColorBrush DefaultColorBrush = new SolidColorBrush(Colors.Transparent);
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return new SolidColorBrush(((int)value) < 0 ? Colors.OrangeRed : Colors.Transparent);
+            return ((int)value) < 0 ? FailColorBrush : DefaultColorBrush;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

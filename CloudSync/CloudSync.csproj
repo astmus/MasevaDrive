@@ -128,8 +128,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Framework\ConcurentObservableCollection.cs" />
     <Compile Include="Framework\DismantileWorkerException.cs" />
+    <Compile Include="Framework\Worker.cs" />
     <Compile Include="Interfaces\ICloudStreamProvider.cs" />
     <Compile Include="OneDrive\OneDriveAccount.cs" />
     <Compile Include="Converters\PercentCompletedToEnableConverter.cs" />

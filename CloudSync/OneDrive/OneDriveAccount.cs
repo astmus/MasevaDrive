@@ -22,8 +22,7 @@ namespace CloudSync
 	{
 		#region public properties
 		public OneDriveClient Client { get; set; }
-		public List<OneDriveFolder> RootFolders { get; set; }
-		public event Action<OneDriveAccount> NeedAuthorization;
+		public List<OneDriveFolder> RootFolders { get; set; }		
 
 		[JsonIgnore]
 		public ObservableCollection<CloudWorker> CurrentWorkers { get; set; } = new ObservableCollection<CloudWorker>();
@@ -54,8 +53,7 @@ namespace CloudSync
 		}
 
 		public void StartSyncActiveFolders()
-		{
-			if (Client.CredentialData == null) { NeedAuthorization?.Invoke(this); return; }
+		{			
 			if (RootFolders != null)
 				foreach (var folder in RootFolders)
 				{
@@ -66,7 +64,7 @@ namespace CloudSync
 						folder.StartSync();
 					}
 				}
-		}
+		}	
 
 		static Dispatcher UIdispatcher = System.Windows.Application.Current.Dispatcher as Dispatcher;
 		private void OnNewWorkerReady(CloudWorker worker)

@@ -114,7 +114,13 @@
 							</Style>
 						</Button.Style>
 					</Button>
-					<ListBox DisplayMemberPath="Client.UserData.DisplayName" HorizontalContentAlignment="Stretch" ItemContainerStyle="{StaticResource ResourceKey=AccountButton}" Padding="0" Background="Transparent"  BorderBrush="{Binding ElementName=ConnectButton, Path=BorderBrush}"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="ConnectedAccounts" SelectionChanged="OnSelectedAccountChanged"  Foreground="#FF888888" BorderThickness="0"   ItemsSource="{Binding ElementName=_this, Path=Clients}" >
+					<ListBox DisplayMemberPath="Client.UserData.DisplayName" HorizontalContentAlignment="Stretch" ItemContainerStyle="{StaticResource ResourceKey=AccountButton}" Padding="0" Background="Transparent"  BorderBrush="{Binding ElementName=ConnectButton, Path=BorderBrush}"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="ConnectedAccounts" SelectionChanged="OnSelectedAccountChanged"  Foreground="#FF888888" BorderThickness="0"   ItemsSource="{Binding ElementName=_this, Path=Clients}" MouseLeftButtonUp="ConnectedAccounts_MouseLeftButtonUp" >
+						<ListBox.ContextMenu>
+							<ContextMenu Closed="OnAccountContextMenuClosed"  x:Name="accountContextMenu">								
+								<MenuItem Header="Reset delta link" Click="OnResetDeltaLinkClick"/>
+								<MenuItem Header="Folders for sync" Click="OnFolderForSyncClick"/>
+							</ContextMenu>
+						</ListBox.ContextMenu>
 						<ListBox.ItemsPanel>
 							<ItemsPanelTemplate>
 								<UniformGrid Rows="1" IsItemsHost="True"/>
@@ -130,8 +136,6 @@
 				<ColumnDefinition Width="60"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
-
-
 			<ItemsControl Grid.Column="1" x:Name="OneDriveWorkersBoard" ItemsSource="{Binding Source={x:Static local:Settings.Instance}, Path=Accounts}">
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
@@ -159,16 +163,16 @@
 								<ListBox.ItemTemplate>
 									<DataTemplate>
 										<Border BorderBrush="#FF666666" Padding="4,6,4,2"  BorderThickness="0,0,0,1">
-											<Grid>
+											<Grid ToolTipService.ToolTip="{Binding AdditionalInfo}">
 												<Grid.ContextMenu>
 													<ContextMenu>
 														<MenuItem Header="Try again" Click="OnTryAgainPressed"  IsEnabled="{Binding Path=CompletedPercent, Converter={StaticResource PerecentConverter}}"  />
 													</ContextMenu>
 												</Grid.ContextMenu>
 												<ProgressBar Height="1" Margin="-5,0,-5,-3" VerticalAlignment="Bottom"  BorderThickness="0" Minimum="0" Maximum="100" Value="{Binding CompletedPercent}" Background="{Binding CompletedPercent, Converter={StaticResource WorkerConverter}}"/>
-												<StackPanel Orientation="Horizontal" >
-													<Label  Foreground="#FF888888" FontSize="15" FontWeight="Medium"  Content="{Binding TaskName}" />
-													<TextBlock Margin="5,0,0,1" VerticalAlignment="Bottom"  Foreground="#FF666666" FontSize="12" x:Name="message"  Text="{Binding AdditionalInfo}" />
+												<StackPanel Orientation="Vertical" >
+													<TextBlock Margin="0,0,-5,0" VerticalAlignment="Bottom"  Foreground="#FF666666" FontSize="12" x:Name="message"  Text="{Binding Status}" />
+													<Label  Foreground="#FF888888" FontSize="15" FontWeight="Medium"  Content="{Binding TaskName}" />													
 												</StackPanel>
 											</Grid>
 										</Border>

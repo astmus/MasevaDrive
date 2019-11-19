@@ -16,6 +16,7 @@ using System.Net;
 using System.Diagnostics;
 using CloudSync.Framework.Exceptions;
 using System.Collections.Concurrent;
+using System.Windows;
 
 
 
@@ -99,8 +100,15 @@ namespace CloudSync
 
 		public void StartSync()
 		{
+			if (!Suspended)
+				return; //that mean synchronization is already started
 			CheckAndCreateDirectoriesForPaths();
 			Suspended = false;
+		}
+
+		public void ResetDeltaLink()
+		{
+			deltaLink = null;
 		}
 
 		private async void Sync(string link = null)
@@ -111,10 +119,12 @@ namespace CloudSync
 			var jresult = JObject.Parse(result);
 			deltaLink = jresult["@odata.deltaLink"]?.ToString();
 			nextLink = jresult["@odata.nextLink"]?.ToString();
+			if (jresult["error"] != null)
+				MessageBox.Show(jresult["error"]["code"].ToString() + Environment.NewLine + jresult["error"]["message"].ToString());
 
-			var allItems = jresult["value"].ToObject<List<OneDriveSyncItem>>();
+			var allItems = jresult["value"]?.ToObject<List<OneDriveSyncItem>>();
 
-			if (allItems.Count == 0)
+			if ((allItems?.Count ?? 0) == 0)
 			{
 				StartSyncTimer();
 				return;
@@ -132,7 +142,8 @@ namespace CloudSync
 		private void CheckAndCreateDirectoriesForPaths()
 		{
 			foreach (var folder in ChildrenFolders)
-				Directory.CreateDirectory(Path.Combine(PathToSync, folder.ReferencePath, folder.Name));
+				if (Directory.Exists(Path.Combine(PathToSync, folder.ReferencePath, folder.Name)) == false)
+					Directory.CreateDirectory(Path.Combine(PathToSync, folder.ReferencePath, folder.Name));
 		}
 
 		private void StartCreateWorkers()
@@ -210,41 +221,7 @@ namespace CloudSync
 				else StartSyncTimer();
 			}
 		}
-				
-		private SemaphoreSlim sema = new SemaphoreSlim(1);
-		private Dictionary<string, Queue<OneDriveItem>> pools = new Dictionary<string, Queue<OneDriveItem>>();
-		private async Task<OneDriveItem> GetItemsForDeletePool(string folderId)
-		{
-			await sema.WaitAsync();
-			Queue<OneDriveItem> itemsForDeletePool = null;
-			try
-			{
-				if (pools.ContainsKey(folderId) == false)
-					pools.Add(folderId, new Queue<OneDriveItem>());
-				itemsForDeletePool = pools[folderId];
-				if (itemsForDeletePool.Count == 0)
-				{					
-					var result = await Owner.GetListOfItemsInFolder(folderId);
-					pools[folderId] = result;
-					return result.Count > 0 ? pools[folderId].Dequeue() : null;
-				}
-				else				
-					return itemsForDeletePool.Dequeue();				
-			}
-			finally
-			{
-				sema.Release();
-			}			
-		}
-
-		private async Task<bool> RemoveOldestFiles(string folderId)
-		{
-			OneDriveItem itemForDelete = await GetItemsForDeletePool(folderId);
-			//logger.Debug("Items for delete = {0}", itemForDelete);
-			logger.Debug("Delete item = {0}", itemForDelete);
-			return await Owner.DeleteItem(itemForDelete);
-		}
-
+		
 		private void StartSyncTimer()
 		{
 			if (!syncTimer.IsEnabled)
@@ -256,7 +233,7 @@ namespace CloudSync
 
 		private void CheckUpdatesOnTheServer(object sender, EventArgs e)
 		{
-			if (!Suspended || deltaLink == null) return;
+			if (Suspended) return;
 			Sync(deltaLink);
 		}
 
@@ -270,7 +247,7 @@ namespace CloudSync
 					var success = itemsForSync.TryDequeue(out syncItem);
 					if (success == false)
 						Thread.Sleep(20);
-				} while (syncItem == null || !itemsForSync.IsEmpty);
+				} while (syncItem == null && !itemsForSync.IsEmpty);
 				string destinationPath = Path.Combine(PathToSync, syncItem.ReferencePath, syncItem.Name);
 				FileInfo info = new FileInfo(destinationPath);				
 				if (info.Exists && (info.Length == syncItem.Size) && info.GetSHA1Hash() == syncItem.SHA1Hash)

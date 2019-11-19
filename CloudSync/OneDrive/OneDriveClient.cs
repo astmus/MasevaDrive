@@ -21,11 +21,12 @@ namespace CloudSync
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		#region Static functionality
 
-		public static string ClientID = "32171e35-694f-4481-a8bc-0498cb7da487";
-		public static string RedirectUri = "msal32171e35-694f-4481-a8bc-0498cb7da487://auth";
+		public static readonly string ClientID = "32171e35-694f-4481-a8bc-0498cb7da487";
+		public static readonly string RedirectUri = "msal32171e35-694f-4481-a8bc-0498cb7da487://auth";
+		public static readonly string AppSecret = "/ckq6/heZ-@GeOVxGb5jYBZZ59bz5Ag:";
 		public static string GetAuthorizationRequestUrl()
 		{
-			return String.Format("https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id={0}&scope=offline_access user.read files.readwrite.all&response_type=code&redirect_uri={1}", ClientID, RedirectUri);
+			return String.Format("https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id={0}&scope=offline_access user.read files.readwrite&response_type=code&redirect_uri={1}", ClientID, RedirectUri);
 		}
 
 		private static string MakeAcquireTokenByAuthorizationCodeContent(string code)
@@ -36,6 +37,7 @@ namespace CloudSync
 		private static string MakeRefreshTokenRequestBody(string refreshToken)
 		{
 			return String.Format("client_id={0}&redirect_uri={1}&refresh_token={2}&grant_type=refresh_token", ClientID, RedirectUri, refreshToken);
+			//return String.Format("client_id={0}&redirect_uri={1}&client_secret={2}&refresh_token={3}&grant_type=refresh_token", ClientID, RedirectUri, AppSecret, refreshToken);
 		}
 
 		private static readonly string PersonalDataUrl = "https://graph.microsoft.com/v1.0/me";
@@ -89,6 +91,7 @@ namespace CloudSync
 			ServicePointManager.DefaultConnectionLimit = 40;
 		}
 
+		public event Action<OneDriveClient> NeedRelogin;
 		public OneDriveClient()
 		{
 			clientHandler = new HttpClientHandler();
@@ -139,12 +142,10 @@ namespace CloudSync
 			HttpResponseMessage response;
 			try
 			{
-				//HttpRequestMessage request = CreateRequestWithAuthorizationData(deleteUrl, HttpMethod.Delete);
 				response = await inetClient.DeleteAsync(deleteUrl);
 				if (response.StatusCode == HttpStatusCode.Unauthorized)
 				{
 					await RenewAccessToken();
-					//request = CreateRequestWithAuthorizationData(deleteUrl, HttpMethod.Delete);
 					response = await inetClient.DeleteAsync(deleteUrl);
 				}
 				if (response.StatusCode != HttpStatusCode.NoContent)
@@ -196,12 +197,12 @@ namespace CloudSync
 			System.Net.Http.HttpResponseMessage response;
 			try
 			{
-				//var request = CreateRequestWithAuthorizationData(url, HttpMethod.Get);
+				if (!CredentialData.IsValid())
+					await RenewAccessToken();
 				response = await inetClient.GetAsync(url);
 				if (response.StatusCode == HttpStatusCode.Unauthorized)
 				{
 					await RenewAccessToken();
-					//request = CreateRequestWithAuthorizationData(url, HttpMethod.Get);
 					response = await inetClient.GetAsync(url);
 				}
 				var content = await response.Content.ReadAsStringAsync();
@@ -223,19 +224,27 @@ namespace CloudSync
 			else
 				currentRenewer = Task.Run(() =>
 			{
-				string userResult;
+				string userResult = null;
 				using (var wc = new WebClient())
 				{
-					if (CredentialData == null)
-						throw new HttpException((int)HttpStatusCode.Unauthorized, " Credential data is empty");
-					string body = OneDriveClient.MakeRefreshTokenRequestBody(CredentialData.RefreshToken);
-					wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-					userResult = wc.UploadString("https://login.microsoftonline.com/common/oauth2/v2.0/token", body);
+					try
+					{
+						if (CredentialData?.RefreshToken == null)
+							throw new HttpException((int)HttpStatusCode.Unauthorized, " Credential data is empty");
+						string body = OneDriveClient.MakeRefreshTokenRequestBody(CredentialData.RefreshToken);
+						wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+						userResult = wc.UploadString("https://login.microsoftonline.com/common/oauth2/v2.0/token", body);
+					}
+					catch
+					{
+						CredentialData.RefreshToken = null;
+						NeedRelogin?.Invoke(this);
+						return;
+					}
 				}
 				try
 				{
 					CredentialData = JsonConvert.DeserializeObject<Credentials>(userResult);
-					CredentialData.ObtainedTime = DateTime.Now;
 				}
 				catch (System.Exception ex)
 				{
@@ -257,7 +266,7 @@ namespace CloudSync
 			//return Task.Run<Stream>(() =>
 			//{
 			if (currentRenewer != null)
-				currentRenewer.Wait();
+				await currentRenewer;
 			if (CredentialData.IsValid())
 				return await inetClient.GetStreamAsync(url);
 			else
@@ -300,11 +309,11 @@ namespace CloudSync
 			[JsonProperty("refresh_token")]
 			public string RefreshToken { get; set; }
 			[JsonProperty]
-			public DateTime ObtainedTime { get; set; }
+			public DateTime ObtainedTime { get; set; } = DateTime.Now;
 			public bool IsValid()
 			{
 				return (DateTime.Now - ObtainedTime) < Expires;
-			}			
+			}
 		}
 
 		public class OwnerInfo

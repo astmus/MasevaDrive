@@ -9,9 +9,7 @@ using System.Windows;
 namespace CloudSync
 {
     public interface IProgressable : INotifyPropertyChanged
-    {
-        string TaskName { get; set; }
-		string AdditionalInfo { get; set; }
+    {		
         event Action<int> PercentCompleted;        
         Task DoWorkAsync();
         int CompletedPercent { get; set; }

@@ -50,7 +50,7 @@ namespace CloudSync
 			InitializeComponent();
 			trayIcon.Click += RestoreWindow;
 			foreach (var acount in Settings.Instance.Accounts)
-				acount.NeedAuthorization += OnAcountNeedAuthorization;
+				acount.Client.NeedRelogin += OnAcountNeedAuthorization;
 			ConnectedAccounts.ItemsSource = Settings.Instance.Accounts;			
 			System.Windows.Application.Current.Exit += OnApplicationExit;
 			System.Windows.Application.Current.MainWindow.Loaded += OnMainWindowLoaded;
@@ -70,11 +70,23 @@ namespace CloudSync
 			Settings.Instance.Save();
 		}
 
-		private void OnAcountNeedAuthorization(OneDriveAccount account)
+		private void OnAcountNeedAuthorization(OneDriveClient client)
 		{
-			BrowserTitle.Text = "Reauthorization for " + account.Client.UserData.DisplayName;
-			Settings.Instance.Accounts.Remove(account);
-			OnConnectButtonClick(null, null);
+			if (BrowserTitle.Dispatcher.CheckAccess())
+			{
+				BrowserTitle.Text = "Reauthorization for " + client.UserData.DisplayName;
+				var forDel = Settings.Instance.Accounts.First(account => account.Client == client);
+				Settings.Instance.Accounts.Remove(forDel);
+				OnConnectButtonClick(null, null);
+			}
+			else
+				Browser.Dispatcher.Invoke(() =>
+				{
+					BrowserTitle.Text = "Reauthorization for " + client.UserData.DisplayName;
+					var forDel = Settings.Instance.Accounts.First(account => account.Client == client);
+					Settings.Instance.Accounts.Remove(forDel);
+					OnConnectButtonClick(null, null);
+				});
 		}		
 
 		private void RestoreWindow(object sender, EventArgs e)
@@ -202,23 +214,54 @@ namespace CloudSync
 		}
 
 		private void OnSelectedAccountChanged(object sender, SelectionChangedEventArgs e)
-		{
+		{			
 			var SelectedAccount = ConnectedAccounts.SelectedItem as OneDriveAccount;
-			if (SelectedAccount != null)
+			if (SelectedAccount != null && (SelectedAccount.RootFolders?.Count ?? 0) == 0)
 			{
-				FolderSyncConfigurator window = new FolderSyncConfigurator(SelectedAccount);
+				ConfigFolderForAccout(SelectedAccount);
+				ConnectedAccounts.SelectedItem = null;
+			}
+		}
+
+		private void ConfigFolderForAccout(OneDriveAccount account)
+		{
+			if (account != null)
+			{
+				FolderSyncConfigurator window = new FolderSyncConfigurator(account);
 				if (window.ShowDialog() == true)
 				{
-					SelectedAccount.StartSyncActiveFolders();
-				}
+					account.StartSyncActiveFolders();
+				}				
 			}
-			ConnectedAccounts.SelectedItem = null;
 		}
 
 		private void OnTryAgainPressed(object sender, RoutedEventArgs e)
 		{
-			
+			IProgressable item = (e.Source as MenuItem).DataContext as IProgressable;
+			item.DoWorkAsync();
+		}
 
-		}		
+		private void OnResetDeltaLinkClick(object sender, RoutedEventArgs e)
+		{
+			var selectedAccount = ConnectedAccounts.SelectedItem as OneDriveAccount;
+			foreach (var folder in selectedAccount.RootFolders)
+				folder.ResetDeltaLink();
+		}
+
+		private void OnFolderForSyncClick(object sender, RoutedEventArgs e)
+		{
+			var SelectedAccount = ConnectedAccounts.SelectedItem as OneDriveAccount;
+			ConfigFolderForAccout(SelectedAccount);
+		}
+
+		private void ConnectedAccounts_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			ConnectedAccounts.ContextMenu.IsOpen = true;
+		}
+
+		private void OnAccountContextMenuClosed(object sender, RoutedEventArgs e)
+		{
+			ConnectedAccounts.SelectedItem = null;
+		}
 	}
 }

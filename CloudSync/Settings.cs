@@ -12,9 +12,9 @@ namespace CloudSync
     {
         private static readonly Lazy<Settings> _instance = new Lazy<Settings>(() => new Settings());
         private Settings()
-        {            			
-			Load();
-        }
+        {
+			Load();	
+		}
 
 		public ObservableCollection<OneDriveAccount> Accounts { get; set; }
         public static Settings Instance

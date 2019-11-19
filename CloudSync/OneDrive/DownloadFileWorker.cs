@@ -25,16 +25,13 @@ namespace CloudSync
 		private ICloudStreamProvider streamProvider;
 		private CancellationTokenSource cancelTokenSource;		
 		public OneDriveSyncItem SyncItem { get; private set; }
-
-		public DownloadFileWorker()
-		{
-		}
-
+				
 		public DownloadFileWorker(OneDriveSyncItem item, string destination, ICloudStreamProvider provider) : base()
         {
             this.SyncItem = item;
             this.Destination = destination;
 			this.streamProvider = provider;
+			Status += " download";
         }
 
 		public override Task DoWorkAsync()
@@ -59,7 +56,8 @@ namespace CloudSync
 		}
 
 		private async void DoWork(CancellationToken token)
-        {			
+        {
+			Status = Statuses.Started;
 			int bufferSize = 4096;			
 			if (SyncItem.Size.AsMB() > 50)
 				bufferSize = 16384;
@@ -68,13 +66,15 @@ namespace CloudSync
 				bufferSize = 8192;			
 			Stream contentStream = null;
 			try
-			{				
+			{
+				Status = "Request file";
 				contentStream = await streamProvider.GetStreamToFileAsync(SyncItem.Link);
 				using (var fileStream = new FileStream(Destination, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true))
 				{
 					var totalRead = 0L;
 					int readed = 0;
 					var buffer = new byte[bufferSize];
+					Status = "Download";
 					while ((readed = await contentStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
 					{
 						await fileStream.WriteAsync(buffer, 0, readed);
@@ -90,10 +90,12 @@ namespace CloudSync
 					}
 					fileStream.Close();
 				}
+				Status = "Download completed";
 				RaiseCompleted();				
 			}
 			catch (System.Exception ex)
 			{
+				Status = "Failed";
 				contentStream?.Close();
 				RaiseFailed(ex);				
 			}
