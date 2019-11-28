@@ -23,9 +23,15 @@ namespace CloudSync
 		public Exception LastException { get; private set; }
 
 		private ICloudStreamProvider streamProvider;
-		private CancellationTokenSource cancelTokenSource;		
+		private CancellationTokenSource cancelTokenSource;
+		private int attemptsCount = 0;
 		public OneDriveSyncItem SyncItem { get; private set; }
-				
+
+		public override int NumberOfAttempts
+		{
+			get { return attemptsCount; }			
+		}
+
 		public DownloadFileWorker(OneDriveSyncItem item, string destination, ICloudStreamProvider provider) : base()
         {
             this.SyncItem = item;
@@ -36,13 +42,12 @@ namespace CloudSync
 
 		public override Task DoWorkAsync()
 		{
-			cancelTokenSource = new CancellationTokenSource();
-			var cancelToken = cancelTokenSource.Token;
-			currentContext = SynchronizationContext.Current as DispatcherSynchronizationContext;
-			TaskWithWork = Task.Run(() => { DoWork(cancelToken); }, cancelToken);
-			System.Diagnostics.Debug.WriteLine(DateTime.Now.TimeOfDay.ToString()+"("+TaskWithWork.Id+")" + TaskWithWork.IsCompleted.ToString() + TaskWithWork.Status);
-			TaskWithWork.ContinueWith((t) => { System.Diagnostics.Debug.WriteLine(DateTime.Now.TimeOfDay.ToString()+ "(" + TaskWithWork.Id + ")" + t.IsCompleted.ToString() + t.Status); });
-			return TaskWithWork;
+			return StartWorkCancellable(0);
+		}	
+
+		public override Task DoWorkAsync(int delay = 0)
+		{
+			return StartWorkCancellable(delay);
 		}
 
 		public override void Dismantle()
@@ -55,8 +60,23 @@ namespace CloudSync
 			cancelTokenSource.Cancel(true);
 		}
 
+		private Task StartWorkCancellable(int delay = 0)
+		{
+			cancelTokenSource = new CancellationTokenSource();
+			var cancelToken = cancelTokenSource.Token;
+			currentContext = SynchronizationContext.Current as DispatcherSynchronizationContext;
+			if (delay != 0)
+				TaskWithWork = Task.Delay(delay, cancelToken).ContinueWith((t) => { DoWork(cancelToken); }, cancelToken);
+			else
+				TaskWithWork = Task.Run(() => { DoWork(cancelToken); }, cancelToken);
+			System.Diagnostics.Debug.WriteLine(DateTime.Now.TimeOfDay.ToString() + "(" + TaskWithWork.Id + ")" + TaskWithWork.IsCompleted.ToString() + TaskWithWork.Status);
+			TaskWithWork.ContinueWith((t) => { System.Diagnostics.Debug.WriteLine(DateTime.Now.TimeOfDay.ToString() + "(" + TaskWithWork.Id + ")" + t.IsCompleted.ToString() + t.Status); });
+			return TaskWithWork;
+		}
+
 		private async void DoWork(CancellationToken token)
         {
+			attemptsCount++;
 			Status = Statuses.Started;
 			int bufferSize = 4096;			
 			if (SyncItem.Size.AsMB() > 50)

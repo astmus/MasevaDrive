@@ -16,6 +16,7 @@ namespace CloudSync.Framework
 			public static readonly string Started = "Started";
 		}
 
+		public abstract int NumberOfAttempts { get; }
 		public abstract Task DoWorkAsync();
 		public abstract void CancelWork();
 
@@ -62,5 +63,7 @@ namespace CloudSync.Framework
 			PercentCompleted?.Invoke(i);
 			//}, this);
 		}
+
+		public abstract Task DoWorkAsync(int delayMilliseconds = 0);
 	}
 }

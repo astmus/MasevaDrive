@@ -12,7 +12,8 @@ namespace CloudSync
     {		
         event Action<int> PercentCompleted;        
         Task DoWorkAsync();
-        int CompletedPercent { get; set; }
+		Task DoWorkAsync(int delayMilliseconds = 0);
+		int CompletedPercent { get; set; }
     }
 
 	public class ProgressableEventArgs : EventArgs

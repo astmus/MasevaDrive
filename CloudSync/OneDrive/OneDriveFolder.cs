@@ -113,7 +113,7 @@ namespace CloudSync
 
 		private async void Sync(string link = null)
 		{
-			if (Suspended) return;
+			if (Suspended || !IsActive) return;
 			string deltaRequest = link ?? String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}/delta?select=id,name,size,folder,file,deleted,parentReference,createdBy", Id);
 			string result = await Owner.GetHttpContent(deltaRequest);			
 			var jresult = JObject.Parse(result);
@@ -193,6 +193,11 @@ namespace CloudSync
 							//case: HttpStatusCode.Unauthorized
 						}
 					}
+					if (sender.NumberOfAttempts < 3)
+					{
+						sender.DoWorkAsync((int)TimeSpan.FromSeconds(5).TotalMilliseconds);
+						return;
+					}
 				}
 				if (args.Error is TaskCanceledException || args.Error is OperationCanceledException)
 				{
@@ -206,7 +211,7 @@ namespace CloudSync
 			}
 				
 
-			if (Suspended) return;
+			if (Suspended || !IsActive) return;
 			var worker = MakeNextWorker();
 			if (worker != null)
 				NewWorkerReady?.Invoke(worker);
@@ -233,7 +238,7 @@ namespace CloudSync
 
 		private void CheckUpdatesOnTheServer(object sender, EventArgs e)
 		{
-			if (Suspended) return;
+			if (Suspended || !IsActive) return;
 			Sync(deltaLink);
 		}
 
@@ -242,8 +247,9 @@ namespace CloudSync
 			while (!itemsForSync.IsEmpty)
 			{
 				OneDriveSyncItem syncItem = null;
+				if (Suspended) return null;
 				do 
-				{					
+				{
 					var success = itemsForSync.TryDequeue(out syncItem);
 					if (success == false)
 						Thread.Sleep(20);

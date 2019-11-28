@@ -57,12 +57,13 @@ namespace CloudSync
 			if (RootFolders != null)
 				foreach (var folder in RootFolders)
 				{
-					if (folder.IsActive && Directory.Exists(folder.PathToSync))
-					{						
+					if (folder.IsActive)
+					{
 						if (!folder.HasWorkerReadySubscribers)
 							folder.NewWorkerReady += OnNewWorkerReady;
 						folder.StartSync();
-					}
+					}					
+					//при снятии галок с папок таймер продолжает тикать 					
 				}
 		}	
 
