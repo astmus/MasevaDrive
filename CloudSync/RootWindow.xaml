@@ -23,6 +23,26 @@
 				<Setter Property="FontWeight" Value="Bold"/>
 				<Setter Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBox}}, Path=BorderBrush}"/>
 			</Style>
+			<Style TargetType="{x:Type ContextMenu}">
+				<Setter Property="SnapsToDevicePixels"          Value="True" />
+				<Setter Property="OverridesDefaultStyle"          Value="True" />
+				<Setter Property="Grid.IsSharedSizeScope"          Value="true" />
+				<Setter Property="HasDropShadow"          Value="True" />
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type ContextMenu}">
+							<Border x:Name="Border" Background="#FF303030" BorderBrush="#FF383838"  BorderThickness="2">
+								<StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+							</Border>
+							<ControlTemplate.Triggers>
+								<Trigger Property="HasDropShadow" Value="true">
+									<Setter TargetName="Border" Property="Padding" Value="0"/>									
+								</Trigger>
+							</ControlTemplate.Triggers>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
 		</ResourceDictionary>
 	</Window.Resources>
 	<Grid>
@@ -116,7 +136,7 @@
 					</Button>
 					<ListBox DisplayMemberPath="Client.UserData.DisplayName" HorizontalContentAlignment="Stretch" ItemContainerStyle="{StaticResource ResourceKey=AccountButton}" Padding="0" Background="Transparent"  BorderBrush="{Binding ElementName=ConnectButton, Path=BorderBrush}"  ScrollViewer.HorizontalScrollBarVisibility="Disabled" Name="ConnectedAccounts" SelectionChanged="OnSelectedAccountChanged"  Foreground="#FF888888" BorderThickness="0"   ItemsSource="{Binding ElementName=_this, Path=Clients}" MouseLeftButtonUp="ConnectedAccounts_MouseLeftButtonUp" >
 						<ListBox.ContextMenu>
-							<ContextMenu Closed="OnAccountContextMenuClosed"  x:Name="accountContextMenu">								
+							<ContextMenu Closed="OnAccountContextMenuClosed"  x:Name="accountContextMenu">
 								<MenuItem Header="Reset delta link" Click="OnResetDeltaLinkClick"/>
 								<MenuItem Header="Folders for sync" Click="OnFolderForSyncClick"/>
 							</ContextMenu>
@@ -130,7 +150,7 @@
 				</DockPanel>
 			</Border>
 		</Grid>
-		
+
 		<Grid Grid.Row="1" Grid.ColumnSpan="2" >
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="60"/>
@@ -167,12 +187,13 @@
 												<Grid.ContextMenu>
 													<ContextMenu>
 														<MenuItem Header="Try again" Click="OnTryAgainPressed"  IsEnabled="{Binding Path=CompletedPercent, Converter={StaticResource PerecentConverter}}"  />
+														<MenuItem Header="Revoke" Click="OnRemoveWorkerClick"  IsEnabled="{Binding Path=CompletedPercent, Converter={StaticResource PerecentConverter}}"  />
 													</ContextMenu>
 												</Grid.ContextMenu>
 												<ProgressBar Height="1" Margin="-5,0,-5,-3" VerticalAlignment="Bottom"  BorderThickness="0" Minimum="0" Maximum="100" Value="{Binding CompletedPercent}" Background="{Binding CompletedPercent, Converter={StaticResource WorkerConverter}}"/>
 												<StackPanel Orientation="Vertical" >
 													<TextBlock Margin="0,0,-5,0" VerticalAlignment="Bottom"  Foreground="#FF666666" FontSize="12" x:Name="message"  Text="{Binding Status}" />
-													<Label  Foreground="#FF888888" FontSize="15" FontWeight="Medium"  Content="{Binding TaskName}" />													
+													<Label  Foreground="#FF888888" FontSize="15" FontWeight="Medium"  Content="{Binding TaskName}" />
 												</StackPanel>
 											</Grid>
 										</Border>

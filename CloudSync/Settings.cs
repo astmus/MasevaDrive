@@ -33,7 +33,7 @@ namespace CloudSync
 			if (!String.IsNullOrEmpty(Properties.Settings.Default.Accounts))
 				Accounts = JsonConvert.DeserializeObject<ObservableCollection<OneDriveAccount>>(Properties.Settings.Default.Accounts);
 			else
-				Accounts = new ObservableCollection<OneDriveAccount>();			
+				Accounts = new ObservableCollection<OneDriveAccount>();		
 		}
     }
 }

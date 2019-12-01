@@ -15,6 +15,8 @@ using System.Collections.Concurrent;
 using System.Windows.Threading;
 using System.Threading;
 using System.Windows.Data;
+using CloudSync.Framework;
+using CloudSync.OneDrive;
 
 namespace CloudSync
 {
@@ -25,7 +27,7 @@ namespace CloudSync
 		public List<OneDriveFolder> RootFolders { get; set; }		
 
 		[JsonIgnore]
-		public ObservableCollection<CloudWorker> CurrentWorkers { get; set; } = new ObservableCollection<CloudWorker>();
+		public ObservableCollection<Worker> CurrentWorkers { get; set; } = new ObservableCollection<Worker>();
 		#endregion
 		private object currentWorkersLock = new object();
 
@@ -62,35 +64,28 @@ namespace CloudSync
 						if (!folder.HasWorkerReadySubscribers)
 							folder.NewWorkerReady += OnNewWorkerReady;
 						folder.StartSync();
-					}					
-					//при снятии галок с папок таймер продолжает тикать 					
+					}
+					else
+						folder.Suspended = true;					
 				}
 		}	
 
 		static Dispatcher UIdispatcher = System.Windows.Application.Current.Dispatcher as Dispatcher;
-		private void OnNewWorkerReady(CloudWorker worker)
+		private void OnNewWorkerReady(Worker worker)
 		{
-			worker.Completed += OnWorkerCompleted;			
-			worker.DoWorkAsync();			
-
-			//if (UIdispatcher.CheckAccess())
-				CurrentWorkers.Add(worker);
-			//else
-				//UIdispatcher.Invoke(() => { CurrentWorkers.Add(worker); });
+			worker.Completed += OnWorkerCompleted;
+			CurrentWorkers.Add(worker);
+			worker.DoWorkAsync();					
 		}
 
-		private void OnWorkerCompleted(CloudWorker worker, ProgressableEventArgs e)
+		private void OnWorkerCompleted(Worker worker, ProgressableEventArgs e)
 		{
-			if (worker is DownloadFileWorker)
-			{
-				if (e.Successfull)
-				{
-					//if (UIdispatcher.CheckAccess())
-						CurrentWorkers.Remove(worker);
-					//else
-					//	UIdispatcher.Invoke(() => { CurrentWorkers.Remove(worker); });
-				}				
-			}			
-		}
+			if (e.Successfull)
+				CurrentWorkers.Remove(worker);
+			if (!e.Successfull && e.Error is ForceCanceledException)
+				CurrentWorkers.Remove(worker);
+			if (!e.Successfull && e.Error.Message.IndexOf("404") >=0)
+				CurrentWorkers.Remove(worker);
+		}		
 	}
 }

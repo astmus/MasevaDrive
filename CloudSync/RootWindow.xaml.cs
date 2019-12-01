@@ -6,6 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Threading.Tasks;
+using CloudSync.OneDrive;
+using CloudSync.Framework;
 
 namespace CloudSync
 {
@@ -251,7 +253,7 @@ namespace CloudSync
 		private void OnFolderForSyncClick(object sender, RoutedEventArgs e)
 		{
 			var SelectedAccount = ConnectedAccounts.SelectedItem as OneDriveAccount;
-			ConfigFolderForAccout(SelectedAccount);
+				ConfigFolderForAccout(SelectedAccount);
 		}
 
 		private void ConnectedAccounts_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -262,6 +264,12 @@ namespace CloudSync
 		private void OnAccountContextMenuClosed(object sender, RoutedEventArgs e)
 		{
 			ConnectedAccounts.SelectedItem = null;
+		}
+
+		private void OnRemoveWorkerClick(object sender, RoutedEventArgs e)
+		{
+			Worker item = (e.Source as MenuItem).DataContext as Worker;
+			item.ForceCancel();
 		}
 	}
 }

@@ -20,6 +20,8 @@ namespace CloudSync.Models
 		public JObject File { get; set; }
 		public JObject Deleted { get; set; }
 		public string OwnerId { get; set; }
+		[JsonProperty("createdDateTime")]
+		public DateTime CreatedDateTime { get; set; }
 		[JsonProperty("createdBy")]
 		private JObject createdBy
 		{
@@ -75,8 +77,16 @@ namespace CloudSync.Models
 			return (long)Math.Round(value.AsMB() / 1024.0);
 		}
 	}
-    
-    public class OneDriveSyncItem : OneDriveItem
+
+	public enum SyncState
+	{
+		New,
+		Loaded,
+		MovedToStore,
+		RemovedFromCloud
+	}
+
+	public class OneDriveSyncItem : OneDriveItem
     {           
         [JsonIgnore]
         public string Link
@@ -106,5 +116,7 @@ namespace CloudSync.Models
 		{
 			get { return File["hashes"]?["sha1Hash"]?.ToString(); }
 		}
+
+		public SyncState CurrentState { get; set; }
     }
 }

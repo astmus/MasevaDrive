@@ -66,7 +66,7 @@ namespace CloudSync
         private void OnNewWorkerReady(CloudWorker worker)
         {
             currentWorkers.Add(worker);
-            worker.Completed += OnWorkerCompleted;        
+           // worker.Completed += OnWorkerCompleted;        
             //worker.DoWork();
         }
 		

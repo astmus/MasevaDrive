@@ -25,8 +25,7 @@ namespace CloudSync
 		private ICloudStreamProvider streamProvider;
 		private CancellationTokenSource cancelTokenSource;
 		private int attemptsCount = 0;
-		public OneDriveSyncItem SyncItem { get; private set; }
-
+		
 		public override int NumberOfAttempts
 		{
 			get { return attemptsCount; }			
@@ -69,8 +68,6 @@ namespace CloudSync
 				TaskWithWork = Task.Delay(delay, cancelToken).ContinueWith((t) => { DoWork(cancelToken); }, cancelToken);
 			else
 				TaskWithWork = Task.Run(() => { DoWork(cancelToken); }, cancelToken);
-			System.Diagnostics.Debug.WriteLine(DateTime.Now.TimeOfDay.ToString() + "(" + TaskWithWork.Id + ")" + TaskWithWork.IsCompleted.ToString() + TaskWithWork.Status);
-			TaskWithWork.ContinueWith((t) => { System.Diagnostics.Debug.WriteLine(DateTime.Now.TimeOfDay.ToString() + "(" + TaskWithWork.Id + ")" + t.IsCompleted.ToString() + t.Status); });
 			return TaskWithWork;
 		}
 

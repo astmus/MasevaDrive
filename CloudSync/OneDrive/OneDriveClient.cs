@@ -16,7 +16,7 @@ using System.IO;
 
 namespace CloudSync
 {
-	public class OneDriveClient : ICloudStreamProvider
+	public class OneDriveClient : ICloudStreamProvider, IDeleteSyncItemProvider
 	{
 		private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
 		#region Static functionality
@@ -134,10 +134,10 @@ namespace CloudSync
 			return folders;
 		}
 
-		public async Task<bool> DeleteItem(OneDriveItem item)
+		public async Task<Exception> DeleteItem(OneDriveItem item)
 		{
 			if (item == null)
-				return false;
+				return new ArgumentNullException("Sync item for delete is null");
 			string deleteUrl = String.Format("https://graph.microsoft.com/v1.0/me/drive/items/{0}", item.Id);
 			HttpResponseMessage response;
 			try
@@ -149,17 +149,16 @@ namespace CloudSync
 					response = await inetClient.DeleteAsync(deleteUrl);
 				}
 				if (response.StatusCode != HttpStatusCode.NoContent)
-					logger.Warn("Delete file failed StatusCode = " + response.StatusCode + " for item " + item.ToString());
+					return new WebException(String.Format("Delete file {0} completed with error. Web code = {1}", item.Name, response.StatusCode));
 				else
 					logger.Debug("File delete success for item = {0}", item);
-				return response.StatusCode == HttpStatusCode.NoContent;
+				return null;
 			}
 			catch (System.Exception ex)
 			{
-				logger.Warn(ex, "Delete item failed reason {0}", ex);
-				return false;
+				logger.Warn(ex, "Delete file {0} failed reason {1}", item.Name, ex);
+				return ex;
 			}
-
 		}
 
 		/// <summary>
@@ -307,7 +306,7 @@ namespace CloudSync
 			[JsonProperty("access_token")]
 			public string AccessToken { get; set; }
 			[JsonProperty("refresh_token")]
-			public string RefreshToken { get; set; }
+			public string RefreshToken { get; set; }			
 			[JsonProperty]
 			public DateTime ObtainedTime { get; set; } = DateTime.Now;
 			public bool IsValid()
