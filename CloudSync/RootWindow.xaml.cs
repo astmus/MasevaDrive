@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Threading.Tasks;
 using CloudSync.OneDrive;
 using CloudSync.Framework;
+using System.Windows.Threading;
 
 namespace CloudSync
 {
@@ -46,7 +47,8 @@ namespace CloudSync
 				return (_errorMessageBox ?? (_errorMessageBox = InitializeErrorMessageBox()));
 			}
 		}
-				
+
+		DispatcherTimer saveSettingsTimer = new DispatcherTimer();
 		public RootWindow()
 		{
 			InitializeComponent();
@@ -56,6 +58,14 @@ namespace CloudSync
 			ConnectedAccounts.ItemsSource = Settings.Instance.Accounts;			
 			System.Windows.Application.Current.Exit += OnApplicationExit;
 			System.Windows.Application.Current.MainWindow.Loaded += OnMainWindowLoaded;
+			saveSettingsTimer.Tick += OnSaveSettingsTimerTick;
+			saveSettingsTimer.Interval = TimeSpan.FromMinutes(10);
+			saveSettingsTimer.Start();
+		}
+
+		private void OnSaveSettingsTimerTick(object sender, EventArgs e)
+		{
+			Settings.Instance.Save();
 		}
 
 		private void OnMainWindowLoaded(object sender, RoutedEventArgs e)

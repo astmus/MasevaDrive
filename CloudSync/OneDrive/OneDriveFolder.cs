@@ -159,7 +159,7 @@ namespace CloudSync
 		private void StartCreateWorkers()
 		{
 			Worker worker = null;
-			for (int i = 0; i < 1 && (worker = MakeNextWorker()) != null; i++)
+			for (int i = 0; i < 2 && (worker = MakeNextWorker()) != null; i++)
 				NewWorkerReady?.Invoke(worker);
 
 			if (itemsForSync.Count == 0)
@@ -169,7 +169,7 @@ namespace CloudSync
 		private void initTimer()
 		{
 			syncTimer.Tick += CheckUpdatesOnTheServer;
-			syncTimer.Interval = TimeSpan.FromSeconds(60);
+			syncTimer.Interval = TimeSpan.FromSeconds(300);
 		}
 
 		private void OnActiveChanged(bool newValue)
@@ -203,6 +203,7 @@ namespace CloudSync
 							//case: HttpStatusCode.Unauthorized
 						}
 					}
+					worker.Status = "Attempt";
 					if (worker.NumberOfAttempts < 3)
 					{
 						worker.DoWorkAsync(5000);
@@ -279,8 +280,7 @@ namespace CloudSync
 				if (syncItem.CurrentState == SyncState.New && info.Exists && (info.Length == syncItem.Size))
 				{
 					logger.Warn("File already exist. Name = {0}", info.FullName);
-					syncItem = null;
-					continue;
+					syncItem.CurrentState = SyncState.Loaded;					
 				}
 
 				Worker nextWorker = null;

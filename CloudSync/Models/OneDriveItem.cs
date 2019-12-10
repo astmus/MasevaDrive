@@ -118,5 +118,10 @@ namespace CloudSync.Models
 		}
 
 		public SyncState CurrentState { get; set; }
-    }
+
+		public override string ToString()
+		{
+			return base.ToString() + String.Format("State {0}", CurrentState);
+		}
+	}
 }
