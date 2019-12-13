@@ -20,6 +20,7 @@ using System.Windows;
 using CloudSync.Framework;
 using CloudSync.OneDrive;
 using System.Net.Http;
+using CloudSync.Telegram;
 
 namespace CloudSync
 {
@@ -128,7 +129,7 @@ namespace CloudSync
 				if (jresult["error"] != null)
 				{
 					MessageBox.Show(jresult["error"]["code"].ToString() + Environment.NewLine + jresult["error"]["message"].ToString());
-					logger.Error(jresult["error"]);
+					logger.Error(jresult["error"].ToString());
 				}
 
 				var allItems = jresult["value"]?.ToObject<List<OneDriveSyncItem>>();
@@ -249,7 +250,7 @@ namespace CloudSync
 			if (args.Successfull)
 				logger.Info("File {0} download and sync completed successful", (worker as DeleteOneDriveFileWorker).SyncItem.Name);
 			else
-				logger.Debug(args.Error, "Delete file {0} from cloud failed {1}", (worker as DeleteOneDriveFileWorker).SyncItem.Name, args.Error);
+				logger.Trace(args.Error, "Delete file {0} from cloud failed {1}", (worker as DeleteOneDriveFileWorker).SyncItem.Name, args.Error);
 		}
 
 		private void StartSyncTimer()
@@ -292,17 +293,18 @@ namespace CloudSync
 					case SyncState.New:
 						nextWorker = new DownloadFileWorker(syncItem, destinationPath, Owner);
 						nextWorker.TaskName = String.Format("{0} ({1})", syncItem.Name, syncItem.FormattedSize);
-						logger.Debug("New download worker ready for file {0} save to {1}", syncItem.Name, destinationPath);
+						logger.Trace("New download worker ready for file {0} save to {1}", syncItem.Name, destinationPath);
 						break;
 					case SyncState.Loaded:
 						nextWorker = new CopyFileWorker(syncItem, PathToDispathFolder, PathToSync);
 						nextWorker.TaskName = String.Format("Copy {0} ({1})", syncItem.Name, syncItem.FormattedSize);
-						logger.Debug("New copy worker ready for file {0} save to {1}", syncItem.Name, PathToSync);
+						logger.Trace("New copy worker ready for file {0} save to {1}", syncItem.Name, PathToSync);
+						TelegramService.SendNotifyFileLoadDone(Owner.UserData.PrincipalName, syncItem);
 						break;
 					case SyncState.MovedToStore:
 						nextWorker = new DeleteOneDriveFileWorker(syncItem, Owner);
 						nextWorker.TaskName = String.Format("Request for delete {0} ({1})", syncItem.Name, syncItem.FormattedSize);
-						logger.Debug("New delete worker ready for file {0}", syncItem.Name);
+						logger.Trace("New delete worker ready for file {0}", syncItem.Name);
 						break;
 					default:
 						break;

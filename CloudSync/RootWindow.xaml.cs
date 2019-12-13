@@ -11,6 +11,8 @@ using CloudSync.Framework;
 using System.Windows.Threading;
 using System.IO;
 using CloudSync.Windows;
+using Microsoft.Win32;
+using System.Windows.Media;
 
 namespace CloudSync
 {
@@ -61,7 +63,12 @@ namespace CloudSync
 			System.Windows.Application.Current.Exit += OnApplicationExit;
 			System.Windows.Application.Current.MainWindow.Loaded += OnMainWindowLoaded;
 			saveSettingsTimer.Tick += OnSaveSettingsTimerTick;
+#if DEBUG
+			saveSettingsTimer.Interval = TimeSpan.FromMinutes(1);
+#else
 			saveSettingsTimer.Interval = TimeSpan.FromMinutes(10);
+#endif
+
 			saveSettingsTimer.Start();
 		}
 
@@ -72,6 +79,12 @@ namespace CloudSync
 
 		private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
 		{
+			RegistryKey rk = Registry.CurrentUser.OpenSubKey
+				("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+			if (rk.GetValue("CloudSync") == null)
+				StartupButton.BorderBrush = new SolidColorBrush(Colors.Orange);
+			else
+				StartupButton.BorderBrush = new SolidColorBrush(Colors.LightGreen);
 			Settings.Instance.Accounts.ToList().ForEach(account =>
 			{
 				account.StartSyncActiveFolders();
@@ -81,7 +94,6 @@ namespace CloudSync
 		private void OnApplicationExit(object sender, ExitEventArgs e)
 		{
 			var res = Parallel.ForEach<OneDriveAccount>(from account in Settings.Instance.Accounts select account, new Action<OneDriveAccount>((curAccount) => { curAccount.CancelAndDestructAllActiveWorkers(); }));
-			Settings.Instance.Save();
 		}
 
 		private void OnAcountNeedAuthorization(OneDriveClient client)
@@ -107,9 +119,10 @@ namespace CloudSync
 		{
 			this.Show();
 			this.WindowState = WindowState.Normal;
+			ShowInTaskbar = true;
 		}
 
-		private void Button_Click(object sender, RoutedEventArgs e)
+		private void OnMinimizeButtonClick(object sender, RoutedEventArgs e)
 		{
 			WindowState = WindowState.Minimized;
 			ShowInTaskbar = false;
@@ -134,7 +147,6 @@ namespace CloudSync
 		private void OnCloseButtonClick(object sender, RoutedEventArgs e)
 		{			
 			this.Close();
-			//Application.Current.Shutdown();
 		}
 
 		//public static IPublicClientApplication PublicClientApp;
@@ -143,28 +155,6 @@ namespace CloudSync
 			BrowserHolder.Visibility = Visibility.Visible;
 			var authStr = OneDriveClient.GetAuthorizationRequestUrl();			
 			Browser.Navigate(authStr);
-			
-
-			/*	PublicClientApp = PublicClientApplicationBuilder.Create(ClientId).WithAuthority(AzureCloudInstance.AzurePublic, Tenant).Build();
-				var CopyauthResult = await PublicClientApp.AcquireTokenInteractive(new List<string>() { "user.read", "files.readwrite", "offline_access" }).ExecuteAsync();
-
-				string Secret = "GsMUnEBN6CYR7PqhE4VAjGneX]cS.4=_";
-
-				//In this example, I am attempting to access the Graph API
-				string[] scopes = new string[] { "https://graph.microsoft.com/.default"};
-				string url = String.Format("https://login.microsoftonline.com/common/oauth2/v2.0/token");
-				string redirectURI = "https://login.live.com/oauth20_desktop.srf";
-
-			//Instantiating and adding properties to Confidential Client
-
-			IConfidentialClientApplication app = ConfidentialClientApplicationBuilder.Create("73b0cdce-a88e-414a-8bb6-571accae6e8a").WithClientSecret(Secret).WithRedirectUri(redirectURI).Build();
-				/*Task<Uri> authCodeURL = app.GetAuthorizationRequestUrl(scopes).WithAuthority(url, true).ExecuteAsync();
-				var r = await authCodeURL;*/
-			//Acquiring token using Client Credentials
-
-			/*Task<AuthenticationResult> tokenTask = app.AcquireTokenForClient(scopes).WithAuthority(url, true).ExecuteAsync();
-			var CopyauthResult = await tokenTask;
-			app.GetAccountAsync(app.UserTokenCache);*/
 		}
 
 		private void ClearIECache()
@@ -289,6 +279,40 @@ namespace CloudSync
 			SyncUSB window = new SyncUSB();
 			window.SyncPathTextBlock.Content = Settings.Instance.RootFolder;
 			window.ShowDialog();
+		}
+
+		private void OnAutoStartButtonClick(object sender, RoutedEventArgs e)
+		{
+			RegistryKey rk = Registry.CurrentUser.OpenSubKey
+				("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+			var msgBox = new Xceed.Wpf.Toolkit.MessageBox()
+			{
+				WindowBackground = this.BorderBrush,
+				Background = this.Background,
+				BorderBrush = this.BorderBrush,
+				BorderThickness = this.BorderThickness,
+				Foreground = Caption.Foreground,
+				CaptionForeground = Caption.Foreground,
+				Text = "Application scheduled for startup",
+				Caption = "Startup",
+				ButtonRegionBackground = this.Background
+			};
+
+			var v = rk.GetValue("CloudSync");
+			if (rk.GetValue("CloudSync") == null || rk.GetValue("CloudSync").ToString() != Application.ResourceAssembly.Location)
+			{
+				rk.SetValue("CloudSync", Application.ResourceAssembly.Location);
+				msgBox.ShowDialog();
+				StartupButton.BorderBrush = new SolidColorBrush(Colors.LightGreen);
+			}
+			else
+			{
+				rk.DeleteValue("CloudSync", false);
+				msgBox.Text = "Application start up disabled";
+				msgBox.ShowDialog();
+				StartupButton.BorderBrush = new SolidColorBrush(Colors.Orange);
+			}
 		}
 	}
 }

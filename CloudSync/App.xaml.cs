@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
 using System.Net;
+using CloudSync.Telegram;
 
 namespace CloudSync
 {
@@ -20,6 +21,7 @@ namespace CloudSync
 		private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 		private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
 		{
+			Settings.Instance.Save();
 			Log.Fatal(e.Exception, "Unhandled exception: {0}", e.Exception);
 			LogManager.Flush();
 			
@@ -30,8 +32,16 @@ namespace CloudSync
 			System.Diagnostics.Trace.WriteLine("App is start");
 			var t = Application.ResourceAssembly.GetName().Name;
 			var t2 = Application.ResourceAssembly.Location;
-			
+			TelegramService.StartService();		
 		}
+
+		private void Application_Exit(object sender, ExitEventArgs e)
+		{
+			Settings.Instance.Save();
+			TelegramService.StopService();
+		}
+
+
 		/*
 		private void SetStartup()
 		{
