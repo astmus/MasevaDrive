@@ -1,5 +1,6 @@
 ﻿using CloudSync.Framework.Exceptions;
 using CloudSync.Models;
+using CloudSync.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;

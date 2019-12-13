@@ -143,18 +143,14 @@
     <Compile Include="Converters\WorkerToBackgroundConverter.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\FileInfoExtension.cs" />
-    <Compile Include="OneDriveFolderSelector.xaml.cs">
-      <DependentUpon>OneDriveFolderSelector.xaml</DependentUpon>
-    </Compile>
     <Compile Include="OneDrive\OneDriveClient.cs" />
     <Compile Include="RootWindow.xaml.cs">
       <DependentUpon>RootWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Page Include="OneDriveFolderSelector.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="Windows\SyncUSB.xaml.cs">
+      <DependentUpon>SyncUSB.xaml</DependentUpon>
+    </Compile>
     <Page Include="RootWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -181,6 +177,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\SyncUSB.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\OneDriveItem.cs" />

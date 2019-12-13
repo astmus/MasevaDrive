@@ -58,25 +58,7 @@ namespace CloudSync.Models
 		{
 			return obj.Id.GetHashCode();
 		}
-	}
-
-	public static class UIntExt
-	{
-		public static long AsKB(this long value)
-		{
-			return (long)Math.Round(value / 1024.0);
-		}
-
-		public static long AsMB(this long value)
-		{
-			return (long)Math.Round(value.AsKB() / 1024.0);
-		}
-
-		public static long AsGB(this long value)
-		{
-			return (long)Math.Round(value.AsMB() / 1024.0);
-		}
-	}
+	}	
 
 	public enum SyncState
 	{

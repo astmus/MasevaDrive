@@ -156,6 +156,31 @@
 				<ColumnDefinition Width="60"/>
 				<ColumnDefinition Width="*"/>
 			</Grid.ColumnDefinitions>
+			<Button Name="RecieveFromUSBButton" Width="59" Height="59"  VerticalAlignment="Top"  BorderThickness="2" HorizontalAlignment="Left" Click="OnRecieveFromUSBButton"  Background="#FF303030"  Content="USB" FontSize="18" FontWeight="Heavy"  Foreground="#FF888888">
+				<Button.Style>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+										<Border x:Name="Main" Background="{TemplateBinding Background}">
+											<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+										</Border>
+									</Border>
+									<ControlTemplate.Triggers>
+										<Trigger Property="IsMouseOver" Value="True">
+											<Setter Property="Background" Value="#FF454545" TargetName="Main" />
+										</Trigger>
+										<Trigger Property="IsPressed" Value="True">
+											<Setter Property="BorderBrush" Value="#FF888888" TargetName="Border" />
+										</Trigger>
+									</ControlTemplate.Triggers>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</Button.Style>
+			</Button>
 			<ItemsControl Grid.Column="1" x:Name="OneDriveWorkersBoard" ItemsSource="{Binding Source={x:Static local:Settings.Instance}, Path=Accounts}">
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>

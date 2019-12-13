@@ -9,6 +9,7 @@ using System.IO;
 using System.Net;
 using CloudSync;
 using CloudSync.Models;
+using CloudSync.Extensions;
 using CloudSync.Interfaces;
 using System.Windows.Threading;
 using CloudSync.Framework.Exceptions;

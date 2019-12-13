@@ -126,7 +126,10 @@ namespace CloudSync
 				deltaLink = jresult["@odata.deltaLink"]?.ToString();
 				nextLink = jresult["@odata.nextLink"]?.ToString();
 				if (jresult["error"] != null)
+				{
 					MessageBox.Show(jresult["error"]["code"].ToString() + Environment.NewLine + jresult["error"]["message"].ToString());
+					logger.Error(jresult["error"]);
+				}
 
 				var allItems = jresult["value"]?.ToObject<List<OneDriveSyncItem>>();
 

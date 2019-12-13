@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using CloudSync.OneDrive;
 using CloudSync.Framework;
 using System.Windows.Threading;
+using System.IO;
+using CloudSync.Windows;
 
 namespace CloudSync
 {
@@ -280,6 +282,13 @@ namespace CloudSync
 		{
 			Worker item = (e.Source as MenuItem).DataContext as Worker;
 			item.ForceCancel();
+		}
+
+		private void OnRecieveFromUSBButton(object sender, RoutedEventArgs e)
+		{
+			SyncUSB window = new SyncUSB();
+			window.SyncPathTextBlock.Content = Settings.Instance.RootFolder;
+			window.ShowDialog();
 		}
 	}
 }

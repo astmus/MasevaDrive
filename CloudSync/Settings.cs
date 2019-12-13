@@ -17,7 +17,8 @@ namespace CloudSync
 		}
 
 		public ObservableCollection<OneDriveAccount> Accounts { get; set; }
-        public static Settings Instance
+		public readonly string RootFolder = @"z:\Images&Video\";
+		public static Settings Instance
         {
             get { return _instance.Value; }
         }
