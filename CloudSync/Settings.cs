@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace CloudSync
 {
@@ -17,24 +18,35 @@ namespace CloudSync
 		}
 
 		public ObservableCollection<OneDriveAccount> Accounts { get; set; }
-		public readonly string RootFolder = @"z:\Images&Video\";
+		public readonly string RootFolder = @"Z:\Images&Video\";
 		public static Settings Instance
         {
             get { return _instance.Value; }
         }
-
-        public void Save()
-        {
-			Properties.Settings.Default.Accounts = JsonConvert.SerializeObject(Accounts);			
-            Properties.Settings.Default.Save();
-        }
-
+		
         public void Load()
-        {
-			if (!String.IsNullOrEmpty(Properties.Settings.Default.Accounts))
-				Accounts = JsonConvert.DeserializeObject<ObservableCollection<OneDriveAccount>>(Properties.Settings.Default.Accounts);
-			else
-				Accounts = new ObservableCollection<OneDriveAccount>();		
+        {			
+			try
+			{
+				using (StreamReader file = File.OpenText(@"account_data.dat"))
+				{
+					JsonSerializer serializer = new JsonSerializer();
+					Accounts = (ObservableCollection<OneDriveAccount>)serializer.Deserialize(file, typeof(ObservableCollection<OneDriveAccount>));
+				}
+			}
+			catch (System.Exception ex)
+			{
+				Save();
+			}
 		}
-    }
+
+		public void Save()
+		{
+			using (StreamWriter file = File.CreateText(@"account_data.dat"))
+			{
+				JsonSerializer serializer = new JsonSerializer();
+				serializer.Serialize(file, Accounts);
+			}
+		}
+	}
 }
