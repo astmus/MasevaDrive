@@ -6,12 +6,14 @@
         xmlns:local="clr-namespace:CloudSync"
 		xmlns:tb="http://www.hardcodet.net/taskbar"
 		xmlns:convert="clr-namespace:CloudSync.Converters"
+		xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
 		x:Name="_this"
         Title="Synchronizer" Height="600" Width="800" WindowStyle="None" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" BorderThickness="4,4,4,4" BorderBrush="#FF323232" Background="#FF282828" StateChanged="OnWindowStateChanged"  >
 	<Window.Resources>
 		<ResourceDictionary>
 			<convert:WorkerToBackgroundConverter x:Key="WorkerConverter"/>
+			
 			<convert:PercentCompletedToEnableConverter x:Key="PerecentConverter"/>
 			<Style TargetType="{x:Type ListBoxItem}" x:Key="AccountButton" >
 				<Setter Property="Height" Value="60"/>

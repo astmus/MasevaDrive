@@ -31,7 +31,18 @@ namespace CloudSync.Telegram
 		public static async void SendNotifyFileLoadDone(string email, OneDriveSyncItem file)
 		{
 			if (Subscribers.ContainsKey(email))
-				await Bot.SendTextMessageAsync(Subscribers[email], string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
+				try
+				{
+					await Bot.SendTextMessageAsync(Subscribers[email], string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
+				}
+				catch (System.Exception ex)
+				{
+					await Task.Delay(3000).ContinueWith(async (a) => 
+					{
+						await Bot.SendTextMessageAsync(Subscribers[email], string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
+					});
+				}
+				
 		}
 
 		private async static void OnMessageRecieved(object sender, global::Telegram.Bot.Args.MessageEventArgs e)

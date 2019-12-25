@@ -152,7 +152,7 @@ namespace CloudSync
 
 		private void CheckAndCreateDirectoriesForPaths()
 		{
-			PathToDispathFolder = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Owner.UserData.DisplayName, Name);
+			PathToDispathFolder = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), Owner.UserData.DisplayName);
 			if (Directory.Exists(PathToDispathFolder) == false)
 				Directory.CreateDirectory(PathToDispathFolder);
 			/*foreach (var folder in ChildrenFolders)

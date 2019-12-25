@@ -34,11 +34,11 @@ namespace CloudSync
 				WindowBackground = this.BorderBrush,
 				Background = this.Background,
 				BorderBrush = this.BorderBrush,
-				BorderThickness = this.BorderThickness,
+				BorderThickness = new Thickness(2,2,2,2),
 				Foreground = Caption.Foreground,
 				CaptionForeground = Caption.Foreground,
 				Text = "Can't get access to the account",
-				Caption = "Error",
+				Caption = "Error", 
 				ButtonRegionBackground = this.Background
 			};
 		}

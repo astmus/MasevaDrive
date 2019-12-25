@@ -4,48 +4,146 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CloudSync.Windows"
-        mc:Ignorable="d"
+		 xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d" x:Name="this"
         Title="SyncUSB" ResizeMode="NoResize"  Width="800" WindowStartupLocation="CenterScreen" BorderThickness="4,4,4,4" BorderBrush="#FF323232" Background="#FF383838" SizeToContent="Height" >
+	<Window.Resources>
+		<Style x:Key="ExistStyle"  TargetType="{x:Type xctk:MessageBox}">
+			<Setter Property="Background" Value="#FF383838"/>
+			<Setter Property="ButtonRegionBackground" Value="#FF383838"/>
+			<Setter Property="Foreground" Value="#FF888888"/>
+			<Setter Property="CaptionForeground" Value="#FF888888"/>
+			<Setter Property="BorderBrush" Value="#FF323232"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="WindowBackground" Value="#FF323232"/>
+		</Style>
+		<Style x:Key="FolderNamePrompt"  TargetType="{x:Type xctk:MessageBox}">
+			<Setter Property="Background" Value="#FF383838"/>
+			<Setter Property="CancelButtonContent" Value="Ok"/>
+			<Setter Property="ButtonRegionBackground" Value="#FF383838"/>
+			<Setter Property="Foreground" Value="#FF888888"/>
+			<Setter Property="CaptionForeground" Value="#FF888888"/>
+			<Setter Property="BorderBrush" Value="#FF323232"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="WindowBackground" Value="#FF323232"/>
+			<Setter Property="OkButtonStyle">
+				<Setter.Value>
+					<Style TargetType="{x:Type Button}">
+						<Setter Property="BorderThickness" Value="0"/>
+						<Setter Property="Background" Value="#FF383838"/>
+						<Setter Property="Padding" Value="-4"/>
+					</Style>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="OkButtonContent">
+				<Setter.Value>
+					<TextBox Width="120" Height="20"/>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="Content">
+				<Setter.Value>
+					<TextBox Width="120" Height="20"/>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style TargetType="{x:Type ContextMenu}">
+			<Setter Property="SnapsToDevicePixels"          Value="True" />
+			<Setter Property="OverridesDefaultStyle"          Value="True" />
+			<Setter Property="Grid.IsSharedSizeScope"          Value="true" />
+			<Setter Property="HasDropShadow"          Value="True" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type ContextMenu}">
+						<Border x:Name="Border" Background="#FF303030" BorderBrush="#FF383838"  BorderThickness="2">
+							<StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="HasDropShadow" Value="true">
+								<Setter TargetName="Border" Property="Padding" Value="0"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style TargetType="{x:Type Button}">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+							<Border x:Name="Main" Background="{TemplateBinding Background}">
+								<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+							</Border>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" Value="#FF454545" TargetName="Main" />
+							</Trigger>
+							<Trigger Property="IsPressed" Value="True">
+								<Setter Property="BorderBrush" Value="#FF888888" TargetName="Border" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Window.Resources>
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="0.2*"/>
+			<ColumnDefinition Width="80"/>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition />
-			<ColumnDefinition Width="0.15*"/>
+			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<ComboBox Grid.Column="0" Height="30" Margin="10,0,10,0"  FontSize="16" VerticalAlignment="Stretch"  Name="DrivesCombobox"  HorizontalAlignment="Stretch" FontWeight="Bold" />
 		<Label x:Name="TotalCountSize"  Grid.Column="1" Grid.Row="0" Content="" HorizontalContentAlignment="Center"  Foreground="#FF888888" FontWeight="Bold" FontSize="14"/>
 		<Label Grid.Column="2" Height="30" FontSize="14"  Name="SyncPathTextBlock"  Foreground="#FF888888" Content="Path" FontWeight="Bold"/>
-		<Button Grid.Column="3" Padding="10"  Height="30" Width="60" Background="#FF303030"  Content="Sync" FontSize="14" FontWeight="Bold"  Foreground="#FF888888" Click="OnSyncButtonClick">
-			<Button.Style>
+		<StackPanel Orientation="Horizontal" Grid.Column="3">
+			<StackPanel.Resources>
 				<Style TargetType="{x:Type Button}">
-					<Setter Property="Template">
-						<Setter.Value>
-							<ControlTemplate TargetType="{x:Type Button}">
-								<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
-									<Border x:Name="Main" Background="{TemplateBinding Background}">
-										<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-									</Border>
-								</Border>
-								<ControlTemplate.Triggers>
-									<Trigger Property="IsMouseOver" Value="True">
-										<Setter Property="Background" Value="#FF454545" TargetName="Main" />
-									</Trigger>
-									<Trigger Property="IsPressed" Value="True">
-										<Setter Property="BorderBrush" Value="#FF888888" TargetName="Border" />
-									</Trigger>
-								</ControlTemplate.Triggers>
-							</ControlTemplate>
-						</Setter.Value>
-					</Setter>
+					<Setter Property="Margin" Value="2,0,2,0"/>
 				</Style>
-			</Button.Style>
-		</Button>
-		<ListBox Grid.Row="1" Height="30" Margin="10"  Grid.Column="0" Grid.ColumnSpan="4" Background="Transparent"/>
-		
+			</StackPanel.Resources>
+			<Button Height="30" Background="#FF303030"  Content="Copy (to root path)" FontSize="14" FontWeight="Bold"    Foreground="#FF888888" Click="OnSyncButtonClick"/>
+			<Button Height="30" Padding="5,0,5,0"  Background="#FF303030"  Content="Copy (add folder name)" FontSize="14" FontWeight="Bold"  Foreground="#FF888888" Click="SyncWithFolderName"/>
+			<Button Height="30" Background="#FF303030"  Content="Copy (certain folder)" FontSize="14" FontWeight="Bold"  Foreground="#FF888888" Click="SyncToCertainFolder"/>
+		</StackPanel>
+		<ProgressBar Grid.Row="1" Height="30" Margin="10,10,10,0"  Grid.Column="0" Grid.ColumnSpan="4" Name="progressBar"  Background="Transparent"/>
+		<ListBox Margin="10" ScrollViewer.VerticalScrollBarVisibility="Hidden"  ItemsSource="{Binding Path=Thumbnails, ElementName=this}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="2" Background="#FF303030" Grid.ColumnSpan="4" x:Name="ThumbnailHolder" Height="500">
+			<ListBox.ContextMenu>
+				<ContextMenu>
+					<ContextMenu.Items>
+						<MenuItem Foreground="White" Header="Unselect all" Click="UnselectAllClicked" />
+						<MenuItem Foreground="White" Header="Select all"  Click="SelectAllClicked"/>
+					</ContextMenu.Items>
+				</ContextMenu>
+			</ListBox.ContextMenu>
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Grid>
+						<!--<Grid.ContextMenu>
+							<ContextMenu>
+								<MenuItem Header="Delete" Click="OnDeleteItemClick"/>
+							</ContextMenu>
+						</Grid.ContextMenu>-->
+						<Border Padding="5">
+							<Image Width="105"  Source="{Binding Path=Thumbnail}" Stretch="Uniform"/>
+						</Border>
+						<CheckBox IsChecked="{Binding Path=IsSelected}"/>
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+			<ListBox.ItemsPanel>
+				<ItemsPanelTemplate>
+					<WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
+				</ItemsPanelTemplate>
+			</ListBox.ItemsPanel>
+		</ListBox>
 	</Grid>
 </Window>

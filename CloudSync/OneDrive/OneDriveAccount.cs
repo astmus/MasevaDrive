@@ -66,7 +66,7 @@ namespace CloudSync
 						folder.StartSync();
 					}
 					else
-						folder.Suspended = true;					
+						folder.Suspended = true;
 				}
 		}	
 
