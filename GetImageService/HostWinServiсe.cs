@@ -40,7 +40,7 @@ namespace GetImageService
             }
             catch (System.Exception ex)
             {
-                File.WriteAllText(@"D:\log.txt", ex.Message);
+                File.WriteAllText(@"log.txt", ex.Message);
             }
         }
 

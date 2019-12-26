@@ -1,0 +1,18 @@
+﻿<table>
+    <# for (int i = 1; i <= 10; i++)
+       { #>
+         <tr><td>Test name <#= i #> </td>
+             <td>Test value <#= i * i #> </td> </tr>
+    <# } #>
+ </table>
+
+<h2>Sales figures</h2>
+<table>
+<# foreach (string item in m_data)
+   // m_data is declared in MyWebPageCode.cs
+   { #>
+      <tr><td> <#= item #> </td>
+          <td> <#= item #> </td></tr>
+<# } // end of foreach
+#>
+</table>
