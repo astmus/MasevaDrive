@@ -12,8 +12,8 @@
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
-    <RootNamespace>DriveDB</RootNamespace>
-    <AssemblyName>DriveDB</AssemblyName>
+    <RootNamespace>MasevaDriveDB</RootNamespace>
+    <AssemblyName>MasevaDriveDB</AssemblyName>
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
@@ -23,6 +23,8 @@
     <SqlServerVerification>False</SqlServerVerification>
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
+    <GenerateCreateScript>False</GenerateCreateScript>
+    <IncludeSchemaNameInFileName>False</IncludeSchemaNameInFileName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
@@ -46,6 +48,7 @@
     <DefineTrace>true</DefineTrace>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <SqlTargetName>MasevaDriveDB</SqlTargetName>
   </PropertyGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
@@ -57,5 +60,15 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="dbo" />
+    <Folder Include="dbo\Tables" />
+    <Folder Include="dbo\Triggers" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\StoredItems.sql" />
+    <Build Include="dbo\Triggers\DeleteStoredItemTrigger.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DriveDB.publish.xml" />
   </ItemGroup>
 </Project>

@@ -29,7 +29,8 @@ namespace CloudSync.Windows
 	{
 		List<DriveInfo> removableDrives = null;
 		DriveInfo currentDrive = null;
-		IEnumerable<FileInfo> mediaFilesOnTheDrive;
+		List<FileInfo> mediaFilesOnTheDrive;
+		
 		public SyncUSB()
 		{
 			InitializeComponent();
@@ -42,28 +43,58 @@ namespace CloudSync.Windows
 		public ObservableCollection<TransmittMedia> Thumbnails { get; set; } = new ObservableCollection<TransmittMedia>();
 		private object ThumbLock = new object();
 
-	private void DrivesCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void DrivesCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			currentDrive = removableDrives[DrivesCombobox.SelectedIndex];
+			busyIndicator.IsBusy = true;
 			Task.Factory.StartNew(() =>
 			{
-				mediaFilesOnTheDrive = currentDrive.RootDirectory.GetFiles("*.*", SearchOption.AllDirectories).Where(path => path.Name.ToLower().EndsWith(".mp4")
+				mediaFilesOnTheDrive = new List<FileInfo>();
+				currentDrive.RootDirectory.EnumerateDirectories().Where(dir => dir.Name != "System Volume Information").ToList().ForEach(dir2 =>
+				{
+					mediaFilesOnTheDrive.AddRange(dir2.GetFiles("*.*", SearchOption.AllDirectories).Where(path => path.Name.ToLower().EndsWith(".mp4")
+																											|| path.Name.ToLower().EndsWith(".jpg")
+																											|| path.Name.ToLower().EndsWith(".3gp")
+																											|| path.Name.ToLower().EndsWith(".mov")));
+
+				});
+				long totalSize = mediaFilesOnTheDrive.Sum(f => f.Length);
+				TotalCountSize.Dispatcher.Invoke(() =>
+				{
+					TotalCountSize.Content = " (" + (totalSize.AsMB().ToString() + " MB)(" + mediaFilesOnTheDrive.Count + " items)");
+				});
+				int i = 0;
+				mediaFilesOnTheDrive.OrderBy(f=>f.Name).AsParallel().AsOrdered<FileInfo>().Select(f => new TransmittMedia(f)).ForAll(obj =>
+					{
+						Thumbnails.Add(obj);
+						i++;
+						if (i == mediaFilesOnTheDrive.Count)
+							busyIndicator.Dispatcher.Invoke(() => { busyIndicator.IsBusy = false; });
+					});
+				/*mediaFilesOnTheDrive = currentDrive.RootDirectory.GetFiles("*.*", SearchOption.AllDirectories).Where(path => path.Name.ToLower().EndsWith(".mp4")
 																										|| path.Name.ToLower().EndsWith(".jpg")
 																										|| path.Name.ToLower().EndsWith(".3gp")
-																										|| path.Name.ToLower().EndsWith(".mov"));
-				long totalSize = mediaFilesOnTheDrive.Sum(f => f.Length);
+																										|| path.Name.ToLower().EndsWith(".mov"));*/
+				/*long totalSize = mediaFilesOnTheDrive.Sum(f => f.Length);
 				TotalCountSize.Dispatcher.Invoke(() =>
 				{
 					TotalCountSize.Content = " (" + (totalSize.AsMB().ToString() + " MB)");
 				});
-				mediaFilesOnTheDrive.AsParallel().Select(f => new TransmittMedia(f)).ForAll(obj => Thumbnails.Add(obj));
+				mediaFilesOnTheDrive.AsParallel().Select(f => new TransmittMedia(f)).ForAll(obj => Thumbnails.Add(obj));*/
 			});
 		}
 
 		private void OnSyncButtonClick(object sender, RoutedEventArgs e)
 		{
-			progressBar.Maximum = Thumbnails.Where(i => i != null && i.IsSelected).Count();
-			foreach (var item in Thumbnails.Where(i=>i.IsSelected).ToList())
+			var nullItems = Thumbnails.Where(i => i == null).ToList();
+			if (nullItems.Count > 0)
+			{
+				int i = 0;
+			}
+			progressBar.Maximum = Thumbnails.Where(i => i.IsSelected).Count();
+			busyIndicator.IsBusy = true;
+			busyIndicator.BusyContent = "Please wait..." + Environment.NewLine+String.Format("{0} copied from {1}", progressBar.Value, progressBar.Maximum);		
+			foreach (var item in Thumbnails.Where(i=> i.IsSelected).ToList())
 			{
 				var pathFolder = System.IO.Path.Combine(SyncPathTextBlock.Content.ToString(), item.fileInfo.CreationTime.ToString("yyyy.MM"), item.fileInfo.CreationTime.ToString("dd"));
 				if (!Directory.Exists(pathFolder))
@@ -81,10 +112,15 @@ namespace CloudSync.Windows
 						info.Delete();
 						item.fileInfo.CopyTo(destenation);
 					}
-				}
+				}				
 				Thumbnails.Remove(item);
-				progressBar.Value += 1;
+				progressBar.Value += 1;				
+				busyIndicator.BusyContent = "Please wait..." + Environment.NewLine + String.Format("{0} copied from {1}", progressBar.Value, progressBar.Maximum);
+				busyIndicator.InvalidateArrange();
+				busyIndicator.UpdateLayout();
+				this.UpdateLayout();
 			}
+			busyIndicator.IsBusy = false;
 			progressBar.Value = 0;
 		}
 
