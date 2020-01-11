@@ -3,10 +3,16 @@
 </head>
 <h2>Folder content</h2>
 <table>
-<# foreach (StorageItem item in storageItems)
+	<# foreach (StorageItem item in storageItems)
    { #>
-      <tr><td> <#= item.ItemName #> </td>
-          <td> <#= item.Hash #> </td></tr>
-<# }
+	<tr>
+		<td>
+			<#= item.ItemName #>
+		</td>
+		<td>
+			<a href="http://localhost:46243/hid=<#= item.Hash #>"><#= item.ItemName #></a>
+		</td>
+	</tr>
+	<# }
 #>
 </table>

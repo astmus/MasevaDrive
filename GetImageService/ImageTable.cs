@@ -25,7 +25,7 @@ namespace GetImageService
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("<head>\r\n\t<meta charset=\"UTF-8\">\r\n</head>\r\n<h2>Folder content</h2>\r\n<table>\r\n");
+            this.Write("<head>\r\n\t<meta charset=\"UTF-8\">\r\n</head>\r\n<h2>Folder content</h2>\r\n<table>\r\n\t");
             
             #line 6 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
  foreach (StorageItem item in storageItems)
@@ -33,23 +33,30 @@ namespace GetImageService
             
             #line default
             #line hidden
-            this.Write("      <tr><td> ");
+            this.Write("\t<tr>\r\n\t\t<td>\r\n\t\t\t");
             
-            #line 8 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
+            #line 10 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(item.ItemName));
             
             #line default
             #line hidden
-            this.Write(" </td>\r\n          <td> ");
+            this.Write("\r\n\t\t</td>\r\n\t\t<td>\r\n\t\t\t<a href=\"http://localhost:46243/hid=");
             
-            #line 9 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
+            #line 13 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(item.Hash));
             
             #line default
             #line hidden
-            this.Write(" </td></tr>\r\n");
+            this.Write("\">");
             
-            #line 10 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
+            #line 13 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.ItemName));
+            
+            #line default
+            #line hidden
+            this.Write("</a>\r\n\t\t</td>\r\n\t</tr>\r\n\t");
+            
+            #line 16 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
  }
 
             
