@@ -12,7 +12,7 @@ namespace GetImageService
     [ServiceContract]    
     interface GetImageServiceContract
     {
-        [WebGet(UriTemplate = "GetImage/img={name}")] //http://localhost:46243/GetImage/img=1.jpg
+        [WebGet(UriTemplate = "hid={name}")] //http://localhost:46243/hid=242E563C1393C7A3E14F875A6D858BF5
 		Stream GetImage(string name);
 
 		[WebGet(UriTemplate = "Page", BodyStyle = WebMessageBodyStyle.Bare)]

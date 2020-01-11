@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HashExtension.cs" />
     <Compile Include="HostWinServiсe.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -93,6 +94,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="GetImageServiceContract.cs" />
     <Compile Include="ImageTransmitService.cs" />
+    <Compile Include="StorageItem.cs" />
     <Compile Include="WinServiceInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
