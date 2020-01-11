@@ -32,15 +32,30 @@ namespace GetImageService
 			};			
 		}
 
-		public Stream GetImage(string name)
+		public Stream GetItem(string name)
         {
             WebOperationContext.Current.OutgoingResponse.ContentType = "image/jpeg";
-            return File.Open(storageItems[name].Path, FileMode.Open);
-        }
+			var requieredItem = storageItems[name];
+			if (requieredItem.IsFolder)
+			return FolderContent(requieredItem);
+				else
+			return File.Open(requieredItem.Path, FileMode.Open);
+		}
 
-		public Stream Connect()
+		private Stream FolderContent(StorageItem folder)
 		{
-			string result = new ImageTable(new List<string>() {"1","2","3"}).TransformText();
+			var content = storageItems.Where(item => item.Value.ParentHash == folder.Hash).Select(c => c.Value).ToList();
+			string result = new ImageTable(content).TransformText();
+			byte[] resultBytes = Encoding.UTF8.GetBytes(result);
+			WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
+			return new MemoryStream(resultBytes);
+		}
+
+		public Stream Root()
+		{
+			var root = ConfigurationManager.AppSettings["RootFolder"];
+			var content = storageItems.Where(item => item.Value.ParentPath == root).Select(c => c.Value).ToList();
+			string result = new ImageTable(content).TransformText();
 			byte[] resultBytes = Encoding.UTF8.GetBytes(result);
 			WebOperationContext.Current.OutgoingResponse.ContentType = "text/html";
 			return new MemoryStream(resultBytes);

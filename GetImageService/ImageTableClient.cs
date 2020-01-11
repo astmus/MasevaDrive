@@ -8,7 +8,7 @@ namespace GetImageService
 {
 	partial class ImageTable
 	{
-		private List<string> m_data;
-		public ImageTable(List<string> data) { this.m_data = data; }
+		private List<StorageItem> storageItems;
+		public ImageTable(List<StorageItem> items) { this.storageItems = items; }
 	}
 }

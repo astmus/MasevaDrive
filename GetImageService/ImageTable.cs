@@ -25,62 +25,32 @@ namespace GetImageService
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("<table>\r\n    ");
-            
-            #line 2 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
- for (int i = 1; i <= 10; i++)
-       { 
-            
-            #line default
-            #line hidden
-            this.Write("         <tr><td>Test name ");
-            
-            #line 4 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(i));
-            
-            #line default
-            #line hidden
-            this.Write(" </td>\r\n             <td>Test value ");
-            
-            #line 5 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(i * i));
-            
-            #line default
-            #line hidden
-            this.Write(" </td> </tr>\r\n    ");
+            this.Write("<head>\r\n\t<meta charset=\"UTF-8\">\r\n</head>\r\n<h2>Folder content</h2>\r\n<table>\r\n");
             
             #line 6 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
- } 
-            
-            #line default
-            #line hidden
-            this.Write(" </table>\r\n\r\n<h2>Sales figures</h2>\r\n<table>\r\n");
-            
-            #line 11 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
- foreach (string item in m_data)
-   // m_data is declared in MyWebPageCode.cs
+ foreach (StorageItem item in storageItems)
    { 
             
             #line default
             #line hidden
             this.Write("      <tr><td> ");
             
-            #line 14 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(item));
+            #line 8 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.ItemName));
             
             #line default
             #line hidden
             this.Write(" </td>\r\n          <td> ");
             
-            #line 15 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(item));
+            #line 9 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(item.Hash));
             
             #line default
             #line hidden
             this.Write(" </td></tr>\r\n");
             
-            #line 16 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
- } // end of foreach
+            #line 10 "X:\Programming\MasevaDrive\GetImageService\ImageTable.tt"
+ }
 
             
             #line default

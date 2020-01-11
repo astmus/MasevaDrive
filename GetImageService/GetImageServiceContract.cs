@@ -13,10 +13,10 @@ namespace GetImageService
     interface GetImageServiceContract
     {
         [WebGet(UriTemplate = "hid={name}")] //http://localhost:46243/hid=242E563C1393C7A3E14F875A6D858BF5
-		Stream GetImage(string name);
+		Stream GetItem(string name);
 
-		[WebGet(UriTemplate = "Page", BodyStyle = WebMessageBodyStyle.Bare)]
+		[WebGet(UriTemplate = "Root", BodyStyle = WebMessageBodyStyle.Bare)]
 		[OperationContract]
-		Stream Connect();		
+		Stream Root();
 	}
 }

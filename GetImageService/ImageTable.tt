@@ -1,18 +1,12 @@
-﻿<table>
-    <# for (int i = 1; i <= 10; i++)
-       { #>
-         <tr><td>Test name <#= i #> </td>
-             <td>Test value <#= i * i #> </td> </tr>
-    <# } #>
- </table>
-
-<h2>Sales figures</h2>
+﻿<head>
+	<meta charset="UTF-8">
+</head>
+<h2>Folder content</h2>
 <table>
-<# foreach (string item in m_data)
-   // m_data is declared in MyWebPageCode.cs
+<# foreach (StorageItem item in storageItems)
    { #>
-      <tr><td> <#= item #> </td>
-          <td> <#= item #> </td></tr>
-<# } // end of foreach
+      <tr><td> <#= item.ItemName #> </td>
+          <td> <#= item.Hash #> </td></tr>
+<# }
 #>
 </table>
