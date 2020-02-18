@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CloudSync.Interfaces
 {
-	interface IDeleteSyncItemProvider
+	public interface IDeleteSyncItemProvider
 	{
 		Task<Exception> DeleteItem(OneDriveItem item);
 	}

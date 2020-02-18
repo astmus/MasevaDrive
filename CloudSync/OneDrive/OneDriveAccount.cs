@@ -41,11 +41,16 @@ namespace CloudSync
 		{
 			lock (currentWorkersLock)
 			{
-				foreach (var worker in CurrentWorkers.Where(worker => (worker.CompletedPercent < 100)))
+				/*foreach (var worker in CurrentWorkers.Where(worker => (worker.CompletedPercent < 100)))
 				{
 					worker.CancelWork();
 					worker.Dismantle();
-				}
+				}*/
+				var res = Parallel.ForEach<Worker>(CurrentWorkers.Where(worker => (worker.CompletedPercent < 100)).ToList(), new Action<Worker>((worker) => 
+				{
+					worker.CancelWork();
+					worker.Dismantle();
+				}));
 			}
 		}
 

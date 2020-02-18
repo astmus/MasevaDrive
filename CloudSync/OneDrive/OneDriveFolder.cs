@@ -130,6 +130,8 @@ namespace CloudSync
 				{
 					MessageBox.Show(jresult["error"]["code"].ToString() + Environment.NewLine + jresult["error"]["message"].ToString());
 					logger.Error(jresult["error"].ToString());
+					if (jresult["error"]["code"].ToString() == "InvalidAuthenticationToken")
+						ResetDeltaLink();
 				}
 
 				var allItems = jresult["value"]?.ToObject<List<OneDriveSyncItem>>();
@@ -173,7 +175,11 @@ namespace CloudSync
 		private void initTimer()
 		{
 			syncTimer.Tick += CheckUpdatesOnTheServer;
+#if DEBUG 
+			syncTimer.Interval = TimeSpan.FromSeconds(30);
+#else
 			syncTimer.Interval = TimeSpan.FromSeconds(300);
+#endif
 		}
 
 		private void OnActiveChanged(bool newValue)

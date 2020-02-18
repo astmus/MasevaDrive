@@ -29,15 +29,14 @@ namespace CloudSync
 
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
-			System.Diagnostics.Trace.WriteLine("App is start");
+			Log.Info("App is start");
 			var t = Application.ResourceAssembly.GetName().Name;
 			var t2 = Application.ResourceAssembly.Location;
 			TelegramService.StartService();		
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)
-		{
-			Settings.Instance.Save();
+		{			
 			TelegramService.StopService();
 		}
 

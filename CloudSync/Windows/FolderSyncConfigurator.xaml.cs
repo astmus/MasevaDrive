@@ -35,8 +35,7 @@ namespace CloudSync
 			this.Loaded -= OnWindowsLoaded;
 			busyIndicator.IsBusy = true;
 
-			if (account.RootFolders == null || account.RootFolders.Count == 0)
-				account.RootFolders = await account.RequestRootFolders();
+			account.RootFolders = await account.RequestRootFolders();
 			folders.ItemsSource = account.RootFolders;
 			busyIndicator.IsBusy = false;
         }

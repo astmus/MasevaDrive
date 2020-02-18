@@ -13,6 +13,7 @@ using System.IO;
 using CloudSync.Windows;
 using Microsoft.Win32;
 using System.Windows.Media;
+using NLog;
 
 namespace CloudSync
 {
@@ -21,6 +22,7 @@ namespace CloudSync
 	/// </summary>
 	public partial class RootWindow : Window
 	{
+		private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 		System.Windows.Forms.NotifyIcon trayIcon = new System.Windows.Forms.NotifyIcon()
 		{
 			Icon = new System.Drawing.Icon(Application.GetResourceStream(new Uri("pack://application:,,,/1.ico")).Stream),
@@ -92,8 +94,11 @@ namespace CloudSync
 		}		
 
 		private void OnApplicationExit(object sender, ExitEventArgs e)
-		{
+		{			
 			var res = Parallel.ForEach<OneDriveAccount>(from account in Settings.Instance.Accounts select account, new Action<OneDriveAccount>((curAccount) => { curAccount.CancelAndDestructAllActiveWorkers(); }));
+			Log.Info("App being close and save settings");
+			Settings.Instance.Save();
+			Log.Info("App saved setting. Exuit code = "+e.ApplicationExitCode);
 		}
 
 		private void OnAcountNeedAuthorization(OneDriveClient client)

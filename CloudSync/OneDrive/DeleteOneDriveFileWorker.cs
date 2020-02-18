@@ -36,7 +36,7 @@ namespace CloudSync.OneDrive
 
 		public override void Dismantle()
 		{
-			
+			RaiseFailed(new DismantileWorkerException());
 		}
 
 		public override Task DoWorkAsync()

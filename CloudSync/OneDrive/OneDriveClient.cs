@@ -62,7 +62,7 @@ namespace CloudSync
 			}
 		}
 		#endregion
-
+		[JsonIgnore]
 		public OwnerInfo _userData;
 		public OwnerInfo UserData
 		{
@@ -234,8 +234,9 @@ namespace CloudSync
 						wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
 						userResult = wc.UploadString("https://login.microsoftonline.com/common/oauth2/v2.0/token", body);
 					}
-					catch
+					catch(Exception ex)
 					{
+						logger.Error(ex.Message + "Inner Message" + ex.InnerException);
 						CredentialData.RefreshToken = null;
 						NeedRelogin?.Invoke(this);
 						return;
@@ -311,7 +312,7 @@ namespace CloudSync
 			public DateTime ObtainedTime { get; set; } = DateTime.Now;
 			public bool IsValid()
 			{
-				return (DateTime.Now - ObtainedTime) < Expires;
+				return (DateTime.Now - ObtainedTime) < (Expires - TimeSpan.FromMinutes(1)); // 1 minute just in case when request make start about expiration time
 			}
 		}
 
