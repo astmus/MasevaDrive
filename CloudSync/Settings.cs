@@ -31,7 +31,7 @@ namespace CloudSync
 				using (StreamReader file = File.OpenText(@"account_data.dat"))
 				{
 					JsonSerializer serializer = new JsonSerializer();
-					Accounts = (ObservableCollection<OneDriveAccount>)serializer.Deserialize(file, typeof(ObservableCollection<OneDriveAccount>));
+					Accounts = (ObservableCollection<OneDriveAccount>)serializer.Deserialize(file, typeof(ObservableCollection<OneDriveAccount>)) ?? new ObservableCollection<OneDriveAccount>();
 				}
 			}
 			catch (System.Exception ex)

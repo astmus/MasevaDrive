@@ -128,7 +128,7 @@ namespace CloudSync
 			}
 		}        
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             /*foreach (var folder in oneDriveFolders)
             {

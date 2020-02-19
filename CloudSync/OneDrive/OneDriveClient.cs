@@ -58,6 +58,7 @@ namespace CloudSync
 			}
 			catch (System.Exception ex)
 			{
+				logger.Error(ex, "Parse credentioal data error");
 				return null;
 			}
 		}
@@ -218,8 +219,12 @@ namespace CloudSync
 		private Task currentRenewer = null;
 		private Task RenewAccessToken()
 		{
+			if (CredentialData.IsValid()) return Task.CompletedTask;
 			if (currentRenewer != null)
-				return currentRenewer;
+			{
+				currentRenewer.Wait();
+				return Task.CompletedTask;
+			}
 			else
 				currentRenewer = Task.Run(() =>
 			{
@@ -228,18 +233,17 @@ namespace CloudSync
 				{
 					try
 					{
-						if (CredentialData?.RefreshToken == null)
+						if (CredentialData.RefreshToken == null)
 							throw new HttpException((int)HttpStatusCode.Unauthorized, " Credential data is empty");
 						string body = OneDriveClient.MakeRefreshTokenRequestBody(CredentialData.RefreshToken);
 						wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
 						userResult = wc.UploadString("https://login.microsoftonline.com/common/oauth2/v2.0/token", body);
 					}
-					catch(Exception ex)
+					catch (Exception ex)
 					{
-						logger.Error(ex.Message + "Inner Message" + ex.InnerException);
-						CredentialData.RefreshToken = null;
-						NeedRelogin?.Invoke(this);
-						return;
+						logger.Error(ex, "Renew Access token error");
+						//NeedRelogin?.Invoke(this);
+						//return;
 					}
 				}
 				try
@@ -248,6 +252,7 @@ namespace CloudSync
 				}
 				catch (System.Exception ex)
 				{
+					logger.Error(ex, "Parse credential data exception");
 					if (ex is WebException)
 						throw ex;
 				}
@@ -265,12 +270,10 @@ namespace CloudSync
 			//return inetClient.GetStreamAsync(url);
 			//return Task.Run<Stream>(() =>
 			//{
-			if (currentRenewer != null)
-				await currentRenewer;
-			if (CredentialData.IsValid())
-				return await inetClient.GetStreamAsync(url);
-			else
+			
+			if (!CredentialData.IsValid())
 				await RenewAccessToken();
+
 			return await inetClient.GetStreamAsync(url);
 			//});
 
