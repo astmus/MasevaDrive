@@ -23,8 +23,7 @@ namespace CloudSync
 		{
 			Settings.Instance.Save();
 			Log.Fatal(e.Exception, "Unhandled exception: {0}", e.Exception);
-			LogManager.Flush();
-			
+			LogManager.Flush();			
 		}
 
 		private void Application_Startup(object sender, StartupEventArgs e)

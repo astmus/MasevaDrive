@@ -103,20 +103,23 @@
 		</Grid.RowDefinitions>
 		<ComboBox Grid.Column="0" Height="30" Margin="10,0,10,0"  FontSize="16" VerticalAlignment="Stretch"  Name="DrivesCombobox"  HorizontalAlignment="Stretch" FontWeight="Bold" />
 		<StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" >
-			<Label  FontSize="12"  Name="SyncPathTextBlock" Padding="0"  Foreground="#FF888888" Content="Path" FontWeight="Bold"/>
-			<Label x:Name="TotalCountSize"  Content="(0 items)" Padding="0"  Foreground="#FF888888" FontWeight="Bold" FontSize="12"/>
+			<Label    Name="SyncPathTextBlock" Padding="2,2,0,0"  Foreground="#FF888888" Content="Path" FontWeight="Bold"/>
+			<Label x:Name="TotalCountSize"  Content="(0 items)" Padding="2,1,0,0"  Foreground="#FF888888" FontWeight="Bold" />
 		</StackPanel>
-		<StackPanel Orientation="Horizontal" Grid.Column="3">
+		<StackPanel Orientation="Horizontal" Margin="0,0,9,0"  Grid.Column="3">
 			<StackPanel.Resources>
 				<Style TargetType="{x:Type Button}">
 					<Setter Property="Margin" Value="2,0,2,0"/>
 				</Style>
-			</StackPanel.Resources>			
-			<Button Height="30" Background="#FF303030"  Content="Copy (to root path)" FontSize="14" FontWeight="Bold"    Foreground="#FF888888" Click="OnSyncButtonClick"/>
-			<Button Height="30" Padding="5,0,5,0"  Background="#FF303030"  Content="Copy (add folder name)" FontSize="14" FontWeight="Bold"  Foreground="#FF888888" Click="SyncWithFolderName"/>
-			<Button Height="30" Background="#FF303030"  Content="Copy (certain folder)" FontSize="14" FontWeight="Bold"  Foreground="#FF888888" Click="SyncToCertainFolder"/>
-		</StackPanel>		
-		<ProgressBar HorizontalAlignment="Stretch"  Grid.Row="1" Height="30" Margin="10,10,10,0"  Grid.Column="0" Grid.ColumnSpan="4" Name="progressBar"  Background="Transparent"/>		
+			</StackPanel.Resources>
+			<Button BorderThickness="2"  Background="#FF303030"  Content="Copy&#x0a;(to root path)" FontSize="14" FontWeight="Bold" HorizontalContentAlignment="Center"   Foreground="#FF888888" Click="OnSyncButtonClick"/>
+			<Button BorderThickness="2" Padding="5,0,5,0"  Background="#FF303030"  Content="Copy&#x0a;(add folder name)" FontSize="14" HorizontalContentAlignment="Center" FontWeight="Bold"  Foreground="#FF888888" Click="SyncWithFolderName"/>
+			<Button BorderThickness="2" Background="#FF303030"  Content="Copy&#x0a;(certain folder)" HorizontalContentAlignment="Center"  FontSize="14" FontWeight="Bold"  Foreground="#FF888888" Click="SyncToCertainFolder" />
+		</StackPanel>
+		<StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+			<ProgressBar HorizontalAlignment="Stretch"   Height="30" Margin="10,10,10,0"   Name="progressBar"  Background="Transparent"/>
+			<ProgressBar HorizontalAlignment="Stretch"   Height="30" Margin="10,10,10,0" Maximum="100"   Name="progressBarDetail"  Background="Transparent"/>
+		</StackPanel>
 		<ListBox Margin="10" ScrollViewer.VerticalScrollBarVisibility="Hidden"  ItemsSource="{Binding Path=Thumbnails, ElementName=this}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="2" Background="#FF303030" Grid.ColumnSpan="4" x:Name="ThumbnailHolder" Height="500">
 			<ListBox.ContextMenu>
 				<ContextMenu>
@@ -147,6 +150,6 @@
 				</ItemsPanelTemplate>
 			</ListBox.ItemsPanel>
 		</ListBox>
-		<xctk:BusyIndicator Grid.Row="0" Grid.RowSpan="3"  Grid.Column="0" Grid.ColumnSpan="4" Background="#FF303030" Foreground="#FF888888"  x:Name="busyIndicator"/>
+		<xctk:BusyIndicator Grid.Row="0" Grid.RowSpan="3"  Grid.Column="0" Grid.ColumnSpan="4" Background="#FF303030" Foreground="#FF888888" x:Name="busyIndicator"/>
 	</Grid>
 </Window>

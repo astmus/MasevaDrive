@@ -18,7 +18,11 @@ namespace CloudSync
 		}
 
 		public ObservableCollection<OneDriveAccount> Accounts { get; set; }
-		public readonly string RootFolder = @"Z:\Images&Video\";
+#if DEBUG
+		public readonly string RootFolder = @"Z:\Images&Video\1";
+#else
+		public readonly string RootFolder = @"Z:\Images&Video";
+#endif
 		public static Settings Instance
         {
             get { return _instance.Value; }
@@ -36,7 +40,7 @@ namespace CloudSync
 			}
 			catch (System.Exception ex)
 			{
-				Save();
+				//Save();				
 			}
 		}
 

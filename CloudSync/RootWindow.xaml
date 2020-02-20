@@ -241,7 +241,7 @@
 												<Grid.ContextMenu>
 													<ContextMenu>
 														<MenuItem Header="Try again" Click="OnTryAgainPressed"  IsEnabled="{Binding Path=CompletedPercent, Converter={StaticResource PerecentConverter}}"  />
-														<MenuItem Header="Revoke" Click="OnRemoveWorkerClick"  IsEnabled="{Binding Path=CompletedPercent, Converter={StaticResource PerecentConverter}}"  />
+														<MenuItem Header="Remove" Click="OnRemoveWorkerClick"  IsEnabled="{Binding Path=CompletedPercent, Converter={StaticResource PerecentConverter}}"  />
 													</ContextMenu>
 												</Grid.ContextMenu>
 												<ProgressBar Height="1" Margin="-5,0,-5,-3" VerticalAlignment="Bottom"  BorderThickness="0" Minimum="0" Maximum="100" Value="{Binding CompletedPercent}" Background="{Binding CompletedPercent, Converter={StaticResource WorkerConverter}}"/>
