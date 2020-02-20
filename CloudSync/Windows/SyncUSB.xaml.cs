@@ -215,11 +215,17 @@ namespace CloudSync.Windows
 
 		private void OnDeleteItemClick(object sender, RoutedEventArgs e)
 		{
-
-		}
+			TransmittMedia item = (e.Source as System.Windows.Controls.MenuItem).DataContext as TransmittMedia;
+			var result = Xceed.Wpf.Toolkit.MessageBox.Show("Remove "+ item.fileInfo.Name+" ?", "Delete file", MessageBoxButton.YesNo, Resources["ExistStyle"] as Style);
+			if (result == MessageBoxResult.Yes)
+			{
+				item.fileInfo.Delete();
+				Thumbnails.Remove(item);
+			}
+		}		
 	}
 
-	
+
 	public class TransmittMedia : INotifyPropertyChanged
 	{
 		public static System.Windows.Media.ImageSource ConvertImage(System.Drawing.Image image)

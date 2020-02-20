@@ -103,7 +103,7 @@
 		</Grid.RowDefinitions>
 		<ComboBox Grid.Column="0" Height="30" Margin="10,0,10,0"  FontSize="16" VerticalAlignment="Stretch"  Name="DrivesCombobox"  HorizontalAlignment="Stretch" FontWeight="Bold" />
 		<StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" >
-			<Label    Name="SyncPathTextBlock" Padding="2,2,0,0"  Foreground="#FF888888" Content="Path" FontWeight="Bold"/>
+			<Label Name="SyncPathTextBlock" Padding="2,2,0,0"  Foreground="#FF888888" Content="Path" FontWeight="Bold"/>
 			<Label x:Name="TotalCountSize"  Content="(0 items)" Padding="2,1,0,0"  Foreground="#FF888888" FontWeight="Bold" />
 		</StackPanel>
 		<StackPanel Orientation="Horizontal" Margin="0,0,9,0"  Grid.Column="3">
@@ -120,30 +120,29 @@
 			<ProgressBar HorizontalAlignment="Stretch"   Height="30" Margin="10,10,10,0"   Name="progressBar"  Background="Transparent"/>
 			<ProgressBar HorizontalAlignment="Stretch"   Height="30" Margin="10,10,10,0" Maximum="100"   Name="progressBarDetail"  Background="Transparent"/>
 		</StackPanel>
-		<ListBox Margin="10" ScrollViewer.VerticalScrollBarVisibility="Hidden"  ItemsSource="{Binding Path=Thumbnails, ElementName=this}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="2" Background="#FF303030" Grid.ColumnSpan="4" x:Name="ThumbnailHolder" Height="500">
-			<ListBox.ContextMenu>
-				<ContextMenu>
-					<ContextMenu.Items>
-						<MenuItem Foreground="White" Header="Unselect all" Click="UnselectAllClicked" />
-						<MenuItem Foreground="White" Header="Select all"  Click="SelectAllClicked"/>
-					</ContextMenu.Items>
-				</ContextMenu>
-			</ListBox.ContextMenu>
+		<ListBox Margin="10" ScrollViewer.VerticalScrollBarVisibility="Hidden" SelectionMode="Extended"  ItemsSource="{Binding Path=Thumbnails, ElementName=this}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="2" Background="#FF303030" Grid.ColumnSpan="4" x:Name="ThumbnailHolder" Height="500">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<Grid>
-						<!--<Grid.ContextMenu>
+						<Grid.ContextMenu>
 							<ContextMenu>
-								<MenuItem Header="Delete" Click="OnDeleteItemClick"/>
+								<MenuItem Foreground="White" Header="Unselect all" Click="UnselectAllClicked" />
+								<MenuItem Foreground="White" Header="Select all"  Click="SelectAllClicked"/>
+								<MenuItem Foreground="White" Header="Delete from disk"  Click="OnDeleteItemClick"/>
 							</ContextMenu>
-						</Grid.ContextMenu>-->
+						</Grid.ContextMenu>
 						<Border Padding="5">
-							<Image Width="105"  Source="{Binding Path=Thumbnail}" Stretch="Uniform"/>
+							<Image Width="105"  Source="{Binding Path=Thumbnail}" Stretch="Uniform" IsEnabled="True"/>
 						</Border>
-						<CheckBox IsChecked="{Binding Path=IsSelected}"/>
+						<!--<CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay}"/>-->
 					</Grid>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="{x:Type ListBoxItem}">
+					<Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
+				</Style>
+			</ListBox.ItemContainerStyle>
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
 					<WrapPanel IsItemsHost="True" Orientation="Horizontal"  />
