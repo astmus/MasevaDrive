@@ -313,7 +313,7 @@ namespace CloudSync.Windows
 				NotifyPropertyChanged();
 			}
 		}
-		private bool _isSelected = true;
+		private bool _isSelected = false;
 		public bool IsSelected { get { return _isSelected; }
 			set {
 				_isSelected = value;

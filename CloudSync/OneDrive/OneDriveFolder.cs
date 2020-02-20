@@ -128,12 +128,13 @@ namespace CloudSync
 				nextLink = jresult["@odata.nextLink"]?.ToString();
 				if (jresult["error"] != null)
 				{
-					MessageBox.Show(jresult["error"]["code"].ToString() + Environment.NewLine + jresult["error"]["message"].ToString());
+					MessageBox.Show(jresult["error"]["code"].ToString() + Environment.NewLine + jresult["error"]["message"].ToString());					
 					logger.Error(jresult["error"].ToString());
+					TelegramService.SendNotifyAboutSyncError("astmus@live.com", jresult["error"].ToString());
 					if (jresult["error"]["code"].ToString() == "InvalidAuthenticationToken")
 						ResetDeltaLink();
 				}
-
+				
 				var allItems = jresult["value"]?.ToObject<List<OneDriveSyncItem>>();
 
 				if ((allItems?.Count ?? 0) == 0)

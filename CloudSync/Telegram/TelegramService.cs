@@ -45,6 +45,23 @@ namespace CloudSync.Telegram
 				
 		}
 
+		public static async void SendNotifyAboutSyncError(string email, string errorMessage)
+		{
+			if (Subscribers.ContainsKey(email))
+				try
+				{
+					await Bot.SendTextMessageAsync(Subscribers[email], errorMessage);
+				}
+				catch (System.Exception ex)
+				{
+					await Task.Delay(3000).ContinueWith(async (a) =>
+					{
+						await Bot.SendTextMessageAsync(Subscribers[email], errorMessage);
+					});
+				}
+
+		}
+
 		private async static void OnMessageRecieved(object sender, global::Telegram.Bot.Args.MessageEventArgs e)
 		{
 			var message = e.Message;
