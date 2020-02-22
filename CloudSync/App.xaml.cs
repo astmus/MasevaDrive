@@ -29,6 +29,7 @@ namespace CloudSync
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
 			Log.Info("App is start");
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 			var t = Application.ResourceAssembly.GetName().Name;
 			var t2 = Application.ResourceAssembly.Location;
 			TelegramService.StartService();		

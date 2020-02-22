@@ -18,7 +18,7 @@ namespace CloudSync.Telegram
 		private static Dictionary<string, long> Subscribers { get; set; } = new Dictionary<string, long>();
 		static TelegramService()
 		{
-			Bot = new TelegramBotClient("1020610189:AAGJ8BkJoRMc3aBSwFykQiPPp4i4oX28B5g");
+			Bot = new TelegramBotClient("688413717:AAELvIkuj37vBedxvzIgtWsjZio8_B4QlR0");
 			Bot.OnMessage += OnMessageRecieved;
 
 			//Bot.OnCallbackQuery += BotOnCallbackQueryReceived;

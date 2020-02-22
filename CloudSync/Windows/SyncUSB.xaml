@@ -159,8 +159,8 @@
 							<Grid>
 								<Image Width="105" DockPanel.Dock="Top"  Source="{Binding Path=Thumbnail}" Stretch="Uniform" IsEnabled="True"/>
 								<StackPanel VerticalAlignment="Bottom">
-									<TextBlock Foreground="White" Text="{Binding Path=DetailedData}" Background="#58585858" />									
-									<TextBlock Foreground="White" Text="{Binding Path=Lenght}" Visibility="Collapsed" />
+									<TextBlock Foreground="White" Text="{Binding Path=DetailedData}" Background="#58585858"/>
+									<TextBlock Foreground="White" Text="{Binding Path=FormattedLastWriteTime}" Background="#58585858"/>
 								</StackPanel>
 							</Grid>
 						</Border>

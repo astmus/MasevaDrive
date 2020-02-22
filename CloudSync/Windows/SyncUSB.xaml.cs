@@ -70,7 +70,7 @@ namespace CloudSync.Windows
 					TotalCountSize.Content = " (" + (totalSize.AsMB().ToString() + " MB)(" + mediaFilesOnTheDrive.Count + " items)");
 				});
 				
-				var result = mediaFilesOnTheDrive.OrderBy(t => t.CreationTime).AsParallel().AsOrdered().WithMergeOptions(ParallelMergeOptions.NotBuffered).Select(f => new TransmittMedia(f));
+				var result = mediaFilesOnTheDrive.OrderBy(tm => tm.LastWriteTime).AsParallel().AsOrdered().WithMergeOptions(ParallelMergeOptions.NotBuffered).Select(f => new TransmittMedia(f));
 				foreach(TransmittMedia t in result)
 				{
 					Thumbnails.Add(t);
@@ -88,25 +88,25 @@ namespace CloudSync.Windows
 			busyIndicator.BusyContent = "Please wait..." + Environment.NewLine+String.Format("{0} copied from {1}", progressBar.Value, progressBar.Maximum);		
 			foreach (var item in Thumbnails.Where(i=> i.IsSelected).ToList())
 			{
-				var pathFolder = System.IO.Path.Combine(SyncPathTextBlock.Content.ToString(), item.fileInfo.CreationTime.ToString("yyyy.MM"), item.fileInfo.CreationTime.ToString("dd"));
-				if (!Directory.Exists(pathFolder))
-					Directory.CreateDirectory(pathFolder);
-				var destenation = System.IO.Path.Combine(pathFolder, item.fileInfo.Name);
+				var pathFolder = System.IO.Path.Combine(SyncPathTextBlock.Content.ToString(), item.FileInfo.LastWriteTime.ToString("yyyy.MM"), item.FileInfo.LastWriteTime.ToString("dd"));
+				if (!System.IO.Directory.Exists(pathFolder))
+					System.IO.Directory.CreateDirectory(pathFolder);
+				var destenation = System.IO.Path.Combine(pathFolder, item.FileInfo.Name);
 				var info = new FileInfo(destenation);
 				progressBarDetail.Value = 0;
 				if (!info.Exists)
-					await XCopy.CopyAsync(item.fileInfo.FullName, destenation, false, true, (o, progress)=> 
+					await XCopy.CopyAsync(item.FileInfo.FullName, destenation, false, true, (o, progress)=> 
 					{
 						progressBarDetail.Dispatcher.InvokeAsync(() => { progressBarDetail.Value = (progress as ProgressChangedEventArgs).ProgressPercentage; });
 					});
 				else
 				{					
-					var Text = String.Format("File {0} already exist. Old size {1} KB new size {2} KB. Overwrite?", item.fileInfo.Name, item.fileInfo.Length.AsKB(), info.Length.AsKB());
+					var Text = String.Format("File {0} already exist. Old size {1} KB new size {2} KB. Overwrite?", item.FileInfo.Name, item.FileInfo.Length.AsKB(), info.Length.AsKB());
 					var result = Xceed.Wpf.Toolkit.MessageBox.Show( Text, "File already exists", MessageBoxButton.OKCancel, Resources["ExistStyle"] as Style);
 					if (result == MessageBoxResult.OK)
 					{
 						info.Delete();
-						await XCopy.CopyAsync(item.fileInfo.FullName, destenation, false, true, (o, progress) =>
+						await XCopy.CopyAsync(item.FileInfo.FullName, destenation, false, true, (o, progress) =>
 						{
 							progressBarDetail.Dispatcher.InvokeAsync(() => { progressBarDetail.Value = (progress as ProgressChangedEventArgs).ProgressPercentage; });
 						});
@@ -152,25 +152,25 @@ namespace CloudSync.Windows
 			var additionalFolderName = res.ValueHolder.Text;
 			foreach (var item in Thumbnails.Where(i => i.IsSelected).ToList())
 			{
-				var pathFolder = System.IO.Path.Combine(SyncPathTextBlock.Content.ToString(), item.fileInfo.CreationTime.ToString("yyyy.MM ") + additionalFolderName);
+				var pathFolder = System.IO.Path.Combine(SyncPathTextBlock.Content.ToString(), item.FileInfo.LastWriteTime.ToString("yyyy.MM ") + additionalFolderName);
 				
-				if (!Directory.Exists(pathFolder))
-					Directory.CreateDirectory(pathFolder);
-				var destenation = System.IO.Path.Combine(pathFolder, item.fileInfo.Name);
+				if (!System.IO.Directory.Exists(pathFolder))
+					System.IO.Directory.CreateDirectory(pathFolder);
+				var destenation = System.IO.Path.Combine(pathFolder, item.FileInfo.Name);
 				var info = new FileInfo(destenation);
 				if (!info.Exists)
-					await XCopy.CopyAsync(item.fileInfo.FullName, destenation, false, true, (o, progress) =>
+					await XCopy.CopyAsync(item.FileInfo.FullName, destenation, false, true, (o, progress) =>
 					{
 						progressBarDetail.Dispatcher.InvokeAsync(() => { progressBarDetail.Value = (progress as ProgressChangedEventArgs).ProgressPercentage; });
 					});
 				else
 				{
-					var Text = String.Format("File {0} already exist. Old size {1} KB new size {2} KB. Overwrite?", item.fileInfo.Name, item.fileInfo.Length.AsKB(), info.Length.AsKB());
+					var Text = String.Format("File {0} already exist. Old size {1} KB new size {2} KB. Overwrite?", item.FileInfo.Name, item.FileInfo.Length.AsKB(), info.Length.AsKB());
 					var result = Xceed.Wpf.Toolkit.MessageBox.Show(Text, "File already exists",MessageBoxButton.YesNo, Resources["ExistStyle"] as Style);
 					if (result == MessageBoxResult.Yes)
 					{
 						info.Delete();
-						await XCopy.CopyAsync(item.fileInfo.FullName, destenation, false, true, (o, progress) =>
+						await XCopy.CopyAsync(item.FileInfo.FullName, destenation, false, true, (o, progress) =>
 						{
 							progressBarDetail.Dispatcher.InvokeAsync(() => { progressBarDetail.Value = (progress as ProgressChangedEventArgs).ProgressPercentage; });
 						});
@@ -199,23 +199,23 @@ namespace CloudSync.Windows
 			foreach (var item in Thumbnails.Where(i => i.IsSelected).ToList())
 			{
 				var pathFolder = selectedFolder;
-				if (!Directory.Exists(pathFolder))
-					Directory.CreateDirectory(pathFolder);
-				var destenation = System.IO.Path.Combine(pathFolder, item.fileInfo.Name);
+				if (!System.IO.Directory.Exists(pathFolder))
+					System.IO.Directory.CreateDirectory(pathFolder);
+				var destenation = System.IO.Path.Combine(pathFolder, item.FileInfo.Name);
 				var info = new FileInfo(destenation);
 				if (!info.Exists)
-					await XCopy.CopyAsync(item.fileInfo.FullName, destenation, false, true, (o, progress) =>
+					await XCopy.CopyAsync(item.FileInfo.FullName, destenation, false, true, (o, progress) =>
 					{
 						progressBarDetail.Dispatcher.InvokeAsync(() => { progressBarDetail.Value = (progress as ProgressChangedEventArgs).ProgressPercentage; });
 					});
 				else
 				{
-					var Text = String.Format("File {0} already exist. Old size {1} KB new size {2} KB. Overwrite?", item.fileInfo.Name, item.fileInfo.Length.AsKB(), info.Length.AsKB());
+					var Text = String.Format("File {0} already exist. Old size {1} KB new size {2} KB. Overwrite?", item.FileInfo.Name, item.FileInfo.Length.AsKB(), info.Length.AsKB());
 					var result = Xceed.Wpf.Toolkit.MessageBox.Show(Text, "File already exists", MessageBoxButton.YesNo, Resources["ExistStyle"] as Style);
 					if (result == MessageBoxResult.Yes)
 					{
 						info.Delete();
-						await XCopy.CopyAsync(item.fileInfo.FullName, destenation, false, true, (o, progress) =>
+						await XCopy.CopyAsync(item.FileInfo.FullName, destenation, false, true, (o, progress) =>
 						{
 							progressBarDetail.Dispatcher.InvokeAsync(() => { progressBarDetail.Value = (progress as ProgressChangedEventArgs).ProgressPercentage; });
 						});
@@ -238,7 +238,7 @@ namespace CloudSync.Windows
 				{
 					selected.ForEach((item) =>
 					{
-						item.fileInfo.Delete();
+						item.FileInfo.Delete();
 						Thumbnails.Remove(item);
 					});
 				}
@@ -269,32 +269,33 @@ namespace CloudSync.Windows
 			return null;
 		}
 
-		public string TypeName { get { return fileInfo.Extension.Remove(0,1).ToUpper(); } }
-		public string FormatSize { get { return ((fileInfo.Length / 1024.0) / 1024.0).ToString("0.##")+" MB"; } }
-		public string DetailedData { get { return FormatSize + " " + TypeName; } }		
+		private string TypeName { get { return FileInfo.Extension.Remove(0,1).ToUpper(); } }
+		private string FormatSize { get { return ((FileInfo.Length / 1024.0) / 1024.0).ToString("0.##") + " MB"; } }
+		public string DetailedData { get { return FormatSize + " " + TypeName; } }
+		public string FormattedLastWriteTime { get { return FileInfo.LastWriteTime.ToShortDateString(); } }
 
 		public TransmittMedia(FileInfo info)
 		{
-			fileInfo = info;
-
-			if (fileInfo.Name.ToLower().EndsWith(".jpg"))
-				using (var original = System.Drawing.Image.FromFile(fileInfo.FullName))
-				{
-					_thumbnail = original.GetThumbnailImage(120, 120, () => false, IntPtr.Zero);
+			FileInfo = info;
+						
+			if (FileInfo.Name.ToLower().EndsWith(".jpg"))
+				using (var original = System.Drawing.Image.FromFile(FileInfo.FullName))
+				{					
+					_thumbnail = original.GetThumbnailImage(120, 90, () => false, IntPtr.Zero);					
 				}
 			else
-				_thumbnail = GenerateVideoThumbnail(fileInfo.FullName, 0.5f, null);
-		}
+				_thumbnail = GenerateVideoThumbnail(FileInfo.FullName, 0.5f, null);
+		}		
 
 		public static System.Drawing.Image GenerateVideoThumbnail(string mediaFile, float amount, System.Drawing.Size? imagesize)
 		{
-			System.Drawing.Size size = imagesize ?? new System.Drawing.Size(120, 80);
+			System.Drawing.Size size = imagesize ?? new System.Drawing.Size(120, 90);
 			MediaPlayer player = new MediaPlayer { Volume = 0, ScrubbingEnabled = true };
 
 			player.Open(new Uri(mediaFile));
 			player.Pause();
 			//We need to give MediaPlayer some time to load.			 
-			System.Threading.Thread.Sleep(1000);
+			System.Threading.Thread.Sleep(1000);			
 			var totalduration = player.NaturalDuration;
 			double offset;
 
@@ -329,7 +330,7 @@ namespace CloudSync.Windows
 			return new Bitmap(memoryStream);
 		}
 
-		public FileInfo fileInfo { get; set; }
+		public FileInfo FileInfo { get; set; }
 
 		private System.Drawing.Image _thumbnail;
 		public ImageSource Thumbnail { get { return ConvertImage(_thumbnail); }
