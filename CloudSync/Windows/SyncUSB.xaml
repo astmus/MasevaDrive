@@ -48,13 +48,12 @@
 		</Style>
 		<Style x:Key="DefButton"  TargetType="{x:Type Button}">			
 			<Setter Property="Background" Value="#FF383838"/>
-			<Setter Property="Foreground" Value="#FF888888"/>
-			<Setter Property="Margin" Value="0,0,10,0"/>			
+			<Setter Property="Foreground" Value="#FF888888"/>			
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate TargetType="{x:Type Button}">
-						<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
-							<Border x:Name="Main" Background="{TemplateBinding Background}">
+						<Border x:Name="Border" BorderThickness="{TemplateBinding BorderThickness}"  BorderBrush="{TemplateBinding BorderBrush}">
+							<Border x:Name="Main" Padding="{TemplateBinding Padding}"  Background="{TemplateBinding Background}">
 								<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
 							</Border>
 						</Border>
@@ -96,28 +95,30 @@
 			<ColumnDefinition Width="280"/>
 			<ColumnDefinition Width="Auto"/>
 			<ColumnDefinition />
-			<ColumnDefinition Width="Auto"/>
+			<ColumnDefinition Width="Auto"/>			
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		<ComboBox Grid.Column="0" Height="30" Margin="10,0,10,0"  FontSize="16" VerticalAlignment="Stretch"  Name="DrivesCombobox"  HorizontalAlignment="Stretch" FontWeight="Bold" />
-		<StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" >
-			<Label Name="SyncPathTextBlock" Padding="2,3,0,0"  Foreground="#FF888888" Content="Path" FontWeight="Bold"/>
-			<Label x:Name="TotalCountSize"  Content="(0 items)" Padding="2,1,0,0"  Foreground="#FF888888" FontWeight="Bold" />
+		<StackPanel Grid.Column="0" Orientation="Horizontal"  Grid.ColumnSpan="4" Grid.Row="1">
+			<Button BorderThickness="2" Padding="5" Margin="10,10,0,0"  Style="{StaticResource DefButton}" Content="Copy (to root path)" FontSize="18" FontWeight="Bold"  Click="OnSyncButtonClick"/>
+			<Button BorderThickness="2" Padding="5" Margin="10,10,0,0" Style="{StaticResource DefButton}" Content="Copy (add folder name)" FontSize="18"   FontWeight="Bold" Click="SyncWithFolderName"/>
+			<Button BorderThickness="2" Padding="5" Margin="10,10,0,0" Style="{StaticResource DefButton}" Content="Copy (certain folder)"  FontSize="18" FontWeight="Bold" Click="SyncToCertainFolder" />
+			<Button BorderThickness="2" Padding="5" Margin="10,10,0,0" Style="{StaticResource DefButton}" Content="Add from folder"  FontSize="18" FontWeight="Bold" />
 		</StackPanel>
-		<StackPanel Orientation="Horizontal"  Grid.Column="3">
-			<Button BorderThickness="2" Style="{StaticResource DefButton}" Content="Copy&#x0a;(to root path)" FontSize="14" FontWeight="Bold" HorizontalContentAlignment="Center"  Click="OnSyncButtonClick"/>
-			<Button BorderThickness="2" Style="{StaticResource DefButton}" Content="Copy&#x0a;(add folder name)" FontSize="14" HorizontalContentAlignment="Center" FontWeight="Bold" Click="SyncWithFolderName"/>
-			<Button BorderThickness="2" Style="{StaticResource DefButton}" Content="Copy&#x0a;(certain folder)" HorizontalContentAlignment="Center"  FontSize="14" FontWeight="Bold" Click="SyncToCertainFolder" />
-		</StackPanel>
-		<StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+		<ComboBox Grid.Column="0" Margin="10,10,10,0" Height="35"  FontSize="16" VerticalAlignment="Stretch"  Name="DrivesCombobox"  HorizontalAlignment="Stretch" FontWeight="Bold" />
+		<StackPanel Orientation="Vertical" Grid.Column="2" Margin="0,10,0,0"  Grid.Row="0" Grid.ColumnSpan="2" >
+			<Label Name="SyncPathTextBlock" Padding="2"  Foreground="#FF888888" Content="Path" FontWeight="Bold"/>
+			<Label x:Name="TotalCountSize" Padding="2"  Content="(0 items)"  Foreground="#FF888888" FontWeight="Bold" />
+		</StackPanel>		
+		<StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4">
 			<ProgressBar HorizontalAlignment="Stretch" Background="#FF383838"  Height="30" Margin="10,10,10,0" Name="progressBar" />
 			<ProgressBar HorizontalAlignment="Stretch" Background="#FF383838"  Height="30" Margin="10,10,10,0" Maximum="100" Name="progressBarDetail" />
 		</StackPanel>
-		<ListBox Margin="10" ScrollViewer.VerticalScrollBarVisibility="Hidden" SelectionMode="Extended"  ItemsSource="{Binding Path=Thumbnails, ElementName=this}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="2" Background="#FF383838" Grid.ColumnSpan="4" x:Name="ThumbnailHolder" Height="500">
+		<ListBox Margin="10" ScrollViewer.VerticalScrollBarVisibility="Hidden" SelectionMode="Extended"  ItemsSource="{Binding Path=Thumbnails, ElementName=this}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="3" Background="#FF383838" Grid.ColumnSpan="4" x:Name="ThumbnailHolder" Height="500">
 			<!--<ListBox.GroupStyle>
 				<GroupStyle>
 					<GroupStyle.ContainerStyle>

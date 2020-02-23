@@ -1,1 +1,2 @@
-ffmpeg -itsoffset -20 -i "d:\Temp\1.jpg" -vcodec mjpeg -vframes 1 -an -f rawvideo -s 320x240 "d:\Temp\222.jpg"
+ffmpeg -itsoffset -20 -i "d:\Temp\1.jpg" -vcodec mjpeg -vframes 1 -an -f rawvideo -s 120x90 "d:\Temp\222.jpg"
+magick.exe D:\1.jpg -thumbnail 120x90! D:\1thumbnail.jpg
