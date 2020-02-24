@@ -47,11 +47,19 @@ namespace CloudSync.Windows
 		private void DrivesCombobox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
 			currentDrive = removableDrives[DrivesCombobox.SelectedIndex];
+			LoadMediaFilesByPath(currentDrive.RootDirectory.FullName);
+		}
+
+		private void LoadMediaFilesByPath(string pathToSourceDirectory)
+		{
+			DirectoryInfo directory = new DirectoryInfo(pathToSourceDirectory);
+			if (directory.Exists == false)
+				return;
 			busyIndicator.IsBusy = true;
 			Task.Factory.StartNew(() =>
 			{
 				mediaFilesOnTheDrive = new List<FileInfo>();
-				currentDrive.RootDirectory.EnumerateDirectories().Where(dir => dir.Name != "System Volume Information").ToList().ForEach(dir2 =>
+				directory.EnumerateDirectories().Where(dir => dir.Name != "System Volume Information").ToList().ForEach(dir2 =>
 				{
 					mediaFilesOnTheDrive.AddRange(dir2.GetFiles("*.*", SearchOption.AllDirectories).Where(path => path.Name.ToLower().EndsWith(".mp4")
 																											|| path.Name.ToLower().EndsWith(".jpg")
@@ -59,25 +67,25 @@ namespace CloudSync.Windows
 																											|| path.Name.ToLower().EndsWith(".mov")));
 
 				});
-				mediaFilesOnTheDrive.AddRange(currentDrive.RootDirectory.GetFiles("*.*", SearchOption.TopDirectoryOnly).Where(path => path.Name.ToLower().EndsWith(".mp4")
+				mediaFilesOnTheDrive.AddRange(directory.GetFiles("*.*", SearchOption.TopDirectoryOnly).Where(path => path.Name.ToLower().EndsWith(".mp4")
 																											|| path.Name.ToLower().EndsWith(".jpg")
 																											|| path.Name.ToLower().EndsWith(".3gp")
 																											|| path.Name.ToLower().EndsWith(".mov")));
-			    long totalSize = mediaFilesOnTheDrive.Sum(f => f.Length);				
+				long totalSize = mediaFilesOnTheDrive.Sum(f => f.Length);
 				progressBar.Dispatcher.Invoke(() => { progressBar.Maximum = mediaFilesOnTheDrive.Count; });
 				TotalCountSize.Dispatcher.Invoke(() =>
 				{
 					TotalCountSize.Content = " (" + (totalSize.AsMB().ToString() + " MB)(" + mediaFilesOnTheDrive.Count + " items)");
 				});
-				
+
 				var result = mediaFilesOnTheDrive.OrderBy(tm => tm.LastWriteTime).AsParallel().AsOrdered().WithMergeOptions(ParallelMergeOptions.NotBuffered).Select(f => new TransmittMedia(f));
-				foreach(TransmittMedia t in result)
+				foreach (TransmittMedia t in result)
 				{
 					Thumbnails.Add(t);
 					progressBar.Dispatcher.Invoke(() => { progressBar.Value++; });
 				}
 				progressBar.Dispatcher.Invoke(() => { progressBar.Value = 0; });
-				busyIndicator.Dispatcher.Invoke(() => { busyIndicator.IsBusy = false; });				
+				busyIndicator.Dispatcher.Invoke(() => { busyIndicator.IsBusy = false; });
 			});
 		}
 
@@ -243,7 +251,20 @@ namespace CloudSync.Windows
 					});
 				}
 			}
-		}		
+		}
+
+		private void OnAddFromFolderClick(object sender, RoutedEventArgs e)
+		{
+			string sourceFolder = null;
+			using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+			{
+				if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+					sourceFolder = dialog.SelectedPath;
+				else
+					return;
+			}			
+			LoadMediaFilesByPath(sourceFolder);
+		}
 	}
 
 

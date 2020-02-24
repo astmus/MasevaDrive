@@ -107,7 +107,7 @@
 			<Button BorderThickness="2" Padding="5" Margin="10,10,0,0"  Style="{StaticResource DefButton}" Content="Copy (to root path)" FontSize="18" FontWeight="Bold"  Click="OnSyncButtonClick"/>
 			<Button BorderThickness="2" Padding="5" Margin="10,10,0,0" Style="{StaticResource DefButton}" Content="Copy (add folder name)" FontSize="18"   FontWeight="Bold" Click="SyncWithFolderName"/>
 			<Button BorderThickness="2" Padding="5" Margin="10,10,0,0" Style="{StaticResource DefButton}" Content="Copy (certain folder)"  FontSize="18" FontWeight="Bold" Click="SyncToCertainFolder" />
-			<Button BorderThickness="2" Padding="5" Margin="10,10,0,0" Style="{StaticResource DefButton}" Content="Add from folder"  FontSize="18" FontWeight="Bold" />
+			<Button BorderThickness="2" Padding="5" Margin="10,10,0,0" Style="{StaticResource DefButton}" Content="Add from folder"  FontSize="18" FontWeight="Bold" Click="OnAddFromFolderClick"/>
 		</StackPanel>
 		<ComboBox Grid.Column="0" Margin="10,10,10,0" Height="35"  FontSize="16" VerticalAlignment="Stretch"  Name="DrivesCombobox"  HorizontalAlignment="Stretch" FontWeight="Bold" />
 		<StackPanel Orientation="Vertical" Grid.Column="2" Margin="0,10,0,0"  Grid.Row="0" Grid.ColumnSpan="2" >
