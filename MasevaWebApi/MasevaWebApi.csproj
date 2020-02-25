@@ -147,6 +147,7 @@
     <Compile Include="Controllers\RootController.cs" />
     <Compile Include="MainStartup.cs" />
     <Compile Include="Models\Book.cs" />
+    <Compile Include="Models\StorageItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

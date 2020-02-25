@@ -9,12 +9,17 @@ using MasevaWebApi.Models;
 namespace MasevaWebApi.Controllers
 {
 	public class RootController : ApiController
-    {
+	{
+		int i = 0;
+		public RootController()
+		{
+			i++;
+		}
 		//[HttpGet]
 		[Route("")]
 		public IEnumerable<int> GetValues()
 		{
-			return Enumerable.Range(0, 10);
+			return Enumerable.Range(0, i);
 		}
 
 		//[HttpGet]

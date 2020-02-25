@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MD5PerformanceTest", "MD5Pe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasevaWebApi", "MasevaWebApi\MasevaWebApi.csproj", "{2720AB48-3230-4BFD-A139-49049247F35D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriveApi", "DriveApi\DriveApi.csproj", "{2BCE4C89-2B8D-45A2-B361-F6BFF89AA819}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{2720AB48-3230-4BFD-A139-49049247F35D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2720AB48-3230-4BFD-A139-49049247F35D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2720AB48-3230-4BFD-A139-49049247F35D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BCE4C89-2B8D-45A2-B361-F6BFF89AA819}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BCE4C89-2B8D-45A2-B361-F6BFF89AA819}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BCE4C89-2B8D-45A2-B361-F6BFF89AA819}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BCE4C89-2B8D-45A2-B361-F6BFF89AA819}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
