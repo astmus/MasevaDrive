@@ -14,6 +14,7 @@ namespace DriveApi.Storage
 		IEnumerable<StorageItem> GetRoot();
 		StorageItem GetById(string id);
 		IEnumerable<StorageItem> GetChildrenByParentId(string id);
+		bool HasId(string id);
 	}
 	public class StorageItemsProvider : IStorageItemsProvide
 	{
@@ -53,6 +54,11 @@ namespace DriveApi.Storage
 		{
 			string pathToRoot = ConfigurationManager.AppSettings.RootPath();
 			return items.Where(i => i.Value.ParentPath == pathToRoot).Select(i=>i.Value).AsEnumerable();
+		}
+
+		public bool HasId(string id)
+		{
+			return items.ContainsKey(id);
 		}
 	}
 }

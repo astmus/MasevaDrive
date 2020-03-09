@@ -16,6 +16,12 @@ using DriveApi.Network;
 using System.Web.Http.Dispatcher;
 using System.Configuration;
 using DriveApi.Extensions;
+using System.Net;
+using System.Web.Http.ExceptionHandling;
+using System.Threading;
+using System.Net.Http;
+using System.Web.Http.Filters;
+using System.ComponentModel.DataAnnotations;
 
 [assembly: OwinStartup(typeof(DriveApi.Startup))]
 
@@ -62,14 +68,12 @@ namespace DriveApi
 			// Use our own IHttpControllerActivator implementation 
 			// (to prevent DefaultControllerActivator's behaviour of creating child containers per request)
 			config.Services.Replace(typeof(IHttpControllerActivator), new ControllerActivator());
-			config.MapHttpAttributeRoutes();
+			//config.Services.Replace(typeof(IExceptionHandler), new ExHandler());
+			config.MapHttpAttributeRoutes();			
 			config.Routes.MapHttpRoute("API Default", "{controller}/{id}", defaults: new { id = ConfigurationManager.AppSettings.RootPath().ToHash() });
 			config.Formatters.Remove(config.Formatters.XmlFormatter);
 			config.Formatters.JsonFormatter.UseDataContractJsonSerializer = true;
-
-			//config.Initializer = Init;
-			
-			
+			//config.Initializer = Init;			
 
 			ODataModelBuilder builder = new ODataConventionModelBuilder();
 			builder.EntitySet<StorageItem>("Items");			
@@ -78,36 +82,41 @@ namespace DriveApi
 			routePrefix: null,
 			model: builder.GetEdmModel());
 			config.EnsureInitialized();
-
+						
 			app.UseUnityContainerPerRequest(container);
-			app.UseCustomMiddleware();
-			
-			
+
+			app.UseCustomMiddleware();			
 			app.UseWebApi(config);
 		}
-	}
-	
-	/*public class IpMiddleware : OwinMiddleware
-	{
-		private readonly HashSet<string> _deniedIps;
 
-		public IpMiddleware(OwinMiddleware next, HashSet<string> deniedIps) :
-			base(next)
+		/*public class ExHandler : ExceptionHandler
 		{
-			_deniedIps = deniedIps;
-		}
-
-		public override async Task Invoke(IOwinContext context)
-		{
-			var ipAddress = (string)context.Request.Environment["server.RemoteIpAddress"];
-
-			if (_deniedIps.Contains(ipAddress))
+			public override Task HandleAsync(ExceptionHandlerContext context,
+											CancellationToken cancellationToken)
 			{
-				context.Response.StatusCode = 403;
-				return;
+				if (!ShouldHandle(context))
+				{
+					return Task.FromResult(0);
+				}
+
+				return HandleAsyncCore(context, cancellationToken);
 			}
 
-			await Next.Invoke(context);
-		}
-	}*/
+			public virtual Task HandleAsyncCore(ExceptionHandlerContext context,
+											   CancellationToken cancellationToken)
+			{
+				HandleCore(context);
+				return Task.FromResult(0);
+			}
+
+			public virtual void HandleCore(ExceptionHandlerContext context)
+			{
+			}
+
+			public override bool ShouldHandle(ExceptionHandlerContext context)
+			{
+				return true;
+			}
+		}*/
+	}
 }

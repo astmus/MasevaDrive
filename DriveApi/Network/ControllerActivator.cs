@@ -12,7 +12,7 @@ namespace DriveApi.Network
 {
 	public class HttpApplicationKey
 	{
-		public static string OwinPerRequestUnityContainerKey = "OwinContext::UnityContainer";
+		public static string OwinStorageManagerContainerKey = "OwinContext::UnityContainer";
 	}
 
 	public class ControllerActivator : IHttpControllerActivator
@@ -20,7 +20,7 @@ namespace DriveApi.Network
 		public IHttpController Create(HttpRequestMessage request, HttpControllerDescriptor controllerDescriptor, Type controllerType)
 		{
 			// Get container that we set to OwinContext using common key
-			var container = request.GetOwinContext().Get<IUnityContainer>(HttpApplicationKey.OwinPerRequestUnityContainerKey);
+			var container = request.GetOwinContext().Get<IUnityContainer>(HttpApplicationKey.OwinStorageManagerContainerKey);
 
 			// Resolve requested IHttpController using current container
 			// prevent DefaultControllerActivator's behaviour of creating child containers 

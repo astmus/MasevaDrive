@@ -26,7 +26,7 @@ namespace DriveApi.Network
 			var childContainer = _container.CreateChildContainer();
 
 			// Set created container to owinContext (to become available at other places using OwinContext.Get<IUnityContainer>(key))
-			context.Set(HttpApplicationKey.OwinPerRequestUnityContainerKey, childContainer);
+			context.Set(HttpApplicationKey.OwinStorageManagerContainerKey, childContainer);
 
 			await _next.Invoke(context);
 

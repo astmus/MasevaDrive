@@ -13,53 +13,74 @@ namespace DriveApi.Controllers
 {
 	public class StorageController : ApiController
 	{
-		IStorageItemsProvide Provider;
+		IStorageItemsProvide Storage;
 		public StorageController(IStorageItemsProvide provider)
 		{
-			Provider = provider;
+			Storage = provider;
 		}
 		[HttpGet]
 		public IEnumerable<StorageItem> GetRoot()
 		{
-			return Provider.GetRoot();
+			return Storage.GetRoot();
 		}
 
 		[HttpGet]
-		public IEnumerable<StorageItem> GetChildrebByParentId(string id)
+		[Route("storage/{id}")]
+		public HttpResponseMessage GetById(string id)
 		{
-			return Provider.GetChildrenByParentId(id);
+			try
+			{
+				var item = Storage.GetById(id);
+				if (item.FileSysInfo != null)
+				{
+					var image = File.ReadAllBytes(item.Path);
+					HttpResponseMessage result = Request.CreateResponse(HttpStatusCode.OK, Storage.GetChildrenByParentId(id));
+					result.Content = new ByteArrayContent(image);
+					result.Content.Headers.ContentLength = image.Length;
+					if (Path.GetExtension(item.Name) == ".jpeg" || Path.GetExtension(item.Name) == ".jpg")
+						result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+					else
+						result.Content.Headers.ContentType = new MediaTypeHeaderValue("video/" + Path.GetExtension(item.Name).Substring(1));
+					return result;
+				}
+				else
+					return Request.CreateResponse(HttpStatusCode.OK, Storage.GetChildrenByParentId(id));
+			}
+			catch
+			{
+				var message = string.Format("Product with id = {0} not found", id);
+				return Request.CreateErrorResponse(HttpStatusCode.OK, message);
+			}			
 		}
 
-		[HttpGet]		
+		[HttpGet]
 		[Route("storage/{id}/content")]
 		public HttpResponseMessage GetFileContent(string id)
 		{
-			var item = Provider.GetById(id);
-			if (item.FileSysInfo != null)
+			try
 			{
-				var image = File.ReadAllBytes(item.Path);				
-				HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-				result.Content = new ByteArrayContent(image);
-				result.Content.Headers.ContentLength = image.Length;
-				result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");				
-				return result;
-			}			
-			else
-				return new HttpResponseMessage(HttpStatusCode.NoContent);
-		}
-
-		//[HttpGet]
-		/*[Route("items")]
-		public IEnumerable<int> GetItems()
-		{
-			return Enumerable.Range(0, 15);
-		}
-		*/
-		//[HttpGet]
-		/*[Route("string/{value}/{val2}")]
-		public string GetStringValue(string value, string val2)
-		{
-			return "new string" + value+" "+val2;
-		}*/
+				var item = Storage.GetById(id);
+				if (item.FileSysInfo != null)
+				{
+					var image = File.ReadAllBytes(item.Path);
+					HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+					result.Content = new ByteArrayContent(image);
+					result.Content.Headers.ContentLength = image.Length;
+					if (Path.GetExtension(item.Name) == "jpeg")
+						result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+					else
+						result.Content.Headers.ContentType = new MediaTypeHeaderValue("video/" + Path.GetExtension(item.Name).Substring(1));
+					result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment") { FileName = item.Name, Size = item.FileSysInfo.Length, CreationDate = item.File.CreationTime, ModificationDate = item.File.CreationTime };
+					return result;
+				}
+				else
+					return Request.CreateErrorResponse(HttpStatusCode.NoContent, "There is no content for download");
+			}
+			catch
+			{
+				var message = string.Format("Product with id = {0} not found", id);
+				return Request.CreateErrorResponse(HttpStatusCode.OK, message);
+			}
+		}		
 	}
 }
