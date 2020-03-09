@@ -16,7 +16,7 @@ namespace DriveApi
 	{
 		static void Main(string[] args)
 		{
-			InitializeAppSettings();
+			InitializeAppSettings();			
 			// Start OWIN host 						
 			using (WebApp.Start<Startup>(url: ConfigurationManager.AppSettings.BaseAddress()))
 			{
@@ -37,7 +37,9 @@ namespace DriveApi
 			if (configFile.AppSettings.Settings["RootPath"] == null)
 				configFile.AppSettings.Settings.Add("RootPath", @"z:\Images&Video");
 			if (configFile.AppSettings.Settings["BaseAddress"] == null)
-				configFile.AppSettings.Settings.Add("BaseAddress", "http://localhost:9090/");
+				configFile.AppSettings.Settings.Add("BaseAddress", "http://192.168.0.103:9090/");
+			if (configFile.AppSettings.Settings["PathToThumbnails"] == null)
+				configFile.AppSettings.Settings.Add("PathToThumbnails", @"z:\Temp\Thumbnails");
 
 			configFile.Save(ConfigurationSaveMode.Modified);
 			ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);

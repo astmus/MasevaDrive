@@ -24,5 +24,11 @@ namespace DriveApi.Extensions
 		{
 			return settings["BaseAddress"];
 		}
+
+		public static string PathToThumbnails(this NameValueCollection settings)
+		{
+			return settings["PathToThumbnails"];
+		}
 	}
+
 }

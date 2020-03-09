@@ -13,6 +13,7 @@ namespace DriveApi.Storage
 	{
 		IEnumerable<StorageItem> GetRoot();
 		StorageItem GetById(string id);
+		StorageItem GetFileById(string id);
 		IEnumerable<StorageItem> GetChildrenByParentId(string id);
 		bool HasId(string id);
 	}
@@ -40,9 +41,14 @@ namespace DriveApi.Storage
 			};
 		}
 
+		public StorageItem GetFileById(string id)
+		{
+			return items.FirstOrDefault(i => i.Value.Id == id && i.Value.FileSysInfo != null).Value;
+		}
+
 		public StorageItem GetById(string id)
 		{
-			return items[id];
+			return items.ContainsKey(id) ? items[id] : null;
 		}
 
 		public IEnumerable<StorageItem> GetChildrenByParentId(string id)
