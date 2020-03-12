@@ -55,6 +55,8 @@ namespace DriveApi.Storage
 			ParentID = ParentPath.ToHash();
 			FileSysInfo = fileInfo;			
 			Name = System.IO.Path.GetFileName(Path);
+			if (Name.Length > 20)
+				Name = Name.Insert(20, Environment.NewLine);
 			ParentName = ParentPath == ConfigurationManager.AppSettings.RootPath() ? RootAliace : System.IO.Path.GetFileName(ParentPath);
 		}
 

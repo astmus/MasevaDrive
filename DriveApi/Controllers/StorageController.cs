@@ -79,14 +79,18 @@ namespace DriveApi.Controllers
 
 			var pathToThumbnail = Path.Combine(ConfigurationManager.AppSettings.PathToThumbnails(), item.Id)+".jpeg";
 
-			if (!(new FileInfo(pathToThumbnail)).Exists)
+			var thumbnailInfo = new FileInfo(pathToThumbnail);
+			if (!thumbnailInfo.Exists)
+			{
 				RunFFmpeg(item.Path, pathToThumbnail);
+				thumbnailInfo = new FileInfo(pathToThumbnail);
+			}
 
-			if ((new FileInfo(pathToThumbnail)).Exists)
+			if (thumbnailInfo.Exists)
 			{
 				var image = File.ReadAllBytes(pathToThumbnail);
 				HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-				result.Content = new ByteArrayContent(image);
+				result.Content = new StreamContent(File.OpenRead(pathToThumbnail));
 				result.Content.Headers.ContentLength = image.Length;
 				result.Content.Headers.ContentType = new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name));
 				return result;
