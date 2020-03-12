@@ -1,0 +1,51 @@
+﻿@{
+	ViewBag.Title = "Home Page";
+}
+<style>
+	img {
+		border-radius: 5px;
+	}
+
+	.text {
+		color: #AAAAAA;
+		font-size: 3vw;
+		padding-left:8px;
+		position:absolute;
+		width: 90%;
+		text-align: left;
+		bottom:3.5vw;
+		font-weight:600;
+	}
+</style>
+<div style="width:100%; padding-top:2vw; display:inline-block">
+	@foreach (var item in Model)
+			{
+		<a href="@("http://192.168.0.103/MasevaDrive/Home/Index/" + @item.Id)">
+			<div style="padding-bottom:10px; max-width:49%; min-width:10%;  display:inline-block; vertical-align:top;">
+
+				@if (@item.File == null)
+				{
+					<div style="position:relative; text-align:center; width:100%;  margin-right:2vw">
+						<div style="width:1920px"></div>
+						<img src="~/Content/folder.svg" alt="no image" style="margin-bottom:-20px; margin-top:-20px;"/>						
+						<div class="text">
+							@item.Name<br />
+							@item.Directory.CreationTime.ToString("dd MMM yyyy")
+						</div>
+					</div>
+				}
+				else
+				{
+					<div style="min-width:10%; max-width:100%">
+						<img src="@("http://192.168.0.103:9090/storage/thumb" + @item.Id)" style="max-width:100%" alt="Smiley face">
+						
+					</div>
+					<div style="width:90%; font-size:12px; font-weight:600; color: #AAAAAA">
+							@item.Name<br />
+							@item.File.CreationTime.ToString("dd MMM yyyy")
+					</div>
+				}				
+			</div>
+		</a>
+			}
+</div>
