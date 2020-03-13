@@ -6,7 +6,40 @@
     <title>@ViewBag.Title - Maseva Drive</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+	<script src="~/Scripts/jquery-1.10.2.js"></script>
+	<script>
+		$(window).ready(function(){
+			$(".itemsHolder").hover(
+			   function () { $(this).toggleClass('higlightItemHolder'); },
+			   function () { $(this).toggleClass('higlightItemHolder'); }
+			   )
 
+			$(".circle").click(
+			   function (event) {
+			   	console.log('click');
+			   	event.stopPropagation();			   	
+			   	$(this).parent('div').toggleClass('selectedItemHolder');
+			   	return false;
+			   }
+			   )
+			$(".circle").hover(
+			   function () { $(this).next('.check').css('display','block'); },
+			   function () { if ($(this).next('.check').parent('div').hasClass('selectedItemHolder') != true) { $(this).next('.check').css('display', 'none'); } }
+			   )
+			/*$(".check").click(
+			   function (event) {
+			   	event.stopPropagation();			   	
+			   	return false;
+			   }
+			   )
+			$(".circle").hover(
+			   function () { $(this).next('.check').show(); },
+			   function () { $(this).next('.check').hide(); }
+			   )
+			$(".check").mouseleave(
+			   )*/
+		});
+	</script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -21,7 +54,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Files", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
