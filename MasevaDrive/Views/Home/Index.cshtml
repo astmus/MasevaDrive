@@ -2,25 +2,23 @@
 	ViewBag.Title = "Files";
 }
 
-<style>
+@model List<StorageItem>
 
+<style>
 	.circle {
-		width:12%;
-		z-index:101;	
-		display:none;	
+		width: 12%;
+		z-index: 101;
+		display: none;
+	}
+
+	.invertImg {
+		-webkit-filter: invert(1);
+		filter: invert(1);
 	}
 
 	.check {
-		width:12%;
-		z-index:100;
-		display:none;
-	}
-
-	.visible{
-		display: block;
-	}
-
-	.invisible{
+		width: 12%;
+		z-index: 100;
 		display: none;
 	}
 
@@ -37,27 +35,31 @@
 		min-width: 10%;
 		display: inline-block;
 		vertical-align: top;
-		position:relative;		
+		position: relative;
+		margin-right: -4px;
 	}
 
-	.selectedItemsHolder {
+	.selectedItemHolder {
 		max-width: 19%;
 		min-width: 10%;
 		display: inline-block;
 		vertical-align: top;
-		position:relative;		
+		position: relative;
 	}
 
-	.itemsHolder.higlightItemHolder
-	{
+	.itemsHolder.higlightItemHolder {
 		background: #EEEEEE;
+	}
+
+	.itemsHolder.selectedItemHolder {
+		background: #DDDDDD;
 	}
 
 	.selectedItemHolder .circle,
 	.selectedItemHolder .check,
-	.higlightItemHolder .circle{
-		display:block;
-	}	
+	.higlightItemHolder .circle {
+		display: block;
+	}
 
 	/*.higlightItemHolder .circle{
 		display:inline;
@@ -79,12 +81,11 @@
 		width: 100%;
 	}
 
-	.file{
-		min-width:10%;
-		max-width:100%;
-		margin-top:10%;
-		position:relative;
-		border:1px solid black;
+	.file {
+		min-width: 10%;
+		max-width: 100%;
+		position: relative;	
+		margin:2%;
 	}
 
 	@@media screen and (max-width: 960px) {
@@ -93,7 +94,7 @@
 			min-width: 10%;
 			display: inline-block;
 			vertical-align: top;
-			position:relative;
+			position: relative;
 		}
 
 		.text {
@@ -105,38 +106,52 @@
 	}
 </style>
 
+
 <div style="width:100%; padding-top:2vw; display:inline-block">
-	@foreach (var item in Model)
-		{
-		<a href="@("http://192.168.0.103/MasevaDrive/Home/Index/" + @item.Id)">
-			<div class="itemsHolder" data-id="@item.Id">
-				<img class="circle" src="~/Content/circle.svg" style="position:absolute; right:5%; top:5%;" />
-				<img class="check" src="~/Content/check.svg" style="position:absolute; right:5%; top:5%;" />
-				@if (@item.File == null)
-				{
-					<div style="position:relative; text-align:center; width:100%;">
-						<div style="width:1920px"></div>
-						<div class="folder">
-							<img src="~/Content/folder.svg" style="margin-bottom:-10%" />
-							<div class="text">
-								@item.Name<br />
-								@item.Directory.CreationTime.ToString("dd MMM yyyy")
+	@using (Html.BeginForm("Files", "Home", FormMethod.Post))
+	{
+			foreach (var item in Model)
+			{
+			<a href="@("http://192.168.0.103/MasevaDrive/Home/Index/" + @item.Id)">
+				<div class="itemsHolder" data-id="@item.Id">		
+					
+					@if (@item.File == null)
+					{
+						<img class="circle" src="~/Content/circle.svg" style="position:absolute; right:10px; top:10px;" />
+						<img class="check" src="~/Content/check.svg" style="position:absolute; right:10px; top:10px;" />
+						<div style="position:relative; text-align:center; width:100%;">
+							<div style="width:1920px"></div>
+							<div class="folder">
+								<img src="~/Content/folder.svg" style="margin-bottom:-10%" />
+								<div class="text">
+									@item.Name<br />
+									@item.Directory.CreationTime.ToString("dd MMM yyyy")
+								</div>
 							</div>
 						</div>
-					</div>
-				}
-				else
-				{
-					<div class="file">
-						<div class="fileText">
-							@item.Name<br />
-							@item.File.CreationTime.ToString("dd MMM yyyy")
+					}
+					else
+					{
+						<img class="circle invertImg" src="~/Content/circle.svg" style="position:absolute; right:10px; top:10px;" />
+						<img class="check invertImg" src="~/Content/check.svg" style="position:absolute; right:10px; top:10px;" />
+						<div class="file">
+							<div class="fileText">
+								@item.Name<br />
+								@item.File.CreationTime.ToString("dd MMM yyyy")
+							</div>
+							<img src="@("http://192.168.0.103:9090/storage/thumb" + @item.Id)" style="max-width:100%; vertical-align:top;">
 						</div>
-						<img src="@("http://192.168.0.103:9090/storage/thumb" + @item.Id)" style="max-width:100%; vertical-align:top;">
-					</div>
+					}
+					<input id="@item.Id" name="Id" type="checkbox" value="@item.Id" style="display:none">
+				</div>
+			</a>
 
-				}
-			</div>
-		</a>
-			}
+		}
+	}
+	<video autoplay="0" stretch="true">
+
+		<source type="application/x-mpegurl" src="http://live.wmncdn.net/safaritv2/live2.stream/index.m3u8">
+	</video> 
 </div>
+
+ 
