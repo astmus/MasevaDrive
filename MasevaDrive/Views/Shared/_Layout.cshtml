@@ -8,17 +8,18 @@
     @Scripts.Render("~/bundles/modernizr")
 	<script src="~/Scripts/jquery-1.10.2.js"></script>
 	<script>
-		$(window).ready(function(){
+		$(window).ready(function () {
+			var pressTimer;
 			$(".itemsHolder").hover(
 			   function () { $(this).toggleClass('higlightItemHolder'); },
 			   function () { $(this).toggleClass('higlightItemHolder'); }
 			   )
-
+			
 			$(".circle").click(
 			   function (event) {
-			   	console.log('click');
 			   	event.stopPropagation();			   	
 			   	$(this).parent('div').toggleClass('selectedItemHolder');
+			   	$(this).parent('div').children('input').prop("checked", $(this).parent('div').hasClass('selectedItemHolder'));
 			   	return false;
 			   }
 			   )
@@ -26,6 +27,15 @@
 			   function () { $(this).next('.check').css('display','block'); },
 			   function () { if ($(this).next('.check').parent('div').hasClass('selectedItemHolder') != true) { $(this).next('.check').css('display', 'none'); } }
 			   )
+			$(".itemsHolder").mouseup(function(){
+				clearTimeout(pressTimer);
+				return false;
+			}).mousedown(function(){
+				pressTimer = window.setTimeout(function () {
+					$(this).toggleClass('higlightItemHolder');
+				}, 1000);
+				return false; 
+			});
 			/*$(".check").click(
 			   function (event) {
 			   	event.stopPropagation();			   	
