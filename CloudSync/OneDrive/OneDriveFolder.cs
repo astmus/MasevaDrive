@@ -127,8 +127,7 @@ namespace CloudSync
 				deltaLink = jresult["@odata.deltaLink"]?.ToString();
 				nextLink = jresult["@odata.nextLink"]?.ToString();
 				if (jresult["error"] != null)
-				{
-					MessageBox.Show(jresult["error"]["code"].ToString() + Environment.NewLine + jresult["error"]["message"].ToString());					
+				{									
 					logger.Error(jresult["error"].ToString());
 					TelegramService.SendNotifyAboutSyncError("astmus@live.com", jresult["error"].ToString());
 					if (jresult["error"]["code"].ToString() == "InvalidAuthenticationToken")

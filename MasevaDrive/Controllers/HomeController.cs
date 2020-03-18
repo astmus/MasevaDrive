@@ -30,10 +30,11 @@ namespace MasevaDrive.Controllers
 					}
 					httpResponse.Close();
 					var jresult = JArray.Parse(response);
-					var allItems = jresult.ToObject<List<StorageItem>>();					
+					var allItems = jresult.ToObject<List<StorageItem>>();
 					return View(allItems);
 				}
 				else
+				if (httpResponse.ContentType == "image/jpeg")
 				{
 					byte[] binaryResponse;
 					using (BinaryReader streamReader = new BinaryReader(httpResponse.GetResponseStream()))
@@ -41,7 +42,12 @@ namespace MasevaDrive.Controllers
 						binaryResponse = streamReader.ReadBytes((int)httpResponse.ContentLength);
 					}
 					httpResponse.Close();
-					return View("ImageContent", binaryResponse);
+					return View("ImageViewContent", binaryResponse);
+				}
+				else
+				if (httpResponse.ContentType == "video/mp4")
+				{
+					return View("VideoViewContent", "http://192.168.0.103:9090/storage/" + id);
 				}
 			}
 			return View();

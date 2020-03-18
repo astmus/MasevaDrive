@@ -275,7 +275,8 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Home\ImageContent.cshtml" />
+    <Content Include="Views\Home\ImageViewContent.cshtml" />
+    <Content Include="Views\Home\VideoViewContent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -309,7 +310,9 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>59901</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/MasevaDrive</IISUrl>
+          <IISUrl>http://192.168.0.103/MasevaDrive</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://192.168.0.103/MasevaDrive</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

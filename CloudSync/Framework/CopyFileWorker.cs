@@ -85,7 +85,7 @@ namespace CloudSync.Framework
 				using (var sourceStream = new FileStream(pathToLoadedFile, FileMode.Open, FileAccess.Read, FileShare.None, bufferSize, true))
 				{
 					Status = "Create destination file";
-					string destinationFolderWithMonthSubFolder = Path.Combine(DestinationFolder, SyncItem.CreatedDateTime.ToString("yyyy.MM"), SyncItem.CreatedDateTime.ToString("dd"));
+					string destinationFolderWithMonthSubFolder = Path.Combine(DestinationFolder, SyncItem.CreatedDateTime.ToString("yyyy.MM"));
 					if (!Directory.Exists(destinationFolderWithMonthSubFolder))
 						Directory.CreateDirectory(destinationFolderWithMonthSubFolder);
 					using (var fileStream = new FileStream(Path.Combine(destinationFolderWithMonthSubFolder, SyncItem.Name), FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true))
