@@ -73,6 +73,7 @@ namespace DriveApi
 			config.Routes.MapHttpRoute("API Default", "{controller}/{id}", defaults: new { id = ConfigurationManager.AppSettings.RootPath().ToHash() });
 			config.Formatters.Remove(config.Formatters.XmlFormatter);
 			config.Formatters.JsonFormatter.UseDataContractJsonSerializer = true;
+			config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new System.Net.Http.Headers.MediaTypeHeaderValue("multipart/form-data"));
 			//config.Initializer = Init;			
 
 			ODataModelBuilder builder = new ODataConventionModelBuilder();
