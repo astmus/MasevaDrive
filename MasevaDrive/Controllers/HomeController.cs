@@ -12,10 +12,11 @@ namespace MasevaDrive.Controllers
 {
 	public class HomeController : Controller
 	{
+		[HttpGet]
 		public ActionResult Index(string id)
 		{
 			string response = string.Empty;
-			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("http://192.168.0.103:9090/storage/"+id);			
+			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:9090/storage/"+id);			
 			httpWebRequest.Method = "GET";			
 			HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 			if (httpResponse.StatusCode == HttpStatusCode.OK)
@@ -46,7 +47,16 @@ namespace MasevaDrive.Controllers
 			return View();
 		}
 
-		public ActionResult About()
+		[ActionName("PostAction")]
+		[HttpPost]		
+		public ActionResult PostAction(List<StorageItem> item)
+		{
+			var r = Request.Form;
+			
+			return Index("");
+		}
+
+		public ActionResult AboutTest()
 		{
 			ViewBag.Message = "Your application description page.";
 
