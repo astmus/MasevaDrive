@@ -36,11 +36,14 @@ namespace DriveApi.Controllers
 				var item = Storage.GetById(id);
 				if (item.FileSysInfo != null)
 				{
-					var image = File.ReadAllBytes(item.Path);
+					if (!item.FileSysInfo.Exists)
+						return Request.CreateErrorResponse(HttpStatusCode.OK, "File does not exist");
+					
 					HttpResponseMessage result = Request.CreateResponse(HttpStatusCode.OK, Storage.GetChildrenByParentId(id));
-					result.Content = new ByteArrayContent(image);
-					result.Content.Headers.ContentLength = image.Length;
-					result.Content.Headers.ContentType = new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name));
+					result.Content = new StreamContent(item.FileSysInfo.OpenRead());
+					result.Content.Headers.ContentLength = item.FileSysInfo.Length;
+
+					result.Content.Headers.ContentType = !item.FileSysInfo.FullName.EndsWith("mp4") ? new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name)) : new MediaTypeHeaderValue("video/mp4");
 					return result;
 				}
 				else
@@ -48,7 +51,7 @@ namespace DriveApi.Controllers
 			}
 			catch
 			{
-				var message = string.Format("Product with id = {0} not found", id);
+				var message = string.Format("Item with id = {0} not found", id);
 				return Request.CreateErrorResponse(HttpStatusCode.OK, message);
 			}
 		}
@@ -87,11 +90,10 @@ namespace DriveApi.Controllers
 			}
 
 			if (thumbnailInfo.Exists)
-			{
-				var image = File.ReadAllBytes(pathToThumbnail);
+			{				
 				HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
 				result.Content = new StreamContent(File.OpenRead(pathToThumbnail));
-				result.Content.Headers.ContentLength = image.Length;
+				result.Content.Headers.ContentLength = thumbnailInfo.Length;
 				result.Content.Headers.ContentType = new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name));
 				return result;
 			}
