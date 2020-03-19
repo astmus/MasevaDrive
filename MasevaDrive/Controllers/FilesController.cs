@@ -10,10 +10,11 @@ using Newtonsoft.Json.Linq;
 
 namespace MasevaDrive.Controllers
 {
-	public class HomeController : Controller
+	public class FilesController : Controller
 	{
+		[ActionName("View")]
 		[HttpGet]
-		public ActionResult Index(string id)
+		public ActionResult ContentOfStorageItem(string id)
 		{
 			string response = string.Empty;
 			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("http://192.168.0.103:9090/storage/"+id);			
@@ -31,6 +32,7 @@ namespace MasevaDrive.Controllers
 					httpResponse.Close();
 					var jresult = JArray.Parse(response);
 					var allItems = jresult.ToObject<List<StorageItem>>();
+					//ViewBag.ItemName = ""
 					return View(allItems);
 				}
 				else
@@ -58,7 +60,7 @@ namespace MasevaDrive.Controllers
 		{
 			var r = Request.Form;
 			
-			return Index("");
+			return ContentOfStorageItem("");
 		}
 
 		public ActionResult AboutTest()
