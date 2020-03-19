@@ -16,7 +16,7 @@ namespace MasevaDrive.Controllers
 		public ActionResult Index(string id)
 		{
 			string response = string.Empty;
-			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("http://localhost:9090/storage/"+id);			
+			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("http://192.168.0.103:9090/storage/"+id);			
 			httpWebRequest.Method = "GET";			
 			HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 			if (httpResponse.StatusCode == HttpStatusCode.OK)
@@ -44,10 +44,9 @@ namespace MasevaDrive.Controllers
 					httpResponse.Close();
 					return View("ImageViewContent", binaryResponse);
 				}
-				else
-				if (httpResponse.ContentType == "video/mp4")
+				else				
 				{
-					return View("VideoViewContent", "http://192.168.0.103:9090/storage/" + id);
+					return View("VideoViewContent", httpResponse);
 				}
 			}
 			return View();

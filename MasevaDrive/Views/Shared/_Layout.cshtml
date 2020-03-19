@@ -1,9 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@{
+	string currentLocation = ViewBag.Title;
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Maseva Drive</title>
+    <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 	<script src="~/Scripts/jquery-1.10.2.js"></script>
@@ -35,19 +38,7 @@
 					$(this).toggleClass('higlightItemHolder');
 				}, 1000);
 				return false; 
-			});
-			/*$(".check").click(
-			   function (event) {
-			   	event.stopPropagation();			   	
-			   	return false;
-			   }
-			   )
-			$(".circle").hover(
-			   function () { $(this).next('.check').show(); },
-			   function () { $(this).next('.check').hide(); }
-			   )
-			$(".check").mouseleave(
-			   )*/
+			});			
 		});
 	</script>
 </head>
@@ -60,13 +51,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Maseva Drive", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Maseva Drive - Root", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Files", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink(currentLocation, "Index", "Home")</li>
+                    @*<li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

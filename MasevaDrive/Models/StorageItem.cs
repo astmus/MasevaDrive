@@ -12,9 +12,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace MasevaDrive
-{	
+{
 	public class StorageItem
 	{
+		private static readonly List<string> ImageExtensions = new List<string> { ".jpg", ".jpeg", ".bmp", ".gif", ".png" };
 		[NotMapped]
 		public string ParentPath { get; set; }
 		public string ParentID { get; set; }
@@ -37,14 +38,19 @@ namespace MasevaDrive
 		{
 			public long Size { get; set; }
 			public DateTime CreationTime { get; set; }
+			public TimeSpan Duration { get; set; }
 			public StorageFile()
 			{
-
+			
 			}
 			public StorageFile(FileInfo info)
 			{
 				Size = info.Length;
 				CreationTime = info.CreationTime;
+				if (!ImageExtensions.Contains(System.IO.Path.GetExtension(info.Name).ToLower()))
+				{
+					Duration = TimeSpan.FromMinutes(13);
+				}
 			}
 
 			public static StorageFile Create(FileInfo info)
