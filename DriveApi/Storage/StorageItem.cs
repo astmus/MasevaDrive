@@ -10,13 +10,15 @@ using System.Configuration;
 using DriveApi.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace DriveApi.Storage
 {
 	[DataContract]
 	public class StorageItem
 	{
-		public static string RootPath = null;
+		private static readonly List<string> ImageExtensions = new List<string> { ".jpg", ".jpeg", ".bmp", ".gif", ".png" };
+		public static string RootPath = ConfigurationManager.AppSettings.RootPath();
 		private static string RootAliace = "Файлы";
 		[NotMapped]
 		public string ParentPath { get; set; }
@@ -41,11 +43,6 @@ namespace DriveApi.Storage
 
 		private StorageDirectory _directory = null;
 		private StorageFile _file = null;
-
-		static StorageItem()
-		{
-			RootPath = ConfigurationManager.AppSettings.RootPath();
-		}		
 
 		public StorageItem(FileInfo fileInfo)
 		{
@@ -76,10 +73,16 @@ namespace DriveApi.Storage
 			public long Size { get; set; }
 			[DataMember]
 			public DateTime CreationTime { get; set; }
+			[DataMember]
+			public double Duration { get; set; }
 			public StorageFile(FileInfo info)
 			{
 				Size = info.Length;
 				CreationTime = info.CreationTime;
+				if (!ImageExtensions.Contains(System.IO.Path.GetExtension(info.Name).ToLower()))
+				{
+					Duration = TimeSpan.FromMinutes(13).TotalSeconds;
+				}
 			}
 
 			public static StorageFile Create(FileInfo info)

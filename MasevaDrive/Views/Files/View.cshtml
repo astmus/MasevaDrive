@@ -108,13 +108,12 @@
 
 
 <div style="width:100%; padding-top:2vw; display:inline-block">	
-		@using (Html.BeginForm("PostAction", "Files", FormMethod.Post, new { enctype = "multipart/form-data" }))
-		{
-			foreach (var item in Model)
+		@*@using (Html.BeginForm("PostAction", "Files", FormMethod.Post, new { enctype = "multipart/form-data" }))
+		{*@
+			@foreach (var item in Model)
 			{
-				<a href="@("http://192.168.0.103/MasevaDrive/Files/View/" + @item.Id)">
+				<a href="@item.ViewLink">
 					<div class="itemsHolder" data-id="@item.Id">
-
 					@if (@item.File == null)
 					{
 						<img class="circle" src="~/Content/circle.svg" style="position:absolute; right:10px; top:10px;" />
@@ -147,8 +146,8 @@
 					</div>
 				</a>
 			}
-			<input type="submit" value="Submit">
-		}
+			@*<input type="submit" value="Submit">
+		}*@
 		@*<video autoplay="0" stretch="true">
 
 				<source type="application/x-mpegurl" src="http://live.wmncdn.net/safaritv2/live2.stream/index.m3u8">

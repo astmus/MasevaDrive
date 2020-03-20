@@ -10,12 +10,13 @@ using System.Configuration;
 using MasevaDrive.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace MasevaDrive
 {
 	public class StorageItem
 	{
-		private static readonly List<string> ImageExtensions = new List<string> { ".jpg", ".jpeg", ".bmp", ".gif", ".png" };
+		private static string apiFilesURL = "http://192.168.0.103/MasevaDrive/Files/View{0}/{1}?name={2}";
 		[NotMapped]
 		public string ParentPath { get; set; }
 		public string ParentID { get; set; }
@@ -23,9 +24,10 @@ namespace MasevaDrive
 		[NotMapped]
 		public string Path { get; set; }
 		public string Id { get; set; }
-		public string Name { get; set; }		
+		public string Name { get; set; }
 		public StorageFile File { get { return _file ?? StorageFile.Create(FileSysInfo); } set { _file = value; } }
 		public StorageDirectory Directory { get { return _directory ?? StorageDirectory.Create(DirectorySysInfo); } set { _directory = value; } }
+		public string ViewLink { get { return string.Format(apiFilesURL, Directory != null ? "" : (File.Duration == 0 ? "Image" : "Video"), Id, Name); } }
 		[NotMapped]
 		public FileInfo FileSysInfo { get; set; } = null;
 		[NotMapped]
@@ -38,7 +40,7 @@ namespace MasevaDrive
 		{
 			public long Size { get; set; }
 			public DateTime CreationTime { get; set; }
-			public TimeSpan Duration { get; set; }
+			public double Duration { get; set; }
 			public StorageFile()
 			{
 			
@@ -46,11 +48,7 @@ namespace MasevaDrive
 			public StorageFile(FileInfo info)
 			{
 				Size = info.Length;
-				CreationTime = info.CreationTime;
-				if (!ImageExtensions.Contains(System.IO.Path.GetExtension(info.Name).ToLower()))
-				{
-					Duration = TimeSpan.FromMinutes(13);
-				}
+				CreationTime = info.CreationTime;				
 			}
 
 			public static StorageFile Create(FileInfo info)

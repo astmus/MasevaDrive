@@ -43,7 +43,7 @@ namespace DriveApi.Controllers
 					result.Content = new StreamContent(item.FileSysInfo.OpenRead());
 					result.Content.Headers.ContentLength = item.FileSysInfo.Length;
 
-					result.Content.Headers.ContentType = !item.FileSysInfo.FullName.EndsWith("mp4") ? new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name)) : new MediaTypeHeaderValue("video/mp4");
+					result.Content.Headers.ContentType = new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name));
 					return result;
 				}
 				else

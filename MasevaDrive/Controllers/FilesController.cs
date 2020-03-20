@@ -12,17 +12,20 @@ namespace MasevaDrive.Controllers
 {
 	public class FilesController : Controller
 	{
+		private static string baseStorageURL = "http://192.168.0.103:9090/storage/";
 		[ActionName("View")]
 		[HttpGet]
 		public ActionResult ContentOfStorageItem(string id)
 		{
+			if (Request.Params["name"] != null)
+				ViewBag.ItemName = Request.Params["name"];
+
 			string response = string.Empty;
-			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("http://192.168.0.103:9090/storage/"+id);			
-			httpWebRequest.Method = "GET";			
+			HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(baseStorageURL + id);
+			httpWebRequest.Method = "GET";
 			HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 			if (httpResponse.StatusCode == HttpStatusCode.OK)
 			{
-
 				if (httpResponse.ContentType == "application/json; charset=utf-8")
 				{
 					using (StreamReader streamReader = new StreamReader(httpResponse.GetResponseStream()))
@@ -32,34 +35,34 @@ namespace MasevaDrive.Controllers
 					httpResponse.Close();
 					var jresult = JArray.Parse(response);
 					var allItems = jresult.ToObject<List<StorageItem>>();
-					//ViewBag.ItemName = ""
 					return View(allItems);
 				}
-				else
-				if (httpResponse.ContentType == "image/jpeg")
-				{
-					byte[] binaryResponse;
-					using (BinaryReader streamReader = new BinaryReader(httpResponse.GetResponseStream()))
-					{
-						binaryResponse = streamReader.ReadBytes((int)httpResponse.ContentLength);
-					}
-					httpResponse.Close();
-					return View("ImageViewContent", binaryResponse);
-				}
-				else				
-				{
-					return View("VideoViewContent", httpResponse);
-				}
 			}
-			return View();
+			return View("Error", "Wrong content type");
+		}
+
+		[HttpGet]
+		public ActionResult ViewImage(string id)
+		{
+			if (Request.Params["name"] != null)
+				ViewBag.ItemName = Request.Params["name"];
+			return View("ImageViewContent", model: baseStorageURL + id);
+		}
+
+		[HttpGet]
+		public ActionResult ViewVideo(string id)
+		{
+			if (Request.Params["name"] != null)
+				ViewBag.ItemName = Request.Params["name"];
+			return View("VideoViewContent", model: baseStorageURL + id);
 		}
 
 		[ActionName("PostAction")]
-		[HttpPost]		
+		[HttpPost]
 		public ActionResult PostAction(List<StorageItem> item)
 		{
 			var r = Request.Form;
-			
+
 			return ContentOfStorageItem("");
 		}
 

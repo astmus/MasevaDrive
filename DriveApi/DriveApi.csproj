@@ -183,6 +183,7 @@
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Extensions\AppSettingExtensions.cs" />
     <Compile Include="Extensions\HashExtension.cs" />
+    <Compile Include="Network\ResponseContainer.cs" />
     <Compile Include="Network\UnityResolver.cs" />
     <Compile Include="Network\ControllerActivator.cs" />
     <Compile Include="Network\UnityContainerPerRequestMiddleware.cs" />
