@@ -13,6 +13,7 @@ using System.Configuration;
 using DriveApi.Extensions;
 using System.Threading;
 using System.Threading.Tasks;
+using DriveApi.Network;
 
 namespace DriveApi.Controllers
 {
@@ -55,7 +56,7 @@ namespace DriveApi.Controllers
 						response = new HttpResponseMessage();
 						response.Headers.AcceptRanges.Add("bytes");
 						response.StatusCode = HttpStatusCode.PartialContent;
-						var c = new ByteRangeStreamContent(item.FileSysInfo.OpenRead(), Request.Headers.Range, MimeMapping.GetMimeMapping(item.Name));
+						var c = new ByteRangeStreamContent(new ByteRangeStream(item.FileSysInfo.FullName,FileMode.Open), Request.Headers.Range, MimeMapping.GetMimeMapping(item.Name));
 						response.Content = c;
 						return response;
 					}
@@ -69,59 +70,7 @@ namespace DriveApi.Controllers
 				var message = string.Format("Item with id = {0} not found", id);
 				return Request.CreateErrorResponse(HttpStatusCode.OK, message);
 			}
-		}
-
-		public const int ReadStreamBufferSize = 100000;
-		private static void CreatePartialContent(Stream inputStream, Stream outputStream,
-			long start, long end)
-		{
-			int count = 0;
-			long remainingBytes = end - start + 1;
-			long position = start;
-			byte[] buffer = new byte[end - start];
-
-			inputStream.Position = start;
-			
-					if (remainingBytes > ReadStreamBufferSize)
-						count = inputStream.Read(buffer, 0, ReadStreamBufferSize);
-					else
-						count = inputStream.Read(buffer, 0, (int)remainingBytes);
-					outputStream.Write(buffer, 0, count);
-					outputStream.Flush();
-		}
-
-	private async void OnStreamConnected(Stream outputStream, HttpContent content, TransportContext context, string fileName)
-		{			
-			try
-			{
-				var buffer = new byte[65536];
-
-				using (var nypdVideo = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-				{
-					var videoLength = (int)nypdVideo.Length;
-					var videoBytesRead = 1;
-					//content.Headers.ContentLength = nypdVideo.Length;
-					//while (videoLength > 0 && videoBytesRead > 0)
-					//{
-					var last = Request.Headers.Range.Ranges.Last();					
-					//nypdVideo.Position = last.From ?? 0;
-					content.Headers.ContentRange = new System.Net.Http.Headers.ContentRangeHeaderValue(last.From ?? 0, (last.From ?? 0)+65536);						
-						videoBytesRead = nypdVideo.Read(buffer,  0,  buffer.Length);						
-						await outputStream.WriteAsync(buffer, 0, videoBytesRead);
-						
-							//}
-				}
-			}
-			catch (HttpException ex)
-			{
-				return;
-			}
-			finally
-			{
-				// Close output stream as we are done
-				//outputStream.Close();
-			}
-		}
+		}		
 
 		[HttpGet]
 		[Route("storage/{id}/content")]
