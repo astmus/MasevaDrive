@@ -11,6 +11,8 @@ using System.IO;
 using System.Diagnostics;
 using System.Configuration;
 using DriveApi.Extensions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DriveApi.Controllers
 {
@@ -38,21 +40,86 @@ namespace DriveApi.Controllers
 				{
 					if (!item.FileSysInfo.Exists)
 						return Request.CreateErrorResponse(HttpStatusCode.OK, "File does not exist");
+					if (item.File.Duration == 0)
+					{
+						HttpResponseMessage result = Request.CreateResponse(HttpStatusCode.OK, Storage.GetChildrenByParentId(id));
+						result.Content = new StreamContent(item.FileSysInfo.OpenRead());
+						result.Content.Headers.ContentLength = item.FileSysInfo.Length;
+						result.Content.Headers.ContentType = new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name));
+						return result;
+					}
 					
-					HttpResponseMessage result = Request.CreateResponse(HttpStatusCode.OK, Storage.GetChildrenByParentId(id));
-					result.Content = new StreamContent(item.FileSysInfo.OpenRead());
-					result.Content.Headers.ContentLength = item.FileSysInfo.Length;
-
-					result.Content.Headers.ContentType = new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name));
-					return result;
+					if (Request.Headers.Range != null)
+					{
+						HttpResponseMessage response;
+						response = new HttpResponseMessage();
+						response.Headers.AcceptRanges.Add("bytes");
+						response.StatusCode = HttpStatusCode.PartialContent;
+						var c = new ByteRangeStreamContent(item.FileSysInfo.OpenRead(), Request.Headers.Range, MimeMapping.GetMimeMapping(item.Name));
+						response.Content = c;
+						return response;
+					}
+					return Request.CreateErrorResponse(HttpStatusCode.NoContent, "File not found");
 				}
 				else
 					return Request.CreateResponse(HttpStatusCode.OK, Storage.GetChildrenByParentId(id));
 			}
-			catch
+			catch(Exception e)
 			{
 				var message = string.Format("Item with id = {0} not found", id);
 				return Request.CreateErrorResponse(HttpStatusCode.OK, message);
+			}
+		}
+
+		public const int ReadStreamBufferSize = 100000;
+		private static void CreatePartialContent(Stream inputStream, Stream outputStream,
+			long start, long end)
+		{
+			int count = 0;
+			long remainingBytes = end - start + 1;
+			long position = start;
+			byte[] buffer = new byte[end - start];
+
+			inputStream.Position = start;
+			
+					if (remainingBytes > ReadStreamBufferSize)
+						count = inputStream.Read(buffer, 0, ReadStreamBufferSize);
+					else
+						count = inputStream.Read(buffer, 0, (int)remainingBytes);
+					outputStream.Write(buffer, 0, count);
+					outputStream.Flush();
+		}
+
+	private async void OnStreamConnected(Stream outputStream, HttpContent content, TransportContext context, string fileName)
+		{			
+			try
+			{
+				var buffer = new byte[65536];
+
+				using (var nypdVideo = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+				{
+					var videoLength = (int)nypdVideo.Length;
+					var videoBytesRead = 1;
+					//content.Headers.ContentLength = nypdVideo.Length;
+					//while (videoLength > 0 && videoBytesRead > 0)
+					//{
+					var last = Request.Headers.Range.Ranges.Last();					
+					//nypdVideo.Position = last.From ?? 0;
+					content.Headers.ContentRange = new System.Net.Http.Headers.ContentRangeHeaderValue(last.From ?? 0, (last.From ?? 0)+65536);						
+						videoBytesRead = nypdVideo.Read(buffer,  0,  buffer.Length);						
+						await outputStream.WriteAsync(buffer, 0, videoBytesRead);
+						
+							//}
+				}
+			}
+			catch (HttpException ex)
+			{
+				return;
+			}
+			finally
+			{
+				// Close output stream as we are done
+				//outputStream.Close();
 			}
 		}
 
@@ -100,6 +167,55 @@ namespace DriveApi.Controllers
 			return Request.CreateResponse(HttpStatusCode.OK, new byte[0]);
 		}
 
+		/*
+		 //-i input.mov -vcodec libvpx -qmin 0 -qmax 50 -crf 10 -b:v 1M -acodec libvorbis output.webm
+				//- i test.wav - f avi pipe:1 | cat > test.avi
+				string path = @"x:\Programming\MasevaDrive\DriveApi\bin\Debug\ffmpeg.exe";
+				string arg = "-re -i \"z:\\Images&Video\\2013 New Year\\01012013003.mp4\" -vcodec libvpx -b:v 640k -acodec libvorbis -crf 4 -s 1920x1080 -f webm pipe:1";
+				//ExcuteProcess(@"x:\Programming\MasevaDrive\DriveApi\bin\Debug\ffmpeg.exe", "-i \"z:\\Images&Video\\2013 New Year\\01012013003.mp4\" -vcodec libvpx -qmin 0 -qmax 50 -crf 10 -b:v 1M -acodec libvorbis -f webm output", (s, e) => { }
+				//);
+				using (FileStream file = System.IO.File.OpenWrite("D:\\Temp\\video13.webm"))
+				{
+					var cmd = Command.Run(@"ffmpeg.exe", null, options => options.StartInfo((i)=> {
+						i.Arguments = arg;
+						i.UseShellExecute = false;
+						i.CreateNoWindow = true;
+						i.RedirectStandardError = true;
+						i.RedirectStandardOutput = true;
+						i.RedirectStandardInput = false;
+					}));										
+					var fileWrite = cmd.StandardOutput.PipeToAsync(file);
+					cmd.Task.
+					fileWrite.Wait();
+					var str = cmd.StandardError.ReadToEnd();
+				}
+			 */
+
+		/*
+		 -i input.mov -vcodec libvpx -qmin 0 -qmax 50 -crf 10 -b:v 1M -acodec libvorbis output.webm
+				/*ExcuteProcess(@"x:\Programming\MasevaDrive\DriveApi\bin\Debug\ffmpeg.exe", "-i \"z:\\Images&Video\\2013 New Year\\01012013003.mp4\" -vcodec libvpx -qmin 0 -qmax 50 -crf 10 -b:v 1M -acodec libvorbis output.webm", (s, e) => {
+					Console.WriteLine(e.Data);
+				});
+			 */
+		/*static void ExcuteProcess(string exe, string arg, DataReceivedEventHandler output)
+		{
+			using (var p = new Process())
+			{
+				p.StartInfo.FileName = exe;
+				p.StartInfo.Arguments = arg;
+				p.StartInfo.UseShellExecute = false;
+				p.StartInfo.CreateNoWindow = true;
+				p.StartInfo.RedirectStandardError = true;
+				p.StartInfo.RedirectStandardOutput = true;
+				p.OutputDataReceived += output;
+				p.ErrorDataReceived += output;
+				p.Start();
+				p.BeginOutputReadLine();
+				p.BeginErrorReadLine();
+				p.WaitForExit();
+			}
+		}*/
+
 		private string RunFFmpeg(string sourceFile, string destFile)
 		{
 			var processInfo = new ProcessStartInfo();
@@ -128,5 +244,5 @@ namespace DriveApi.Controllers
 		{
 			var v = e.Data;
 		}
-	}
+	}	
 }
