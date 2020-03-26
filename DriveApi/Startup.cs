@@ -74,6 +74,7 @@ namespace DriveApi
 			config.Formatters.Remove(config.Formatters.XmlFormatter);
 			config.Formatters.JsonFormatter.UseDataContractJsonSerializer = true;
 			config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new System.Net.Http.Headers.MediaTypeHeaderValue("multipart/form-data"));
+			//config.MessageHandlers.Add(new CloseConnectionHandler());
 			//config.Initializer = Init;			
 
 			ODataModelBuilder builder = new ODataConventionModelBuilder();
@@ -88,6 +89,20 @@ namespace DriveApi
 
 			app.UseCustomMiddleware();			
 			app.UseWebApi(config);
+		}
+
+		public class CloseConnectionHandler : DelegatingHandler
+		{
+			protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
+			{
+				return base.SendAsync(request, cancellationToken).ContinueWith(t =>
+				{					
+					var response = t.Result;
+					//response.Headers.ConnectionClose = true;
+
+					return response;
+				});
+			}
 		}
 
 		/*public class ExHandler : ExceptionHandler

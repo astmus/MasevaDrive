@@ -41,7 +41,7 @@ namespace DriveApi.Controllers
 				{
 					if (!item.FileSysInfo.Exists)
 						return Request.CreateErrorResponse(HttpStatusCode.OK, "File does not exist");
-					if (item.File.Duration == 0)
+					if (item.File.IsPicture)
 					{
 						HttpResponseMessage result = Request.CreateResponse(HttpStatusCode.OK, Storage.GetChildrenByParentId(id));
 						result.Content = new StreamContent(item.FileSysInfo.OpenRead());
@@ -56,7 +56,8 @@ namespace DriveApi.Controllers
 						response = new HttpResponseMessage();
 						response.Headers.AcceptRanges.Add("bytes");
 						response.StatusCode = HttpStatusCode.PartialContent;
-						var c = new ByteRangeStreamContent(new ByteRangeStream(item.FileSysInfo.FullName,FileMode.Open), Request.Headers.Range, MimeMapping.GetMimeMapping(item.Name));
+						//var c = new ByteRangeStreamContent(item.FileSysInfo.OpenRead(), Request.Headers.Range, MimeMapping.GetMimeMapping(item.Name));
+						var c = new ByteRangeStreamContent(new ByteRangeStream(item.File), Request.Headers.Range, MimeMapping.GetMimeMapping(item.Name));
 						response.Content = c;
 						return response;
 					}
@@ -79,10 +80,9 @@ namespace DriveApi.Controllers
 			var item = Storage.GetFileById(id);
 			if (item == null)
 				return Request.CreateErrorResponse(HttpStatusCode.NoContent, string.Format("File with id = {0} not found", id));
-			var image = File.ReadAllBytes(item.Path);
 			HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-			result.Content = new ByteArrayContent(image);
-			result.Content.Headers.ContentLength = image.Length;			
+			result.Content = new StreamContent(item.FileSysInfo.OpenRead());
+			result.Content.Headers.ContentLength = item.FileSysInfo.Length;			
 			result.Content.Headers.ContentType = new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name));			
 			result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment") { FileName = item.Name, Size = item.FileSysInfo.Length, CreationDate = item.File.CreationTime, ModificationDate = item.File.CreationTime };
 			return result;

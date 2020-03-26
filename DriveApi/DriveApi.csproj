@@ -27,6 +27,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -54,6 +56,10 @@
     </Reference>
     <Reference Include="MedallionShell, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MedallionShell.1.6.1\lib\net45\MedallionShell.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MediaInfo.Wrapper, Version=19.9.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediaInfo.Wrapper.19.9.2\lib\net45\MediaInfo.Wrapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -186,8 +192,9 @@
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Extensions\AppSettingExtensions.cs" />
+    <Compile Include="Extensions\ExiffFileInfoExtension.cs" />
     <Compile Include="Extensions\HashExtension.cs" />
-    <Compile Include="Network\ResponseContainer.cs" />
+    <Compile Include="Network\ByteRangeStream.cs" />
     <Compile Include="Network\UnityResolver.cs" />
     <Compile Include="Network\ControllerActivator.cs" />
     <Compile Include="Network\UnityContainerPerRequestMiddleware.cs" />
@@ -224,6 +231,13 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\MediaInfo.Native.19.9.0\build\MediaInfo.Native.targets" Condition="Exists('..\packages\MediaInfo.Native.19.9.0\build\MediaInfo.Native.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MediaInfo.Native.19.9.0\build\MediaInfo.Native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MediaInfo.Native.19.9.0\build\MediaInfo.Native.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

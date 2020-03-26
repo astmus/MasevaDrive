@@ -16,6 +16,7 @@ namespace MasevaDrive
 {
 	public class StorageItem
 	{
+		
 		private static string apiFilesURL = "http://192.168.0.103/MasevaDrive/Files/View{0}/{1}?name={2}";
 		[NotMapped]
 		public string ParentPath { get; set; }
@@ -27,7 +28,7 @@ namespace MasevaDrive
 		public string Name { get; set; }
 		public StorageFile File { get { return _file ?? StorageFile.Create(FileSysInfo); } set { _file = value; } }
 		public StorageDirectory Directory { get { return _directory ?? StorageDirectory.Create(DirectorySysInfo); } set { _directory = value; } }
-		public string ViewLink { get { return string.Format(apiFilesURL, Directory != null ? "" : (File.Duration == 0 ? "Image" : "Video"), Id, Name); } }
+		public string ViewLink { get { return string.Format(apiFilesURL, Directory != null ? "" : (File.IsPicture ? "Image" : "Video"), Id, Name); } }
 		[NotMapped]
 		public FileInfo FileSysInfo { get; set; } = null;
 		[NotMapped]
@@ -41,6 +42,7 @@ namespace MasevaDrive
 			public long Size { get; set; }
 			public DateTime CreationTime { get; set; }
 			public double Duration { get; set; }
+			public bool IsPicture { get; set; }
 			public StorageFile()
 			{
 			
