@@ -41,6 +41,32 @@
 			});			
 		});
 	</script>
+			$(".circle").click(
+			   function (event) {
+			   	console.log('click');
+			   	event.stopPropagation();			   	
+			   	$(this).parent('div').toggleClass('selectedItemHolder');
+			   	return false;
+			   }
+			   )
+			$(".circle").hover(
+			   function () { $(this).next('.check').css('display','block'); },
+			   function () { if ($(this).next('.check').parent('div').hasClass('selectedItemHolder') != true) { $(this).next('.check').css('display', 'none'); } }
+			   )
+			/*$(".check").click(
+			   function (event) {
+			   	event.stopPropagation();			   	
+			   	return false;
+			   }
+			   )
+			$(".circle").hover(
+			   function () { $(this).next('.check').show(); },
+			   function () { $(this).next('.check').hide(); }
+			   )
+			$(".check").mouseleave(
+			   )*/
+		});
+	</script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
