@@ -7,17 +7,19 @@ using System.IO;
 using System.Threading;
 using static DriveApi.Storage.StorageItem;
 using Medallion.Shell;
+using System.Net.Http.Headers;
 
 namespace DriveApi.Network
 {
 	class ByteRangeStream : MemoryStream
 	{
-		private MemoryStream outputStream;
-		
-
-		public ByteRangeStream(StorageFile file)
+		public bool EncodeCompleted = false;
+		public long supposeLength;
+		public ByteRangeStream(long supposeLength) : base((int)supposeLength)
 		{
-			outputStream = file.encodedStream.Value;
+			this.supposeLength = supposeLength;
+			//outputStream = file.encodedStream.Value;
+			//this.file = file;
 			//string arg = string.Format("-i \"{0}\" -c:v libvpx -minrate 1M -maxrate 1M -b:v 1M -bufsize 1k -c:a libopus -b:a 96k -metadata duration=\"177\" -f webm pipe:1", file.FullPath);
 			/*string arg = string.Format("-i \"{0}\" -vcodec libx264 -movflags frag_keyframe+empty_moov+faststart -vb 1024k -f mp4 pipe:1", file.FullPath);
 
@@ -35,65 +37,17 @@ namespace DriveApi.Network
 			var results = cmd.StandardError.ReadToEnd();*/
 		}
 
-		~ByteRangeStream()
+		public override void Close()
 		{
-			int i = 0;
-		}
-
-		public override long Position
-		{
-			get
-			{
-				return outputStream.Position;
-			}
-
-			set
-			{
-				outputStream.Position = value;
-			}
+			base.Close();
 		}
 
 		public override long Length
 		{
 			get
 			{
-				return outputStream.Length;
+				return /*EncodeCompleted ? base.Length :*/ supposeLength;
 			}
 		}
-
-		public override long Seek(long offset, SeekOrigin origin)
-		{
-			return outputStream.Seek(offset, origin);
-		}
-
-		public override int Read(byte[] array, int offset, int count)
-		{
-			return outputStream.Read(array, offset, count);
-		}
-
-		public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-		{
-			return outputStream.ReadAsync(buffer, offset, count, cancellationToken);
-		}
-
-		public override int ReadByte()
-		{
-			return outputStream.ReadByte();
-		}
-
-		public override void Write(byte[] buffer, int offset, int count)
-		{
-			base.Write(buffer, offset, count);
-		}
-
-		public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-		{
-			return base.WriteAsync(buffer, offset, count, cancellationToken);
-		}
-
-		public override void WriteByte(byte value)
-		{
-			base.WriteByte(value);
-		}		
 	}
 }

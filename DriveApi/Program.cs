@@ -20,7 +20,7 @@ namespace DriveApi
 	class Program
 	{
 		static void Main(string[] args)
-		{
+	{
 			InitializeAppSettings();			
 			// Start OWIN host 						
 			using (WebApp.Start<Startup>(url: ConfigurationManager.AppSettings.BaseAddress()))
@@ -34,32 +34,25 @@ namespace DriveApi
 				Console.WriteLine(response.Content.ReadAsStringAsync().Result);
 
 
-				//string path = @"x:\Programming\MasevaDrive\DriveApi\bin\Debug\ffmpeg.exe";
-				string arg = "-i \"d:\\Temp\\1.MOV\" -c:v libvpx -minrate 8M -maxrate 8M -b:v 8M -bufsize 1k -c:a libopus -b:a 96k -f webm pipe:1";
-				//ExcuteProcess(@"x:\Programming\MasevaDrive\DriveApi\bin\Debug\ffmpeg.exe", "-i \"z:\\Images&Video\\2013 New Year\\01012013003.mp4\" -vcodec libvpx -qmin 0 -qmax 50 -crf 10 -b:v 1M -acodec libvorbis -f webm output", (s, e) => { }
-				//);
-				using (FileStream file = System.IO.File.OpenWrite("D:\\Temp\\video09111.webm"))
-				{
-					var cmd = Command.Run(@"ffmpeg.exe", null, options => options.StartInfo((i) =>
-					{
-						i.Arguments = arg;
-						i.UseShellExecute = false;
-						i.CreateNoWindow = true;
-						i.RedirectStandardError = true;
-						i.RedirectStandardOutput = true;
-						i.RedirectStandardInput = false;					
-					}));
-					var fileWrite = cmd.StandardOutput.PipeToAsync(file);					
-					
-					var str = cmd.StandardError.ReadToEnd();
-					fileWrite.Wait();
-				}
-				
+				//string arg = string.Format("-i \"{0}\" -vcodec libvpx -b:v 1600K -bufsize 5M -crf 4 -ac 2 -c:a libopus -b:a 96k \"{1}\"", @"D:\Temp\3.mp4", @"D:\Temp\0.webm");
+				/*string arg = string.Format("-i \"{0}\" -vcodec libvpx -vsync 2 -b:v 1600K -bufsize 5M -auto-alt-ref 1 -an \"{1}\"", @"D:\Temp\3.mp4", @"D:\Temp\_3.webm");
 
-				   Console.ReadKey();
+				var cmd = Command.Run(@"ffmpeg.exe", null, options => options.StartInfo((i) =>
+				{
+					i.Arguments = arg;
+				}));
+				
+				//var fileWrite = cmd.StandardOutput.PipeToAsync(file);					
+
+				var str = cmd.RedirectStandardErrorTo(Console.Out);
+					*/
+
+				Console.ReadKey();
 			}
 		}
 
+		//ExcuteProcess(@"x:\Programming\MasevaDrive\DriveApi\bin\Debug\ffmpeg.exe", "-i \"z:\\Images&Video\\2013 New Year\\01012013003.mp4\" -vcodec libvpx -qmin 0 -qmax 50 -crf 10 -b:v 1M -acodec libvorbis -f webm output", (s, e) => { }
+		//);
 		/*ExcuteProcess(@"x:\Programming\MasevaDrive\DriveApi\bin\Debug\ffmpeg.exe", "-i \"z:\\Images&Video\\2013 New Year\\01012013003.mp4\" -vcodec libvpx -qmin 0 -qmax 50 -crf 10 -b:v 1M -acodec libvorbis -f webm pipe:1", (s, e) =>
 							{
 								Console.WriteLine(e.Data);

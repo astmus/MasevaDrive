@@ -13,9 +13,12 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Globalization;
-using MediaInfo;
 using Medallion.Shell;
 using System.Threading.Tasks;
+using DriveApi.Network;
+using System.IO.MemoryMappedFiles;
+using System.Net.Http.Headers;
+using DriveApi.Model;
 
 namespace DriveApi.Storage
 {
@@ -74,8 +77,9 @@ namespace DriveApi.Storage
 		[DataContract]
 		public class StorageFile
 		{
-			private MediaInfoWrapper exifInfo;
-			public Lazy<MemoryStream> encodedStream;
+			private Lazy<MediaFileInfo> mediaInfo;
+			public Lazy<Stream> encodedStream;
+			public bool EncodeCompleted { get; set; }
 			private StorageItem parent;
 			[DataMember]
 			public long Size { get {return parent.FileSysInfo.Length; } set { } }
@@ -97,27 +101,94 @@ namespace DriveApi.Storage
 				get { return parent.FileSysInfo.FullName; }
 			}
 
+			public MediaFileInfo MediaInfo
+			{
+				get { return mediaInfo.Value; }
+			}
+
 			public StorageFile(StorageItem parent)
 			{
 				this.parent = parent;
-				encodedStream = new Lazy<MemoryStream>(InitEncodingStream,false);
+				encodedStream = new Lazy<Stream>(InitEncodingStream,true);
+				mediaInfo = new Lazy<MediaFileInfo>(parent.FileSysInfo.GetMediaInfo, true);
 			}
-			private MemoryStream InitEncodingStream()
+			
+			List<string> lines = new List<string>();
+			Dictionary<string, string> encodeStat;
+			TimeSpan offset = TimeSpan.Zero;
+			//ByteRangeStream partialStream = new ByteRangeStream();
+			public Stream InitEncodingStream()
 			{
-				string arg = string.Format("-i \"{0}\" -vcodec libx264 -movflags frag_keyframe+empty_moov+faststart -metadata duration=\"177\" -vb 1024k -f mp4 pipe:1", parent.FileSysInfo.FullName);
-				var resultStream = new MemoryStream();
-				var cmd = Command.Run(@"ffmpeg.exe", null, options => options.StartInfo((i) =>
+				/*string arg1 = string.Format("-i \"{0}\" -c:v libx264 -strict -2 -passlogfile log.log -b:v 1M -maxrate 1M -bufsize 2M -pass 1 -f mp4", parent.FileSysInfo.FullName);
+				var cmd2 = Command.Run(@"ffmpeg.exe", null, options => options.StartInfo((i) =>
 				{
-					i.Arguments = arg;
+					i.Arguments = arg1;
 					i.UseShellExecute = false;
 					i.CreateNoWindow = true;
 					i.RedirectStandardError = true;
-					i.RedirectStandardOutput = true;
+					i.RedirectStandardOutput = false;
 					i.RedirectStandardInput = false;
 				}));
-				var encodingTask = cmd.StandardOutput.PipeToAsync(resultStream, leaveStreamOpen: true);
-				encodingTask.Wait();
-				return resultStream;
+				cmd2.StandardError.PipeToAsync(Console.Out);*/
+
+
+				var info = parent.FileSysInfo.GetMediaInfo();
+				double targetVideoBitRate = info.Streams[0].BitRate * .5D;
+				double targetAudioBitRate = info.Streams[1].BitRate * .5D;				
+				targetAudioBitRate = Math.Max(32000, Math.Min(targetAudioBitRate, 512000));
+				double totalDurationSeconds = info.Format.Duration;
+				long size = info.Format.Size;
+				var leftBits = (info.Format.BitRate * totalDurationSeconds) - ((info.Streams[0].BitRate + info.Streams[1].BitRate) * totalDurationSeconds);
+				//string arg = string.Format("-i \"{0}\" -c:v libx264 -strict -2 -passlogfile log.log -bufsize 2M -pass 2 -b 1M -metadata duration=\"{2}\" -c:a copy -f mp4 -movflags frag_keyframe+empty_moov pipe:1", parent.FileSysInfo.FullName, targetBitrate, TimeSpan.FromMilliseconds(totalDuration).ToString());
+				//string arg = string.Format("-re -i \"{0}\" -vcodec libvpx -quality realtime -b 1024k -bufsize 1M -metadata duration=\"{2}\" -c:a libopus -f webm pipe:1", parent.FileSysInfo.FullName, targetBitrate, TimeSpan.FromMilliseconds(totalDuration).ToString());
+				//-c:v libvpx -minrate 8M -maxrate 8M -b:v 8M -bufsize 1k -c:a libopus -b:a 96k -f webm pipe:1
+				//var mmf = MemoryMappedFile.CreateNew(parent.Name, totalDuration * (targetBitrate/8)+ (totalDuration * ((int)mediaInfo.Value.AudioStreams[0].Bitrate / 8)));
+				//string arg = string.Format("-v quiet -stats -ss {3} -i \"{0}\" -vcodec libvpx -quality realtime -b 1024k -bufsize 1k -metadata duration=\"{2}\" -c:a libopus -f webm -fs 640k pipe:1", parent.FileSysInfo.FullName, targetBitrate, TimeSpan.FromMilliseconds(totalDuration).ToString(), offset);
+				double expectedSize = ((targetVideoBitRate + targetAudioBitRate) * totalDurationSeconds) / 8D;
+
+				string arg = string.Format("-hide_banner -i \"{0}\" -vcodec libvpx -quality realtime -b:v {3} -maxrate {5} -minrate {5} -bufsize 1k -metadata duration=\"{1}\" -ac 2 -c:a libopus -b:a {4} -fs {2} -f webm pipe:1", parent.FileSysInfo.FullName,(int)totalDurationSeconds, (int)expectedSize, (int)targetVideoBitRate, (int)targetAudioBitRate, info.Format.BitRate * 0.5D);
+				Console.WriteLine(arg);
+
+				
+				//var mmf = 
+				var result = new DuplexStream(parent.Name, (long)expectedSize);
+				//ByteRangeStream partialStream = new ByteRangeStream(expectedSize);
+				//MemoryStream result = new MemoryStream();
+				//partialStream.EncodeCompleted = false;
+				var cmd = Command.Run(@"ffmpeg.exe", null, options => options.StartInfo((i) =>
+				{
+					i.Arguments = arg;
+					/*i.UseShellExecute = false;
+					i.CreateNoWindow = true;
+					i.RedirectStandardError = true;
+					i.RedirectStandardOutput = true;
+					i.RedirectStandardInput = false;					*/
+				}));
+				//result.encodeTask = cmd;				
+				var encodingTask = cmd.StandardOutput.PipeToAsync(result.writeStream, leaveStreamOpen: true);
+				cmd.RedirectStandardErrorTo(Console.Out);				
+				encodingTask.Wait(1500);
+				//cmd.RedirectStandardErrorTo(lines);
+				//var err = cmd.GetOutputAndErrorLines();
+				
+				//var encodingTask = cmd.StandardOutput.PipeToAsync(resultStream, leaveStreamOpen: true);
+				//encodingTask.ContinueWith((t) => {
+				//	resultStream.Encoded = true;
+				//});
+				//return mmf.CreateViewStream();
+				/*lines = lines.Where(l=>l.IndexOf("speed") > 0).ToList();
+				List<Dictionary<string, string>> totalStats = new List<Dictionary<string, string>>();
+				lines.ForEach((data) =>
+				{
+					while (data.IndexOf("= ") >= 0)
+						data = data.Replace("= ", "=");
+					encodeStat = data.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToDictionary(key => key.Split('=')[0], val => val.Split('=')[1]);
+					totalStats.Add(encodeStat);
+				});*/
+
+				//offset = offset.Add(TimeSpan.Parse(encodeStat?["time"] ?? "00:00:00.0"));
+				
+				return result;
 			}
 
 			public static StorageFile Create(StorageItem parent)
