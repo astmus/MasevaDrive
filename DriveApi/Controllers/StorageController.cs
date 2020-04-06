@@ -148,7 +148,7 @@ namespace DriveApi.Controllers
 							try
 							{
 								Console.WriteLine("File open");
-								using (var inputStream = Stream.Synchronized(item.FileSysInfo.OpenRead()))
+								using (var inputStream = File.Open(item.FileSysInfo.FullName,FileMode.Open,FileAccess.Read,FileShare.Read))
 								{
 									int count = 0;
 									long remainingBytes = end - start + 1;
@@ -158,7 +158,6 @@ namespace DriveApi.Controllers
 									inputStream.Position = start;
 									do
 									{
-
 										if (remainingBytes > ReadStreamBufferSize)
 											count = await inputStream.ReadAsync(buffer, 0, ReadStreamBufferSize);
 										else
