@@ -116,9 +116,9 @@
 		</StackPanel>		
 		<StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4">
 			<ProgressBar HorizontalAlignment="Stretch" Background="#FF383838"  Height="30" Margin="10,10,10,0" Name="progressBar" />
-			<ProgressBar HorizontalAlignment="Stretch" Background="#FF383838"  Height="30" Margin="10,10,10,0" Maximum="100" Name="progressBarDetail" />
+			<ProgressBar HorizontalAlignment="Stretch" Background="#FF383838"  Height="30" Margin="10,10,10,10" Maximum="100" Name="progressBarDetail" />
 		</StackPanel>
-		<ListBox Margin="10" ScrollViewer.VerticalScrollBarVisibility="Hidden" SelectionMode="Extended"  ItemsSource="{Binding Path=Thumbnails, ElementName=this}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="3" Background="#FF383838" Grid.ColumnSpan="4" x:Name="ThumbnailHolder" Height="500">
+		<ListBox Margin="10,0,10,10" ScrollViewer.VerticalScrollBarVisibility="Hidden" SelectionMode="Extended"  ItemsSource="{Binding Path=Thumbnails, ElementName=this}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Grid.Row="3" Background="#FF383838" Grid.ColumnSpan="4" x:Name="ThumbnailHolder" Height="500">
 			<!--<ListBox.GroupStyle>
 				<GroupStyle>
 					<GroupStyle.ContainerStyle>
