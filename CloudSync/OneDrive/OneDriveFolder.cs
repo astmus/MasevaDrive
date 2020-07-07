@@ -165,7 +165,7 @@ namespace CloudSync
 		private void StartCreateWorkers()
 		{
 			Worker worker = null;
-			for (int i = 0; i < 2 && (worker = MakeNextWorker()) != null; i++)
+			for (int i = 0; (worker = MakeNextWorker()) != null; i++)
 				NewWorkerReady?.Invoke(worker);
 
 			if (itemsForSync.Count == 0)

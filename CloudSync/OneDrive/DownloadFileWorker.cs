@@ -26,6 +26,7 @@ namespace CloudSync
 		private ICloudStreamProvider streamProvider;
 		private CancellationTokenSource cancelTokenSource;
 		private int attemptsCount = 0;
+		private static Semaphore syncContext = new Semaphore(2, 2);
 		
 		public override int NumberOfAttempts
 		{
@@ -85,6 +86,7 @@ namespace CloudSync
 			Stream contentStream = null;
 			try
 			{
+				syncContext.WaitOne(TimeSpan.FromSeconds(60));
 				Status = "Request file";
 				contentStream = await streamProvider.GetStreamToFileAsync(SyncItem.Link);
 				using (var fileStream = new FileStream(Destination, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true))
@@ -115,7 +117,11 @@ namespace CloudSync
 			{
 				Status = "Failed";
 				contentStream?.Close();
-				RaiseFailed(ex);				
+				RaiseFailed(ex);
+			}
+			finally
+			{
+				syncContext.Release();
 			}
 		}
 
