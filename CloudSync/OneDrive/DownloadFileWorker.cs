@@ -86,7 +86,7 @@ namespace CloudSync
 			Stream contentStream = null;
 			try
 			{
-				syncContext.WaitOne(TimeSpan.FromSeconds(60));
+				syncContext.WaitOne();
 				Status = "Request file";
 				contentStream = await streamProvider.GetStreamToFileAsync(SyncItem.Link);
 				using (var fileStream = new FileStream(Destination, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true))
