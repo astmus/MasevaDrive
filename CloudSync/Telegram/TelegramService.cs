@@ -9,6 +9,9 @@ using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using CloudSync.Models;
 using System.Threading;
+using System.Drawing;
+using System.Drawing.Imaging;
+using CloudSync.Windows;
 
 namespace CloudSync.Telegram
 {
@@ -28,12 +31,33 @@ namespace CloudSync.Telegram
 			//Bot.StopReceiving();
 		}
 
-		public static async void SendNotifyFileLoadDone(string email, OneDriveSyncItem file)
+		public static async void SendNotifyFileLoadDone(string email, OneDriveSyncItem file, string destenationPath)
 		{
 			if (Subscribers.ContainsKey(email))
 				try
 				{
-					await Bot.SendTextMessageAsync(Subscribers[email], string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
+					try
+					{
+						Image thumb;
+						if (Path.GetExtension(destenationPath).ToLower() == ".jpg" || Path.GetExtension(destenationPath).ToLower() == ".jpeg" || Path.GetExtension(destenationPath).ToLower() == ".png")
+							thumb = GetThumbnail(destenationPath);
+						else
+							thumb = TransmittMedia.GenerateVideoThumbnail(destenationPath, 0.5f, new Size(240, 160));
+
+						using (MemoryStream imageStream = new MemoryStream())
+						{
+							thumb.Save(imageStream, ImageFormat.Jpeg);
+							imageStream.Position = 0;
+							await Bot.SendPhotoAsync(
+							Subscribers[email],
+							imageStream,
+							string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
+						}
+					}
+					catch
+					{
+						await Bot.SendTextMessageAsync(Subscribers[email], string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
+					}					
 				}
 				catch (System.Exception ex)
 				{
@@ -41,8 +65,18 @@ namespace CloudSync.Telegram
 					{
 						await Bot.SendTextMessageAsync(Subscribers[email], string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
 					});
-				}
-				
+				}				
+		}
+
+		private static Image GetThumbnail(string filePath)
+		{
+			using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+			{
+				var image = Image.FromStream(stream);
+				stream.Close();
+				var aspect = (double)image.Size.Width / (double)image.Size.Height;
+				return image.GetThumbnailImage((int)(160 * aspect), 160, () => false, IntPtr.Zero);
+			}
 		}
 
 		public static async void SendNotifyAboutSyncError(string email, string errorMessage)
@@ -59,7 +93,6 @@ namespace CloudSync.Telegram
 						await Bot.SendTextMessageAsync(Subscribers[email], errorMessage);
 					});
 				}
-
 		}
 
 		private async static void OnMessageRecieved(object sender, global::Telegram.Bot.Args.MessageEventArgs e)
@@ -78,7 +111,7 @@ namespace CloudSync.Telegram
 					var splitted = message.Text.Split(' ');
 					if (splitted.Length == 1)
 					{
-						await Bot.SendTextMessageAsync(message.Chat.Id, "You are not subscribed enter comand with email");
+						await Bot.SendTextMessageAsync(message.Chat.Id, "You are not subscribed enter command with email");
 						return;
 					}
 					var email = splitted[1];

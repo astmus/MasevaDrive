@@ -249,9 +249,11 @@ namespace CloudSync.Windows
 			FileInfo = info;
 						
 			if (FileInfo.Name.ToLower().EndsWith(".jpg") || FileInfo.Name.ToLower().EndsWith(".jpeg"))
-				using (var original = System.Drawing.Image.FromFile(FileInfo.FullName))
-				{					
-					_thumbnail = original.GetThumbnailImage(120, 90, () => false, IntPtr.Zero);					
+				using (FileStream stream = new FileStream(FileInfo.FullName, FileMode.Open, FileAccess.Read))
+				{
+					var original = System.Drawing.Image.FromStream(stream);
+					stream.Close();
+					_thumbnail = original.GetThumbnailImage(160, 120, () => false, IntPtr.Zero);					
 				}
 			else
 				_thumbnail = GenerateVideoThumbnail(FileInfo.FullName, 0.5f, null);
