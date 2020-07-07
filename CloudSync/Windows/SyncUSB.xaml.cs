@@ -206,9 +206,17 @@ namespace CloudSync.Windows
 			}			
 			LoadMediaFilesByPath(sourceFolder);
 		}
+
+		private void OnFileMouseDown(object sender, MouseButtonEventArgs e)
+		{
+			if (e.ClickCount == 2)
+			{
+				TransmittMedia file = (sender as Grid).DataContext as TransmittMedia;
+				System.Diagnostics.Process.Start(file.FileInfo.FullName);
+			}
+		}
 	}
-
-
+	
 	public class TransmittMedia : INotifyPropertyChanged
 	{
 		public static System.Windows.Media.ImageSource ConvertImage(System.Drawing.Image image)
