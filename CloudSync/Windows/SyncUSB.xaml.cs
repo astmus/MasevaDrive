@@ -20,6 +20,7 @@ using System.Runtime.CompilerServices;
 using Xceed.Wpf.Toolkit;
 using System.Windows.Forms;
 using CloudSync.Framework;
+using Medallion.Shell;
 
 namespace CloudSync.Windows
 {
@@ -247,7 +248,13 @@ namespace CloudSync.Windows
 		public TransmittMedia(FileInfo info)
 		{
 			FileInfo = info;
-						
+			/*Command.Run(@"ffmpeg.exe", null, options => options.StartInfo((i) =>
+			{
+				i.Arguments = arg;
+			}));*/
+
+			
+
 			if (FileInfo.Name.ToLower().EndsWith(".jpg") || FileInfo.Name.ToLower().EndsWith(".jpeg"))
 				using (FileStream stream = new FileStream(FileInfo.FullName, FileMode.Open, FileAccess.Read))
 				{

@@ -48,9 +48,12 @@ namespace DriveApi.Storage
 		public FileInfo FileSysInfo { get; set; } = null;
 		[NotMapped]
 		public DirectoryInfo DirectorySysInfo { get; set; } = null;
+		[NotMapped]
+		public List<string> EncodeLogs { get; set; } = new List<string>();
 
 		private StorageDirectory _directory = null;
 		private StorageFile _file = null;
+		public Command CurrentEncodeProcess;
 
 		public StorageItem(FileInfo fileInfo)
 		{

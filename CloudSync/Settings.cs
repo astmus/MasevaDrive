@@ -9,19 +9,22 @@ using System.IO;
 
 namespace CloudSync
 {
-    public class Settings
+    internal class Settings
     {
         private static readonly Lazy<Settings> _instance = new Lazy<Settings>(() => new Settings());
         private Settings()
-        {
-			Load();	
+		{
+			Load();
 		}
-
+		public Properties.Settings AppProperties
+		{
+			get { return Properties.Settings.Default; }
+		}
 		public ObservableCollection<OneDriveAccount> Accounts { get; set; }
 #if DEBUG
-		public readonly string RootFolder = @"Z:\Images&Video\1";
+		public string RootFolder { get { return AppProperties.RootMediaPath + "1"; } }
 #else
-		public readonly string RootFolder = @"Z:\Images&Video";
+		public string RootFolder { get { return AppProperties.RootMediaPath; } }
 #endif
 		public static Settings Instance
         {

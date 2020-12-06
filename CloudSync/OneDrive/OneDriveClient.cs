@@ -133,7 +133,7 @@ namespace CloudSync
 			var data = result["value"]?.Where(w => w["folder"] != null);
 			List<OneDriveFolder> folders = data.Select(s => s.ToObject<OneDriveFolder>()).ToList();
 			return folders;
-		}
+		}		
 
 		public async Task<Exception> DeleteItem(OneDriveItem item)
 		{

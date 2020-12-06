@@ -51,12 +51,6 @@ namespace DriveApi
 			}
 		}
 
-		//ExcuteProcess(@"x:\Programming\MasevaDrive\DriveApi\bin\Debug\ffmpeg.exe", "-i \"z:\\Images&Video\\2013 New Year\\01012013003.mp4\" -vcodec libvpx -qmin 0 -qmax 50 -crf 10 -b:v 1M -acodec libvorbis -f webm output", (s, e) => { }
-		//);
-		/*ExcuteProcess(@"x:\Programming\MasevaDrive\DriveApi\bin\Debug\ffmpeg.exe", "-i \"z:\\Images&Video\\2013 New Year\\01012013003.mp4\" -vcodec libvpx -qmin 0 -qmax 50 -crf 10 -b:v 1M -acodec libvorbis -f webm pipe:1", (s, e) =>
-							{
-								Console.WriteLine(e.Data);
-							});*/
 		static ProcessStartInfo newInfo(string exe, string arg)
 		{
 			ProcessStartInfo i = new ProcessStartInfo();
@@ -98,7 +92,7 @@ namespace DriveApi
 		{
 			var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 			if (configFile.AppSettings.Settings["RootPath"] == null)
-				configFile.AppSettings.Settings.Add("RootPath", @"z:\Images&Video");
+				configFile.AppSettings.Settings.Add("RootPath", @"r:\Images&Video");
 			if (configFile.AppSettings.Settings["BaseAddress"] == null)
 				configFile.AppSettings.Settings.Add("BaseAddress", "http://192.168.0.103:9090/");
 			if (configFile.AppSettings.Settings["PathToThumbnails"] == null)

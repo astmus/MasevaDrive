@@ -7,8 +7,8 @@ using Microsoft.Owin.Extensions;
 using System.IO;
 using DriveApi.Storage;
 using System.Collections.Generic;
-using Microsoft.AspNet.OData.Builder;
-using Microsoft.AspNet.OData.Extensions;
+//using Microsoft.AspNet.OData.Builder;
+//using Microsoft.AspNet.OData.Extensions;
 using Unity;
 using System.Web.Http.Dependencies;
 using Unity.Lifetime;
@@ -77,12 +77,12 @@ namespace DriveApi
 			//config.MessageHandlers.Add(new CloseConnectionHandler());
 			//config.Initializer = Init;			
 
-			ODataModelBuilder builder = new ODataConventionModelBuilder();
+			/*ODataModelBuilder builder = new ODataConventionModelBuilder();
 			builder.EntitySet<StorageItem>("Items");			
 			config.MapODataServiceRoute(
 			routeName: "ODataRoute",
 			routePrefix: null,
-			model: builder.GetEdmModel());
+			model: builder.GetEdmModel());*/
 			config.EnsureInitialized();
 						
 			app.UseUnityContainerPerRequest(container);

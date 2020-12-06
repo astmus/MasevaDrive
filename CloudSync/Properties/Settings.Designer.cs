@@ -23,15 +23,12 @@ namespace CloudSync.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Accounts {
+        [global::System.Configuration.DefaultSettingValueAttribute("Z:\\Images&Video\\")]
+        public string RootMediaPath {
             get {
-                return ((string)(this["Accounts"]));
-            }
-            set {
-                this["Accounts"] = value;
+                return ((string)(this["RootMediaPath"]));
             }
         }
     }

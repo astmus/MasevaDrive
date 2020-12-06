@@ -1,5 +1,5 @@
 ﻿using DriveApi.Storage;
-using Microsoft.AspNet.OData;
+//using Microsoft.AspNet.OData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DriveApi.Controllers
 {
-	public class ItemsController : ODataController
+	/*public class ItemsController : ODataController
 	{
 		IStorageItemsProvide Provider;
 
@@ -21,5 +21,5 @@ namespace DriveApi.Controllers
 		{
 			return Provider.GetRoot();
 		}
-	}
+	}*/
 }

@@ -12,6 +12,7 @@ using System.Threading;
 using System.Drawing;
 using System.Drawing.Imaging;
 using CloudSync.Windows;
+using Medallion.Shell;
 
 namespace CloudSync.Telegram
 {
@@ -31,30 +32,22 @@ namespace CloudSync.Telegram
 			//Bot.StopReceiving();
 		}
 
-		public static async void SendNotifyFileLoadDone(string email, OneDriveSyncItem file, string destenationPath)
+		public static async void SendNotifyFileLoadDone(string email, OneDriveSyncItem file, string pathToLoadedFile)
 		{
 			if (Subscribers.ContainsKey(email))
 				try
 				{
 					try
 					{
-						Image thumb;
-						if (Path.GetExtension(destenationPath).ToLower() == ".jpg" || Path.GetExtension(destenationPath).ToLower() == ".jpeg" || Path.GetExtension(destenationPath).ToLower() == ".png")
-							thumb = GetThumbnail(destenationPath);
-						else
-							thumb = TransmittMedia.GenerateVideoThumbnail(destenationPath, 0.5f, new Size(240, 160));
-
-						using (MemoryStream imageStream = new MemoryStream())
+						using (MemoryStream imageStream = CreateThumbnailOfFile(pathToLoadedFile))
 						{
-							thumb.Save(imageStream, ImageFormat.Jpeg);
-							imageStream.Position = 0;
 							await Bot.SendPhotoAsync(
 							Subscribers[email],
 							imageStream,
 							string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
 						}
 					}
-					catch
+					catch (Exception ex)
 					{
 						await Bot.SendTextMessageAsync(Subscribers[email], string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
 					}					
@@ -68,16 +61,23 @@ namespace CloudSync.Telegram
 				}				
 		}
 
-		private static Image GetThumbnail(string filePath)
+		private static MemoryStream CreateThumbnailOfFile(string filePath)
 		{
-			using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+			string args = string.Format("-i \"{0}\" -qscale:v 5 -vf scale=\"360:-1\" -vframes 1 -f image2pipe pipe:1", filePath);
+			var createThumbnailProcess = Command.Run(@"C:\MediaTools\ffmpeg.exe", null, options => options.StartInfo((i) =>
 			{
-				var image = Image.FromStream(stream);
-				stream.Close();
-				var aspect = (double)image.Size.Width / (double)image.Size.Height;
-				return image.GetThumbnailImage((int)(160 * aspect), 160, () => false, IntPtr.Zero);
-			}
-		}
+				i.Arguments = args;
+				i.RedirectStandardOutput = true;
+				i.UseShellExecute = false;			
+			}));
+
+			var result = new MemoryStream();
+			createThumbnailProcess.RedirectTo(result);
+			createThumbnailProcess.Wait();
+			
+			result.Seek(0,SeekOrigin.Begin);
+			return result;
+		}		
 
 		public static async void SendNotifyAboutSyncError(string email, string errorMessage)
 		{

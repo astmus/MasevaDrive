@@ -2,8 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CloudSync.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Accounts" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="RootMediaPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Z:\Images&amp;Video\</Value>
     </Setting>
   </Settings>
 </SettingsFile>
