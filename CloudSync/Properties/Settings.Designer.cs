@@ -31,5 +31,17 @@ namespace CloudSync.Properties {
                 return ((string)(this["RootMediaPath"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\MediaTools\\ffmpeg.exe")]
+        public string FFmpegPath {
+            get {
+                return ((string)(this["FFmpegPath"]));
+            }
+            set {
+                this["FFmpegPath"] = value;
+            }
+        }
     }
 }

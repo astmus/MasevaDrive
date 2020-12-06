@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using CloudSync.Windows;
 using Medallion.Shell;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace CloudSync.Telegram
 {
@@ -24,14 +25,40 @@ namespace CloudSync.Telegram
 		{
 			Bot = new TelegramBotClient("688413717:AAELvIkuj37vBedxvzIgtWsjZio8_B4QlR0");
 			Bot.OnMessage += OnMessageRecieved;
-
-			//Bot.OnCallbackQuery += BotOnCallbackQueryReceived;
-			//Bot.OnInlineQuery += BotOnInlineQueryReceived;
-			//Bot.OnInlineResultChosen += BotOnChosenInlineResultReceived;
+			Bot.OnCallbackQuery += Bot_OnCallbackQuery;			
+			Bot.OnInlineQuery += Bot_OnInlineQuery1;
+			Bot.OnInlineResultChosen += Bot_OnInlineResultChosen1;
+			Bot.OnInlineQuery += Bot_OnInlineQuery;
+			Bot.OnInlineResultChosen += Bot_OnInlineResultChosen; ;
 			//Bot.OnReceiveError += BotOnReceiveError;
 			//Bot.StopReceiving();
 		}
 
+		private static void Bot_OnInlineQuery1(object sender, global::Telegram.Bot.Args.InlineQueryEventArgs e)
+		{
+			int i = 0;
+		}
+
+		private static void Bot_OnInlineResultChosen1(object sender, global::Telegram.Bot.Args.ChosenInlineResultEventArgs e)
+		{
+			int i = 0;
+		}
+
+		private static void Bot_OnInlineResultChosen(object sender, global::Telegram.Bot.Args.ChosenInlineResultEventArgs e)
+		{
+			int i = 0;
+		}
+
+		private static void Bot_OnInlineQuery(object sender, global::Telegram.Bot.Args.InlineQueryEventArgs e)
+		{
+			int i = 0;
+		}
+
+		private static void Bot_OnCallbackQuery(object sender, global::Telegram.Bot.Args.CallbackQueryEventArgs e)
+		{
+			int i = 0;
+		}
+		
 		public static async void SendNotifyFileLoadDone(string email, OneDriveSyncItem file, string pathToLoadedFile)
 		{
 			if (Subscribers.ContainsKey(email))
@@ -39,12 +66,17 @@ namespace CloudSync.Telegram
 				{
 					try
 					{
+						var RequestReplyKeyboard = new ReplyKeyboardMarkup(new KeyboardButton[] 
+						{
+							KeyboardButton.WithRequestPoll("удалить","deleteImageAction")
+						},true,true);
+						
 						using (MemoryStream imageStream = CreateThumbnailOfFile(pathToLoadedFile))
 						{
 							await Bot.SendPhotoAsync(
 							Subscribers[email],
 							imageStream,
-							string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
+							string.Format("{0} ({1}) done", file.Name, file.FormattedSize), replyMarkup: RequestReplyKeyboard);
 						}
 					}
 					catch (Exception ex)
@@ -63,21 +95,21 @@ namespace CloudSync.Telegram
 
 		private static MemoryStream CreateThumbnailOfFile(string filePath)
 		{
-			string args = string.Format("-i \"{0}\" -qscale:v 5 -vf scale=\"360:-1\" -vframes 1 -f image2pipe pipe:1", filePath);
-			var createThumbnailProcess = Command.Run(@"C:\MediaTools\ffmpeg.exe", null, options => options.StartInfo((i) =>
+			string args = string.Format("-i \"{0}\" -qscale:v 5 -vf scale=\"360:-1\" -vframes 1 -f image2pipe pipe:1", filePath);				
+			var createThumbnailProcess = Command.Run(Settings.Instance.AppProperties.FFmpegPath, null, options => options.StartInfo((i) =>
 			{
 				i.Arguments = args;
 				i.RedirectStandardOutput = true;
-				i.UseShellExecute = false;			
-			}));
-
+				i.UseShellExecute = false;
+			}));			
+			
 			var result = new MemoryStream();
 			createThumbnailProcess.RedirectTo(result);
 			createThumbnailProcess.Wait();
 			
 			result.Seek(0,SeekOrigin.Begin);
 			return result;
-		}		
+		}
 
 		public static async void SendNotifyAboutSyncError(string email, string errorMessage)
 		{
@@ -97,7 +129,7 @@ namespace CloudSync.Telegram
 
 		private async static void OnMessageRecieved(object sender, global::Telegram.Bot.Args.MessageEventArgs e)
 		{
-			var message = e.Message;
+			 var message = e.Message;
 
 			if (message == null || message.Type != MessageType.Text) return;
 
