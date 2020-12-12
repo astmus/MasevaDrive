@@ -21,6 +21,7 @@ using Xceed.Wpf.Toolkit;
 using System.Windows.Forms;
 using CloudSync.Framework;
 using Medallion.Shell;
+using System.Diagnostics;
 
 namespace CloudSync.Windows
 {
@@ -62,18 +63,9 @@ namespace CloudSync.Windows
 				mediaFilesOnTheDrive = new List<FileInfo>();
 				directory.EnumerateDirectories().Where(dir => dir.Name != "System Volume Information").ToList().ForEach(dir2 =>
 				{
-					mediaFilesOnTheDrive.AddRange(dir2.GetFiles("*.*", SearchOption.AllDirectories).Where(path => path.Name.ToLower().EndsWith(".mp4")
-																											|| path.Name.ToLower().EndsWith(".jpg")
-																											|| path.Name.ToLower().EndsWith(".jpeg")
-																											|| path.Name.ToLower().EndsWith(".3gp")
-																											|| path.Name.ToLower().EndsWith(".mov")));
-
+					mediaFilesOnTheDrive.AddRange(dir2.GetFiles("*.*", SearchOption.AllDirectories));
 				});
-				mediaFilesOnTheDrive.AddRange(directory.GetFiles("*.*", SearchOption.TopDirectoryOnly).Where(path => path.Name.ToLower().EndsWith(".mp4")
-																											|| path.Name.ToLower().EndsWith(".jpg")
-																											|| path.Name.ToLower().EndsWith(".jpeg")
-																											|| path.Name.ToLower().EndsWith(".3gp")
-																											|| path.Name.ToLower().EndsWith(".mov")));
+				mediaFilesOnTheDrive.AddRange(directory.GetFiles("*.*", SearchOption.TopDirectoryOnly));
 				long totalSize = mediaFilesOnTheDrive.Sum(f => f.Length);
 				progressBar.Dispatcher.Invoke(() => { progressBar.Maximum = mediaFilesOnTheDrive.Count; });
 				TotalCountSize.Dispatcher.Invoke(() =>
@@ -82,11 +74,17 @@ namespace CloudSync.Windows
 				});
 
 				var result = mediaFilesOnTheDrive.OrderBy(tm => tm.LastWriteTime).AsParallel().AsOrdered().WithMergeOptions(ParallelMergeOptions.NotBuffered).Select(f => new TransmittMedia(f));
+
 				foreach (TransmittMedia t in result)
 				{
+					if (t.HasInvalidInputData)
+						continue;
+					if (t.IsEmpty)
+						t.RegenerateThumbnail();					
 					Thumbnails.Add(t);
 					progressBar.Dispatcher.Invoke(() => { progressBar.Value++; });
-				}
+				}				
+				
 				progressBar.Dispatcher.Invoke(() => { progressBar.Value = 0; });
 				busyIndicator.Dispatcher.Invoke(() => { busyIndicator.IsBusy = false; });
 			});
@@ -142,8 +140,7 @@ namespace CloudSync.Windows
 			progressBar.Value = 0;
 			progressBarDetail.Value = 0;
 			GC.Collect();
-		}
-				
+		}				
 
 		private void SyncWithFolderName(object sender, RoutedEventArgs e)
 		{
@@ -247,71 +244,69 @@ namespace CloudSync.Windows
 
 		public TransmittMedia(FileInfo info)
 		{
-			FileInfo = info;
-			/*Command.Run(@"ffmpeg.exe", null, options => options.StartInfo((i) =>
+			FileInfo = info;			
+			try
 			{
-				i.Arguments = arg;
-			}));*/
-
-			
-
-			if (FileInfo.Name.ToLower().EndsWith(".jpg") || FileInfo.Name.ToLower().EndsWith(".jpeg"))
-				using (FileStream stream = new FileStream(FileInfo.FullName, FileMode.Open, FileAccess.Read))
-				{
-					var original = System.Drawing.Image.FromStream(stream);
-					stream.Close();
-					_thumbnail = original.GetThumbnailImage(160, 120, () => false, IntPtr.Zero);					
-				}
-			else
-				_thumbnail = GenerateVideoThumbnail(FileInfo.FullName, 0.5f, null);
-		}		
-
-		public static System.Drawing.Image GenerateVideoThumbnail(string mediaFile, float amount, System.Drawing.Size? imagesize)
-		{
-			System.Drawing.Size size = imagesize ?? new System.Drawing.Size(120, 90);
-			MediaPlayer player = new MediaPlayer { Volume = 0, ScrubbingEnabled = true };
-
-			player.Open(new Uri(mediaFile));
-			player.Pause();
-			//We need to give MediaPlayer some time to load.			 
-			System.Threading.Thread.Sleep(1000);			
-			var totalduration = player.NaturalDuration;
-			double offset;
-
-			if (totalduration.HasTimeSpan)
-				offset = totalduration.TimeSpan.TotalSeconds * amount;
-			else
-				offset = 1;
-
-			player.Position = TimeSpan.FromSeconds(offset);
-			player.Play();
-			player.Pause();
-
-			System.Threading.Thread.Sleep(500);
-
-			RenderTargetBitmap rtb = new RenderTargetBitmap(size.Width, size.Height, 96, 96, PixelFormats.Pbgra32);
-			DrawingVisual dv = new DrawingVisual();			
-			using (DrawingContext dc = dv.RenderOpen())
-			{
-				dc.DrawVideo(player, new Rect(0, 0, size.Width, size.Height));
+				var imageStream = CreateThumbnailOfFile(FileInfo.FullName);
+				if (!HasInvalidInputData)
+					_thumbnail = System.Drawing.Image.FromStream(imageStream);
 			}
-			rtb.Render(dv);
-			Duration duration = player.NaturalDuration;
-			BitmapFrame frame = BitmapFrame.Create(rtb).GetCurrentValueAsFrozen() as BitmapFrame;			
-			BitmapEncoder encoder = new JpegBitmapEncoder();
-			encoder.Frames.Add(frame as BitmapFrame);
-			
-			MemoryStream memoryStream = new MemoryStream();
-			encoder.Save(memoryStream);
-			//Here we have the thumbnail in the MemoryStream!
-			memoryStream.Seek(0, SeekOrigin.Begin);
-			player.Close();
-			return new Bitmap(memoryStream);
+			catch (System.Exception ex)
+			{
+				Debug.WriteLine(FileInfo.Name + " " + ex.ToString());
+			}			
+		}
+
+		public bool RegenerateThumbnail()
+		{
+			if (HasInvalidInputData)
+				return false;	
+			try
+			{
+				var imageStream = CreateThumbnailOfFile(FileInfo.FullName);				
+				_thumbnail = System.Drawing.Image.FromStream(imageStream);
+				return true;
+			}
+			catch (System.Exception ex)
+			{
+				return false;
+			}
+		}
+
+		private MemoryStream CreateThumbnailOfFile(string filePath)
+		{
+			try
+			{
+				string args = string.Format("-hide_banner -i \"{0}\" -qscale:v 16 -an -vf scale=\"320:240\" -vframes 1 -f image2pipe pipe:1", filePath);
+				var createThumbnailProcess = Command.Run(Settings.Instance.AppProperties.FFmpegPath, null, options => options.StartInfo((i) =>
+				{
+					i.Arguments = args;
+					i.RedirectStandardOutput = true;
+					i.UseShellExecute = false;
+				}));
+
+				var result = new MemoryStream();
+				createThumbnailProcess.RedirectTo(result);
+				createThumbnailProcess.Wait();
+				if (createThumbnailProcess.Task.Result.Success == false &&
+					(createThumbnailProcess.Task.Result.StandardError.IndexOf("Invalid data found when processing input") != -1
+					|| createThumbnailProcess.Task.Result.StandardError.IndexOf("does not contain any stream") != -1))
+					HasInvalidInputData = true;
+				
+				result.Seek(0, SeekOrigin.Begin);
+				return result;
+			}
+			catch (System.Exception ex)
+			{
+				return null;
+			}			
 		}
 
 		public FileInfo FileInfo { get; set; }
 
 		private System.Drawing.Image _thumbnail;
+		public bool IsEmpty { get { return _thumbnail == null; } }
+		public bool HasInvalidInputData { get; private set; }
 		public ImageSource Thumbnail { get { return ConvertImage(_thumbnail); }
 			set
 			{				
