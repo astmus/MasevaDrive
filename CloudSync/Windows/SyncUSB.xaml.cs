@@ -215,62 +215,69 @@ namespace CloudSync.Windows
 		}
 	}
 	
-	public class TransmittMedia : INotifyPropertyChanged
+	public class TransmittMedia : INotifyPropertyChanged, IDisposable
 	{
-		public static System.Windows.Media.ImageSource ConvertImage(System.Drawing.Image image)
+		public System.Windows.Media.ImageSource ConvertImage()
 		{
 			try
 			{
-				if (image != null)
+				if (_thumbnail != null)
 				{
 					var bitmap = new System.Windows.Media.Imaging.BitmapImage();
 					bitmap.BeginInit();
 					System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-					image.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
+					_thumbnail.Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
 					memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
 					bitmap.StreamSource = memoryStream;
-					bitmap.EndInit();
+					bitmap.EndInit();					
 					return bitmap;
 				}
 			}
-			catch { }
+			catch(Exception ex)
+			{
+			}
 			return null;
 		}
 
+		public FileInfo FileInfo { get; set; }
+		private System.Drawing.Image _thumbnail;
+		public bool IsEmpty { get { return _thumbnail == null; } }
+		public bool HasInvalidInputData { get; private set; }
 		private string TypeName { get { return FileInfo.Extension.Remove(0,1).ToUpper(); } }
 		private string FormatSize { get { return ((FileInfo.Length / 1024.0) / 1024.0).ToString("0.##") + " MB"; } }
+		private MemoryStream _imageStream;
 		public string DetailedData { get { return FormatSize + " " + TypeName; } }
 		public string FormattedLastWriteTime { get { return FileInfo.LastWriteTime.ToShortDateString(); } }
+		
 
 		public TransmittMedia(FileInfo info)
 		{
 			FileInfo = info;			
 			try
 			{
-				var imageStream = CreateThumbnailOfFile(FileInfo.FullName);
+				_imageStream = CreateThumbnailOfFile(FileInfo.FullName);
 				if (!HasInvalidInputData)
-					_thumbnail = System.Drawing.Image.FromStream(imageStream);
+					_thumbnail = System.Drawing.Image.FromStream(_imageStream);				
 			}
-			catch (System.Exception ex)
-			{
-				Debug.WriteLine(FileInfo.Name + " " + ex.ToString());
+			catch
+			{				
 			}			
 		}
 
 		public bool RegenerateThumbnail()
 		{
 			if (HasInvalidInputData)
-				return false;	
+				return false;
 			try
 			{
-				var imageStream = CreateThumbnailOfFile(FileInfo.FullName);				
-				_thumbnail = System.Drawing.Image.FromStream(imageStream);
+				_imageStream = CreateThumbnailOfFile(FileInfo.FullName);				
+				_thumbnail = System.Drawing.Image.FromStream(_imageStream);
 				return true;
 			}
 			catch (System.Exception ex)
 			{
 				return false;
-			}
+			}			
 		}
 
 		private MemoryStream CreateThumbnailOfFile(string filePath)
@@ -301,13 +308,8 @@ namespace CloudSync.Windows
 				return null;
 			}			
 		}
-
-		public FileInfo FileInfo { get; set; }
-
-		private System.Drawing.Image _thumbnail;
-		public bool IsEmpty { get { return _thumbnail == null; } }
-		public bool HasInvalidInputData { get; private set; }
-		public ImageSource Thumbnail { get { return ConvertImage(_thumbnail); }
+			
+		public ImageSource Thumbnail { get { return ConvertImage(); }
 			set
 			{				
 				NotifyPropertyChanged();
@@ -325,6 +327,14 @@ namespace CloudSync.Windows
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
-		public event PropertyChangedEventHandler PropertyChanged;
+
+		public void Dispose()
+		{
+			_imageStream?.Close();
+			_imageStream?.Dispose();
+			_thumbnail.Dispose();
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;		
 	}
 }
