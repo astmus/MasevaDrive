@@ -15,6 +15,7 @@ namespace GetDriveFileService
 		public string Hash { get; set; }
 		public string ItemName { get; set; }
 		public bool IsFolder { get; set; } = false;
+		public long Size { get; private set; } = 0;
 
 		public StorageItem(FileInfo fileInfo)
 		{
@@ -23,6 +24,7 @@ namespace GetDriveFileService
 			Hash = fileInfo.FullName.ToHash();
 			ParentPath = fileInfo.DirectoryName;
 			ParentHash = fileInfo.DirectoryName.ToHash();
+			Size = fileInfo.Length;
 		}
 		public StorageItem(DirectoryInfo directoryInfo)
 		{

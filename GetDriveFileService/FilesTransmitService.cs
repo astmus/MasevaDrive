@@ -34,8 +34,12 @@ namespace GetDriveFileService
 
 		public Stream GetItem(string name)
         {
-            WebOperationContext.Current.OutgoingResponse.ContentType = "image/jpeg";
-			var requieredItem = storageItems[name];			
+			var requieredItem = storageItems[name];
+
+			WebOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
+			WebOperationContext.Current.OutgoingResponse.Headers.Add(string.Format("Content-Disposition: attachment; filename=\"{0}\"", requieredItem.ItemName));
+			WebOperationContext.Current.OutgoingResponse.ContentLength = requieredItem.Size;
+
 			return File.Open(requieredItem.Path, FileMode.Open);
 		}
 	}
