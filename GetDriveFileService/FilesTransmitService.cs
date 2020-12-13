@@ -14,9 +14,10 @@ namespace GetDriveFileService
 	class FilesTransmitService : GetFileServiceContract
 	{
 		Dictionary<string, StorageItem> storageItems = new Dictionary<string, StorageItem>();
+		FileSystemWatcher newFilesWatcher;
 		public FilesTransmitService()
 		{
-			DirectoryInfo d = new DirectoryInfo(@"z:\Images&Video\");
+			DirectoryInfo d = new DirectoryInfo(@"Z:\Images&Video\");			
 			var folders = d.GetDirectories("*", SearchOption.AllDirectories);
 			foreach (var f in folders)
 			{
@@ -29,7 +30,24 @@ namespace GetDriveFileService
 			{
 				StorageItem item = new StorageItem(f);
 				storageItems.Add(item.Hash, item);
-			};	
+			};
+			newFilesWatcher = new FileSystemWatcher(@"Z:\Images&Video\");
+			newFilesWatcher.IncludeSubdirectories = true;
+			newFilesWatcher.InternalBufferSize = 65000;
+			newFilesWatcher.Created += NewFilesWatcher_Created;
+			newFilesWatcher.Deleted += NewFilesWatcher_Deleted;
+			newFilesWatcher.EnableRaisingEvents = true;
+		}
+
+		private void NewFilesWatcher_Deleted(object sender, FileSystemEventArgs e)
+		{
+			storageItems.Remove(e.FullPath.ToHash());
+		}
+
+		private void NewFilesWatcher_Created(object sender, FileSystemEventArgs e)
+		{
+			StorageItem item = new StorageItem(new FileInfo(e.FullPath));
+			storageItems.Add(item.Hash, item);
 		}
 
 		public Stream GetItem(string name)

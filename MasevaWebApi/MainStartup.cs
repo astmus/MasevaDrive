@@ -16,7 +16,7 @@ namespace MasevaWebApi
 		Dictionary<string, StorageItem> hashs;
 		public MainStartup()
 		{
-			DirectoryInfo d = new DirectoryInfo(@"z:\Images&Video\");
+			DirectoryInfo d = new DirectoryInfo(@"Z:\Images&Video\");
 			hashs = new Dictionary<string, StorageItem>();
 			var folders = d.GetDirectories("*", SearchOption.AllDirectories);
 			foreach (var f in folders)

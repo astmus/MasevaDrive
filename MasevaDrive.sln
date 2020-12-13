@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetImageService", "GetImageService\GetImageService.csproj", "{C849F61C-BEA0-4B09-A58C-74C86AC85AC6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudSync", "CloudSync\CloudSync.csproj", "{39AE4133-B74B-4623-99A2-18A3C23F4491}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramMasevaBot", "TelegramMasevaBot\TelegramMasevaBot.csproj", "{99684E9A-7CF4-4EBA-8967-4B60C255775D}"
@@ -17,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriveApi", "DriveApi\DriveA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasevaDrive", "MasevaDrive\MasevaDrive.csproj", "{A58366EC-3220-4E3B-8E8B-A39728DB4612}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetDriveFileService", "GetDriveFileService\GetDriveFileService.csproj", "{4F9483D7-70B1-40FF-B350-640B8C0C3858}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,14 +25,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C849F61C-BEA0-4B09-A58C-74C86AC85AC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C849F61C-BEA0-4B09-A58C-74C86AC85AC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C849F61C-BEA0-4B09-A58C-74C86AC85AC6}.Debug|x64.ActiveCfg = Debug|x64
-		{C849F61C-BEA0-4B09-A58C-74C86AC85AC6}.Debug|x64.Build.0 = Debug|x64
-		{C849F61C-BEA0-4B09-A58C-74C86AC85AC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C849F61C-BEA0-4B09-A58C-74C86AC85AC6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C849F61C-BEA0-4B09-A58C-74C86AC85AC6}.Release|x64.ActiveCfg = Release|x64
-		{C849F61C-BEA0-4B09-A58C-74C86AC85AC6}.Release|x64.Build.0 = Release|x64
 		{39AE4133-B74B-4623-99A2-18A3C23F4491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{39AE4133-B74B-4623-99A2-18A3C23F4491}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39AE4133-B74B-4623-99A2-18A3C23F4491}.Debug|x64.ActiveCfg = Debug|x64
@@ -82,6 +74,14 @@ Global
 		{A58366EC-3220-4E3B-8E8B-A39728DB4612}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A58366EC-3220-4E3B-8E8B-A39728DB4612}.Release|x64.ActiveCfg = Release|x64
 		{A58366EC-3220-4E3B-8E8B-A39728DB4612}.Release|x64.Build.0 = Release|x64
+		{4F9483D7-70B1-40FF-B350-640B8C0C3858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F9483D7-70B1-40FF-B350-640B8C0C3858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F9483D7-70B1-40FF-B350-640B8C0C3858}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4F9483D7-70B1-40FF-B350-640B8C0C3858}.Debug|x64.Build.0 = Debug|Any CPU
+		{4F9483D7-70B1-40FF-B350-640B8C0C3858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F9483D7-70B1-40FF-B350-640B8C0C3858}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F9483D7-70B1-40FF-B350-640B8C0C3858}.Release|x64.ActiveCfg = Release|Any CPU
+		{4F9483D7-70B1-40FF-B350-640B8C0C3858}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

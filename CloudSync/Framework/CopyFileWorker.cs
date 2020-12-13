@@ -17,6 +17,7 @@ namespace CloudSync.Framework
 		public string Link { get; set; }
 		public string DestinationFolder { get; private set; }
 		public string DispathFolder { get; private set; }
+		public string DestinationFullFilePath { get; private set; }
 
 		private CancellationTokenSource cancelTokenSource;
 		private int attemptsCount = 0;
@@ -88,7 +89,8 @@ namespace CloudSync.Framework
 					string destinationFolderWithMonthSubFolder = Path.Combine(DestinationFolder, SyncItem.CreatedDateTime.ToString("yyyy.MM"));
 					if (!Directory.Exists(destinationFolderWithMonthSubFolder))
 						Directory.CreateDirectory(destinationFolderWithMonthSubFolder);
-					using (var fileStream = new FileStream(Path.Combine(destinationFolderWithMonthSubFolder, SyncItem.Name), FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true))
+					DestinationFullFilePath = Path.Combine(destinationFolderWithMonthSubFolder, SyncItem.Name);
+					using (var fileStream = new FileStream(DestinationFullFilePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true))
 					{
 						var totalRead = 0L;
 						int readed = 0;

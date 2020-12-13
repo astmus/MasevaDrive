@@ -25,7 +25,7 @@ namespace CloudSync.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Z:\\Images&Video\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("z:\\Images&Video\\")]
         public string RootMediaPath {
             get {
                 return ((string)(this["RootMediaPath"]));

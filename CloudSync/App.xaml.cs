@@ -32,12 +32,14 @@ namespace CloudSync
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 			var t = Application.ResourceAssembly.GetName().Name;
 			var t2 = Application.ResourceAssembly.Location;
-			TelegramService.StartService();		
+			TelegramService.StartService();
+			TelegramInlineService.StartService();
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{			
 			TelegramService.StopService();
+			TelegramInlineService.StopService();
 			LogManager.Flush();
 		}
 

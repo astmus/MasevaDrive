@@ -17,7 +17,7 @@ namespace TelegramMasevaBot
 	class Program
 	{
 		private static readonly TelegramBotClient Bot = new TelegramBotClient("688413717:AAELvIkuj37vBedxvzIgtWsjZio8_B4QlR0");
-		private static string RootFolder = @"z:\Images&Video\";
+		private static string RootFolder = @"Z:\Images&Video\";
 		private static string selectedFolder = RootFolder;
 		static void Main(string[] args)
 		{

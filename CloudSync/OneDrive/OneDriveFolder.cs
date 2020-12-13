@@ -304,8 +304,15 @@ namespace CloudSync
 					case SyncState.Loaded:
 						nextWorker = new CopyFileWorker(syncItem, PathToDispathFolder, PathToSync);
 						nextWorker.TaskName = String.Format("Copy {0} ({1})", syncItem.Name, syncItem.FormattedSize);
+						nextWorker.Completed += (Worker w, ProgressableEventArgs args) =>
+						{						
+							if (args.Successfull)
+								TelegramInlineService.SendNotifyFileLoadDone(Owner.UserData.PrincipalName, syncItem, (w as CopyFileWorker).DestinationFullFilePath);
+							else
+								TelegramInlineService.SendNotifyAboutSyncError(Owner.UserData.PrincipalName, syncItem.Name + "copy problem");
+						};
 						logger.Trace("New copy worker ready for file {0} save to {1}", syncItem.Name, PathToSync);
-						TelegramService.SendNotifyFileLoadDone(Owner.UserData.PrincipalName, syncItem, destinationPath);
+						//TelegramService.SendNotifyFileLoadDone(Owner.UserData.PrincipalName, syncItem, destinationPath);						
 						break;
 					case SyncState.MovedToStore:
 						nextWorker = new DeleteOneDriveFileWorker(syncItem, Owner);

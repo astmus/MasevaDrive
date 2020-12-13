@@ -68,7 +68,7 @@ namespace CloudSync.Telegram
 					{
 						var RequestReplyKeyboard = new ReplyKeyboardMarkup(new KeyboardButton[] 
 						{
-							KeyboardButton.WithRequestPoll("удалить","deleteImageAction")
+							new KeyboardButton("удалить")
 						},true,true);
 						
 						using (MemoryStream imageStream = CreateThumbnailOfFile(pathToLoadedFile))
