@@ -28,10 +28,9 @@ namespace GetDriveFileService
 				serviceHost.Close();
 			}
 
-			// Create a ServiceHost for the CalculatorService type and
-			// provide the base address.
 			try
 			{
+				StorageItemsProvider.Instance.StartPipeServer();
 				Uri baseAddress = new Uri(@"http://192.168.0.103:9090/");
 				serviceHost = new ServiceHost(typeof(FilesTransmitService), baseAddress);
 				serviceHost.AddServiceEndpoint(typeof(GetFileServiceContract), new WebHttpBinding(), "").Behaviors.Add(new WebHttpBehavior());
@@ -41,9 +40,6 @@ namespace GetDriveFileService
 				throw new Exception("My data");
 			}
 			
-			
-			// Open the ServiceHostBase to create listeners and start
-			// listening for messages.
 			serviceHost.Open();
 		}
 
@@ -54,6 +50,7 @@ namespace GetDriveFileService
 				serviceHost.Close();
 				serviceHost = null;
 			}
+			StorageItemsProvider.Instance.StopPipeService();
 		}
 	}
 }

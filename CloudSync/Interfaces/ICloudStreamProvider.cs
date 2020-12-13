@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CloudSync.Interfaces
@@ -10,5 +11,6 @@ namespace CloudSync.Interfaces
 	public interface ICloudStreamProvider
 	{
 		Task<Stream> GetStreamToFileAsync(string url);
+		Semaphore GetDownloadSrteamLimiter();
 	}
 }

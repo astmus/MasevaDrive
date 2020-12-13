@@ -10,6 +10,8 @@ using System.Windows;
 using Microsoft.Win32;
 using System.Net;
 using CloudSync.Telegram;
+using System.IO.Pipes;
+using System.IO;
 
 namespace CloudSync
 {
@@ -18,7 +20,8 @@ namespace CloudSync
 	/// </summary>
 	public partial class App : Application
 	{
-		private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+		private static readonly Logger Log = LogManager.GetCurrentClassLogger();		
+
 		private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
 		{
 			Settings.Instance.Save();
@@ -30,30 +33,33 @@ namespace CloudSync
 		{
 			Log.Info("App is start");
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-			var t = Application.ResourceAssembly.GetName().Name;
-			var t2 = Application.ResourceAssembly.Location;
-			TelegramService.StartService();
-			TelegramInlineService.StartService();
+			TelegramService.RequestDeleteFile += OnRequestDeleteFileFromStorage;
+			TelegramService.StartService();						
+		}
+
+		private async void OnRequestDeleteFileFromStorage(string hashOfPath)
+		{
+			NamedPipeClientStream client = new NamedPipeClientStream("StorageFileInfoPipe");
+			client.Connect();
+			StreamReader reader = new StreamReader(client);
+			StreamWriter writer = new StreamWriter(client);
+			writer.AutoFlush = true;			
+			await writer.WriteLineAsync(hashOfPath);
+			var pathToFile = await reader.ReadLineAsync();
+			try
+			{
+				File.Delete(pathToFile);
+			}
+			catch (System.Exception ex)
+			{
+				TelegramService.SendNotifyAboutDeleteFileError(pathToFile + " cannot delete" + ex.ToString());
+			}			
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{			
-			TelegramService.StopService();
-			TelegramInlineService.StopService();
-			LogManager.Flush();
-		}
-
-
-		/*
-		private void SetStartup()
-		{
-			RegistryKey rk = Registry.CurrentUser.OpenSubKey
-				("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-
-			if (chkStartUp.Checked)
-				rk.SetValue(AppName, Application.ExecutablePath);
-			else
-				rk.DeleteValue(AppName, false);
-		}*/
+			TelegramService.StopService();			
+			LogManager.Flush();			
+		}		
 	}
 }

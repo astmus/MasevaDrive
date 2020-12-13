@@ -11,29 +11,33 @@ namespace GetDriveFileService
 	{
 		public string ParentPath { get; set; }
 		public string ParentHash { get; set; }
-		public string Path { get; set; }
+		public string FullPath { get; set; }
 		public string Hash { get; set; }
 		public string ItemName { get; set; }
 		public bool IsFolder { get; set; } = false;
 		public long Size { get; private set; } = 0;
+		public FileInfo FileSysInfo { get; set; } = null;
+		public DirectoryInfo DirectorySysInfo { get; set; } = null;
 
 		public StorageItem(FileInfo fileInfo)
 		{
 			ItemName = fileInfo.Name;
-			Path = fileInfo.FullName;
+			FullPath = fileInfo.FullName;
 			Hash = fileInfo.FullName.ToHash();
 			ParentPath = fileInfo.DirectoryName;
 			ParentHash = fileInfo.DirectoryName.ToHash();
+			FileSysInfo = fileInfo;
 			Size = fileInfo.Length;
 		}
 		public StorageItem(DirectoryInfo directoryInfo)
 		{
 			IsFolder = true;
 			ItemName = directoryInfo.Name;
-			Path = directoryInfo.FullName;
+			FullPath = directoryInfo.FullName;
 			Hash = directoryInfo.FullName.ToHash();
 			ParentPath = directoryInfo.Parent.FullName;
 			ParentHash = directoryInfo.Parent.FullName.ToHash();
+			DirectorySysInfo = directoryInfo;
 		}
 
 		public override string ToString()

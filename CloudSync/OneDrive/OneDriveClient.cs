@@ -13,6 +13,7 @@ using System.Net.Http.Headers;
 using System.Web;
 using CloudSync.Interfaces;
 using System.IO;
+using System.Threading;
 
 namespace CloudSync
 {
@@ -292,6 +293,12 @@ namespace CloudSync
 				return null;*/
 			//});
 
+		}
+
+		private Semaphore accountDownloadConnectionsLimiter = new Semaphore(2, 2);
+		public Semaphore GetDownloadSrteamLimiter()
+		{
+			return accountDownloadConnectionsLimiter;
 		}
 
 		[JsonObject]

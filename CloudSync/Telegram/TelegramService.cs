@@ -14,6 +14,7 @@ using System.Drawing.Imaging;
 using CloudSync.Windows;
 using Medallion.Shell;
 using Telegram.Bot.Types.ReplyMarkups;
+using System.IO.MemoryMappedFiles;
 
 namespace CloudSync.Telegram
 {
@@ -21,27 +22,16 @@ namespace CloudSync.Telegram
 	{		
 		private static readonly TelegramBotClient Bot;
 		private static Dictionary<string, long> Subscribers { get; set; } = new Dictionary<string, long>();
+		public static event Action<string> RequestDeleteFile;
 		static TelegramService()
 		{
 			Bot = new TelegramBotClient("688413717:AAELvIkuj37vBedxvzIgtWsjZio8_B4QlR0");
 			Bot.OnMessage += OnMessageRecieved;
 			Bot.OnCallbackQuery += Bot_OnCallbackQuery;			
-			Bot.OnInlineQuery += Bot_OnInlineQuery1;
-			Bot.OnInlineResultChosen += Bot_OnInlineResultChosen1;
 			Bot.OnInlineQuery += Bot_OnInlineQuery;
 			Bot.OnInlineResultChosen += Bot_OnInlineResultChosen; ;
 			//Bot.OnReceiveError += BotOnReceiveError;
 			//Bot.StopReceiving();
-		}
-
-		private static void Bot_OnInlineQuery1(object sender, global::Telegram.Bot.Args.InlineQueryEventArgs e)
-		{
-			int i = 0;
-		}
-
-		private static void Bot_OnInlineResultChosen1(object sender, global::Telegram.Bot.Args.ChosenInlineResultEventArgs e)
-		{
-			int i = 0;
 		}
 
 		private static void Bot_OnInlineResultChosen(object sender, global::Telegram.Bot.Args.ChosenInlineResultEventArgs e)
@@ -54,43 +44,48 @@ namespace CloudSync.Telegram
 			int i = 0;
 		}
 
-		private static void Bot_OnCallbackQuery(object sender, global::Telegram.Bot.Args.CallbackQueryEventArgs e)
+		private async static void Bot_OnCallbackQuery(object sender, global::Telegram.Bot.Args.CallbackQueryEventArgs e)
 		{
-			int i = 0;
+			await Bot.DeleteMessageAsync(e.CallbackQuery.Message.Chat.Id, e.CallbackQuery.Message.MessageId);
+			if (RequestDeleteFile != null)
+				RequestDeleteFile(e.CallbackQuery.Data);
 		}
-		
+
 		public static async void SendNotifyFileLoadDone(string email, OneDriveSyncItem file, string pathToLoadedFile)
 		{
-			if (Subscribers.ContainsKey(email))
+			if (!Subscribers.ContainsKey(email)) return;
+			var ChatId = Subscribers[email];
+			try
+			{
 				try
 				{
-					try
+					var hashOfPath = pathToLoadedFile.ToHash();
+					var RequestReplyKeyboard = new InlineKeyboardMarkup(new InlineKeyboardButton[]
 					{
-						var RequestReplyKeyboard = new ReplyKeyboardMarkup(new KeyboardButton[] 
-						{
-							new KeyboardButton("удалить")
-						},true,true);
-						
-						using (MemoryStream imageStream = CreateThumbnailOfFile(pathToLoadedFile))
-						{
-							await Bot.SendPhotoAsync(
-							Subscribers[email],
-							imageStream,
-							string.Format("{0} ({1}) done", file.Name, file.FormattedSize), replyMarkup: RequestReplyKeyboard);
-						}
-					}
-					catch (Exception ex)
-					{
-						await Bot.SendTextMessageAsync(Subscribers[email], string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
-					}					
-				}
-				catch (System.Exception ex)
-				{
-					await Task.Delay(3000).ContinueWith(async (a) => 
-					{
-						await Bot.SendTextMessageAsync(Subscribers[email], string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
+							InlineKeyboardButton.WithCallbackData("удалить",hashOfPath),
+							InlineKeyboardButton.WithUrl("скачать","http://192.168.0.103:9090/hid="+hashOfPath)
 					});
-				}				
+
+					using (MemoryStream imageStream = CreateThumbnailOfFile(pathToLoadedFile))
+					{
+						await Bot.SendPhotoAsync(
+						ChatId,
+						imageStream,
+						string.Format("{0} ({1}) done", file.Name, file.FormattedSize), replyMarkup: RequestReplyKeyboard);
+					}
+				}
+				catch (Exception ex)
+				{
+					await Bot.SendTextMessageAsync(ChatId, string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
+				}
+			}
+			catch (System.Exception ex)
+			{
+				await Task.Delay(3000).ContinueWith(async (a) =>
+				{
+					await Bot.SendTextMessageAsync(ChatId, string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
+				});
+			}
 		}
 
 		private static MemoryStream CreateThumbnailOfFile(string filePath)
@@ -109,6 +104,11 @@ namespace CloudSync.Telegram
 			
 			result.Seek(0,SeekOrigin.Begin);
 			return result;
+		}
+
+		public static void SendNotifyAboutDeleteFileError(string errorMessage)
+		{
+			Bot.SendTextMessageAsync(Subscribers["astmus@live.com"], errorMessage);
 		}
 
 		public static async void SendNotifyAboutSyncError(string email, string errorMessage)
