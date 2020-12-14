@@ -17,7 +17,7 @@ namespace GetDriveFileService
 	{
 		public FilesTransmitService()
 		{
-			
+			int i = 0;
 		}		
 
 		public Stream GetItem(string name)
@@ -25,16 +25,14 @@ namespace GetDriveFileService
 			var requieredItem = StorageItemsProvider.Instance[name];
 			if (requieredItem == null)
 			{
-				WebOperationContext.Current.OutgoingResponse.StatusCode = System.Net.HttpStatusCode.NotFound;
-				WebOperationContext.Current.OutgoingResponse.StatusDescription = "File does not exists";
+				WebOperationContext.Current.OutgoingResponse.SetStatusAsNotFound("File does not exists");
 				return null;
 			}
 			
 			WebOperationContext.Current.OutgoingResponse.ContentType = "application/octet-stream";
 			WebOperationContext.Current.OutgoingResponse.Headers.Add(string.Format("Content-Disposition: attachment; filename=\"{0}\"", requieredItem.ItemName));
-			WebOperationContext.Current.OutgoingResponse.ContentLength = requieredItem.Size;
-			
-			return requieredItem.FileSysInfo.Open(FileMode.Open, FileAccess.Read);
+			WebOperationContext.Current.OutgoingResponse.ContentLength = requieredItem.Size;			
+			return new FileStream(requieredItem.FullPath,FileMode.Open, FileAccess.Read, FileShare.Read);
 		}
 	}
 }

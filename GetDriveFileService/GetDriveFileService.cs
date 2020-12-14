@@ -33,7 +33,13 @@ namespace GetDriveFileService
 				StorageItemsProvider.Instance.StartPipeServer();
 				Uri baseAddress = new Uri(@"http://192.168.0.103:9090/");
 				serviceHost = new ServiceHost(typeof(FilesTransmitService), baseAddress);
-				serviceHost.AddServiceEndpoint(typeof(GetFileServiceContract), new WebHttpBinding(), "").Behaviors.Add(new WebHttpBehavior());
+				var bind = new WebHttpBinding();
+				bind.ReaderQuotas.MaxArrayLength = 2147483647;
+				bind.ReaderQuotas.MaxStringContentLength = 2147483647;
+				bind.TransferMode = TransferMode.Streamed;
+				bind.MaxReceivedMessageSize = 2147483647;
+				bind.Security.Mode = WebHttpSecurityMode.TransportCredentialOnly;
+				serviceHost.AddServiceEndpoint(typeof(GetFileServiceContract), bind, "").Behaviors.Add(new WebHttpBehavior());
 			}
 			catch (System.Exception ex)
 			{
