@@ -9,10 +9,10 @@ using Unity;
 
 namespace DriveApi.Network
 {
-	public class CustomMiddleware : OwinMiddleware
+	public class ProxyMiddleware : OwinMiddleware
 	{
 		private readonly OwinMiddleware _next;
-		public CustomMiddleware(OwinMiddleware next) : base(next)
+		public ProxyMiddleware(OwinMiddleware next) : base(next)
 		{
 			_next = next;
 		}
@@ -34,7 +34,7 @@ namespace DriveApi.Network
 	{
 		public static IAppBuilder UseCustomMiddleware(this IAppBuilder app)
 		{
-			app.Use(typeof(CustomMiddleware));
+			app.Use(typeof(ProxyMiddleware));
 			return app;
 		}
 	}

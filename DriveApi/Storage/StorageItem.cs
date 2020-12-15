@@ -154,7 +154,7 @@ namespace DriveApi.Storage
 
 				
 				//var mmf = 
-				var result = new DuplexStream(parent.Name, (long)expectedSize);
+				//var result = new DuplexStream(parent.Name, (long)expectedSize);
 				//ByteRangeStream partialStream = new ByteRangeStream(expectedSize);
 				//MemoryStream result = new MemoryStream();
 				//partialStream.EncodeCompleted = false;
@@ -168,9 +168,9 @@ namespace DriveApi.Storage
 					i.RedirectStandardInput = false;					*/
 				}));
 				//result.encodeTask = cmd;				
-				var encodingTask = cmd.StandardOutput.PipeToAsync(result.writeStream, leaveStreamOpen: true);
+				/*var encodingTask = cmd.StandardOutput.PipeToAsync(result.writeStream, leaveStreamOpen: true);
 				cmd.RedirectStandardErrorTo(Console.Out);				
-				encodingTask.Wait(1500);
+				encodingTask.Wait(1500);*/
 				//cmd.RedirectStandardErrorTo(lines);
 				//var err = cmd.GetOutputAndErrorLines();
 				
@@ -191,7 +191,7 @@ namespace DriveApi.Storage
 
 				//offset = offset.Add(TimeSpan.Parse(encodeStat?["time"] ?? "00:00:00.0"));
 				
-				return result;
+				return null;
 			}
 
 			public static StorageFile Create(StorageItem parent)

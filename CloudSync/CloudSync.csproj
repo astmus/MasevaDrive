@@ -191,7 +191,6 @@
       <DependentUpon>RootWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="Telegram\TelegramInlineService.cs" />
     <Compile Include="Telegram\TelegramService.cs" />
     <Compile Include="Windows\PromptDialogBox.xaml.cs">
       <DependentUpon>PromptDialogBox.xaml</DependentUpon>
