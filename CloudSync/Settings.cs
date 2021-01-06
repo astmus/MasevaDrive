@@ -21,11 +21,9 @@ namespace CloudSync
 			get { return Properties.Settings.Default; }
 		}
 		public ObservableCollection<OneDriveAccount> Accounts { get; set; }
-#if DEBUG
-		public string RootFolder { get { return AppProperties.RootMediaPath + "1"; } }
-#else
+
 		public string RootFolder { get { return AppProperties.RootMediaPath; } }
-#endif
+
 		public static Settings Instance
         {
             get { return _instance.Value; }
