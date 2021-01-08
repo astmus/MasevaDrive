@@ -15,13 +15,13 @@ using Unity.Lifetime;
 using DriveApi.Network;
 using System.Web.Http.Dispatcher;
 using System.Configuration;
-using DriveApi.Extensions;
 using System.Net;
 using System.Web.Http.ExceptionHandling;
 using System.Threading;
 using System.Net.Http;
 using System.Web.Http.Filters;
 using System.ComponentModel.DataAnnotations;
+using FrameworkData.Settings;
 
 [assembly: OwinStartup(typeof(DriveApi.Startup))]
 
@@ -70,7 +70,7 @@ namespace DriveApi
 			config.Services.Replace(typeof(IHttpControllerActivator), new ControllerActivator());
 			//config.Services.Replace(typeof(IExceptionHandler), new ExHandler());
 			config.MapHttpAttributeRoutes();			
-			config.Routes.MapHttpRoute("API Default", "{controller}/{id}", defaults: new { id = ConfigurationManager.AppSettings.RootPath().ToHash() });
+			config.Routes.MapHttpRoute("API Default", "{controller}/{id}", defaults: new { id = SolutionSettings.Default.RootOfMediaFolder.ToHash() });
 			config.Formatters.Remove(config.Formatters.XmlFormatter);
 			config.Formatters.JsonFormatter.UseDataContractJsonSerializer = true;
 			config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new System.Net.Http.Headers.MediaTypeHeaderValue("multipart/form-data"));

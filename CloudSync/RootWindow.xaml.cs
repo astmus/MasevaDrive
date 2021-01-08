@@ -14,6 +14,7 @@ using CloudSync.Windows;
 using Microsoft.Win32;
 using System.Windows.Media;
 using NLog;
+using FrameworkData.Settings;
 
 namespace CloudSync
 {
@@ -59,9 +60,9 @@ namespace CloudSync
 		{
 			InitializeComponent();
 			trayIcon.Click += RestoreWindow;
-			foreach (var acount in Settings.Instance.Accounts)
+			foreach (var acount in AppSettings.Instance.Accounts)
 				acount.Client.NeedRelogin += OnAcountNeedAuthorization;
-			ConnectedAccounts.ItemsSource = Settings.Instance.Accounts;			
+			ConnectedAccounts.ItemsSource = AppSettings.Instance.Accounts;			
 			System.Windows.Application.Current.Exit += OnApplicationExit;
 			System.Windows.Application.Current.MainWindow.Loaded += OnMainWindowLoaded;
 			saveSettingsTimer.Tick += OnSaveSettingsTimerTick;
@@ -76,7 +77,7 @@ namespace CloudSync
 
 		private void OnSaveSettingsTimerTick(object sender, EventArgs e)
 		{
-			Settings.Instance.Save();
+			AppSettings.Instance.Save();
 		}
 
 		private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
@@ -87,17 +88,20 @@ namespace CloudSync
 				StartupButton.BorderBrush = new SolidColorBrush(Colors.Orange);
 			else
 				StartupButton.BorderBrush = new SolidColorBrush(Colors.LightGreen);
-			Settings.Instance.Accounts.ToList().ForEach(account =>
+			AppSettings.Instance.Accounts.ToList().ForEach(account =>
 			{
 				account.StartSyncActiveFolders();
 			});
+#if !DEBUG
+			OnMinimizeButtonClick(null, null);
+#endif
 		}		
 
 		private void OnApplicationExit(object sender, ExitEventArgs e)
 		{			
-			var res = Parallel.ForEach<OneDriveAccount>(from account in Settings.Instance.Accounts select account, new Action<OneDriveAccount>((curAccount) => { curAccount.CancelAndDestructAllActiveWorkers(); }));
+			var res = Parallel.ForEach<OneDriveAccount>(from account in AppSettings.Instance.Accounts select account, new Action<OneDriveAccount>((curAccount) => { curAccount.CancelAndDestructAllActiveWorkers(); }));
 			Log.Info("App being close and save settings");
-			Settings.Instance.Save();
+			AppSettings.Instance.Save();
 			Log.Info("App saved setting. Exuit code = "+e.ApplicationExitCode);
 		}
 
@@ -106,16 +110,16 @@ namespace CloudSync
 			if (BrowserTitle.Dispatcher.CheckAccess())
 			{
 				BrowserTitle.Text = "Reauthorization for " + client.UserData.DisplayName;
-				var forDel = Settings.Instance.Accounts.First(account => account.Client == client);
-				Settings.Instance.Accounts.Remove(forDel);
+				var forDel = AppSettings.Instance.Accounts.First(account => account.Client == client);
+				AppSettings.Instance.Accounts.Remove(forDel);
 				OnConnectButtonClick(null, null);
 			}
 			else
 				Browser.Dispatcher.Invoke(() =>
 				{
 					BrowserTitle.Text = "Reauthorization for " + client.UserData.DisplayName;
-					var forDel = Settings.Instance.Accounts.First(account => account.Client == client);
-					Settings.Instance.Accounts.Remove(forDel);
+					var forDel = AppSettings.Instance.Accounts.First(account => account.Client == client);
+					AppSettings.Instance.Accounts.Remove(forDel);
 					OnConnectButtonClick(null, null);
 				});
 		}		
@@ -196,9 +200,9 @@ namespace CloudSync
 				{
 					var newAccount = new OneDriveAccount(OneDriveClient.AcquireClientByCode(code));
 					var userId = newAccount.Client.UserData.Id;
-					var existingConnectedUser = Settings.Instance.Accounts.FirstOrDefault(a => a.Client.UserData.Id == userId);
+					var existingConnectedUser = AppSettings.Instance.Accounts.FirstOrDefault(a => a.Client.UserData.Id == userId);
 					if (existingConnectedUser == null)
-						Settings.Instance.Accounts.Add(newAccount);
+						AppSettings.Instance.Accounts.Add(newAccount);
 					else
 						existingConnectedUser.Client.CredentialData = newAccount.Client.CredentialData;
 
@@ -282,7 +286,7 @@ namespace CloudSync
 		private void OnRecieveFromUSBButton(object sender, RoutedEventArgs e)
 		{
 			SyncUSB window = new SyncUSB();
-			window.SyncPathTextBlock.Content = Settings.Instance.RootFolder;
+			window.SyncPathTextBlock.Content = SolutionSettings.Default.RootOfMediaFolder;
 			window.ShowDialog();
 		}
 

@@ -1,65 +1,66 @@
-﻿using System;
+﻿using FrameworkData;
+using FrameworkData.Settings;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DriveApi.Extensions;
 
 namespace DriveApi.Storage
 {
 	public interface IStorageItemsProvide
 	{
-		IEnumerable<StorageItem> GetRoot();
-		StorageItem GetById(string id);
-		StorageItem GetFileById(string id);
-		IEnumerable<StorageItem> GetChildrenByParentId(string id);
+		IEnumerable<StorageItemInfo> GetRoot();
+		StorageItemInfo GetById(string id);
+		StorageItemInfo GetFileById(string id);
+		IEnumerable<StorageItemInfo> GetChildrenByParentId(string id);
 		bool HasId(string id);
 	}
 	public class StorageItemsProvider : IStorageItemsProvide
 	{
-		Dictionary<string, StorageItem> items;
-		FileSystemWatcher observer = new FileSystemWatcher(ConfigurationManager.AppSettings.RootPath());		
+		Dictionary<string, StorageItemInfo> items;
+		FileSystemWatcher observer = new FileSystemWatcher(SolutionSettings.Default.RootOfMediaFolder);		
 		
 		public StorageItemsProvider()
 		{
-			DirectoryInfo d = new DirectoryInfo(ConfigurationManager.AppSettings.RootPath());			
-			items = new Dictionary<string, StorageItem>();
+			DirectoryInfo d = new DirectoryInfo(SolutionSettings.Default.RootOfMediaFolder);			
+			items = new Dictionary<string, StorageItemInfo>();
 			var folders = d.GetDirectories("*", SearchOption.AllDirectories);
 			foreach (var f in folders)
 			{
-				StorageItem item = new StorageItem(f);
-				items.Add(item.Id, item);
+				StorageItemInfo item = new StorageItemInfo(f);
+				items.Add(item.Hash, item);
 			};
 
 			var files = d.GetFiles("*", SearchOption.AllDirectories);
 			foreach (var f in files)
 			{
-				StorageItem item = new StorageItem(f);
-				items.Add(item.Id, item);
+				StorageItemInfo item = new StorageItemInfo(f);
+				items.Add(item.Hash, item);
 			};
 		}
 
-		public StorageItem GetFileById(string id)
+		public StorageItemInfo GetFileById(string id)
 		{
-			return items.FirstOrDefault(i => i.Value.Id == id && i.Value.FileSysInfo != null).Value;
+			return items.FirstOrDefault(i => i.Value.IsFile && i.Value.Hash == id).Value;
 		}
 
-		public StorageItem GetById(string id)
+		public StorageItemInfo GetById(string id)
 		{
 			return items.ContainsKey(id) ? items[id] : null;
 		}
 
-		public IEnumerable<StorageItem> GetChildrenByParentId(string id)
+		public IEnumerable<StorageItemInfo> GetChildrenByParentId(string id)
 		{
-			return items.Where(i => i.Value.ParentID == id).Select(i => i.Value).AsEnumerable();
+			return items.Where(i => i.Value.ParentHash == id).Select(i => i.Value).AsEnumerable();
 		}
 
-		public IEnumerable<StorageItem> GetRoot()
+		public IEnumerable<StorageItemInfo> GetRoot()
 		{
-			string pathToRoot = ConfigurationManager.AppSettings.RootPath();
-			return items.Where(i => i.Value.ParentPath == pathToRoot).Select(i=>i.Value).AsEnumerable();
+			string pathToRoot = SolutionSettings.Default.RootOfMediaFolder;
+			return items.Where(i => i.Value.ParentHash == pathToRoot).Select(i=>i.Value).AsEnumerable();
 		}
 
 		public bool HasId(string id)

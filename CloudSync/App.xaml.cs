@@ -24,7 +24,7 @@ namespace CloudSync
 
 		private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
 		{
-			Settings.Instance.Save();
+			AppSettings.Instance.Save();
 			Log.Fatal(e.Exception, "Unhandled exception: {0}", e.Exception);
 			LogManager.Flush();			
 		}

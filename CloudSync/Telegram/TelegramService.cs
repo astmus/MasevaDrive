@@ -15,6 +15,8 @@ using CloudSync.Windows;
 using Medallion.Shell;
 using Telegram.Bot.Types.ReplyMarkups;
 using System.IO.MemoryMappedFiles;
+using FrameworkData.Settings;
+using FrameworkData;
 
 namespace CloudSync.Telegram
 {
@@ -62,11 +64,10 @@ namespace CloudSync.Telegram
 					var hashOfPath = pathToLoadedFile.ToHash();
 					var RequestReplyKeyboard = new InlineKeyboardMarkup(new InlineKeyboardButton[]
 					{
-							InlineKeyboardButton.WithCallbackData("удалить",hashOfPath),
-							InlineKeyboardButton.WithUrl("скачать","http://192.168.0.103:9090/hid="+hashOfPath)
+						InlineKeyboardButton.WithCallbackData("удалить",hashOfPath)
 					});
 
-					using (MemoryStream imageStream = CreateThumbnailOfFile(pathToLoadedFile))
+					using (MemoryStream imageStream = FFTools.CreateThumbnail(pathToLoadedFile))
 					{
 						await Bot.SendPhotoAsync(
 						ChatId,
@@ -86,25 +87,7 @@ namespace CloudSync.Telegram
 					await Bot.SendTextMessageAsync(ChatId, string.Format("{0} ({1}) done", file.Name, file.FormattedSize));
 				});
 			}
-		}
-
-		private static MemoryStream CreateThumbnailOfFile(string filePath)
-		{
-			string args = string.Format("-i \"{0}\" -qscale:v 5 -vf scale=\"360:-1\" -vframes 1 -f image2pipe pipe:1", filePath);				
-			var createThumbnailProcess = Command.Run(Settings.Instance.AppProperties.FFmpegPath, null, options => options.StartInfo((i) =>
-			{
-				i.Arguments = args;
-				i.RedirectStandardOutput = true;
-				i.UseShellExecute = false;
-			}));			
-			
-			var result = new MemoryStream();
-			createThumbnailProcess.RedirectTo(result);
-			createThumbnailProcess.Wait();
-			
-			result.Seek(0,SeekOrigin.Begin);
-			return result;
-		}
+		}		
 
 		public static void SendNotifyAboutDeleteFileError(string errorMessage)
 		{

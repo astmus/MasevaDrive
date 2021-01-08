@@ -1,4 +1,5 @@
-﻿using GetDriveFileService.Properties;
+﻿using FrameworkData;
+using GetDriveFileService.Properties;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,11 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace GetDriveFileService
 {
 	public class StorageItemsProvider : IDisposable
 	{
-		Dictionary<string, StorageItem> storageItems = new Dictionary<string, StorageItem>();
+		public Dictionary<string, StorageItemInfo> storageItems = new Dictionary<string, StorageItemInfo>();
 		FileSystemWatcher newFilesWatcher = new FileSystemWatcher(Settings.Default.RootPath);
 		private static readonly Lazy<StorageItemsProvider> lazy = new Lazy<StorageItemsProvider>(() => new StorageItemsProvider());
 
@@ -24,14 +26,14 @@ namespace GetDriveFileService
 			var folders = d.GetDirectories("*", SearchOption.AllDirectories);
 			foreach (var f in folders)
 			{
-				StorageItem item = new StorageItem(f);
+				StorageItemInfo item = new StorageItemInfo(f);
 				storageItems.Add(item.Hash, item);
 			};
 
 			var files = d.GetFiles("*", SearchOption.AllDirectories);
 			foreach (var f in files)
 			{
-				StorageItem item = new StorageItem(f);
+				StorageItemInfo item = new StorageItemInfo(f);
 				storageItems.Add(item.Hash, item);
 			};
 			newFilesWatcher = new FileSystemWatcher(Settings.Default.RootPath);
@@ -40,9 +42,14 @@ namespace GetDriveFileService
 			newFilesWatcher.Created += NewFilesWatcher_Created;
 			newFilesWatcher.Deleted += NewFilesWatcher_Deleted;
 			newFilesWatcher.EnableRaisingEvents = true;
-		}		
+		}
 
-		public StorageItem this[string hash]
+		public List<string> GetContentOfFolder(string hash)
+		{
+			return storageItems.Where(si => si.Value.ParentHash == hash).Select(s=>s.Value.FullPath).ToList();
+		}
+
+		public StorageItemInfo this[string hash]
 		{
 			get
 			{
@@ -53,35 +60,6 @@ namespace GetDriveFileService
 			}
 		}
 
-		bool pipeIsServiceEnabled = false;
-		public void StartPipeServer()
-		{
-			pipeIsServiceEnabled = true;
-			Task.Factory.StartNew(async () =>
-			{
-				NamedPipeServerStream server = new NamedPipeServerStream("StorageFileInfoPipe");
-				do
-				{
-					server.WaitForConnection();
-					StreamReader reader = new StreamReader(server);
-					StreamWriter writer = new StreamWriter(server);
-					writer.AutoFlush = true;
-
-					var filePathHash = await reader.ReadLineAsync();
-					if (storageItems.ContainsKey(filePathHash))
-						writer.WriteLine(storageItems[filePathHash].FullPath);
-					else
-						writer.WriteLine("error");
-					server.Disconnect();
-				} while (pipeIsServiceEnabled);
-			});
-		}
-
-		public void StopPipeService()
-		{
-			pipeIsServiceEnabled = false;
-		}
-
 		private void NewFilesWatcher_Deleted(object sender, FileSystemEventArgs e)
 		{
 			storageItems.Remove(e.FullPath.ToHash());
@@ -89,13 +67,12 @@ namespace GetDriveFileService
 
 		private void NewFilesWatcher_Created(object sender, FileSystemEventArgs e)
 		{
-			StorageItem item = new StorageItem(new FileInfo(e.FullPath));
+			StorageItemInfo item = new StorageItemInfo(new FileInfo(e.FullPath));
 			storageItems.Add(item.Hash, item);
 		}
 
 		public void Dispose()
 		{
-			StopPipeService();
 		}
 	}
 }

@@ -7,7 +7,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Configuration;
-using DriveApi.Extensions;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -18,11 +17,10 @@ using System.Threading.Tasks;
 using DriveApi.Network;
 using System.IO.MemoryMappedFiles;
 using System.Net.Http.Headers;
-using DriveApi.Model;
 
 namespace DriveApi.Storage
 {
-	[DataContract]
+	/*[DataContract]
 	public class StorageItem
 	{
 		private static readonly List<string> ImageExtensions = new List<string> { ".jpg", ".jpeg", ".bmp", ".gif", ".png" };
@@ -117,7 +115,6 @@ namespace DriveApi.Storage
 			}
 			
 			List<string> lines = new List<string>();
-			Dictionary<string, string> encodeStat;
 			TimeSpan offset = TimeSpan.Zero;
 			//ByteRangeStream partialStream = new ByteRangeStream();
 			public Stream InitEncodingStream()
@@ -133,7 +130,7 @@ namespace DriveApi.Storage
 					i.RedirectStandardInput = false;
 				}));
 				cmd2.StandardError.PipeToAsync(Console.Out);*/
-
+				/*
 
 				var info = parent.FileSysInfo.GetMediaInfo();
 				double targetVideoBitRate = info.Streams[0].BitRate * .5D;
@@ -152,21 +149,21 @@ namespace DriveApi.Storage
 				string arg = string.Format("-hide_banner -i \"{0}\" -vcodec libvpx -quality realtime -b:v {3} -maxrate {5} -minrate {5} -bufsize 1k -metadata duration=\"{1}\" -ac 2 -c:a libopus -b:a {4} -fs {2} -f webm pipe:1", parent.FileSysInfo.FullName,(int)totalDurationSeconds, (int)expectedSize, (int)targetVideoBitRate, (int)targetAudioBitRate, info.Format.BitRate * 0.5D);
 				Console.WriteLine(arg);
 
-				
+				*/
 				//var mmf = 
 				//var result = new DuplexStream(parent.Name, (long)expectedSize);
 				//ByteRangeStream partialStream = new ByteRangeStream(expectedSize);
 				//MemoryStream result = new MemoryStream();
 				//partialStream.EncodeCompleted = false;
-				var cmd = Command.Run(@"ffmpeg.exe", null, options => options.StartInfo((i) =>
-				{
-					i.Arguments = arg;
+				//var cmd = Command.Run(@"ffmpeg.exe", null, options => options.StartInfo((i) =>
+				//{
+					//i.Arguments = arg;
 					/*i.UseShellExecute = false;
 					i.CreateNoWindow = true;
 					i.RedirectStandardError = true;
 					i.RedirectStandardOutput = true;
 					i.RedirectStandardInput = false;					*/
-				}));
+				//}));
 				//result.encodeTask = cmd;				
 				/*var encodingTask = cmd.StandardOutput.PipeToAsync(result.writeStream, leaveStreamOpen: true);
 				cmd.RedirectStandardErrorTo(Console.Out);				
@@ -190,7 +187,7 @@ namespace DriveApi.Storage
 				});*/
 
 				//offset = offset.Add(TimeSpan.Parse(encodeStat?["time"] ?? "00:00:00.0"));
-				
+				/*
 				return null;
 			}
 
@@ -198,7 +195,7 @@ namespace DriveApi.Storage
 			{
 				return parent.FileSysInfo == null ? null : new StorageFile(parent);
 			}
-		}
+		}*/
 
 		[DataContract]
 		public class StorageDirectory
@@ -219,6 +216,3 @@ namespace DriveApi.Storage
 			}
 		}
 	}
-
-	
-}

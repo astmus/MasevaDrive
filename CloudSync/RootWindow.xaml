@@ -210,7 +210,7 @@
 				</Button.Style>
 			</Button>
 			</StackPanel>
-			<ItemsControl Grid.Column="1" x:Name="OneDriveWorkersBoard" ItemsSource="{Binding Source={x:Static local:Settings.Instance}, Path=Accounts}">
+			<ItemsControl Grid.Column="1" x:Name="OneDriveWorkersBoard" ItemsSource="{Binding Source={x:Static local:AppSettings.Instance}, Path=Accounts}">
 				<ItemsControl.ItemsPanel>
 					<ItemsPanelTemplate>
 						<UniformGrid VerticalAlignment="Top"  Rows="1" IsItemsHost="True"/>

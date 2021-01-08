@@ -88,7 +88,7 @@ namespace CloudSync
 		{
 			get
 			{
-				return _owner ?? (_owner = Settings.Instance.Accounts.FirstOrDefault((a) => { return a.Client.UserData.Id == OwnerId; })?.Client);
+				return _owner ?? (_owner = AppSettings.Instance.Accounts.FirstOrDefault((a) => { return a.Client.UserData.Id == OwnerId; })?.Client);
 			}
 		}
 		public OneDriveFolder()

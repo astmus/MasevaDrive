@@ -32,7 +32,7 @@ namespace CloudSync
 		List<OneDriveFolder> oneDriveFolders
         {
             get { return null;/*Settings.Instance.FoldersForSync;*/ }
-            set { Settings.Instance.Accounts = null; }
+            set { AppSettings.Instance.Accounts = null; }
         }
 
         public ObservableCollection<IProgressable> currentWorkers { get; set; } = new ObservableCollection<IProgressable>();
@@ -149,7 +149,7 @@ namespace CloudSync
         protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
-            Settings.Instance.Save();
+            AppSettings.Instance.Save();
         }
 
         private void OnTryAgainPressed(object sender, RoutedEventArgs e)
