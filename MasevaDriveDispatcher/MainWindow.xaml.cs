@@ -34,7 +34,7 @@ namespace MasevaDriveDispatcher
 		{
 			InitializeComponent();
 			host = new ServiceHost(typeof(StorageInformationService), new Uri[] { new Uri("net.pipe://localhost") });
-			host.AddServiceEndpoint(typeof(IStorageDataInfo), new NetNamedPipeBinding(), "StorageItemsInfoPipe");			
+			host.AddServiceEndpoint(typeof(IStorageInfoProvider), new NetNamedPipeBinding(), "StorageItemsInfoPipe");			
 			AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 			checkState.Interval = TimeSpan.FromSeconds(1);
 			checkState.Tick += CheckState_Tick;
@@ -62,7 +62,7 @@ namespace MasevaDriveDispatcher
 			if (host.State == CommunicationState.Closed)
 			{
 				host = new ServiceHost(typeof(StorageInformationService), new Uri[] { new Uri("net.pipe://localhost") });
-				host.AddServiceEndpoint(typeof(IStorageDataInfo), new NetNamedPipeBinding(), "StorageItemsInfoPipe");
+				host.AddServiceEndpoint(typeof(IStorageInfoProvider), new NetNamedPipeBinding(), "StorageItemsInfoPipe");
 			}
 
 			if (host.State == CommunicationState.Opened)			

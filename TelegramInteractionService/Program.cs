@@ -5,7 +5,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TelegramInteractionService
+namespace TelegramService
 {
 	static class Program
 	{
@@ -17,7 +17,7 @@ namespace TelegramInteractionService
 			ServiceBase[] ServicesToRun;
 			ServicesToRun = new ServiceBase[]
 			{
-				new ActualizerInfoService()
+				new TelegramInteractionService()
 			};
 			ServiceBase.Run(ServicesToRun);
 		}

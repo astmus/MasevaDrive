@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GetDriveFileService
 {
-	public class StorageInformationService : IStorageDataInfo
+	public class StorageInformationService : IStorageInfoProvider
 	{
 		public StorageInformationService()
 		{

@@ -59,7 +59,7 @@ namespace GetDriveFileService
 
 			using (host = new ServiceHost(typeof(StorageInformationService),new Uri[]{new Uri("net.pipe://localhost")}))
 			{
-				host.AddServiceEndpoint(typeof(IStorageDataInfo), new NetNamedPipeBinding(), "StorageItemsInfoPipe");
+				host.AddServiceEndpoint(typeof(IStorageInfoProvider), new NetNamedPipeBinding(), "StorageItemsInfoPipe");
 
 				host.Open();
 

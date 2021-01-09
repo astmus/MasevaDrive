@@ -7,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace FrameworkData
 {
-	public class PipeAccessPoint
+	public class PipeAccessPoints
 	{
-		public static ChannelFactory<IStorageDataInfo> Connect()
+		public static ChannelFactory<IStorageInfoProvider> StorageInformationChannel()
 		{
-			return new ChannelFactory<IStorageDataInfo>(new NetNamedPipeBinding() { MaxReceivedMessageSize = 64*1024 }, new EndpointAddress("net.pipe://localhost/StorageItemsInfoPipe"));
+			return new ChannelFactory<IStorageInfoProvider>(new NetNamedPipeBinding() { MaxReceivedMessageSize = 64*1024 }, new EndpointAddress("net.pipe://localhost/StorageItemsInfoPipe"));
+		}
+
+		public static ChannelFactory<ITelegrammInterractor> TelegramInterractChannel()
+		{
+			return new ChannelFactory<ITelegrammInterractor>(new NetNamedPipeBinding() { MaxReceivedMessageSize = 64 * 1024 }, new EndpointAddress("net.pipe://localhost/TelegramInteractPipe"));
 		}
 	}
 }

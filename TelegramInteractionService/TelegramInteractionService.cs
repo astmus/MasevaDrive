@@ -20,13 +20,13 @@ namespace TelegramService
 		{
 			InitializeComponent();
 			Logger = new System.Diagnostics.EventLog();
-			if (!System.Diagnostics.EventLog.SourceExists("ActializerSource"))
+			if (!System.Diagnostics.EventLog.SourceExists("TelegramSource"))
 			{
 				System.Diagnostics.EventLog.CreateEventSource(
-					"ActializerSource", "ActializerNewLog");
+					"TelegramSource", "TelegramLog");
 			}
-			Logger.Source = "ActializerSource";
-			Logger.Log = "ActializerNewLog";
+			Logger.Source = "TelegramSource";
+			Logger.Log = "TelegramLog";
 		}
 
 		protected override void OnStart(string[] args)
@@ -36,7 +36,7 @@ namespace TelegramService
 			serviceStatus.dwWaitHint = 10000;
 			SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-			Logger.WriteEntry("ActualizerStarted");
+			Logger.WriteEntry("Telergam service started");
 
 			serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
 			SetServiceStatus(this.ServiceHandle, ref serviceStatus);

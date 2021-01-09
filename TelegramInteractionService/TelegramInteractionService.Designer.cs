@@ -1,6 +1,6 @@
-﻿namespace TelegramInteractionService
+﻿namespace TelegramService
 {
-	partial class ActualizerInfoService
+	partial class TelegramInteractionService
 	{
 		/// <summary> 
 		/// Required designer variable.

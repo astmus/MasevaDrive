@@ -27,6 +27,8 @@ namespace FrameworkData
 		public DateTime DateTimeCreation { get; set; }
 		[DataMember]
 		public DateTime DateTimeLastAccess { get; set; }
+		[DataMember]
+		public string Owner { get; set; }
 
 		[IgnoreDataMember]
 		public string ParentHash { get; set; }

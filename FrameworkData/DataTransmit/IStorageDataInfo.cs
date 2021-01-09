@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.ServiceModel;
 using System.Text;
 
-[ServiceContract]
-public interface IStorageDataInfo
+[ServiceContract(Name = "StorageInformationService")]
+public interface IStorageInfoProvider
 {
 	[OperationContract]
 	string GetItem(string fileNameHash);
