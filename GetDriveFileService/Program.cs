@@ -54,17 +54,23 @@ namespace GetDriveFileService
 			};
 			if (host != null)
 				host.Close();
+
+			var e = ServiceController.GetServices();
+
 			using (host = new ServiceHost(typeof(StorageInformationService),new Uri[]{new Uri("net.pipe://localhost")}))
 			{
-
 				host.AddServiceEndpoint(typeof(IStorageDataInfo), new NetNamedPipeBinding(), "StorageItemsInfoPipe");
 
-				host.Open();				
+				host.Open();
+
+
 
 				Console.WriteLine("Service is available. " +
 				  "Press <ENTER> to exit.");
-				Console.ReadLine();
 
+				Console.ReadLine();
+				var e2 = ServiceController.GetServices();
+				Console.ReadLine();
 				host.Close();
 			}
 		}

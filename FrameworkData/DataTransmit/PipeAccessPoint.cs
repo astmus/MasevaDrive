@@ -11,7 +11,7 @@ namespace FrameworkData
 	{
 		public static ChannelFactory<IStorageDataInfo> Connect()
 		{
-			return new ChannelFactory<IStorageDataInfo>(new NetNamedPipeBinding() { MaxReceivedMessageSize = 300000 }, new EndpointAddress("net.pipe://localhost/StorageItemsInfoPipe"));
+			return new ChannelFactory<IStorageDataInfo>(new NetNamedPipeBinding() { MaxReceivedMessageSize = 64*1024 }, new EndpointAddress("net.pipe://localhost/StorageItemsInfoPipe"));
 		}
 	}
 }

@@ -36,6 +36,11 @@ namespace FrameworkData
 			return string.Format("{0} IsFile = {1} Hash = {2} CR = {3}, LA = {4}, OR = {5}", Name, IsFile, Hash, DateTimeCreation, DateTimeLastAccess, DateTimeOriginal);
 		}
 
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+
 		[IgnoreDataMember]
 		protected FileSystemInfo systemInfo { get; set; }
 

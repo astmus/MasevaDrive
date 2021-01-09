@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataTransmit\Notifications.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="DataTransmit\IStorageDataInfo.cs" />
     <Compile Include="DataTransmit\MediaInfo.cs" />
