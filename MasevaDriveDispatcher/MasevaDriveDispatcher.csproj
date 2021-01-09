@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,6 +50,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -112,6 +115,10 @@
     <ProjectReference Include="..\FrameworkData\FrameworkData.csproj">
       <Project>{6abe39d2-e661-499f-8220-d095857be228}</Project>
       <Name>FrameworkData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GetDriveFileService\GetDriveFileService.csproj">
+      <Project>{4f9483d7-70b1-40ff-b350-640b8c0c3858}</Project>
+      <Name>GetDriveFileService</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -36,12 +36,12 @@ namespace GetDriveFileService
 				StorageItemInfo item = new StorageItemInfo(f);
 				storageItems.Add(item.Hash, item);
 			};
-			newFilesWatcher = new FileSystemWatcher(Settings.Default.RootPath);
+			/*newFilesWatcher = new FileSystemWatcher(Settings.Default.RootPath);
 			newFilesWatcher.IncludeSubdirectories = true;
 			newFilesWatcher.InternalBufferSize = 65000;
 			newFilesWatcher.Created += NewFilesWatcher_Created;
 			newFilesWatcher.Deleted += NewFilesWatcher_Deleted;
-			newFilesWatcher.EnableRaisingEvents = true;
+			newFilesWatcher.EnableRaisingEvents = true;*/
 		}
 
 		public List<string> GetContentOfFolder(string hash)
