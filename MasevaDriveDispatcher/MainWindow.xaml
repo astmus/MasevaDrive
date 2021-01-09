@@ -8,7 +8,7 @@
         Title="Maseva Drive" Height="800" Width="600"  WindowStyle="None" SnapsToDevicePixels="True" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" IsManipulationEnabled="True" MouseDown="Window_MouseDown" AllowsTransparency="True" >
 	
 	<Window.Background>
-		<SolidColorBrush Color="#FF515151" Opacity="0.5"/>
+		<SolidColorBrush Color="Gray" Opacity="0.9"/>
 	</Window.Background>
 	<Window.Resources>
 		
@@ -21,19 +21,35 @@
 				</Setter.Value>
 			</Setter>
 			<Setter Property="Opacity" Value="1"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate  TargetType="{x:Type Button}">
+						<Border x:Name="border" Margin="2" BorderBrush="Transparent" Background="#FF410E64" SnapsToDevicePixels="True">
+							<ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="Button.IsDefaulted" Value="True">
+								<Setter Property="Background" TargetName="border" Value="#FF3B0F61"/>
+							</Trigger>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" TargetName="border" Value="#DD4B0E7E"/>
+							</Trigger>
+							<Trigger Property="IsPressed" Value="True">
+								<Setter Property="Background" TargetName="border" Value="#EE4B0E7E"/>
+							</Trigger>
+							
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter Property="Background" TargetName="border" Value="#FF4B0E7E"/>
+								<Setter Property="Foreground" Value="#FF838383"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
 		</Style>
+		
 	</Window.Resources>
 	<Grid >
-		<Border>			
-			<Border.BitmapEffect>
-				<BlurBitmapEffect Radius="30" />
-			</Border.BitmapEffect>
-			<Canvas>
-				<Canvas.Background>
-					<SolidColorBrush Color="#FF555555" Opacity="0.75"/>
-				</Canvas.Background>
-			</Canvas>
-		</Border>
 		<Border Padding="15">
 		<Grid  >
 			<Grid.ColumnDefinitions>
