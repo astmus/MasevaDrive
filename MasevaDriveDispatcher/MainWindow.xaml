@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MasevaDriveDispatcher"
         mc:Ignorable="d"
-        Title="Maseva Drive" Height="800" Width="600" Background="#CC555555" BorderThickness="2" BorderBrush="#FF999999" WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" IsManipulationEnabled="True" MouseDown="Window_MouseDown" AllowsTransparency="True"  >
+        Title="Maseva Drive" Height="810" Width="600" Background="#CC555555" BorderThickness="2" BorderBrush="#FF999999" WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" IsManipulationEnabled="True" MouseDown="Window_MouseDown" AllowsTransparency="True"  >
 
 	<Window.Resources>
 		<Style TargetType="Button">
@@ -20,16 +20,18 @@
 				<Setter.Value>
 					<ControlTemplate  TargetType="{x:Type Button}">
 						<Border x:Name="border" Margin="2" BorderBrush="#FFFFFFFF" Background="#FF4B0E7E" SnapsToDevicePixels="True">
-							<Border BorderThickness="2" BorderBrush="#FF555555" Background="Transparent" SnapsToDevicePixels="True">
+							<Border BorderThickness="2" x:Name="innerBorder" BorderBrush="#FF555555" Background="Transparent" SnapsToDevicePixels="True">
 								<ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 							</Border>
 						</Border>
 						<ControlTemplate.Triggers>
 							<Trigger Property="Button.IsDefaulted" Value="True">
-								<Setter Property="Background" TargetName="border" Value="#FF4B0E7E"/>								
+								<Setter Property="Background" TargetName="border" Value="#FF4B0E7E"/>
+								<Setter Property="BorderBrush" TargetName="innerBorder" Value="#FF888888"/>
 							</Trigger>
 							<Trigger Property="IsMouseOver" Value="True">
 								<Setter Property="Background" TargetName="border" Value="#FF5D159B"/>
+								<Setter Property="BorderBrush" TargetName="innerBorder" Value="#FF888888"/>
 							</Trigger>
 							<Trigger Property="IsPressed" Value="True">
 								<Setter Property="Background" TargetName="border" Value="#EE4B0E7E"/>

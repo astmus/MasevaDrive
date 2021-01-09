@@ -71,6 +71,7 @@ namespace MasevaDriveDispatcher
 				host.Open();*/			
 		}
 
+		HashSet<FileInfo> site = new HashSet<FileInfo>();
 		private void OnDebug(object sender, RoutedEventArgs e)
 		{
 			if (newFilesWatcher == null)
@@ -83,6 +84,7 @@ namespace MasevaDriveDispatcher
 				newFilesWatcher.Deleted += NewFilesWatcher_Deleted;
 				newFilesWatcher.Changed += NewFilesWatcher_Changed;
 				newFilesWatcher.Renamed += NewFilesWatcher_Renamed;
+				newFilesWatcher.Site = site;
 				watcherButtton.Content = "Started";
 			}
 			newFilesWatcher.EnableRaisingEvents = !newFilesWatcher.EnableRaisingEvents;
