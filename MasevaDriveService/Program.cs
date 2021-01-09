@@ -5,7 +5,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TelegramService
+namespace MasevaDriveService
 {
 	static class Program
 	{
@@ -17,7 +17,7 @@ namespace TelegramService
 			ServiceBase[] ServicesToRun;
 			ServicesToRun = new ServiceBase[]
 			{
-				new TelegramInteractionService()
+				new MasevaDriveService()
 			};
 			ServiceBase.Run(ServicesToRun);
 		}

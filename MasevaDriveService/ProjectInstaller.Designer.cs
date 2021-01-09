@@ -1,4 +1,4 @@
-﻿namespace TelegramInteractionService
+﻿namespace MasevaDriveService
 {
 	partial class ProjectInstaller
 	{

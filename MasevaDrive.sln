@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasevaDriveDispatcher", "Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DriveDataInfoActualizer", "DriveDataInfoActualizer\DriveDataInfoActualizer.csproj", "{BF0F7D31-1A29-4CDE-B7E1-F8772768257F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasevaDriveService", "TelegramInteractionService\MasevaDriveService.csproj", "{0DD46D20-1FED-4EEF-A015-9E6F25029A6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasevaDriveService", "MasevaDriveService\MasevaDriveService.csproj", "{0DD46D20-1FED-4EEF-A015-9E6F25029A6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
