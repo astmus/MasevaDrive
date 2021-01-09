@@ -5,41 +5,38 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MasevaDriveDispatcher"
         mc:Ignorable="d"
-        Title="Maseva Drive" Height="800" Width="600"  WindowStyle="None" SnapsToDevicePixels="True" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" IsManipulationEnabled="True" MouseDown="Window_MouseDown" AllowsTransparency="True" >
-	
-	<Window.Background>
-		<SolidColorBrush Color="Gray" Opacity="0.9"/>
-	</Window.Background>
+        Title="Maseva Drive" Height="800" Width="600" Background="#CC555555" BorderThickness="2" BorderBrush="#FF999999" WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" IsManipulationEnabled="True" MouseDown="Window_MouseDown" AllowsTransparency="True"  >
+
 	<Window.Resources>
-		
 		<Style TargetType="Button">
 			<Setter Property="Margin" Value="2"/>
-			<Setter Property="BorderThickness" Value="2"/>
-			<Setter Property="BorderBrush">
-				<Setter.Value>
-				<SolidColorBrush Color="#FF666666" Opacity="0.0"/>
-				</Setter.Value>
-			</Setter>
+			<Setter Property="Foreground" Value="LightGray"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="FontSize" Value="22"/>
+			<Setter Property="FontFamily" Value="Yu Gothic UI Semibold"/>
+			
 			<Setter Property="Opacity" Value="1"/>
 			<Setter Property="Template">
 				<Setter.Value>
 					<ControlTemplate  TargetType="{x:Type Button}">
-						<Border x:Name="border" Margin="2" BorderBrush="Transparent" Background="#FF410E64" SnapsToDevicePixels="True">
-							<ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+						<Border x:Name="border" Margin="2" BorderBrush="#FFFFFFFF" Background="#FF4B0E7E" SnapsToDevicePixels="True">
+							<Border BorderThickness="2" BorderBrush="#FF555555" Background="Transparent" SnapsToDevicePixels="True">
+								<ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+							</Border>
 						</Border>
 						<ControlTemplate.Triggers>
 							<Trigger Property="Button.IsDefaulted" Value="True">
-								<Setter Property="Background" TargetName="border" Value="#FF3B0F61"/>
+								<Setter Property="Background" TargetName="border" Value="#FF4B0E7E"/>								
 							</Trigger>
 							<Trigger Property="IsMouseOver" Value="True">
-								<Setter Property="Background" TargetName="border" Value="#DD4B0E7E"/>
+								<Setter Property="Background" TargetName="border" Value="#FF5D159B"/>
 							</Trigger>
 							<Trigger Property="IsPressed" Value="True">
 								<Setter Property="Background" TargetName="border" Value="#EE4B0E7E"/>
 							</Trigger>
-							
+
 							<Trigger Property="IsEnabled" Value="False">
-								<Setter Property="Background" TargetName="border" Value="#FF4B0E7E"/>
+								<Setter Property="Background" TargetName="border" Value="#CC3B0F61"/>
 								<Setter Property="Foreground" Value="#FF838383"/>
 							</Trigger>
 						</ControlTemplate.Triggers>
@@ -47,35 +44,40 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
-		
+
 	</Window.Resources>
 	<Grid >
-		<Border Padding="15">
-		<Grid  >
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-				<ColumnDefinition/>
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="190"/>
-				<RowDefinition Height="190"/>
-				<RowDefinition Height="190"/>
-				<RowDefinition Height="190"/>
-				<RowDefinition Height="190"/>
-			</Grid.RowDefinitions>
-			<Button Content="StartWatchDir" Name="watcherButtton" Foreground="White" FontSize="20" Grid.ColumnSpan="2" Click="OnDebug"/>
-				<Button Grid.Column="2" Name="InformationService" Foreground="LightGray" FontSize="20" Click="OnToggleStateOfInformationService"> IS not started</Button>
-			<Button Grid.Row="1" Grid.ColumnSpan="3"/>
-			<Button Grid.Row="2"/>
-			<Button Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"/>
-			<Button Grid.Row="3" Grid.Column="1"/>
-			<Button Grid.Row="3"/>
-			<Button Grid.Column="3" Grid.Row="3"/>
-
-				<ListBox ScrollViewer.IsDeferredScrollingEnabled="True" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="3" Background="#99555555" Foreground="#FFF838AF" FontSize="16" ScrollViewer.CanContentScroll="True" Name="log">
+		<Image Opacity="0.8" Source="back.jpg" Margin="-10" Stretch="Fill">
+			<Image.BitmapEffect>
+				<BlurBitmapEffect Radius="20" />
+			</Image.BitmapEffect>
+		</Image>
+		<Border Padding="6">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="190"/>
+					<RowDefinition Height="190"/>
+					<RowDefinition Height="190"/>
+					<RowDefinition Height="190"/>
+					<RowDefinition Height="190"/>
+				</Grid.RowDefinitions>
+				<!--<ListBox ScrollViewer.IsDeferredScrollingEnabled="True" Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="3" Background="#99555555" Foreground="#FFF838AF" FontSize="16" ScrollViewer.CanContentScroll="True" Name="log">
 					<ListBoxItem>Logger</ListBoxItem>
-				</ListBox>
+				</ListBox>-->
+
+				<Button Content="StartWatchDir" Name="watcherButtton" Grid.ColumnSpan="2" Click="OnDebug"/>
+				<Button Grid.Column="2" Name="InformationService" Click="OnToggleStateOfInformationService">IS not started</Button>
+				<Button IsEnabled="False" Grid.Row="1" Grid.ColumnSpan="3"/>
+				<Button Grid.Row="2"/>
+				<Button Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"/>
+				<Button Grid.Row="3" Grid.Column="1"/>
+				<Button Grid.Row="3"/>
+				<Button Grid.Column="3" Grid.Row="3"/>
 
 			</Grid>
 		</Border>

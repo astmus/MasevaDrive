@@ -33,22 +33,22 @@ namespace MasevaDriveDispatcher
 		public MainWindow()
 		{
 			InitializeComponent();
-			host = new ServiceHost(typeof(StorageInformationService), new Uri[] { new Uri("net.pipe://localhost") });
-			host.AddServiceEndpoint(typeof(IStorageDataDriveService), new NetNamedPipeBinding(), "StorageItemsInfoPipe");			
-			AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+			//host = new ServiceHost(typeof(StorageInformationService), new Uri[] { new Uri("net.pipe://localhost") });
+			//host.AddServiceEndpoint(typeof(IStorageDataDriveService), new NetNamedPipeBinding(), "StorageItemsInfoPipe");			
+			/*AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 			checkState.Interval = TimeSpan.FromSeconds(1);
 			checkState.Tick += CheckState_Tick;
-			checkState.Start();
+			checkState.Start();*/
 		}
 
 		private void CheckState_Tick(object sender, EventArgs e)
 		{
-			InformationService.Content = host.State.ToString();
+			//InformationService.Content = host.State.ToString();
 		}
 		
 		private void CurrentDomain_ProcessExit(object sender, EventArgs e)
 		{
-			host?.Close();
+			//host?.Close();
 		}
 
 		private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -91,33 +91,33 @@ namespace MasevaDriveDispatcher
 
 		private void NewFilesWatcher_Renamed(object sender, RenamedEventArgs e)
 		{
-			log.Dispatcher.Invoke(() =>
+			/*log.Dispatcher.Invoke(() =>
 			{
 				log.Items.Insert(1,e.ChangeType.ToString() + " ;" + e.OldName + " ;" + e.Name);
-			});
+			});*/
 		}
 
 		private void NewFilesWatcher_Changed(object sender, FileSystemEventArgs e)
 		{
-			log.Dispatcher.Invoke(() =>
+			/*log.Dispatcher.Invoke(() =>
 			{
 				log.Items.Insert(1, e.ChangeType.ToString() + " ;" + e.FullPath + " ;" + e.Name);
-			});
+			});*/
 		}
 
 		private void NewFilesWatcher_Deleted(object sender, FileSystemEventArgs e)
 		{
-			log.Dispatcher.Invoke(() =>
+			/*log.Dispatcher.Invoke(() =>
 			{
 				log.Items.Insert(1,e.ChangeType.ToString() + " ;" + e.FullPath + " ;" + e.Name);
-			});
+			});*/
 		}
 
 		private void NewFilesWatcher_Created(object sender, FileSystemEventArgs e)
 		{
-			log.Dispatcher.Invoke(()=> {
+			/*log.Dispatcher.Invoke(()=> {
 				log.Items.Insert(1,e.ChangeType.ToString() + " ;" + e.FullPath + " ;" + e.Name);
-			});
+			});*/
 		}
 	}
 }
