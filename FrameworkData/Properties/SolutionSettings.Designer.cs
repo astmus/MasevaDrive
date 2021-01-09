@@ -67,5 +67,26 @@ namespace FrameworkData.Settings {
                 return ((string)(this["BaseApiAddress"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"astmus@live.com\":506545376,\"olgas88@live.com\":355747145}")]
+        public string TelegramSubscribers {
+            get {
+                return ((string)(this["TelegramSubscribers"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("688413717:AAELvIkuj37vBedxvzIgtWsjZio8_B4QlR0")]
+        public string TelegramSecretKey {
+            get {
+                return ((string)(this["TelegramSecretKey"]));
+            }
+            set {
+                this["TelegramSecretKey"] = value;
+            }
+        }
     }
 }

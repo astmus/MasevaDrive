@@ -33,8 +33,8 @@ namespace CloudSync
 		{
 			Log.Info("App is start");
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-			TelegramService.RequestDeleteFile += OnRequestDeleteFileFromStorage;
-			TelegramService.StartService();						
+			///TelegramService.RequestDeleteFile += OnRequestDeleteFileFromStorage;
+			//TelegramService.StartService();						
 		}
 
 		private async void OnRequestDeleteFileFromStorage(string hashOfPath)
@@ -58,7 +58,7 @@ namespace CloudSync
 
 		private void Application_Exit(object sender, ExitEventArgs e)
 		{			
-			TelegramService.StopService();			
+			//TelegramService.StopService();			
 			LogManager.Flush();			
 		}		
 	}

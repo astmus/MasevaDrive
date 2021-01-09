@@ -14,9 +14,9 @@ namespace FrameworkData
 			return new ChannelFactory<IStorageInfoProvider>(new NetNamedPipeBinding() { MaxReceivedMessageSize = 64*1024 }, new EndpointAddress("net.pipe://localhost/StorageItemsInfoPipe"));
 		}
 
-		public static ChannelFactory<ITelegrammInterractor> TelegramInterractChannel()
+		public static ChannelFactory<ITelegramInteractProvider> TelegramInterractChannel()
 		{
-			return new ChannelFactory<ITelegrammInterractor>(new NetNamedPipeBinding() { MaxReceivedMessageSize = 64 * 1024 }, new EndpointAddress("net.pipe://localhost/TelegramInteractPipe"));
+			return new ChannelFactory<ITelegramInteractProvider>(new NetNamedPipeBinding() { MaxReceivedMessageSize = 64 * 1024 }, new EndpointAddress("net.pipe://localhost/TelegramInteractPipe"));
 		}
 	}
 }
