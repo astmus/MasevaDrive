@@ -79,6 +79,7 @@ namespace CloudSync
 		private void OnNewWorkerReady(Worker worker)
 		{
 			worker.Completed += OnWorkerCompleted;
+			worker.NotificationReceiver = ((App)Application.Current).DefaultHandler;
 			CurrentWorkers.Add(worker);
 			worker.DoWorkAsync();					
 		}
@@ -91,6 +92,7 @@ namespace CloudSync
 				CurrentWorkers.Remove(worker);
 			if (!e.Successfull && e.Error.Message.IndexOf("404") >=0)
 				CurrentWorkers.Remove(worker);
+
 		}		
 	}
 }

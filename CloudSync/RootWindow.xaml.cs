@@ -60,8 +60,8 @@ namespace CloudSync
 		{
 			InitializeComponent();
 			trayIcon.Click += RestoreWindow;
-			foreach (var acount in AppSettings.Instance.Accounts)
-				acount.Client.NeedRelogin += OnAcountNeedAuthorization;
+			/*foreach (var acount in AppSettings.Instance.Accounts)
+				acount.Client.NeedRelogin += OnAcountNeedAuthorization;*/
 			ConnectedAccounts.ItemsSource = AppSettings.Instance.Accounts;			
 			System.Windows.Application.Current.Exit += OnApplicationExit;
 			System.Windows.Application.Current.MainWindow.Loaded += OnMainWindowLoaded;
@@ -105,7 +105,7 @@ namespace CloudSync
 			Log.Info("App saved setting. Exuit code = "+e.ApplicationExitCode);
 		}
 
-		private void OnAcountNeedAuthorization(OneDriveClient client)
+		/*private void OnAcountNeedAuthorization(OneDriveClient client)
 		{
 			if (BrowserTitle.Dispatcher.CheckAccess())
 			{
@@ -122,7 +122,7 @@ namespace CloudSync
 					AppSettings.Instance.Accounts.Remove(forDel);
 					OnConnectButtonClick(null, null);
 				});
-		}		
+		}*/		
 
 		private void RestoreWindow(object sender, EventArgs e)
 		{

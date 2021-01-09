@@ -54,12 +54,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataTransmit\ITelegramInterractor.cs" />
-    <Compile Include="DataTransmit\Notifications.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="DataTransmit\IStorageDataInfo.cs" />
+    <Compile Include="DataTransmit\IStorageDateService.cs" />
     <Compile Include="DataTransmit\MediaInfo.cs" />
-    <Compile Include="DataTransmit\PipeAccessPoint.cs" />
+    <Compile Include="DataTransmit\StorageServicePipeAccessPoint.cs" />
     <Compile Include="MediaHelpers\FFTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\SolutionSettings.Designer.cs">

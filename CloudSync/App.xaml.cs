@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
 using System.Net;
-using CloudSync.Telegram;
 using System.IO.Pipes;
 using System.IO;
+using FrameworkData;
 
 namespace CloudSync
 {
@@ -20,8 +20,8 @@ namespace CloudSync
 	/// </summary>
 	public partial class App : Application
 	{
-		private static readonly Logger Log = LogManager.GetCurrentClassLogger();		
-
+		private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+		internal OccuranceNotificationHandler DefaultHandler;
 		private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
 		{
 			AppSettings.Instance.Save();
@@ -33,27 +33,7 @@ namespace CloudSync
 		{
 			Log.Info("App is start");
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-			///TelegramService.RequestDeleteFile += OnRequestDeleteFileFromStorage;
-			//TelegramService.StartService();						
-		}
-
-		private async void OnRequestDeleteFileFromStorage(string hashOfPath)
-		{
-			NamedPipeClientStream client = new NamedPipeClientStream("StorageFileInfoPipe");
-			client.Connect();
-			StreamReader reader = new StreamReader(client);
-			StreamWriter writer = new StreamWriter(client);
-			writer.AutoFlush = true;			
-			await writer.WriteLineAsync(hashOfPath);
-			var pathToFile = await reader.ReadLineAsync();
-			try
-			{
-				File.Delete(pathToFile);
-			}
-			catch (System.Exception ex)
-			{
-				TelegramService.SendNotifyAboutDeleteFileError(pathToFile + " cannot delete" + ex.ToString());
-			}			
+			DefaultHandler = new OccuranceNotificationHandler(StorageServicePipeAccessPoint.GetConnection().CreateChannel());
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)

@@ -20,7 +20,7 @@ using System.Windows;
 using CloudSync.Framework;
 using CloudSync.OneDrive;
 using System.Net.Http;
-using CloudSync.Telegram;
+using FrameworkData;
 
 namespace CloudSync
 {
@@ -80,7 +80,7 @@ namespace CloudSync
 		public event Action<Worker> NewWorkerReady;
 		public event PropertyChangedEventHandler PropertyChanged;
 		//public HashSet<OneDriveSyncItem> ChildrenFolders { get; private set; } = new HashSet<OneDriveSyncItem>(new OneDriveSyncItem());
-
+		public IOccurrenceNotifyReceiver NotificationReceiver {get;set;}
 		private string PathToDispathFolder { get; set; }
 		private DispatcherTimer syncTimer = new DispatcherTimer();
 		private OneDriveClient _owner;
@@ -113,7 +113,11 @@ namespace CloudSync
 		{
 			deltaLink = null;
 		}
-
+		IStorageDataDriveService _serviceConnection;
+		IStorageDataDriveService serviceConnection
+		{
+			get { return _serviceConnection ?? (_serviceConnection = StorageServicePipeAccessPoint.GetConnection().CreateChannel()); }
+		}
 		private async void Sync(string link = null)
 		{
 			if (Suspended || !IsActive) return;
@@ -129,7 +133,8 @@ namespace CloudSync
 				if (jresult["error"] != null)
 				{									
 					logger.Error(jresult["error"].ToString());
-					TelegramService.SendNotifyAboutSyncError("astmus@live.com", jresult["error"].ToString());
+					
+					serviceConnection.SendNotifyAboutSyncError("astmus@live.com", jresult["error"].ToString());
 					if (jresult["error"]["code"].ToString() == "InvalidAuthenticationToken")
 						ResetDeltaLink();
 				}
@@ -307,13 +312,13 @@ namespace CloudSync
 						nextWorker.Completed += (Worker w, ProgressableEventArgs args) =>
 						{						
 							if (args.Successfull)
-								TelegramService.SendNotifyFileLoadDone(Owner.UserData.PrincipalName, syncItem, (w as CopyFileWorker).DestinationFullFilePath);
+								w.NotificationReceiver?.NotifyDownLoadCompletedSuccess(Owner.UserData.PrincipalName, syncItem.Name, syncItem.FormattedSize, (w as CopyFileWorker).DestinationFullFilePath);
 							else
-								TelegramService.SendNotifyAboutSyncError(Owner.UserData.PrincipalName, syncItem.Name + "copy problem");
+								w.NotificationReceiver?.NotifyDownLoadFailed(Owner.UserData.PrincipalName, syncItem.Name + "copy problem");
 						};
 						logger.Trace("New copy worker ready for file {0} save to {1}", syncItem.Name, PathToSync);											
 						break;
-					case SyncState.MovedToStore:
+					case SyncState.MovedToStorage:
 						nextWorker = new DeleteOneDriveFileWorker(syncItem, Owner);
 						nextWorker.TaskName = String.Format("Request for delete {0} ({1})", syncItem.Name, syncItem.FormattedSize);
 						logger.Trace("New delete worker ready for file {0}", syncItem.Name);

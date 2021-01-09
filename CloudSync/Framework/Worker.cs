@@ -9,6 +9,12 @@ using System.Threading.Tasks;
 
 namespace CloudSync.Framework
 {
+
+	public interface IOccurrenceNotifyReceiver
+	{
+		void NotifyDownLoadCompletedSuccess(string email, string fileName, string formattedSize, string pathToLoadedFile);
+		void NotifyDownLoadFailed(string email, string errorMessage);
+	}
 	public abstract class Worker : IProgressable
 	{
 		public static class Statuses
@@ -22,6 +28,7 @@ namespace CloudSync.Framework
 		public abstract void CancelWork();
 		public abstract void Dismantle();
 		public virtual Task TaskWithWork { get; protected set; }
+		public virtual IOccurrenceNotifyReceiver NotificationReceiver {get;set;}
 		public virtual event Action<Worker, ProgressableEventArgs> Completed;
 		public OneDriveSyncItem SyncItem { get; protected set; }
 
@@ -53,7 +60,7 @@ namespace CloudSync.Framework
 
 		public event Action<int> PercentCompleted;
 		public event PropertyChangedEventHandler PropertyChanged;
-		
+
 		protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
 			//currentContext.Send(state =>
@@ -74,7 +81,7 @@ namespace CloudSync.Framework
 		public void ForceCancel()
 		{
 			RaiseFailed(new ForceCanceledException(SyncItem));
-		}		
+		}
 
 		protected void RaiseFailed(Exception error)
 		{

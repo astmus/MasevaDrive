@@ -93,7 +93,6 @@ namespace CloudSync
 			ServicePointManager.DefaultConnectionLimit = 40;
 		}
 
-		public event Action<OneDriveClient> NeedRelogin;
 		public OneDriveClient()
 		{
 			clientHandler = new HttpClientHandler();
@@ -116,7 +115,7 @@ namespace CloudSync
 			if (accessData?.AccessToken != null)
 			{
 				clientHandler = new HttpClientHandler();
-				clientHandler.MaxConnectionsPerServer = 40;
+				clientHandler.MaxConnectionsPerServer = 4;
 				inetClient = new HttpClient(clientHandler)
 				{
 					DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Bearer", accessData.AccessToken) }

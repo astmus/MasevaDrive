@@ -25,7 +25,7 @@ namespace FrameworkData.Settings {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Z:\\ImagesAndVideos")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z:\\ImagesAndVideos\\")]
         public string RootOfMediaFolder {
             get {
                 return ((string)(this["RootOfMediaFolder"]));
@@ -52,7 +52,7 @@ namespace FrameworkData.Settings {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Z:\\Temp\\Thumbnails")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z:\\Temp\\Thumbnails\\")]
         public string ThumbnailsFolder {
             get {
                 return ((string)(this["ThumbnailsFolder"]));
@@ -86,6 +86,18 @@ namespace FrameworkData.Settings {
             }
             set {
                 this["TelegramSecretKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z:\\Temp\\Recycle\\")]
+        public string RecycleFolderPath {
+            get {
+                return ((string)(this["RecycleFolderPath"]));
+            }
+            set {
+                this["RecycleFolderPath"] = value;
             }
         }
     }

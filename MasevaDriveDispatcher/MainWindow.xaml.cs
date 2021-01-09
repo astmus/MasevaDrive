@@ -34,7 +34,7 @@ namespace MasevaDriveDispatcher
 		{
 			InitializeComponent();
 			host = new ServiceHost(typeof(StorageInformationService), new Uri[] { new Uri("net.pipe://localhost") });
-			host.AddServiceEndpoint(typeof(IStorageInfoProvider), new NetNamedPipeBinding(), "StorageItemsInfoPipe");			
+			host.AddServiceEndpoint(typeof(IStorageDataDriveService), new NetNamedPipeBinding(), "StorageItemsInfoPipe");			
 			AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 			checkState.Interval = TimeSpan.FromSeconds(1);
 			checkState.Tick += CheckState_Tick;
@@ -59,16 +59,16 @@ namespace MasevaDriveDispatcher
 
 		private void OnToggleStateOfInformationService(object sender, RoutedEventArgs e)
 		{
-			if (host.State == CommunicationState.Closed)
+			/*if (host.State == CommunicationState.Closed)
 			{
-				host = new ServiceHost(typeof(StorageInformationService), new Uri[] { new Uri("net.pipe://localhost") });
-				host.AddServiceEndpoint(typeof(IStorageInfoProvider), new NetNamedPipeBinding(), "StorageItemsInfoPipe");
+				host = new ServiceHost(typeof(StorageDataDriveService), new Uri[] { new Uri("net.pipe://localhost") });
+				host.AddServiceEndpoint(typeof(IStorageDataDriveService), new NetNamedPipeBinding(), "StorageItemsInfoPipe");
 			}
 
 			if (host.State == CommunicationState.Opened)			
 				host.Close();
 			else
-				host.Open();			
+				host.Open();*/			
 		}
 
 		private void OnDebug(object sender, RoutedEventArgs e)
@@ -83,7 +83,6 @@ namespace MasevaDriveDispatcher
 				newFilesWatcher.Deleted += NewFilesWatcher_Deleted;
 				newFilesWatcher.Changed += NewFilesWatcher_Changed;
 				newFilesWatcher.Renamed += NewFilesWatcher_Renamed;
-				newFilesWatcher.EnableRaisingEvents = true;
 				watcherButtton.Content = "Started";
 			}
 			newFilesWatcher.EnableRaisingEvents = !newFilesWatcher.EnableRaisingEvents;

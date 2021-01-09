@@ -1,10 +1,11 @@
-﻿using System;
+﻿using FrameworkData;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
 
-	public static class HashExtension
+public static class HashExtension
 	{
 		private static MD5CryptoServiceProvider hasher = new MD5CryptoServiceProvider();
 		public static string ToHash(this string path)
@@ -16,6 +17,14 @@ using System.Text;
 			return sb.ToString();
 		}
 	}
+
+public static class StorageItemInfoExtensions
+{
+	public static string GetFormatSize(this StorageItemInfo storageItem)
+	{
+		return storageItem.IsFile ? ((storageItem.Size / 1024.0) / 1024.0).ToString("0.##") + " MB" : "0";
+	}
+}
 
 public static class LongExt
 {

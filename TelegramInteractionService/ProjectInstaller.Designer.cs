@@ -39,9 +39,9 @@
 			// 
 			// serviceInstaller1
 			// 
-			this.serviceInstaller1.Description = "Interact with subscribers and provide actios to files";
-			this.serviceInstaller1.DisplayName = "Telegram Interaction Service";
-			this.serviceInstaller1.ServiceName = "Telegram Interaction Service";
+			this.serviceInstaller1.Description = "Home cloud service";
+			this.serviceInstaller1.DisplayName = "Maseva Drive Service";
+			this.serviceInstaller1.ServiceName = "Maseva Drive Service";
 			this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
 			// 
 			// ProjectInstaller
