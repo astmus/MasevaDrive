@@ -87,12 +87,12 @@ namespace MasevaDriveService
 						string.Format("{0} ({1}) done", fileName, formattedSize), replyMarkup: board);
 					}
 				}
-				catch
+				catch (Exception ex)
 				{
 					await Bot.SendTextMessageAsync(ChatId, string.Format("{0} ({1}) done", fileName, formattedSize));
 				}
 			}
-			catch
+			catch (System.Exception ex)
 			{
 				await Task.Delay(3000).ContinueWith(async (a) =>
 				{
@@ -113,7 +113,7 @@ namespace MasevaDriveService
 				{
 					await Bot.SendTextMessageAsync(Subscribers[email], errorMessage);
 				}
-				catch
+				catch (System.Exception ex)
 				{
 					await Task.Delay(3000).ContinueWith(async (a) =>
 					{
