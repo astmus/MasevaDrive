@@ -36,22 +36,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Syncfusion.Licensing, Version=18.4460.0.33, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.Licensing.18.4.0.33\lib\net46\Syncfusion.Licensing.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.SfHubTile.WPF, Version=18.4460.0.33, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.SfHubTile.WPF.18.4.0.33\lib\net46\Syncfusion.SfHubTile.WPF.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.SfShared.WPF, Version=18.4460.0.33, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <HintPath>..\packages\Syncfusion.SfShared.WPF.18.4.0.33\lib\net46\Syncfusion.SfShared.WPF.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.7.6\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -115,10 +110,6 @@
     <ProjectReference Include="..\FrameworkData\FrameworkData.csproj">
       <Project>{6abe39d2-e661-499f-8220-d095857be228}</Project>
       <Name>FrameworkData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GetDriveFileService\GetDriveFileService.csproj">
-      <Project>{4f9483d7-70b1-40ff-b350-640b8c0c3858}</Project>
-      <Name>GetDriveFileService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -45,12 +45,12 @@ namespace MasevaDriveService
 
 		private void Bot_OnInlineResultChosen(object sender, global::Telegram.Bot.Args.ChosenInlineResultEventArgs e)
 		{
-			int i = 0;
+			//int i = 0;
 		}
 
 		private void Bot_OnInlineQuery(object sender, global::Telegram.Bot.Args.InlineQueryEventArgs e)
 		{
-			int i = 0;
+			//int i = 0;
 		}
 
 		private async void Bot_OnCallbackQuery(object sender, global::Telegram.Bot.Args.CallbackQueryEventArgs e)
@@ -87,12 +87,12 @@ namespace MasevaDriveService
 						string.Format("{0} ({1}) done", fileName, formattedSize), replyMarkup: board);
 					}
 				}
-				catch (Exception ex)
+				catch
 				{
 					await Bot.SendTextMessageAsync(ChatId, string.Format("{0} ({1}) done", fileName, formattedSize));
 				}
 			}
-			catch (System.Exception ex)
+			catch
 			{
 				await Task.Delay(3000).ContinueWith(async (a) =>
 				{
@@ -113,7 +113,7 @@ namespace MasevaDriveService
 				{
 					await Bot.SendTextMessageAsync(Subscribers[email], errorMessage);
 				}
-				catch (System.Exception ex)
+				catch
 				{
 					await Task.Delay(3000).ContinueWith(async (a) =>
 					{

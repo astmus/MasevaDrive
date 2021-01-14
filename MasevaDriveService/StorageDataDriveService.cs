@@ -12,7 +12,7 @@ namespace MasevaDriveService
 	{
 		public StorageDataDriveService()
 		{
-			int i = 0;
+			//int i = 0;
 		}
 
 		public string GetItem(string fileNameHash)

@@ -1,5 +1,4 @@
 ﻿using FrameworkData.Settings;
-using GetDriveFileService;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,7 +26,7 @@ namespace MasevaDriveDispatcher
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private ServiceHost host;
+		//private ServiceHost host;
 		DispatcherTimer checkState = new DispatcherTimer();
 		FileSystemWatcher newFilesWatcher;
 		public MainWindow()
@@ -83,8 +82,7 @@ namespace MasevaDriveDispatcher
 				newFilesWatcher.Created += NewFilesWatcher_Created;
 				newFilesWatcher.Deleted += NewFilesWatcher_Deleted;
 				newFilesWatcher.Changed += NewFilesWatcher_Changed;
-				newFilesWatcher.Renamed += NewFilesWatcher_Renamed;
-				newFilesWatcher.Site = site;
+				newFilesWatcher.Renamed += NewFilesWatcher_Renamed;				
 				watcherButtton.Content = "Started";
 			}
 			newFilesWatcher.EnableRaisingEvents = !newFilesWatcher.EnableRaisingEvents;

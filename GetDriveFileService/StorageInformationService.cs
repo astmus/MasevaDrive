@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GetDriveFileService
 {
-	public class StorageInformationService : IStorageInfoProvider
+	public class StorageInformationService : IStorageDataDriveService
 	{
 		public StorageInformationService()
 		{
@@ -40,6 +40,31 @@ namespace GetDriveFileService
 		public List<StorageItemInfo> GetConentOf(string folderHash)
 		{
 			return StorageItemsProvider.Instance.storageItems.Values.Where(v=>v.ParentHash == folderHash).ToList();
+		}
+
+		public void SetOwnerForItem(string fileNameHash, string ownerId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void AddNewByPath(string fullPath, string ownerId)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SendNotifyFileLoadSuccess(string email, string fileName, string formattedSize, string pathToLoadedFile)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SendNotifyAboutDeleteFileError(string errorMessage)
+		{
+			throw new NotImplementedException();
+		}
+
+		public void SendNotifyAboutSyncError(string email, string errorMessage)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
