@@ -19,6 +19,11 @@ namespace MasevaDriveService
 
 		public static StorageItemsProvider Instance { get { return lazy.Value; } }
 		
+		public void Initialize()
+		{
+
+		}
+
 		private StorageItemsProvider()
 		{
 			DirectoryInfo d = new DirectoryInfo(SolutionSettings.Default.RootOfMediaFolder);

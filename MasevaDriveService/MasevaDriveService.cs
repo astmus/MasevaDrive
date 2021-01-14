@@ -39,6 +39,7 @@ namespace MasevaDriveService
 			serviceStatus.dwWaitHint = 10000;
 			SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 			TelegramClient.Instance.StartService();
+			StorageItemsProvider.Instance.Initialize();
 			startTimer = new Timer(30000);
 			startTimer.Elapsed += StartTimer_Elapsed;
 			startTimer.Start();
@@ -49,10 +50,7 @@ namespace MasevaDriveService
 		}
 
 		private void StartTimer_Elapsed(object sender, ElapsedEventArgs e)
-		{
-			if (host != null && host.State == CommunicationState.Opened)
-				host.Close();
-
+		{			
 			host = new ServiceHost(typeof(StorageDataDriveService), new Uri[] { new Uri("net.pipe://localhost") });
 			host.AddServiceEndpoint(typeof(IStorageDataDriveService), new NetNamedPipeBinding(), "StorageItemsInfoPipe");
 			host.Open();

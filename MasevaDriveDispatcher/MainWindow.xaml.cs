@@ -14,6 +14,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -28,16 +29,39 @@ namespace MasevaDriveDispatcher
 	{
 		//private ServiceHost host;
 		DispatcherTimer checkState = new DispatcherTimer();
+		ServiceController storageServiceController;
 		FileSystemWatcher newFilesWatcher;
+		DispatcherTimer storageServiceStatusCheck;
+		private static SolidColorBrush notActive = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#280a42"));
+		private static SolidColorBrush active = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#6b1bb1"));
 		public MainWindow()
 		{
 			InitializeComponent();
+			storageServiceController = new ServiceController("Maseva Drive Service");
+			storageServiceStatusCheck = new DispatcherTimer();
+			storageServiceStatusCheck.Tick += OnCheckDriveServiceStatus;
+			storageServiceStatusCheck.Interval = TimeSpan.FromSeconds(10);
+			storageServiceStatusCheck.Start();
 			//host = new ServiceHost(typeof(StorageInformationService), new Uri[] { new Uri("net.pipe://localhost") });
 			//host.AddServiceEndpoint(typeof(IStorageDataDriveService), new NetNamedPipeBinding(), "StorageItemsInfoPipe");			
-			/*AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-			checkState.Interval = TimeSpan.FromSeconds(1);
+			AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+			/*checkState.Interval = TimeSpan.FromSeconds(1);
 			checkState.Tick += CheckState_Tick;
 			checkState.Start();*/
+		}
+
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
+			StorageServiceStateTextBlock.Text = storageServiceController.Status.ToString();
+			if (storageServiceController.Status == ServiceControllerStatus.Stopped)
+				StorageServiceButtton.Background = notActive;
+		}
+
+		private void OnCheckDriveServiceStatus(object sender, EventArgs e)
+		{
+			StorageServiceStateTextBlock.Text = storageServiceController.Status.ToString();
+			if (storageServiceController.Status == ServiceControllerStatus.Stopped)
+				StorageServiceButtton.Background = notActive;
 		}
 
 		private void CheckState_Tick(object sender, EventArgs e)
@@ -70,10 +94,9 @@ namespace MasevaDriveDispatcher
 				host.Open();*/			
 		}
 
-		HashSet<FileInfo> site = new HashSet<FileInfo>();
 		private void OnDebug(object sender, RoutedEventArgs e)
 		{
-			if (newFilesWatcher == null)
+			/*if (newFilesWatcher == null)
 			{
 				newFilesWatcher = new FileSystemWatcher(SolutionSettings.Default.RootOfMediaFolder);
 				newFilesWatcher.IncludeSubdirectories = true;
@@ -86,7 +109,7 @@ namespace MasevaDriveDispatcher
 				watcherButtton.Content = "Started";
 			}
 			newFilesWatcher.EnableRaisingEvents = !newFilesWatcher.EnableRaisingEvents;
-			watcherButtton.Content = "Started "+ newFilesWatcher.EnableRaisingEvents;
+			watcherButtton.Content = "Started "+ newFilesWatcher.EnableRaisingEvents;*/
 		}
 
 		private void NewFilesWatcher_Renamed(object sender, RenamedEventArgs e)
@@ -119,5 +142,24 @@ namespace MasevaDriveDispatcher
 				log.Items.Insert(1,e.ChangeType.ToString() + " ;" + e.FullPath + " ;" + e.Name);
 			});*/
 		}
+
+		
+		private void account_Checked(object sender, RoutedEventArgs e)
+		{
+			var board = this.Resources["openPanel"] as Storyboard;
+			Storyboard.SetTargetProperty(board, new PropertyPath("Height"));
+			Storyboard.SetTargetName(board, subPanel.Name);
+			board.Begin();
+		}
+
+		private void account_Unchecked(object sender, RoutedEventArgs e)
+		{
+			var board = this.Resources["collapsePanel"] as Storyboard;
+			Storyboard.SetTargetProperty(board, new PropertyPath("Height"));
+			Storyboard.SetTargetName(board, subPanel.Name);
+			board.Begin();
+		}
+
+		
 	}
 }
