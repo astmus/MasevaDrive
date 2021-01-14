@@ -38,7 +38,7 @@
 					<ControlTemplate  TargetType="{x:Type Button}">
 						<Border x:Name="borderB" Margin="3"  Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
 								<Grid>
-								<Border Margin="2" Background="#77501485" Name="highlighter"/>
+								<Border Margin="2" Background="#44501485" Name="highlighter"/>
 									<Border x:Name="innerBorderB" BorderThickness="1"  SnapsToDevicePixels="True">
 										<ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
 									</Border>
@@ -134,7 +134,7 @@
 					<ToggleButton MinHeight="190" x:Name="account" MinWidth="285" Checked="account_Checked" Unchecked="account_Unchecked"/>
 					<ToggleButton MinHeight="190" MinWidth="285"/>
 					<Button Height="0" IsEnabled="False" Name="subPanel" MinWidth="570"/>
-					<Button MinHeight="190" MinWidth="190" x:Name="StorageServiceButtton" >
+					<Button MinHeight="190" MinWidth="190" x:Name="StorageServiceButtton" Click="StorageServiceButtton_Click" >
 						<StackPanel Orientation="Vertical" >
 							<TextBlock Text="DriveService"/>
 							<TextBlock Text="()" x:Name="StorageServiceStateTextBlock" HorizontalAlignment="Center"/>

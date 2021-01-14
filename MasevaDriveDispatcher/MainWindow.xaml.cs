@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Permissions;
 using System.ServiceModel;
 using System.ServiceProcess;
 using System.Text;
@@ -26,42 +27,83 @@ namespace MasevaDriveDispatcher
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow : Window
-	{
-		//private ServiceHost host;
+	{		
 		DispatcherTimer checkState = new DispatcherTimer();
-		ServiceController storageServiceController;
 		FileSystemWatcher newFilesWatcher;
 		DispatcherTimer storageServiceStatusCheck;
 		private static SolidColorBrush notActive = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#280a42"));
-		private static SolidColorBrush active = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#6b1bb1"));
+		private static SolidColorBrush active = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7300e6"));
 		public MainWindow()
 		{
 			InitializeComponent();
-			storageServiceController = new ServiceController("Maseva Drive Service");
-			storageServiceStatusCheck = new DispatcherTimer();
-			storageServiceStatusCheck.Tick += OnCheckDriveServiceStatus;
-			storageServiceStatusCheck.Interval = TimeSpan.FromSeconds(10);
-			storageServiceStatusCheck.Start();
-			//host = new ServiceHost(typeof(StorageInformationService), new Uri[] { new Uri("net.pipe://localhost") });
-			//host.AddServiceEndpoint(typeof(IStorageDataDriveService), new NetNamedPipeBinding(), "StorageItemsInfoPipe");			
-			AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-			/*checkState.Interval = TimeSpan.FromSeconds(1);
-			checkState.Tick += CheckState_Tick;
-			checkState.Start();*/
+			
+			
+			AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;			
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			StorageServiceStateTextBlock.Text = storageServiceController.Status.ToString();
-			if (storageServiceController.Status == ServiceControllerStatus.Stopped)
-				StorageServiceButtton.Background = notActive;
+			if (StorageServiceHelper.IsInstalled() != true)
+			{
+				StorageServiceStateTextBlock.Text = "not installed";
+				StorageServiceButtton.IsEnabled = false;
+			}
+			else
+			{
+				storageServiceStatusCheck = new DispatcherTimer();
+				storageServiceStatusCheck.Tick += OnCheckDriveServiceStatus;
+				storageServiceStatusCheck.Interval = TimeSpan.FromSeconds(10);
+				storageServiceStatusCheck.Start();
+				DisplayCurrentServiceStatus();
+			}
+		}
+
+		private void DisplayCurrentServiceStatus()
+		{
+			try
+			{
+				var status = StorageServiceHelper.CurrentStatus();
+				StorageServiceStateTextBlock.Text = status.ToString();
+				if (status == ServiceControllerStatus.Stopped)
+					StorageServiceButtton.Background = notActive;
+				else
+					StorageServiceButtton.Background = active;
+			}
+			catch (System.Exception ex)
+			{
+				MessageBox.Show(ex.Message.ToString());
+				storageServiceStatusCheck.Stop();
+			}			
 		}
 
 		private void OnCheckDriveServiceStatus(object sender, EventArgs e)
 		{
-			StorageServiceStateTextBlock.Text = storageServiceController.Status.ToString();
-			if (storageServiceController.Status == ServiceControllerStatus.Stopped)
-				StorageServiceButtton.Background = notActive;
+			DisplayCurrentServiceStatus();
+		}
+				
+		private void StorageServiceButtton_Click(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				if (StorageServiceHelper.CurrentStatus() != ServiceControllerStatus.Running)
+					StorageServiceHelper.StartService(startStopComletionCallback);
+				else
+					StorageServiceHelper.StopService(startStopComletionCallback);
+				DisplayCurrentServiceStatus();
+			}
+			catch (System.Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+			
+		}
+
+		private void startStopComletionCallback(int errorCode, string message)
+		{
+			if (errorCode != 0)
+				MessageBox.Show(message);
+			else
+				DisplayCurrentServiceStatus();
 		}
 
 		private void CheckState_Tick(object sender, EventArgs e)
@@ -158,8 +200,6 @@ namespace MasevaDriveDispatcher
 			Storyboard.SetTargetProperty(board, new PropertyPath("Height"));
 			Storyboard.SetTargetName(board, subPanel.Name);
 			board.Begin();
-		}
-
-		
+		}		
 	}
 }

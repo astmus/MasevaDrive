@@ -39,7 +39,7 @@ namespace MasevaDriveService
 			serviceStatus.dwWaitHint = 10000;
 			SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 			TelegramClient.Instance.StartService();
-			StorageItemsProvider.Instance.Initialize();
+			//StorageItemsProvider.Instance.Initialize();
 			startTimer = new Timer(30000);
 			startTimer.Elapsed += StartTimer_Elapsed;
 			startTimer.Start();
