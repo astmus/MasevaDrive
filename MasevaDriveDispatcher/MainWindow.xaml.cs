@@ -1,4 +1,5 @@
-﻿using FrameworkData.Settings;
+﻿using FrameworkData;
+using FrameworkData.Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,6 +34,7 @@ namespace MasevaDriveDispatcher
 		DispatcherTimer storageServiceStatusCheck;
 		private static SolidColorBrush notActive = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#280a42"));
 		private static SolidColorBrush active = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#7300e6"));
+		IStorageDataDriveService serviceConnection;
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -55,6 +57,49 @@ namespace MasevaDriveDispatcher
 				storageServiceStatusCheck.Interval = TimeSpan.FromSeconds(10);
 				storageServiceStatusCheck.Start();
 				DisplayCurrentServiceStatus();
+				StorageServiceButtton.IsEnabled = true;
+				if (StorageServiceHelper.CurrentStatus() == ServiceControllerStatus.Running)
+					TryToEstablishPipeConnection();
+			}
+		}
+
+		private void StorageServicePipeButton_Checked(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void TryToEstablishPipeConnection()
+		{
+			try
+			{
+				var connection = StorageServicePipeAccessPoint.GetConnection();
+				
+				serviceConnection = connection.CreateChannel();
+				
+				StorageServicePipeButton.IsEnabled = (connection.State != CommunicationState.Faulted && connection.State != CommunicationState.Closed);
+				StorageServicePipeTextBlock.Text = connection.State.ToString();
+
+			}
+			catch(Exception error)
+			{
+				MessageBox.Show(error.Message);
+			}			
+		}
+
+		private void StorageServicePipeButton_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void PipeServicOnConnectTo(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				serviceConnection.SendNotifyAboutSyncError("astmus@live.com", "Synchronization error");
+			}
+			catch (Exception error)
+			{
+				MessageBox.Show(error.Message);
 			}
 		}
 
@@ -200,6 +245,10 @@ namespace MasevaDriveDispatcher
 			Storyboard.SetTargetProperty(board, new PropertyPath("Height"));
 			Storyboard.SetTargetName(board, subPanel.Name);
 			board.Begin();
-		}		
+		}
+
+		
+
+		
 	}
 }

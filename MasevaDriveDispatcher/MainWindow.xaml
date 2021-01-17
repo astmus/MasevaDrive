@@ -94,7 +94,7 @@
 								<Setter Property="BorderBrush" TargetName="innerBorder" Value="#FF888888"/>
 							</Trigger>
 							<Trigger Property="IsEnabled" Value="False">
-								<Setter Property="Background" TargetName="border" Value="#501485"/>
+								<Setter Property="Background" TargetName="border" Value="#280a43"/>
 								<Setter Property="Foreground" Value="#66838383"/>
 							</Trigger>
 							<MultiTrigger>
@@ -134,14 +134,19 @@
 					<ToggleButton MinHeight="190" x:Name="account" MinWidth="285" Checked="account_Checked" Unchecked="account_Unchecked"/>
 					<ToggleButton MinHeight="190" MinWidth="285"/>
 					<Button Height="0" IsEnabled="False" Name="subPanel" MinWidth="570"/>
-					<Button MinHeight="190" MinWidth="190" x:Name="StorageServiceButtton" Click="StorageServiceButtton_Click" >
+					<Button MinHeight="190" MinWidth="190" x:Name="StorageServiceButtton" IsEnabled="False" Click="StorageServiceButtton_Click" >
 						<StackPanel Orientation="Vertical" >
 							<TextBlock Text="DriveService"/>
 							<TextBlock Text="()" x:Name="StorageServiceStateTextBlock" HorizontalAlignment="Center"/>
 						</StackPanel>
 					</Button>
-					<Button MinHeight="190" MinWidth="190"   />
-					<Button MinHeight="190" MinWidth="190"/>
+					<Button MinHeight="190" MinWidth="190" x:Name="StorageServicePipeButton"  IsEnabled="False"  Click="StorageServicePipeButton_Click" >
+						<StackPanel Orientation="Vertical" >
+							<TextBlock Text="Pipe Connection"/>
+							<TextBlock Text="()" x:Name="StorageServicePipeTextBlock" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+					<Button MinHeight="190" MinWidth="190" Click="PipeServicOnConnectTo"/>
 					<ToggleButton MinHeight="190" MinWidth="380"/>
 					<Button MinHeight="190" MinWidth="190"/>
 					<Button MinHeight="190" MinWidth="190"/>

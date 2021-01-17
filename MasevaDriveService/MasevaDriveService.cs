@@ -18,7 +18,7 @@ namespace MasevaDriveService
 		[DllImport("advapi32.dll", SetLastError = true)]
 		private static extern bool SetServiceStatus(System.IntPtr handle, ref ServiceStatus serviceStatus);
 		Timer startTimer;
-		private ServiceHost host;
+		private ServiceHost host;		
 		public MasevaDriveService()
 		{
 			InitializeComponent();
@@ -39,7 +39,7 @@ namespace MasevaDriveService
 			serviceStatus.dwWaitHint = 10000;
 			SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 			TelegramClient.Instance.StartService();
-			//StorageItemsProvider.Instance.Initialize();
+			
 			startTimer = new Timer(30000);
 			startTimer.Elapsed += StartTimer_Elapsed;
 			startTimer.Start();
@@ -50,11 +50,12 @@ namespace MasevaDriveService
 		}
 
 		private void StartTimer_Elapsed(object sender, ElapsedEventArgs e)
-		{			
+		{
+			startTimer.Stop();
+			StorageItemsProvider.Instance.Initialize();
 			host = new ServiceHost(typeof(StorageDataDriveService), new Uri[] { new Uri("net.pipe://localhost") });
 			host.AddServiceEndpoint(typeof(IStorageDataDriveService), new NetNamedPipeBinding(), "StorageItemsInfoPipe");
 			host.Open();
-			startTimer.Stop();
 		}
 
 		protected override void OnStop()

@@ -100,9 +100,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ServiceSettings.cs" />
-    <Compile Include="StorageDataDriveService.cs" />
-    <Compile Include="StorageItemsProvider.cs" />
+    <Compile Include="Storage\ServiceSettings.cs" />
+    <Compile Include="Storage\StorageDataDriveService.cs" />
+    <Compile Include="Storage\StorageItemsProvider.cs" />
     <Compile Include="MasevaDriveService.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -117,7 +117,11 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TelegramClient.cs" />
+    <Compile Include="Telegram\CallbackData.cs" />
+    <Compile Include="Telegram\Keyboards.cs" />
+    <Compile Include="Telegram\TelegramClient.cs" />
+    <Compile Include="Telegram\TelegramMessageHandlerAttribute.cs" />
+    <Compile Include="Telegram\GMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

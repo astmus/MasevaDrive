@@ -34,9 +34,12 @@ namespace MasevaDriveService
 				Items.Add(item.Hash, item);
 			};
 
-			var files = d.GetFiles("*.jpg|*.jpeg|*.bmp|*.gif|*.png|*.mov|*.mp4|*.3gp", SearchOption.AllDirectories);
+			var files = d.GetFiles("*.*", SearchOption.AllDirectories);
 			foreach (var f in files)
 			{
+				if ("*.jpg|*.jpeg|*.bmp|*.gif|*.png|*.mov|*.mp4|*.3gp".IndexOf(f.Extension) == -1)
+					continue;
+
 				StorageItemInfo item = new StorageItemInfo(f);
 				Items.Add(item.Hash, item);
 			};			

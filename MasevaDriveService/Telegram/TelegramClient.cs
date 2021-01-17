@@ -18,14 +18,6 @@ namespace MasevaDriveService
 {
 	public class TelegramClient
 	{
-		enum MessageConfirmLevel
-		{
-			NeedConfirm = 0,
-			Confirmed = 1,
-			NotConfirmed = 2,
-			WaitDecision = 3
-		}
-
 		private TelegramBotClient Bot;
 		private Dictionary<string, long> Subscribers { get; set; } = new Dictionary<string, long>();
 
@@ -33,7 +25,7 @@ namespace MasevaDriveService
 		public static TelegramClient Instance { get { return lazy.Value; } }
 
 		private TelegramClient()
-		{
+		{			
 			Bot = new TelegramBotClient(SolutionSettings.Default.TelegramSecretKey);
 			Bot.OnMessage += OnMessageRecieved;
 			Bot.OnCallbackQuery += Bot_OnCallbackQuery;			
@@ -43,28 +35,29 @@ namespace MasevaDriveService
 			//Bot.StopReceiving();
 		}
 
-		private void Bot_OnInlineResultChosen(object sender, global::Telegram.Bot.Args.ChosenInlineResultEventArgs e)
+		private void Bot_OnInlineResultChosen(object sender, Telegram.Bot.Args.ChosenInlineResultEventArgs e)
 		{
 			//int i = 0;
+			//e.ChosenInlineResult.
 		}
 
-		private void Bot_OnInlineQuery(object sender, global::Telegram.Bot.Args.InlineQueryEventArgs e)
+		private void Bot_OnInlineQuery(object sender, Telegram.Bot.Args.InlineQueryEventArgs e)
 		{
-			//int i = 0;
+			
 		}
 
-		private async void Bot_OnCallbackQuery(object sender, global::Telegram.Bot.Args.CallbackQueryEventArgs e)
+		private async void Bot_OnCallbackQuery(object sender, Telegram.Bot.Args.CallbackQueryEventArgs e)
 		{
-			await Bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id,"Received message " + e.CallbackQuery.Data, true);
-			var hash = e.CallbackQuery.Data.Substring(2);			
+			GMessage message = e.CallbackQuery.Parse(Bot);
+			await message.Replay();
+			/*var hash = e.CallbackQuery.Data.Substring(2);			
 			if (StorageItemsProvider.Instance[hash] != null)
 				await Bot.DeleteMessageAsync(e.CallbackQuery.Message.Chat.Id, e.CallbackQuery.Message.MessageId);
-			MessageConfirmLevel result;
-			Enum.TryParse(e.CallbackQuery.Data.Substring(0, 1), out result);
+			
 			if (result == MessageConfirmLevel.NeedConfirm)
 				await Bot.EditMessageReplyMarkupAsync(e.CallbackQuery.Message.Chat.Id, e.CallbackQuery.Message.MessageId, MakeDeleteKeyboard(hash,MessageConfirmLevel.WaitDecision), default(CancellationToken));
 			else
-				await Bot.DeleteMessageAsync(e.CallbackQuery.Message.Chat.Id, e.CallbackQuery.Message.MessageId);
+				await Bot.DeleteMessageAsync(e.CallbackQuery.Message.Chat.Id, e.CallbackQuery.Message.MessageId);*/
 			/*if (RequestDeleteFile != null)
 				RequestDeleteFile(e.CallbackQuery.Data);*/
 		}
@@ -77,7 +70,7 @@ namespace MasevaDriveService
 			{
 				try
 				{
-					var board = MakeDeleteKeyboard(pathToLoadedFile.ToHash());
+					var board = Keyboards.CommonFileActionsKeyboard(pathToLoadedFile.ToHash());
 
 					using (MemoryStream imageStream = FFTools.CreateThumbnail(pathToLoadedFile))
 					{
@@ -122,6 +115,29 @@ namespace MasevaDriveService
 				}
 		}
 
+		public void StartService()
+		{
+			LoadSubscribers();
+			Bot.StartReceiving();
+		}
+
+		public void StopService()
+		{
+			Bot.StopReceiving();
+		}
+
+		private void LoadSubscribers()
+		{
+			try
+			{
+				Subscribers = JsonConvert.DeserializeObject<Dictionary<string, long>>(SolutionSettings.Default.TelegramSubscribers);
+			}
+			catch (System.Exception ex)
+			{
+				//SaveSubscribers();
+			}
+		}
+		
 		private async void OnMessageRecieved(object sender, global::Telegram.Bot.Args.MessageEventArgs e)
 		{
 			 var message = e.Message;
@@ -249,42 +265,6 @@ namespace MasevaDriveService
 			}
 		}
 
-		public void StartService()
-		{
-			LoadSubscribers();
-			Bot.StartReceiving();
-		}
-
-		public void StopService()
-		{
-			Bot.StopReceiving();
-		}
-
-		private void LoadSubscribers()
-		{
-			try
-			{
-				Subscribers = JsonConvert.DeserializeObject<Dictionary<string, long>>(SolutionSettings.Default.TelegramSubscribers);
-			}
-			catch (System.Exception ex)
-			{
-				//SaveSubscribers();
-			}
-		}
-		static InlineKeyboardMarkup MakeDeleteKeyboard(string hash, MessageConfirmLevel level = MessageConfirmLevel.NeedConfirm)
-		{
-			if (level == MessageConfirmLevel.NeedConfirm)
-				return new InlineKeyboardMarkup(new InlineKeyboardButton[]
-					{
-					InlineKeyboardButton.WithCallbackData("удалить",MessageConfirmLevel.NeedConfirm+ ":"+hash)
-					});
-			else
-				return new InlineKeyboardMarkup(new InlineKeyboardButton[]
-					{
-					InlineKeyboardButton.WithCallbackData("да удалить",MessageConfirmLevel.Confirmed+ ":"+hash),
-					InlineKeyboardButton.WithCallbackData("нет",MessageConfirmLevel.NotConfirmed+ ":"+hash),
-					});
-		}
 
 	}
 
