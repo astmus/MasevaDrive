@@ -10,9 +10,21 @@ namespace MasevaDriveService
 {
 	public abstract class GMessage
 	{
-		protected CallbackQuery query { get; set; }
-		protected TelegramBotClient owner { get; set; }		
-
+		private CallbackQuery _query;
+		protected CallbackQuery query 
+		{
+			get { return _query; }
+			set 
+			{ 
+				_query = value;
+				Data = CallbackData.Parse(query.Data);
+			} 
+		}
+		protected TelegramBotClient Owner { get; set; }		
+		protected CallbackData Data { get; set; }
+		protected ChatId ChatID => query?.Message.Chat.Id;
+		protected ChatId QueryID => query?.Id;
+		protected int MessageID => query.Message.MessageId;
 		public GMessage()
 		{
 		}
@@ -25,7 +37,7 @@ namespace MasevaDriveService
 		public static GMessage InitializeMesage(Type concreteType, CallbackQuery query, TelegramBotClient owner)
 		{
 			var result = Activator.CreateInstance(concreteType) as GMessage;
-			result.owner = owner;
+			result.Owner = owner;
 			result.query = query;
 			return result;
 		}
@@ -36,12 +48,12 @@ namespace MasevaDriveService
 		public NotValidDataMessage(CallbackQuery query, TelegramBotClient owner)
 		{
 			this.query = query;
-			this.owner = owner;
+			this.Owner = owner;
 		}
 
 		public override Task Replay()
 		{
-			return owner.AnswerCallbackQueryAsync(query.Id, "Received not valid callback data. Parse error.", true);			
+			return Owner.AnswerCallbackQueryAsync(query.Id, "Received not valid callback data. Parse error.", true);			
 		}
 	}
 
@@ -52,11 +64,11 @@ namespace MasevaDriveService
 		{
 			this.seed = seed;
 			this.query = query;
-			this.owner = owner;
+			this.Owner = owner;
 		}
 		public override Task Replay()
 		{
-			return owner.AnswerCallbackQueryAsync(query.Id, "Nucleo storage does not contain info for seed '"+seed+"'. Parse error.", true);
+			return Owner.AnswerCallbackQueryAsync(query.Id, "Nucleo storage does not contain info for seed '"+seed+"'. Parse error.", true);
 		}
 	}
 	public static class TelegramExtensions

@@ -51,6 +51,22 @@ namespace MasevaDriveService
 			Items.Add(item.Hash, item);
 		}
 
+		internal string MoveToTrash(string hash)
+		{
+			if (Items.ContainsKey(hash) == false)
+				return "Данный файл не найден. Возможно уже удален.";
+			var file = Items[hash];
+			try
+			{
+				File.Move(file.FullPath, SolutionSettings.Default.RecycleFolderPath + file.Name);
+				return null;
+			}
+			catch (Exception error)
+			{
+				return "Ошибка удаления: " + error;
+			}
+		}
+
 		public List<string> GetContentOfFolder(string hash)
 		{
 			return Items.Where(si => si.Value.ParentHash == hash).Select(s=>s.Value.FullPath).ToList();
