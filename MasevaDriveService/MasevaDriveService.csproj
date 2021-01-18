@@ -118,10 +118,12 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Telegram\CallbackData.cs" />
+    <Compile Include="Telegram\GMessages\DeleteConfirmationMessage.cs" />
+    <Compile Include="Telegram\GMessages\DeleteFileMessage.cs" />
     <Compile Include="Telegram\Keyboards.cs" />
     <Compile Include="Telegram\TelegramClient.cs" />
     <Compile Include="Telegram\TelegramMessageHandlerAttribute.cs" />
-    <Compile Include="Telegram\GMessage.cs" />
+    <Compile Include="Telegram\GMessages\GMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -50,7 +50,8 @@ namespace MasevaDriveService
 		{
 			GMessage message = e.CallbackQuery.Parse(Bot);
 			await message.Replay();
-			/*var hash = e.CallbackQuery.Data.Substring(2);			
+			/*
+			 * var hash = e.CallbackQuery.Data.Substring(2);			
 			if (StorageItemsProvider.Instance[hash] != null)
 				await Bot.DeleteMessageAsync(e.CallbackQuery.Message.Chat.Id, e.CallbackQuery.Message.MessageId);
 			
@@ -138,7 +139,7 @@ namespace MasevaDriveService
 			}
 		}
 		
-		private async void OnMessageRecieved(object sender, global::Telegram.Bot.Args.MessageEventArgs e)
+		private async void OnMessageRecieved(object sender, Telegram.Bot.Args.MessageEventArgs e)
 		{
 			 var message = e.Message;
 
