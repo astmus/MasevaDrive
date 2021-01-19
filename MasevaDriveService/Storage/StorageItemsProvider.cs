@@ -53,9 +53,9 @@ namespace MasevaDriveService
 
 		internal string MoveToTrash(string hash)
 		{
-			if (Items.ContainsKey(hash) == false)
-				return "Данный файл не найден. Возможно уже удален.";
-			var file = Items[hash];
+			var file = this[hash];
+			if (file == null)
+				return "Данный файл не найден. Возможно уже удален.";			
 			try
 			{
 				File.Move(file.FullPath, SolutionSettings.Default.RecycleFolderPath + file.Name);

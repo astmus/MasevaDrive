@@ -79,7 +79,7 @@ namespace CloudSync
 		private void OnNewWorkerReady(Worker worker)
 		{
 			worker.Completed += OnWorkerCompleted;
-			worker.NotificationReceiver = ((App)Application.Current).DefaultHandler;
+			worker.NotificationReceiver = App.DefaultHandler.Value;
 			CurrentWorkers.Add(worker);
 			worker.DoWorkAsync();					
 		}

@@ -218,12 +218,7 @@ namespace CloudSync
 							//case: HttpStatusCode.Unauthorized
 						}
 					}
-					worker.Status = "Attempt";
-					if (worker.NumberOfAttempts < 3)
-					{
-						worker.DoWorkAsync(5000);
-						return;
-					}
+					worker.Status = "Attempt";					
 				}
 				if (args.Error is HttpRequestException)
 				{					

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace MasevaDriveService
 {
+	[SvcErrorHandlerBehaviour]
 	public class StorageDataDriveService : IStorageDataDriveService
 	{
 		public StorageDataDriveService()
@@ -62,7 +63,7 @@ namespace MasevaDriveService
 
 		public void SendNotifyAboutDeleteFileError(string errorMessage)
 		{
-			TelegramClient.Instance.SendNotifyAboutDeleteFileError(errorMessage);
+			TelegramClient.Instance.SendNotifyAboutError(errorMessage);
 		}
 
 		public void SendNotifyAboutSyncError(string email, string errorMessage)

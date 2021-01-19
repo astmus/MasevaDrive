@@ -16,20 +16,20 @@ namespace MasevaDriveService
 	public partial class MasevaDriveService : ServiceBase
 	{
 		[DllImport("advapi32.dll", SetLastError = true)]
-		private static extern bool SetServiceStatus(System.IntPtr handle, ref ServiceStatus serviceStatus);
+		private static extern bool SetServiceStatus(IntPtr handle, ref ServiceStatus serviceStatus);
 		Timer startTimer;
-		private ServiceHost host;		
+		private ServiceHost pipeLineHost;		
 		public MasevaDriveService()
 		{
 			InitializeComponent();
-			Logger = new System.Diagnostics.EventLog();
-			if (!System.Diagnostics.EventLog.SourceExists("MasevaDriveSource"))
-			{
-				System.Diagnostics.EventLog.CreateEventSource(
-					"MasevaDriveSource", "MasevaDriveLog");
-			}
+			
+			Logger = new EventLog();
+			if (!EventLog.SourceExists("MasevaDriveSource"))
+				EventLog.CreateEventSource("MasevaDriveSource", "MasevaDriveLog");
+
 			Logger.Source = "MasevaDriveSource";
 			Logger.Log = "MasevaDriveLog";
+			TelegramClient.Instance.ErrorOcccured = (string error) => { Logger.WriteEntry("ERROR: telegram error => " + error, EventLogEntryType.Error); };
 		}
 
 		protected override void OnStart(string[] args)
@@ -38,24 +38,16 @@ namespace MasevaDriveService
 			serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
 			serviceStatus.dwWaitHint = 10000;
 			SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-			TelegramClient.Instance.StartService();
-			
+
+			StartTelegramPart();
+			InitStorageProvider();
+			StartPipeLinePart();
 			startTimer = new Timer(30000);
 			startTimer.Elapsed += StartTimer_Elapsed;
-			startTimer.Start();
-			Logger.WriteEntry("Maseva service started");
+			startTimer.Start();		
 			
 			serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
 			SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-		}
-
-		private void StartTimer_Elapsed(object sender, ElapsedEventArgs e)
-		{
-			startTimer.Stop();
-			StorageItemsProvider.Instance.Initialize();
-			host = new ServiceHost(typeof(StorageDataDriveService), new Uri[] { new Uri("net.pipe://localhost") });
-			host.AddServiceEndpoint(typeof(IStorageDataDriveService), new NetNamedPipeBinding(), "StorageItemsInfoPipe");
-			host.Open();
 		}
 
 		protected override void OnStop()
@@ -64,15 +56,13 @@ namespace MasevaDriveService
 			//serviceStatus.dwCurrentState = ServiceState.SERVICE_STOP_PENDING;
 			//serviceStatus.dwWaitHint = 100000;
 			//SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-			host?.Close();
-			TelegramClient.Instance.StartService();
-			Logger.WriteEntry("Maseva Drive Stopped");
-
+			StopTelegramPart();
+			StopPipeLinePart();
+			Logger.WriteEntry("Service Stopped");
 			//// Update the service state to Stopped.
 			//serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
 			//SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 		}
-
 		protected override void OnContinue()
 		{
 			Logger.WriteEntry("In OnContinue.");
@@ -82,6 +72,83 @@ namespace MasevaDriveService
 		{
 			Logger.WriteEntry("In Pause.");
 		}
+
+		private void StartTimer_Elapsed(object sender, ElapsedEventArgs e)
+		{
+			startTimer.Stop();			
+		}
+
+		private void StartPipeLinePart()
+		{
+			try
+			{
+				pipeLineHost = new ServiceHost(typeof(StorageDataDriveService), new Uri[] { new Uri("net.pipe://localhost") });
+				pipeLineHost.AddServiceEndpoint(typeof(IStorageDataDriveService), new NetNamedPipeBinding(), "StorageItemsInfoPipe");
+				pipeLineHost.Open();
+			}
+			catch (Exception error)
+			{
+				Logger.WriteEntry("ERROR: Start pipeline part => " + error.Message, EventLogEntryType.Error);
+			}
+		}
+
+
+		private void InitStorageProvider()
+		{
+			try
+			{
+#if DEBUG
+				Stopwatch initMeter = new Stopwatch();
+				initMeter.Start();
+				StorageItemsProvider.Instance.Initialize();
+				initMeter.Stop();
+				Logger.WriteEntry("Storage provider iniitalize duration => " + initMeter.Elapsed.ToString());
+#else
+				StorageItemsProvider.Instance.Initialize();
+#endif
+			}
+			catch (Exception error)
+			{
+				Logger.WriteEntry("ERROR: Storage provider part => " + error.Message,EventLogEntryType.Error);
+			}			
+		}
+
+		private void StartTelegramPart()
+		{
+			try
+			{
+				TelegramClient.Instance.StartService();
+			}
+			catch (Exception error)
+			{
+				Logger.WriteEntry("ERROR: Start telegram part => " + error.Message, EventLogEntryType.Error);
+			}			
+		}
+
+		private void StopPipeLinePart()
+		{
+			try
+			{
+				pipeLineHost?.Close();
+			}
+			catch (Exception error)
+			{
+				Logger.WriteEntry("ERROR: Stop pipeline part => " + error.Message, EventLogEntryType.Error);
+			}			
+		}
+
+		private void StopTelegramPart()
+		{
+			try
+			{
+				TelegramClient.Instance.StopService();
+			}
+			catch (Exception error)
+			{
+				Logger.WriteEntry("ERROR: Stop telegram part => " + error.Message, EventLogEntryType.Error);
+			}			
+		}
+
 
 		public enum ServiceState
 		{

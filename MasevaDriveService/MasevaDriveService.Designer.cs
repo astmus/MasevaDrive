@@ -30,9 +30,6 @@
 		{
 			this.Logger = new System.Diagnostics.EventLog();
 			((System.ComponentModel.ISupportInitialize)(this.Logger)).BeginInit();
-			// 
-			// ActualizerInfoService
-			// 
 			this.CanPauseAndContinue = true;
 			this.ServiceName = "Maseva Drive Service";
 			((System.ComponentModel.ISupportInitialize)(this.Logger)).EndInit();

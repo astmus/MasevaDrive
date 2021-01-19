@@ -13,6 +13,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 using System.IO.MemoryMappedFiles;
 using FrameworkData.Settings;
 using FrameworkData;
+using Telegram.Bot.Args;
 
 namespace MasevaDriveService
 {
@@ -23,6 +24,7 @@ namespace MasevaDriveService
 
 		private static readonly Lazy<TelegramClient> lazy = new Lazy<TelegramClient>(() => new TelegramClient());
 		public static TelegramClient Instance { get { return lazy.Value; } }
+		public Action<string> ErrorOcccured { get; set; }
 
 		private TelegramClient()
 		{			
@@ -30,23 +32,26 @@ namespace MasevaDriveService
 			Bot.OnMessage += OnMessageRecieved;
 			Bot.OnCallbackQuery += Bot_OnCallbackQuery;			
 			Bot.OnInlineQuery += Bot_OnInlineQuery;
-			Bot.OnInlineResultChosen += Bot_OnInlineResultChosen; ;
+			Bot.OnInlineResultChosen += Bot_OnInlineResultChosen;
+			Bot.OnReceiveGeneralError += Bot_OnReceiveGeneralError;
 			//Bot.OnReceiveError += BotOnReceiveError;
 			//Bot.StopReceiving();
 		}
 
-		private void Bot_OnInlineResultChosen(object sender, Telegram.Bot.Args.ChosenInlineResultEventArgs e)
+		private void Bot_OnReceiveGeneralError(object sender, ReceiveGeneralErrorEventArgs e) => ErrorOcccured?.Invoke(e.Exception.Message);
+
+		private void Bot_OnInlineResultChosen(object sender, ChosenInlineResultEventArgs e)
 		{
 			//int i = 0;
 			//e.ChosenInlineResult.
 		}
 
-		private void Bot_OnInlineQuery(object sender, Telegram.Bot.Args.InlineQueryEventArgs e)
+		private void Bot_OnInlineQuery(object sender, InlineQueryEventArgs e)
 		{
 			
 		}
 
-		private async void Bot_OnCallbackQuery(object sender, Telegram.Bot.Args.CallbackQueryEventArgs e)
+		private async void Bot_OnCallbackQuery(object sender, CallbackQueryEventArgs e)
 		{
 			GMessage message = e.CallbackQuery.Parse(Bot);
 			await message.Replay();
@@ -95,7 +100,7 @@ namespace MasevaDriveService
 			}
 		}		
 
-		public async void SendNotifyAboutDeleteFileError(string errorMessage)
+		public async void SendNotifyAboutError(string errorMessage)
 		{
 			await Bot.SendTextMessageAsync(Subscribers["astmus@live.com"], errorMessage);
 		}
@@ -118,9 +123,9 @@ namespace MasevaDriveService
 
 		public void StartService()
 		{
-			LoadSubscribers();
+			LoadSubscribers();			
 			Bot.StartReceiving();
-		}
+		}		
 
 		public void StopService()
 		{

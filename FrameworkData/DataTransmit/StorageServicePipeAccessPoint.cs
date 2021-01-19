@@ -11,7 +11,7 @@ namespace FrameworkData
 	{
 		public static ChannelFactory<IStorageDataDriveService> GetConnection()
 		{
-			return new ChannelFactory<IStorageDataDriveService>(new NetNamedPipeBinding() { MaxReceivedMessageSize = 64*1024 }, new EndpointAddress("net.pipe://localhost/StorageItemsInfoPipe"));
+			return new ChannelFactory<IStorageDataDriveService>(new NetNamedPipeBinding() { MaxReceivedMessageSize = 64*1024, MaxConnections=32 }, new EndpointAddress("net.pipe://localhost/StorageItemsInfoPipe"));
 		}
 	}
 }

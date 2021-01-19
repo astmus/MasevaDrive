@@ -12,6 +12,7 @@ using System.Net;
 using System.IO.Pipes;
 using System.IO;
 using FrameworkData;
+using System.Windows.Threading;
 
 namespace CloudSync
 {
@@ -21,8 +22,8 @@ namespace CloudSync
 	public partial class App : Application
 	{
 		private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-		internal OccuranceNotificationHandler DefaultHandler;
-		private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+		internal static readonly Lazy<OccuranceNotificationHandler> DefaultHandler = new Lazy<OccuranceNotificationHandler>(() => new OccuranceNotificationHandler());
+		private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
 			AppSettings.Instance.Save();
 			Log.Fatal(e.Exception, "Unhandled exception: {0}", e.Exception);
@@ -33,7 +34,6 @@ namespace CloudSync
 		{
 			Log.Info("App is start");
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-			DefaultHandler = new OccuranceNotificationHandler(StorageServicePipeAccessPoint.GetConnection().CreateChannel());
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)

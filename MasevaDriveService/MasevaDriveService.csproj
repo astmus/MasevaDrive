@@ -100,6 +100,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Storage\ErrorHandling.cs" />
     <Compile Include="Storage\ServiceSettings.cs" />
     <Compile Include="Storage\StorageDataDriveService.cs" />
     <Compile Include="Storage\StorageItemsProvider.cs" />
