@@ -34,7 +34,7 @@ namespace DriveApi.Network
 	{
 		public static IAppBuilder UseCustomMiddleware(this IAppBuilder app)
 		{
-			app.Use(typeof(ProxyMiddleware));
+			app.Use(typeof(ProxyMiddleware));			
 			return app;
 		}
 	}

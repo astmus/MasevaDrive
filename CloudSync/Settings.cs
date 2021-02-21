@@ -9,24 +9,17 @@ using System.IO;
 
 namespace CloudSync
 {
-    internal class Settings
+    internal class AppSettings
     {
-        private static readonly Lazy<Settings> _instance = new Lazy<Settings>(() => new Settings());
-        private Settings()
+        private static readonly Lazy<AppSettings> _instance = new Lazy<AppSettings>(() => new AppSettings());
+        private AppSettings()
 		{
 			Load();
 		}
-		public Properties.Settings AppProperties
-		{
-			get { return Properties.Settings.Default; }
-		}
+		
 		public ObservableCollection<OneDriveAccount> Accounts { get; set; }
-#if DEBUG
-		public string RootFolder { get { return AppProperties.RootMediaPath + "1"; } }
-#else
-		public string RootFolder { get { return AppProperties.RootMediaPath; } }
-#endif
-		public static Settings Instance
+
+		public static AppSettings Instance
         {
             get { return _instance.Value; }
         }

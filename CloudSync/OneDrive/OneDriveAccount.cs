@@ -75,10 +75,10 @@ namespace CloudSync
 				}
 		}	
 
-		static Dispatcher UIdispatcher = System.Windows.Application.Current.Dispatcher as Dispatcher;
+		//static Dispatcher UIdispatcher = System.Windows.Application.Current.Dispatcher as Dispatcher;
 		private void OnNewWorkerReady(Worker worker)
 		{
-			worker.Completed += OnWorkerCompleted;
+			worker.Completed += OnWorkerCompleted;			
 			CurrentWorkers.Add(worker);
 			worker.DoWorkAsync();					
 		}
@@ -91,6 +91,7 @@ namespace CloudSync
 				CurrentWorkers.Remove(worker);
 			if (!e.Successfull && e.Error.Message.IndexOf("404") >=0)
 				CurrentWorkers.Remove(worker);
+
 		}		
 	}
 }

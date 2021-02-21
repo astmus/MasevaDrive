@@ -9,9 +9,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
 using System.Net;
-using CloudSync.Telegram;
 using System.IO.Pipes;
 using System.IO;
+using FrameworkData;
+using System.Windows.Threading;
+using static CloudSync.OneDriveClient;
+using CloudSync.Models;
 
 namespace CloudSync
 {
@@ -20,11 +23,11 @@ namespace CloudSync
 	/// </summary>
 	public partial class App : Application
 	{
-		private static readonly Logger Log = LogManager.GetCurrentClassLogger();		
-
-		private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+		private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+		internal static readonly Lazy<OccuranceNotificationHandler> NotificationSender = new Lazy<OccuranceNotificationHandler>(() => new OccuranceNotificationHandler());
+		private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
-			Settings.Instance.Save();
+			AppSettings.Instance.Save();
 			Log.Fatal(e.Exception, "Unhandled exception: {0}", e.Exception);
 			LogManager.Flush();			
 		}
@@ -32,33 +35,12 @@ namespace CloudSync
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
 			Log.Info("App is start");
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-			TelegramService.RequestDeleteFile += OnRequestDeleteFileFromStorage;
-			TelegramService.StartService();						
-		}
-
-		private async void OnRequestDeleteFileFromStorage(string hashOfPath)
-		{
-			NamedPipeClientStream client = new NamedPipeClientStream("StorageFileInfoPipe");
-			client.Connect();
-			StreamReader reader = new StreamReader(client);
-			StreamWriter writer = new StreamWriter(client);
-			writer.AutoFlush = true;			
-			await writer.WriteLineAsync(hashOfPath);
-			var pathToFile = await reader.ReadLineAsync();
-			try
-			{
-				File.Delete(pathToFile);
-			}
-			catch (System.Exception ex)
-			{
-				TelegramService.SendNotifyAboutDeleteFileError(pathToFile + " cannot delete" + ex.ToString());
-			}			
+			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+			ServicePointManager.DefaultConnectionLimit = 16;
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)
-		{			
-			TelegramService.StopService();			
+		{						
 			LogManager.Flush();			
 		}		
 	}

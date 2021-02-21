@@ -22,6 +22,8 @@ using System.Windows.Forms;
 using CloudSync.Framework;
 using Medallion.Shell;
 using System.Diagnostics;
+using FrameworkData.Settings;
+using FrameworkData;
 
 namespace CloudSync.Windows
 {
@@ -242,7 +244,8 @@ namespace CloudSync.Windows
 		public FileInfo FileInfo { get; set; }
 		private System.Drawing.Image _thumbnail;
 		public bool IsEmpty { get { return _thumbnail == null; } }
-		public bool HasInvalidInputData { get; private set; }
+		private bool hasInvalidInputData;
+		public bool HasInvalidInputData { get { return hasInvalidInputData; } }
 		private string TypeName { get { return FileInfo.Extension.Remove(0,1).ToUpper(); } }
 		private string FormatSize { get { return ((FileInfo.Length / 1024.0) / 1024.0).ToString("0.##") + " MB"; } }
 		private MemoryStream _imageStream;
@@ -255,8 +258,8 @@ namespace CloudSync.Windows
 			FileInfo = info;			
 			try
 			{
-				_imageStream = CreateThumbnailOfFile(FileInfo.FullName);
-				if (!HasInvalidInputData)
+				_imageStream = FFTools.CreateThumbnail(FileInfo.FullName, out hasInvalidInputData);
+				if (!hasInvalidInputData)
 					_thumbnail = System.Drawing.Image.FromStream(_imageStream);				
 			}
 			catch
@@ -266,11 +269,11 @@ namespace CloudSync.Windows
 
 		public bool RegenerateThumbnail()
 		{
-			if (HasInvalidInputData)
+			if (hasInvalidInputData)
 				return false;
 			try
 			{
-				_imageStream = CreateThumbnailOfFile(FileInfo.FullName);				
+				_imageStream = FFTools.CreateThumbnail(FileInfo.FullName, out hasInvalidInputData);				
 				_thumbnail = System.Drawing.Image.FromStream(_imageStream);
 				return true;
 			}
@@ -280,34 +283,7 @@ namespace CloudSync.Windows
 			}			
 		}
 
-		private MemoryStream CreateThumbnailOfFile(string filePath)
-		{
-			try
-			{
-				string args = string.Format("-hide_banner -i \"{0}\" -qscale:v 16 -an -vf scale=\"320:240\" -vframes 1 -f image2pipe pipe:1", filePath);
-				var createThumbnailProcess = Command.Run(Settings.Instance.AppProperties.FFmpegPath, null, options => options.StartInfo((i) =>
-				{
-					i.Arguments = args;
-					i.RedirectStandardOutput = true;
-					i.UseShellExecute = false;
-				}));
-
-				var result = new MemoryStream();
-				createThumbnailProcess.RedirectTo(result);
-				createThumbnailProcess.Wait();
-				if (createThumbnailProcess.Task.Result.Success == false &&
-					(createThumbnailProcess.Task.Result.StandardError.IndexOf("Invalid data found when processing input") != -1
-					|| createThumbnailProcess.Task.Result.StandardError.IndexOf("does not contain any stream") != -1))
-					HasInvalidInputData = true;
-				
-				result.Seek(0, SeekOrigin.Begin);
-				return result;
-			}
-			catch (System.Exception ex)
-			{
-				return null;
-			}			
-		}
+		
 			
 		public ImageSource Thumbnail { get { return ConvertImage(); }
 			set

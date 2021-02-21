@@ -21,13 +21,7 @@ namespace CloudSync.OneDrive
 		{
 			SyncItem = syncItem;
 			this.connectionProvider = connectionProvider;
-		}
-
-		private int numberOfAttempts = 0;
-		public override int NumberOfAttempts
-		{
-			get { return numberOfAttempts; }
-		}
+		}	
 
 		public override void CancelWork()
 		{
@@ -59,8 +53,7 @@ namespace CloudSync.OneDrive
 		}
 
 		private async void DoWork()
-		{
-			numberOfAttempts++;
+		{			
 			Status = "Request delete file";
 			var result = await connectionProvider.DeleteItem(SyncItem);
 			if (result == null)

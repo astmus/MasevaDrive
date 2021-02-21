@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Owin.Hosting.Engine;
 using System.Configuration;
-using DriveApi.Extensions;
 using DriveApi.Storage;
 using System.Diagnostics;
 using Medallion.Shell;
 using System.Threading;
 using System.IO;
 using Medallion.Shell.Streams;
+using FrameworkData.Settings;
 
 namespace DriveApi
 {
@@ -21,17 +21,22 @@ namespace DriveApi
 	{
 		static void Main(string[] args)
 	{
-			InitializeAppSettings();			
 			// Start OWIN host 						
-			using (WebApp.Start<Startup>(url: ConfigurationManager.AppSettings.BaseAddress()))
+			var address = SolutionSettings.Default.BaseApiAddress;
+			using (WebApp.Start<Startup>(url: address))
 			{
 				// Create HttpClient and make a request to api/values 
 				HttpClient client = new HttpClient();
 
-				var response = client.GetAsync(ConfigurationManager.AppSettings.BaseAddress()).Result;
+				Task.Delay(1000).ContinueWith(async delegate {
+					var response = await client.GetAsync(address);
+					Console.WriteLine("response =>"+response);
+					Console.WriteLine("response content =>"+response.Content.ReadAsStringAsync().Result);
+				}
+				);
+				
 
-				Console.WriteLine(response);
-				Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+				
 
 
 				//string arg = string.Format("-i \"{0}\" -vcodec libvpx -b:v 1600K -bufsize 5M -crf 4 -ac 2 -c:a libopus -b:a 96k \"{1}\"", @"D:\Temp\3.mp4", @"D:\Temp\0.webm");
@@ -86,20 +91,6 @@ namespace DriveApi
 		private static void P_ErrorDataReceived(object sender, DataReceivedEventArgs e)
 		{
 			Console.WriteLine(e.Data);
-		}
-
-		private static void InitializeAppSettings()
-		{
-			var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-			if (configFile.AppSettings.Settings["RootPath"] == null)
-				configFile.AppSettings.Settings.Add("RootPath", @"r:\Images&Video");
-			if (configFile.AppSettings.Settings["BaseAddress"] == null)
-				configFile.AppSettings.Settings.Add("BaseAddress", "http://192.168.0.103:9090/");
-			if (configFile.AppSettings.Settings["PathToThumbnails"] == null)
-				configFile.AppSettings.Settings.Add("PathToThumbnails", @"z:\Temp\Thumbnails");
-
-			configFile.Save(ConfigurationSaveMode.Modified);
-			ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
 		}
 	}
 }

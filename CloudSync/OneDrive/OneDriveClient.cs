@@ -90,15 +90,11 @@ namespace CloudSync
 
 		static OneDriveClient()
 		{
-			ServicePointManager.DefaultConnectionLimit = 40;
 		}
 
-		public event Action<OneDriveClient> NeedRelogin;
 		public OneDriveClient()
 		{
 			clientHandler = new HttpClientHandler();
-			clientHandler.MaxConnectionsPerServer = 40;
-			//clientHandler.MaxRequestContentBufferSize = 16348;
 			inetClient = new HttpClient(clientHandler);
 		}
 
@@ -116,7 +112,6 @@ namespace CloudSync
 			if (accessData?.AccessToken != null)
 			{
 				clientHandler = new HttpClientHandler();
-				clientHandler.MaxConnectionsPerServer = 40;
 				inetClient = new HttpClient(clientHandler)
 				{
 					DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue("Bearer", accessData.AccessToken) }
@@ -268,31 +263,10 @@ namespace CloudSync
 
 		public async Task<Stream> GetStreamToFileAsync(string url)
 		{
-			//return inetClient.GetStreamAsync(url);
-			//return Task.Run<Stream>(() =>
-			//{
-			
 			if (!CredentialData.IsValid())
 				await RenewAccessToken();
 
 			return await inetClient.GetStreamAsync(url);
-			//});
-
-
-			/*return Task.Run<Stream>(() =>
-			{
-				return inetClient.GetStreamAsync(url);
-				//var taskResult = response.Result;
-				/*if (taskResponse.IsSuccessStatusCode)
-					return taskResponse.Content.ReadAsStreamAsync();
-				if (taskResponse.StatusCode == HttpStatusCode.Unauthorized)
-				{
-					RenewAccessToken();
-					return taskResponse.Content.ReadAsStreamAsync();
-				}
-				return null;*/
-			//});
-
 		}
 
 		private Semaphore accountDownloadConnectionsLimiter = new Semaphore(2, 2);

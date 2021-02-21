@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace CloudSync.Framework
 {
+
+	
 	public abstract class Worker : IProgressable
 	{
 		public static class Statuses
@@ -16,8 +18,6 @@ namespace CloudSync.Framework
 			public static readonly string WaitToStart = "Wait to start";
 			public static readonly string Started = "Started";
 		}
-
-		public abstract int NumberOfAttempts { get; }
 		public abstract Task DoWorkAsync();
 		public abstract void CancelWork();
 		public abstract void Dismantle();
@@ -53,7 +53,7 @@ namespace CloudSync.Framework
 
 		public event Action<int> PercentCompleted;
 		public event PropertyChangedEventHandler PropertyChanged;
-		
+
 		protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
 		{
 			//currentContext.Send(state =>
@@ -74,7 +74,7 @@ namespace CloudSync.Framework
 		public void ForceCancel()
 		{
 			RaiseFailed(new ForceCanceledException(SyncItem));
-		}		
+		}
 
 		protected void RaiseFailed(Exception error)
 		{

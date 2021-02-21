@@ -9,18 +9,15 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Threading;
 using System.Threading;
-using CloudSync.Extensions;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Net;
-using System.Diagnostics;
 using CloudSync.Framework.Exceptions;
 using System.Collections.Concurrent;
 using System.Windows;
 using CloudSync.Framework;
 using CloudSync.OneDrive;
 using System.Net.Http;
-using CloudSync.Telegram;
 
 namespace CloudSync
 {
@@ -78,9 +75,7 @@ namespace CloudSync
 		[JsonIgnore]
 		public bool HasWorkerReadySubscribers { get { return NewWorkerReady != null; } }
 		public event Action<Worker> NewWorkerReady;
-		public event PropertyChangedEventHandler PropertyChanged;
-		//public HashSet<OneDriveSyncItem> ChildrenFolders { get; private set; } = new HashSet<OneDriveSyncItem>(new OneDriveSyncItem());
-
+		public event PropertyChangedEventHandler PropertyChanged;			
 		private string PathToDispathFolder { get; set; }
 		private DispatcherTimer syncTimer = new DispatcherTimer();
 		private OneDriveClient _owner;
@@ -88,7 +83,7 @@ namespace CloudSync
 		{
 			get
 			{
-				return _owner ?? (_owner = Settings.Instance.Accounts.FirstOrDefault((a) => { return a.Client.UserData.Id == OwnerId; })?.Client);
+				return _owner ?? (_owner = AppSettings.Instance.Accounts.FirstOrDefault((a) => { return a.Client.UserData.Id == OwnerId; })?.Client);
 			}
 		}
 		public OneDriveFolder()
@@ -129,7 +124,8 @@ namespace CloudSync
 				if (jresult["error"] != null)
 				{									
 					logger.Error(jresult["error"].ToString());
-					TelegramService.SendNotifyAboutSyncError("astmus@live.com", jresult["error"].ToString());
+					 
+					App.NotificationSender.Value.NotifyOneDriveError(Owner.UserData, jresult["error"].ToString());
 					if (jresult["error"]["code"].ToString() == "InvalidAuthenticationToken")
 						ResetDeltaLink();
 				}
@@ -213,12 +209,7 @@ namespace CloudSync
 							//case: HttpStatusCode.Unauthorized
 						}
 					}
-					worker.Status = "Attempt";
-					if (worker.NumberOfAttempts < 3)
-					{
-						worker.DoWorkAsync(5000);
-						return;
-					}
+					worker.Status = "Attempt";					
 				}
 				if (args.Error is HttpRequestException)
 				{					
@@ -233,6 +224,15 @@ namespace CloudSync
 					itemsForSync.Enqueue(worker.SyncItem);
 					return;
 				}
+			}
+
+			var copyWorker = worker as CopyFileWorker;
+			if (copyWorker != null)
+			{
+				if (args.Successfull)
+					App.NotificationSender.Value.NotifyDownLoadSuccess(Owner.UserData, copyWorker.DestinationFullFilePath);
+				else
+					App.NotificationSender.Value.NotifyDownLoadFailed(Owner.UserData, copyWorker.SyncItem.Name, args.Error.ToString());
 			}
 
 			if ((Suspended || !IsActive) && worker.SyncItem.CurrentState == SyncState.RemovedFromCloud) return;
@@ -264,14 +264,14 @@ namespace CloudSync
 			if (!syncTimer.IsEnabled)
 			{
 				logger.Info("Sync timer staeted fo folder {0}", this.Name);
-				syncTimer.Start();
+					syncTimer.Start();
 			}
 		}
 
 		private void CheckUpdatesOnTheServer(object sender, EventArgs e)
 		{
 			if (Suspended || !IsActive) return;
-			Sync(deltaLink);
+				Sync(deltaLink);
 		}
 
 		private Worker MakeNextWorker(OneDriveSyncItem syncItem = null)
@@ -306,14 +306,11 @@ namespace CloudSync
 						nextWorker.TaskName = String.Format("Copy {0} ({1})", syncItem.Name, syncItem.FormattedSize);
 						nextWorker.Completed += (Worker w, ProgressableEventArgs args) =>
 						{						
-							if (args.Successfull)
-								TelegramService.SendNotifyFileLoadDone(Owner.UserData.PrincipalName, syncItem, (w as CopyFileWorker).DestinationFullFilePath);
-							else
-								TelegramService.SendNotifyAboutSyncError(Owner.UserData.PrincipalName, syncItem.Name + "copy problem");
+							
 						};
 						logger.Trace("New copy worker ready for file {0} save to {1}", syncItem.Name, PathToSync);											
 						break;
-					case SyncState.MovedToStore:
+					case SyncState.MovedToStorage:
 						nextWorker = new DeleteOneDriveFileWorker(syncItem, Owner);
 						nextWorker.TaskName = String.Format("Request for delete {0} ({1})", syncItem.Name, syncItem.FormattedSize);
 						logger.Trace("New delete worker ready for file {0}", syncItem.Name);

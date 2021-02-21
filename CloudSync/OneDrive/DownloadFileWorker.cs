@@ -25,14 +25,8 @@ namespace CloudSync
 
 		private ICloudStreamProvider streamProvider;
 		private CancellationTokenSource cancelTokenSource;
-		private int attemptsCount = 0;
 		private Semaphore downloadLimiter;
 		
-		public override int NumberOfAttempts
-		{
-			get { return attemptsCount; }			
-		}
-
 		public DownloadFileWorker(OneDriveSyncItem item, string destination, ICloudStreamProvider provider) : base()
         {
             this.SyncItem = item;
@@ -76,25 +70,19 @@ namespace CloudSync
 
 		private async void DoWork(CancellationToken token)
         {
-			attemptsCount++;
+			downloadLimiter.WaitOne(TimeSpan.FromMinutes(10));
 			Status = Statuses.Started;
-			int bufferSize = 4096;			
-			if (SyncItem.Size.AsMB() > 50)
-				bufferSize = 32768;
-			else
-			if (SyncItem.Size.AsMB() > 10)
-				bufferSize = 16384;			
+			int bufferSize = 4.KB();
 			Stream contentStream = null;
 			try
 			{
-				downloadLimiter.WaitOne();
 				Status = "Request file";
 				contentStream = await streamProvider.GetStreamToFileAsync(SyncItem.Link);
+				var buffer = new byte[bufferSize];
 				using (var fileStream = new FileStream(Destination, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize, true))
 				{
 					var totalRead = 0L;
-					int readed = 0;
-					var buffer = new byte[bufferSize];
+					int readed = 0;	
 					Status = "Download";
 					while ((readed = await contentStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
 					{

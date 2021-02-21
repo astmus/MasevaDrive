@@ -10,13 +10,13 @@ using System.Net.Http.Headers;
 using System.IO;
 using System.Diagnostics;
 using System.Configuration;
-using DriveApi.Extensions;
 using System.Threading;
 using System.Threading.Tasks;
 using DriveApi.Network;
 using Medallion.Shell;
-using DriveApi.Model;
 using System.Reflection;
+using FrameworkData.Settings;
+using FrameworkData;
 
 namespace DriveApi.Controllers
 {
@@ -36,43 +36,51 @@ namespace DriveApi.Controllers
 			if (item == null)
 				return Request.CreateErrorResponse(HttpStatusCode.NoContent, string.Format("File with id = {0} not found", id));
 			HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-			result.Content = new StreamContent(item.FileSysInfo.OpenRead());
-			result.Content.Headers.ContentLength = item.FileSysInfo.Length;
-			result.Content.Headers.ContentType = new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name));
-			result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment") { FileName = item.Name, Size = item.FileSysInfo.Length, CreationDate = item.File.CreationTime, ModificationDate = item.File.CreationTime };
+			result.Content = new StreamContent(item.GetStream());
+			result.Content.Headers.ContentLength = item.Size;
+			result.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeMapping.GetMimeMapping(item.Name));
+			result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = item.Name, Size = item.Size, CreationDate = item.DateTimeCreation };
 			return result;
 		}
 
 		[HttpGet]
-		[Route("storage/thumb{id}")]
-		public HttpResponseMessage GetThumbnail(string id)
+		[Route("storage/thumb{id}={size}")]
+		public HttpResponseMessage GetThumbnail(string id, int size)
 		{
 			var item = Storage.GetFileById(id);
 			if (item == null)
 				return Request.CreateErrorResponse(HttpStatusCode.NoContent, string.Format("File with id = {0} not found", id));
 
-			var pathToThumbnail = Path.Combine(ConfigurationManager.AppSettings.PathToThumbnails(), item.Id) + ".jpeg";
+			var pathToThumbnail = Path.Combine(SolutionSettings.Default.ThumbnailsFolder, item.Hash) + ".jpeg";
 
 			var thumbnailInfo = new FileInfo(pathToThumbnail);
+			Stream stream = null;			
 			if (!thumbnailInfo.Exists)
-			{
-				RunFFmpeg(item.Path, pathToThumbnail);
+			{				
+				var fileStream = File.Create(pathToThumbnail);				
+				stream.CopyTo(fileStream);
+				fileStream.Close();
+				stream.Seek(0, SeekOrigin.Begin);
 				thumbnailInfo = new FileInfo(pathToThumbnail);
 			}
+			else
+				stream = FrameworkData.FFTools.CreateInlineThumbnail(item.FullPath, size);
 
-			if (thumbnailInfo.Exists)
+
+			if (stream?.Length > 0)
 			{
 				HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-				result.Content = new StreamContent(File.OpenRead(pathToThumbnail));
-				result.Content.Headers.ContentLength = thumbnailInfo.Length;
+				result.Content = new StreamContent(stream);
+				result.Content.Headers.ContentLength = stream.Length;
 				result.Content.Headers.ContentType = new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name));
 				return result;
 			}
-			return Request.CreateResponse(HttpStatusCode.OK, new byte[0]);
+			else
+				return Request.CreateResponse(HttpStatusCode.OK, new byte[0]);
 		}
 
 		[HttpGet]
-		public IEnumerable<StorageItem> GetRoot()
+		public IEnumerable<StorageItemInfo> GetRoot()
 		{
 			return Storage.GetRoot();
 		}
@@ -83,190 +91,95 @@ namespace DriveApi.Controllers
 		{
 			try
 			{
-				StorageItem item = Storage.GetById(id);
-				if (item.FileSysInfo != null)
-				{
-					if (!item.FileSysInfo.Exists)
+				StorageItemInfo item = Storage.GetById(id);
+				if (item == null || !File.Exists(item.FullPath))
 						return Request.CreateErrorResponse(HttpStatusCode.OK, "File does not exist");
-					if (item.File.IsPicture)
+					if (item.IsFile)
 					{
 						HttpResponseMessage result = Request.CreateResponse(HttpStatusCode.OK, Storage.GetChildrenByParentId(id));
-						result.Content = new StreamContent(item.FileSysInfo.OpenRead());
-						result.Content.Headers.ContentLength = item.FileSysInfo.Length;
+						result.Content = new StreamContent(item.GetStream());
+						result.Content.Headers.ContentLength = item.Size;
 						result.Content.Headers.ContentType = new MediaTypeHeaderValue(System.Web.MimeMapping.GetMimeMapping(item.Name));
 						return result;
 					}
-					else
-					{
-						/*string tag = GetETag(Request);
-						if (tag == "\"" + item.FileSysInfo.Name.ToHash() + "\"")
-						{							
-							var res = Request.CreateResponse(HttpStatusCode.NotModified);
-							res.Headers.Add("SuppressContent","1");
-							Console.WriteLine(Environment.NewLine + tag +Environment.NewLine);
-							return res;
-						}*/
-						var info = item.FileSysInfo.GetMediaInfo();
-						double targetVideoBitRate = info.Streams[0].BitRate * .5D;
-						double targetAudioBitRate = info.Streams[1].BitRate * .5D;
-						targetAudioBitRate = 96000;//Math.Max(32000, Math.Min(targetAudioBitRate, 192000));
-						targetVideoBitRate = 3000000;//Math.Max(32000, Math.Min(targetVideoBitRate, 512000));
-						double totalDurationSeconds = info.Format.Duration;
-						long originalSize = info.Format.Size;
-						//var leftBits = (info.Format.BitRate * totalDurationSeconds) - ((info.Streams[0].BitRate + info.Streams[1].BitRate) * totalDurationSeconds);
+					//else
+					//{
+					//	/*string tag = GetETag(Request);
+					//	if (tag == "\"" + item.FileSysInfo.Name.ToHash() + "\"")
+					//	{							
+					//		var res = Request.CreateResponse(HttpStatusCode.NotModified);
+					//		res.Headers.Add("SuppressContent","1");
+					//		Console.WriteLine(Environment.NewLine + tag +Environment.NewLine);
+					//		return res;
+					//	}*/
+					//	var info = item.FileSysInfo.GetMediaInfo();
+					//	double targetVideoBitRate = info.Streams[0].BitRate * .5D;
+					//	double targetAudioBitRate = info.Streams[1].BitRate * .5D;
+					//	targetAudioBitRate = 96000;//Math.Max(32000, Math.Min(targetAudioBitRate, 192000));
+					//	targetVideoBitRate = 3000000;//Math.Max(32000, Math.Min(targetVideoBitRate, 512000));
+					//	double totalDurationSeconds = info.Format.Duration;
+					//	long originalSize = info.Format.Size;
+					//	//var leftBits = (info.Format.BitRate * totalDurationSeconds) - ((info.Streams[0].BitRate + info.Streams[1].BitRate) * totalDurationSeconds);
 
-						long expectedSize = Convert.ToInt64(((targetVideoBitRate + targetAudioBitRate) * totalDurationSeconds) / 8D *0.99);						
-						double targetBitRate = (targetVideoBitRate + targetAudioBitRate) / 8D;
-						Console.WriteLine(Environment.NewLine + expectedSize + "bytes " + expectedSize / 1024.0 + " KB" + Environment.NewLine);
+					//	long expectedSize = Convert.ToInt64(((targetVideoBitRate + targetAudioBitRate) * totalDurationSeconds) / 8D *0.99);						
+					//	double targetBitRate = (targetVideoBitRate + targetAudioBitRate) / 8D;
+					//	Console.WriteLine(Environment.NewLine + expectedSize + "bytes " + expectedSize / 1024.0 + " KB" + Environment.NewLine);
 
-						RangeHeaderValue rangeHeader = Request.Headers.Range;
-						HttpResponseMessage response = new HttpResponseMessage();
+					//	RangeHeaderValue rangeHeader = Request.Headers.Range;
+					//	HttpResponseMessage response = new HttpResponseMessage();
 
-						response.Headers.AcceptRanges.Add("bytes");
+					//	response.Headers.AcceptRanges.Add("bytes");
 
-						response.Headers.ETag = new EntityTagHeaderValue("\"" + item.FileSysInfo.Name.ToHash() + "\"");
-						Console.WriteLine(Environment.NewLine + Request.Headers.Range + Environment.NewLine);
-						long end;
-						long start;						
-						string arg = string.Format("-hide_banner -i \"{0}\" -vf scale=1280:-1 ! -metadata duration=\"{1}\" -b:a 96000 -vcodec libvpx -b:v 3000k -quality realtime -g 240 -threads 8 -speed 5 -qmin 4 -qmax 48 -ac 2 -c:a libopus -pass 2 -passlogfile \"D:\\Temp\\MaxOlgaClip-1280x720\" -f webm pipe:1", item.FileSysInfo.FullName, item.File.MediaInfo.Format.Duration);
-						if (rangeHeader.Ranges.First().From != null/* && rangeHeader.Ranges.First().From > 0*/)
-						{
+					//	response.Headers.ETag = new EntityTagHeaderValue("\"" + item.FileSysInfo.Name.ToHash() + "\"");
+					//	Console.WriteLine(Environment.NewLine + Request.Headers.Range + Environment.NewLine);
+					//	long end;
+					//	long start;						
+					//	string arg = string.Format("-hide_banner -i \"{0}\" -vf scale=1280:-1 ! -metadata duration=\"{1}\" -b:a 96000 -vcodec libvpx -b:v 3000k -quality realtime -g 240 -threads 8 -speed 5 -qmin 4 -qmax 48 -ac 2 -c:a libopus -pass 2 -passlogfile \"D:\\Temp\\MaxOlgaClip-1280x720\" -f webm pipe:1", item.FileSysInfo.FullName, item.File.MediaInfo.Format.Duration);
+					//	if (rangeHeader.Ranges.First().From != null/* && rangeHeader.Ranges.First().From > 0*/)
+					//	{
 
-						}
-						// 1. If the unit is not 'bytes'.
-						// 2. If there are multiple ranges in header value.
-						// 3. If start or end position is greater than file length.
-						if (rangeHeader.Unit != "bytes" || rangeHeader.Ranges.Count > 1 ||
-							!TryReadRangeItem(rangeHeader.Ranges.First(), expectedSize/*originalSize*/, out start, out end))
-						{
-							response.StatusCode = HttpStatusCode.RequestedRangeNotSatisfiable;
-							response.Content = new StreamContent(Stream.Null);  // No content for this status.
-							response.Content.Headers.ContentRange = new ContentRangeHeaderValue(expectedSize);
-							response.Content.Headers.ContentType = new MediaTypeHeaderValue("video/webm");
+					//	}
+					//	// 1. If the unit is not 'bytes'.
+					//	// 2. If there are multiple ranges in header value.
+					//	// 3. If start or end position is greater than file length.
+					//	if (rangeHeader.Unit != "bytes" || rangeHeader.Ranges.Count > 1 ||
+					//		!TryReadRangeItem(rangeHeader.Ranges.First(), expectedSize/*originalSize*/, out start, out end))
+					//	{
+					//		response.StatusCode = HttpStatusCode.RequestedRangeNotSatisfiable;
+					//		response.Content = new StreamContent(Stream.Null);  // No content for this status.
+					//		response.Content.Headers.ContentRange = new ContentRangeHeaderValue(expectedSize);
+					//		response.Content.Headers.ContentType = new MediaTypeHeaderValue("video/webm");
 
-							return response;
-						}
+					//		return response;
+					//	}
 
-						var contentRange = new ContentRangeHeaderValue(start, end, expectedSize);
+					//	var contentRange = new ContentRangeHeaderValue(start, end, expectedSize);
 						
-						//var contentRange = new ContentRangeHeaderValue(start, end, originalSize);
+					//	//var contentRange = new ContentRangeHeaderValue(start, end, originalSize);
 
-						// We are now ready to produce partial content.						
-						response.StatusCode = HttpStatusCode.PartialContent;
-						response.Content = new PushStreamContent(async (outputStream, httpContent, transportContext) =>
-							{
-								await OnStreamConnected(outputStream, httpContent as PushStreamContent, transportContext, item, start, end, arg, targetBitRate);
-							}, "video/webm");
+					//	// We are now ready to produce partial content.						
+					//	response.StatusCode = HttpStatusCode.PartialContent;
+					//	response.Content = new PushStreamContent(async (outputStream, httpContent, transportContext) =>
+					//		{
+					//			await OnStreamConnected(outputStream, httpContent as PushStreamContent, transportContext, item, start, end, arg, targetBitRate);
+					//		}, "video/webm");
 						
 						
-						//response.Content.Headers.Expires = DateTime.UtcNow.Date.AddHours(1);
-						response.Content.Headers.ContentLength = end - start + 1;
-						response.Content.Headers.ContentRange = contentRange;
-						Console.WriteLine("Range - "+contentRange.ToString());					
+					//	//response.Content.Headers.Expires = DateTime.UtcNow.Date.AddHours(1);
+					//	response.Content.Headers.ContentLength = end - start + 1;
+					//	response.Content.Headers.ContentRange = contentRange;
+					//	Console.WriteLine("Range - "+contentRange.ToString());					
 											
-						return response;
-					}
-				}
+					//	return response;
+					//}
 				else
-					return Request.CreateResponse(HttpStatusCode.OK, Storage.GetChildrenByParentId(id));
+					return Request.CreateResponse(HttpStatusCode.NotFound);
 			}
 			catch (Exception e)
 			{
 				var message = string.Format("Item with id = {0} not found", id);
 				return Request.CreateResponse(HttpStatusCode.NoContent, message);
 			}
-		}
-				
-		private async Task OnStreamConnected(Stream outputStream, PushStreamContent content, TransportContext transport, StorageItem item, long start, long end, string arg, double targetBitRate)
-		{			
-			try
-			{
-				//using (var inputStream = File.Open(item.FileSysInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read))
-				//{
-				int count = 0;
-				long remainingBytes = end - start + 1;
-				long position = start;
-				byte[] buffer = new byte[ReadStreamBufferSize];
-				
-				/*Console.WriteLine(arg);
-				*/
-				if (start != 0)
-				{					
-					string appendTimeShift = " -ss " + TimeSpan.FromSeconds((int)(start / targetBitRate)).ToString();
-					arg = arg.Replace("!",appendTimeShift);
-				}
-				else
-					arg = arg.Replace("!", "");
-				item.CurrentEncodeProcess?.Kill();
-
-				Console.WriteLine(arg);
-				item.CurrentEncodeProcess = Command.Run(@"ffmpeg.exe", null, options => options.StartInfo((i) =>
-				{
-					i.Arguments = arg;
-				}));
-				item.CurrentEncodeProcess.RedirectStandardErrorTo(Console.Out);
-				
-				int readed = 0;
-
-				while ((readed = await item.CurrentEncodeProcess.StandardOutput.BaseStream.ReadAsync(buffer, 0, remainingBytes > buffer.Length ? buffer.Length : (int)remainingBytes)) > 0 && remainingBytes > 0)
-				{
-					remainingBytes -= readed;
-					outputStream.Write(buffer, 0, readed);
-				}
-								
-				item.CurrentEncodeProcess.StandardOutput.BaseStream.CopyTo(outputStream);
-				
-				//content.Headers.ContentLength = Int64.Parse(item.EncodeLogs.Last().Split(' ').First(part => part.Contains("kB")).Replace("kB","")) * 1024;
-				
-				Console.WriteLine("Encode ended "+ content.Headers.ContentLength);
-				/*if (remainingBytes > ReadStreamBufferSize)
-					count = await inputStream.ReadAsync(buffer, 0, ReadStreamBufferSize);
-				else
-					count = await inputStream.ReadAsync(buffer, 0, (int)remainingBytes);
-				await outputStream.WriteAsync(buffer, 0, count);
-
-				position = inputStream.Position;
-				remainingBytes = end - position + 1;*/
-				//}
-				//while (position <= end);
-				//}
-			}
-			catch (System.Exception ex)
-			{
-				Console.WriteLine("Output stream exception" + ex.Message);
-				item.CurrentEncodeProcess?.Kill();
-				outputStream.Close();
-				outputStream.Dispose();
-			}
-			finally
-			{
-				Console.WriteLine("Closed output stream");
-				item.CurrentEncodeProcess?.Kill();
-				outputStream.Close();
-			}
-		}
-
-		private static string GetETag(HttpRequestMessage request)
-		{
-			IEnumerable<string> values = null;
-			if (request.Headers.TryGetValues("If-None-Match", out values))
-			{
-				Console.WriteLine(Environment.NewLine + "If-None-Match = " + values + Environment.NewLine);
-				return new EntityTagHeaderValue(values.FirstOrDefault()).Tag;
-			}
-			/*else
-				if (request.Headers.TryGetValues("If-Range", out values))
-			{
-				Console.WriteLine(Environment.NewLine + "If-Range = " + values + Environment.NewLine);
-				return new EntityTagHeaderValue(values.FirstOrDefault()).Tag;
-			}*/
-			else
-				if (request.Headers.TryGetValues("If-Match", out values))
-			{
-				Console.WriteLine(Environment.NewLine + "If-Math = " + values + Environment.NewLine);
-				return new EntityTagHeaderValue(values.FirstOrDefault()).Tag;
-			}
-			else return null;
 		}
 
 		private static bool TryReadRangeItem(RangeItemHeaderValue range, long contentLength, out long start, out long end)
@@ -340,25 +253,6 @@ namespace DriveApi.Controllers
 				p.WaitForExit();
 			}
 		}*/
-
-		private string RunFFmpeg(string sourceFile, string destFile)
-		{
-			var processInfo = new ProcessStartInfo();
-			processInfo.FileName = "ffmpeg.exe";
-			processInfo.Arguments = string.Format("-i \"{0}\" -qscale:v 5 -vf scale=\"360:-1\" \"{1}\"", sourceFile, destFile);
-			processInfo.CreateNoWindow = true;
-			processInfo.UseShellExecute = false;
-			//processInfo.RedirectStandardOutput = true;
-			using (var process = new Process())
-			{
-				process.StartInfo = processInfo;
-				process.Start();
-				process.WaitForExit();
-				process.ErrorDataReceived += Process_ErrorDataReceived;
-				return destFile;
-				//return process.StandardOutput.BaseStream;			
-			}
-		}
 
 		private void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
 		{

@@ -64,7 +64,7 @@ namespace CloudSync.Models
 	{
 		New,
 		Loaded,
-		MovedToStore,
+		MovedToStorage,
 		RemovedFromCloud
 	}
 

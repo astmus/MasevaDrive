@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -21,7 +24,7 @@ namespace TelegramMasevaBot
 		private static string selectedFolder = RootFolder;
 		static void Main(string[] args)
 		{
-			var me = Bot.GetMeAsync().Result;
+			/*var me = Bot.GetMeAsync().Result;
 			Console.Title = me.Username;
 
 			Bot.OnMessage += BotOnMessageReceived;
@@ -34,7 +37,44 @@ namespace TelegramMasevaBot
 			Bot.StartReceiving();
 			Console.WriteLine($"Start listening for @{me.Username}");
 			Console.ReadLine();
-			Bot.StopReceiving();
+			Bot.StopReceiving();*/
+			var urls = Enumerable.Range(1, 300).Select(index => string.Format("http://astmus.com/giveout/{0}.jpg", index)).ToList();
+		
+
+
+			var client = new HttpClient();
+			var t = client.GetAsync(urls[1]);
+			t.Wait();
+			Console.WriteLine(t.Result.Content);
+
+			//Start with a list of URLs
+
+			//Start requests for all of them
+			var requests = urls.Select(url =>
+			client.GetAsync(url)				
+			).ToList();
+
+			//Wait for all the requests to finish
+			Task.WhenAll(requests);
+
+			//Get the responses
+			var responses = requests.Select
+				(
+					task => task.Result
+				);
+
+			Stopwatch stopWatch = new Stopwatch();
+			Console.WriteLine("read result");
+			foreach (var r in responses)
+			{
+				// Extract the message body
+				var resi = r.Content.ReadAsStringAsync();
+				resi.Wait();
+				Console.WriteLine(resi.Result);
+			}
+			stopWatch.Stop();
+			Console.WriteLine("press key");
+			Console.ReadKey();
 		}
 
 		private static async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)

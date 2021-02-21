@@ -20,12 +20,6 @@ namespace CloudSync.Framework
 		public string DestinationFullFilePath { get; private set; }
 
 		private CancellationTokenSource cancelTokenSource;
-		private int attemptsCount = 0;
-
-		public override int NumberOfAttempts
-		{
-			get { return attemptsCount; }
-		}
 
 		public CopyFileWorker(OneDriveSyncItem item, string dispatchFolder, string destinationFolder) : base()
         {
@@ -68,14 +62,8 @@ namespace CloudSync.Framework
 
 		private async void DoWork(CancellationToken token)
 		{
-			attemptsCount++;
 			Status = Statuses.Started;
-			int bufferSize = 4096;
-			if (SyncItem.Size.AsMB() > 50)
-				bufferSize = 16384;
-			else
-			if (SyncItem.Size.AsMB() > 10)
-				bufferSize = 8192;
+			int bufferSize = 4096;			
 			try
 			{
 				Status = "Open file";
@@ -94,7 +82,7 @@ namespace CloudSync.Framework
 					{
 						var totalRead = 0L;
 						int readed = 0;
-						var buffer = new byte[bufferSize];
+						var buffer = new byte[bufferSize];						
 						Status = "Copy file";
 						while ((readed = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
 						{
