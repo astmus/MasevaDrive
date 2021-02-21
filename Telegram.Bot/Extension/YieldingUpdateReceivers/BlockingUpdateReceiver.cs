@@ -1,11 +1,13 @@
-﻿#if (NETSTANDARD2_0 || NET472)
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot.Requests;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+
+#if NET5_0
+
 
 namespace Telegram.Bot.Extensions
 {
@@ -17,14 +19,14 @@ namespace Telegram.Bot.Extensions
         private static readonly Update[] EmptyUpdates = { };
 
         /// <summary>
-        /// The <see cref="ITelegramBot"/> used for making GetUpdates calls
+        /// The <see cref="ITelegramBotClient"/> used for making GetUpdates calls
         /// </summary>
         public readonly ITelegramBotClient BotClient;
 
         /// <summary>
-        /// Constructs a new <see cref="BlockingUpdateReceiver"/> for the specified <see cref="ITelegramBot"/>
+        /// Constructs a new <see cref="BlockingUpdateReceiver"/> for the specified <see cref="ITelegramBotClient"/>
         /// </summary>
-        /// <param name="botClient">The <see cref="ITelegramBot"/> used for making GetUpdates calls</param>
+        /// <param name="botClient">The <see cref="ITelegramBotClient"/> used for making GetUpdates calls</param>
         /// <param name="allowedUpdates">Indicates which <see cref="UpdateType"/>s are allowed to be received. null means all updates</param>
         /// <param name="errorHandler">The function used to handle <see cref="Exception"/>s</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> with which you can stop receiving</param>
@@ -41,8 +43,9 @@ namespace Telegram.Bot.Extensions
             _cancellationToken = cancellationToken;
         }
 #nullable disable
-
+#nullable enable
         private readonly UpdateType[]? _allowedUpdates;
+#nullable disable
         private readonly Func<Exception, CancellationToken, Task>? errorHandler;
         private readonly CancellationToken _cancellationToken;
         private int _updateIndex = 0;
@@ -102,6 +105,7 @@ namespace Telegram.Bot.Extensions
 
                 if (_updateArray.Length > 0)
                     _messageOffset = _updateArray[^1].Id + 1;
+
             }
         }
     }
