@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6ABE39D2-E661-499F-8220-D095857BE228}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FrameworkData</RootNamespace>
+    <AssemblyName>FrameworkData</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MedallionShell, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MedallionShell.1.6.2\lib\net46\MedallionShell.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.7.7\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Extensions.cs" />
+    <Compile Include="DataTransmit\IStorageDateService.cs" />
+    <Compile Include="DataTransmit\MediaInfo.cs" />
+    <Compile Include="DataTransmit\StorageServicePipeAccessPoint.cs" />
+    <Compile Include="MediaHelpers\FFTools.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\SolutionSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>SolutionSettings.settings</DependentUpon>
+      <CustomToolNamespace>FrameworkData.Settings</CustomToolNamespace>
+    </Compile>
+    <Compile Include="SolutionSettings.cs" />
+    <Compile Include="DataTransmit\StorageItemInfo.cs" />
+    <Compile Include="XCopy.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\SolutionSettings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SolutionSettings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>FrameworkData.Settings</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Dlls\AppCommon.Thumbnails.dll" />
+    <Content Include="Dlls\AppCore.Windows.dll" />
+    <Content Include="Dlls\AppSettingsCppCX.dll" />
+    <Content Include="Dlls\BendRealityNode.dll" />
+    <Content Include="Dlls\BridgeInterface.dll" />
+    <Content Include="Dlls\clrcompression.dll" />
+    <Content Include="Dlls\DDSImageEncoder.dll" />
+    <Content Include="Dlls\Edit.AppTk.SceneGraph.dll" />
+    <Content Include="Dlls\engine.eval.dll" />
+    <Content Include="Dlls\ExploreModel.dll" />
+    <Content Include="Dlls\ImageDecoding.dll" />
+    <Content Include="Dlls\ipp_uwp.dll" />
+    <Content Include="Dlls\LivingImagesProcessing.Windows.dll" />
+    <Content Include="Dlls\Lumia.AppTk.SceneGraph.dll" />
+    <Content Include="Dlls\Lumia.Imaging.dll" />
+    <Content Include="Dlls\Lumia.VideoTk.dll" />
+    <Content Include="Dlls\MediaEngineCSWrapper.dll" />
+    <Content Include="Dlls\MediaEngineVideoDataProvider.UWP.dll" />
+    <Content Include="Dlls\MediaExpression.ProjectManagement.dll" />
+    <Content Include="Dlls\Microsoft.Graphics.Canvas.dll" />
+    <Content Include="Dlls\Microsoft.People.Relevance.QueryClient.dll" />
+    <Content Include="Dlls\Microsoft.Photos.AGM.Native.Windows.dll" />
+    <Content Include="Dlls\Microsoft.Photos.dll" />
+    <Content Include="Dlls\Microsoft.Photos.Edit.Services.dll" />
+    <Content Include="Dlls\Microsoft.RichMedia.Ink.Controls.dll" />
+    <Content Include="Dlls\Microsoft.RichMedia.Ink.dll" />
+    <Content Include="Dlls\Microsoft.RichMedia.Packaging.dll" />
+    <Content Include="Dlls\Native.UWP.dll" />
+    <Content Include="Dlls\OnlineMediaComponent.dll" />
+    <Content Include="Dlls\opencv_core320.dll" />
+    <Content Include="Dlls\opencv_imgproc320.dll" />
+    <Content Include="Dlls\Photos.Viewer.Plugins.Native.dll" />
+    <Content Include="Dlls\Photos.Viewer.Sequence.dll" />
+    <Content Include="Dlls\PhotosApp.Windows.dll" />
+    <Content Include="Dlls\RenderingPlugin.dll" />
+    <Content Include="Dlls\Robmikh.CompositionSurfaceFactory.dll" />
+    <Content Include="Dlls\RuntimeConfiguration.dll" />
+    <Content Include="Dlls\SKU.dll" />
+    <Content Include="Dlls\StoreRatingPromotion.dll" />
+    <Content Include="Dlls\TrackingDLLUWP.dll" />
+    <Content Include="Dlls\UnityEngineDelegates.dll" />
+    <Content Include="Dlls\UnityPlayer.dll" />
+    <Content Include="Dlls\VideoEditor.Common.Native.dll" />
+    <Content Include="Dlls\VideoFrameExtractor.Native.dll" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

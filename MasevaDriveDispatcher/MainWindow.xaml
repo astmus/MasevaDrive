@@ -1,0 +1,159 @@
+﻿<Window x:Class="MasevaDriveDispatcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MasevaDriveDispatcher"
+        mc:Ignorable="d"
+        Title="Maseva Drive" Height="810" Width="600" Background="#AA555555" BorderThickness="2" BorderBrush="#FF999999" WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" IsManipulationEnabled="True" MouseDown="Window_MouseDown" AllowsTransparency="True" Loaded="Window_Loaded"  >
+	<Window.Resources>
+		<Storyboard   x:Key="openPanel" >
+			<DoubleAnimation From="0" To="400" RepeatBehavior="1x"                                                                                
+                                         Duration="0:0:0.8">
+				<DoubleAnimation.EasingFunction>
+					<PowerEase Power="15" EasingMode="EaseOut"/>
+				</DoubleAnimation.EasingFunction>
+			</DoubleAnimation>
+		</Storyboard>
+		<Storyboard  x:Key="collapsePanel" >
+			<DoubleAnimation To="0" RepeatBehavior="1x"                                                                                
+                                         Duration="0:0:0.8">
+				<DoubleAnimation.EasingFunction>
+					<PowerEase Power="15" EasingMode="EaseOut"/>
+				</DoubleAnimation.EasingFunction>
+			</DoubleAnimation>
+		</Storyboard>
+		<Style TargetType="{x:Type TextBlock}">
+			<Setter Property="Foreground" Value="LightGray" />
+		</Style>
+		<Style TargetType="Button">
+			<Setter Property="Margin" Value="0"/>
+			<Setter Property="Foreground" Value="LightGray"/>			
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Background" Value="#3B0F61"/>
+			<Setter Property="FontSize" Value="22"/>
+			<Setter Property="FontFamily" Value="Yu Gothic UI Semibold"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate  TargetType="{x:Type Button}">
+						<Border x:Name="borderB" Margin="3"  Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+								<Grid>
+								<Border Margin="2" Background="#44501485" Name="highlighter"/>
+									<Border x:Name="innerBorderB" BorderThickness="1"  SnapsToDevicePixels="True">
+										<ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+									</Border>
+								</Grid>
+							</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="False">
+								<Setter Property="Background" TargetName="highlighter" Value="#66501485"/>
+								<Setter Property="BorderBrush" TargetName="innerBorderB" Value="#DD999999"/>
+								</Trigger>
+								<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" TargetName="highlighter" Value="#BB501485"/>
+								<Setter Property="BorderBrush" TargetName="innerBorderB" Value="#DD999999"/>
+							</Trigger>							
+							<Trigger Property="IsPressed" Value="True">
+								<Setter Property="Background" TargetName="highlighter" Value="#FF5e179b"/>
+								<Setter Property="BorderBrush" TargetName="innerBorderB" Value="#FF999999"/>
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter Property="Background" TargetName="highlighter" Value="#280a43"/>
+								<Setter Property="BorderBrush" TargetName="innerBorderB" Value="#88999999"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style TargetType="ToggleButton">
+			<Setter Property="Margin" Value="0"/>
+			<Setter Property="Foreground" Value="LightGray"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="FontSize" Value="22"/>
+			<Setter Property="FontFamily" Value="Yu Gothic UI Semibold"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate  TargetType="{x:Type ToggleButton}">
+						<Border x:Name="border" Margin="3" BorderBrush="#FFFFFFFF" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+							<Border BorderThickness="1" x:Name="innerBorder" BorderBrush="#FF555555" Background="Transparent" SnapsToDevicePixels="True">
+								<ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+							</Border>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter Property="Background" TargetName="border" Value="#BB501485"/>
+								<Setter Property="BorderBrush" TargetName="innerBorder" Value="#FF888888"/>
+							</Trigger>
+							<Trigger Property="IsChecked" Value="True">
+								<Setter Property="Background" TargetName="border" Value="#280a43"/>
+								<Setter Property="Foreground" Value="#FF838383"/>
+							</Trigger>
+							<Trigger Property="IsChecked" Value="False">
+								<Setter Property="Background" TargetName="border" Value="#CC501485"/>
+								<Setter Property="BorderBrush" TargetName="innerBorder" Value="#FF888888"/>
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter Property="Background" TargetName="border" Value="#280a43"/>
+								<Setter Property="Foreground" Value="#66838383"/>
+							</Trigger>
+							<MultiTrigger>
+								<MultiTrigger.Conditions>
+									<Condition Property="IsMouseOver" Value="True" />
+									<Condition Property="IsChecked" Value="False" />
+								</MultiTrigger.Conditions>
+								<Setter Property="Background" TargetName="border" Value="#501485"/>
+								<Setter Property="BorderBrush" TargetName="innerBorder" Value="#FF888888"/>
+							</MultiTrigger>
+							<MultiTrigger>
+								<MultiTrigger.Conditions>
+									<Condition Property="IsEnabled" Value="False" />
+									<Condition Property="IsChecked" Value="True" />
+								</MultiTrigger.Conditions>
+								<Setter Property="Background" TargetName="border" Value="#FF5D159B"/>
+								<Setter Property="BorderBrush" TargetName="innerBorder" Value="#AA838383"/>
+							</MultiTrigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+
+	</Window.Resources>
+	<Grid >
+		<Image Opacity="0.8" Source="back.jpg" Margin="-10" Stretch="Fill">
+			<Image.BitmapEffect>
+				<BlurBitmapEffect Radius="20" />
+			</Image.BitmapEffect>
+		</Image>
+		<TextBlock Text="Maseva Cloud Dispatcher" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15,4,0,0" />
+		<Border Margin="12" Padding="0,8,0,0">
+			<ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" >
+				<WrapPanel  FlowDirection="LeftToRight">
+					<ToggleButton MinHeight="190" x:Name="account" MinWidth="285" Checked="account_Checked" Unchecked="account_Unchecked"/>
+					<ToggleButton MinHeight="190" MinWidth="285"/>
+					<Button Height="0" IsEnabled="False" Name="subPanel" MinWidth="570"/>
+					<Button MinHeight="190" MinWidth="190" x:Name="StorageServiceButtton" IsEnabled="False" Click="StorageServiceButtton_Click" >
+						<StackPanel Orientation="Vertical" >
+							<TextBlock Text="DriveService"/>
+							<TextBlock Text="()" x:Name="StorageServiceStateTextBlock" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+					<Button MinHeight="190" MinWidth="190" x:Name="StorageServicePipeButton"  IsEnabled="False"  Click="StorageServicePipeButton_Click" >
+						<StackPanel Orientation="Vertical" >
+							<TextBlock Text="Pipe Connection"/>
+							<TextBlock Text="()" x:Name="StorageServicePipeTextBlock" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Button>
+					<Button MinHeight="190" MinWidth="190" Click="PipeServicOnConnectTo"/>
+					<ToggleButton MinHeight="190" MinWidth="380"/>
+					<Button MinHeight="190" MinWidth="190" Click="SendObjectMessage"/>
+					<Button MinHeight="190" MinWidth="190"/>
+					<ToggleButton MinHeight="190" MinWidth="380"/>
+				</WrapPanel>
+			</ScrollViewer>
+		</Border>
+
+	</Grid>
+</Window>

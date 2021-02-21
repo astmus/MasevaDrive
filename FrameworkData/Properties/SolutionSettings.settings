@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FrameworkData.Settings" GeneratedClassName="SolutionSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="RootOfMediaFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Z:\ImagesAndVideos\</Value>
+    </Setting>
+    <Setting Name="FFmpegPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\MediaTools\ffmpeg.exe</Value>
+    </Setting>
+    <Setting Name="FFprobePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\MediaTools\ffprobe.exe</Value>
+    </Setting>
+    <Setting Name="ThumbnailsFolder" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Z:\Temp\Thumbnails\</Value>
+    </Setting>
+    <Setting Name="BaseApiAddress" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://192.168.0.103:80/</Value>
+    </Setting>
+    <Setting Name="TelegramSubscribers" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{"astmus@live.com":506545376,"olgas88@live.com":355747145}</Value>
+    </Setting>
+    <Setting Name="RecycleFolderPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Z:\Temp\Recycle\</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
