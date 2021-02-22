@@ -1,29 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;net472</TargetFrameworks>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+	  
     <UserSecretsId>d2452447-633a-4e00-8091-564812aa229f</UserSecretsId>
   </PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net5.0|x64'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)' == 'Debug|net5.0'">
 		<DefineConstants>DEBUG;TRACE;NET5_0</DefineConstants>
 		<Nullable>enable</Nullable>
 		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|x64'">
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)' == 'Debug|net472'">
 		<DefineConstants>DEBUG;TRACE;NET472</DefineConstants>
+		<LangVersion>8.0</LangVersion>
+		<Nullable>enable</Nullable>
 		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>
 	<ItemGroup Condition="'$(Configuration)' == 'net472'">
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
-	    <Version>5.0.3</Version>
-	  </PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core">
+		  <Version>5.0.3</Version>
+		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.3">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -31,6 +35,14 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.3">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+		<Reference Include="System.Net.Http" />
+		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
+		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 </Project>
