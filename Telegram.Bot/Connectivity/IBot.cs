@@ -282,8 +282,8 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
-			InputMedia thumb = default); // ToDo inconsistent order of parameters
+			InputMedia thumb = default,
+			CancellationToken cancellationToken = default); // ToDo inconsistent order of parameters
 
 		/// <summary>
 		/// Use this method to send general files. On success, the sent Description is returned. Bots can send files of
@@ -314,8 +314,8 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
-			InputMedia thumb = default); // ToDo inconsistent order of parameters
+			InputMedia thumb = default,
+			CancellationToken cancellationToken = default); // ToDo inconsistent order of parameters
 
 		/// <summary>
 		/// Use this method to send .webp stickers. On success, the sent Description is returned.
@@ -373,8 +373,8 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
-			InputMedia thumb = default); // ToDo inconsistent order of parameters
+			InputMedia thumb = default,
+			CancellationToken cancellationToken = default); // ToDo inconsistent order of parameters
 
 		/// <summary>
 		/// Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent
@@ -468,8 +468,8 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
-			InputMedia thumb = default); // ToDo inconsistent order of parameters
+			InputMedia thumb = default,
+			CancellationToken cancellationToken = default); // ToDo inconsistent order of parameters
 
 
 		/// <summary>
@@ -542,8 +542,8 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
-			string foursquareType = default); // ToDo inconsistent order of parameters
+			string foursquareType = default,
+			CancellationToken cancellationToken = default); // ToDo inconsistent order of parameters
 
 
 		/// <summary>
@@ -553,8 +553,8 @@ namespace Telegram.Bot.Connectivity
 		/// <param name="disableNotification">Sends the message silently. iOS users will not receive a notification, Android users will receive a notification with no sound.</param>
 		/// <param name="replyToMessageId">If the message is a reply, ID of the original message</param>
 		/// <param name="replyMarkup">Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to hide keyboard or to force a reply from the user.</param>
-		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
 		/// <param name="emoji">Emoji on which the dice throw animation is based</param>
+		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
 		/// <returns>On success, the sent <see cref="Message"/> is returned.</returns>
 		/// <see href="https://core.telegram.org/bots/api#senddice"/>
 		// TODO Fix parameter order in vnext
@@ -563,8 +563,8 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
-			Emoji? emoji = default);
+			Emoji? emoji = default,
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Use this method when you need to tell the user that something is happening on the bot's side. The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status).
@@ -788,8 +788,8 @@ namespace Telegram.Bot.Connectivity
 			int messageId,
 			string caption,
 			InlineKeyboardMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
-			ParseMode parseMode = default);
+			ParseMode parseMode = default,
+			CancellationToken cancellationToken = default);
 
 		/// <summary>
 		/// Use this method to edit captions of messages sent by the bot or via the bot (for inline bots).

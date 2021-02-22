@@ -438,9 +438,9 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
 			InputMedia thumb = default
-		) =>
+,
+			CancellationToken cancellationToken = default) =>
 			MakeRequestAsync(new SendAudioRequest(chatId, audio)
 			{
 				Caption = caption,
@@ -463,9 +463,9 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
 			InputMedia thumb = default
-		) =>
+,
+			CancellationToken cancellationToken = default) =>
 			MakeRequestAsync(new SendDocumentRequest(chatId, document)
 			{
 				Caption = caption,
@@ -505,9 +505,9 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
 			InputMedia thumb = default
-		) =>
+,
+			CancellationToken cancellationToken = default) =>
 			MakeRequestAsync(new SendVideoRequest(chatId, video)
 			{
 				Duration = duration,
@@ -581,9 +581,9 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
 			InputMedia thumb = default
-		) =>
+,
+			CancellationToken cancellationToken = default) =>
 			MakeRequestAsync(new SendVideoNoteRequest(chatId, videoNote)
 			{
 				Duration = duration,
@@ -638,9 +638,9 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
 			string foursquareType = default
-		) =>
+,
+			CancellationToken cancellationToken = default) =>
 			MakeRequestAsync(new SendVenueRequest(chatId, latitude, longitude, title, address)
 			{
 				FoursquareId = foursquareId,
@@ -658,8 +658,8 @@ namespace Telegram.Bot.Connectivity
 			bool disableNotification = default,
 			int replyToMessageId = default,
 			IReplyMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
-			Emoji? emoji = default) =>
+			Emoji? emoji = default,
+			CancellationToken cancellationToken = default) =>
 			MakeRequestAsync(
 				new SendDiceRequest(chatId)
 				{
@@ -857,9 +857,9 @@ namespace Telegram.Bot.Connectivity
 			int messageId,
 			string caption,
 			InlineKeyboardMarkup replyMarkup = default,
-			CancellationToken cancellationToken = default,
 			ParseMode parseMode = default
-		) =>
+,
+			CancellationToken cancellationToken = default) =>
 			MakeRequestAsync(new EditMessageCaptionRequest(chatId, messageId, caption)
 			{
 				ParseMode = parseMode,

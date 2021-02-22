@@ -8,6 +8,7 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\StorageDataProviders\StorageDataProviders.csproj" />
 	  <ProjectReference Include="..\Telegram.Bot\Telegram.Bot.csproj" />
 	</ItemGroup>
 </Project>
