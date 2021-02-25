@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Options;
 using StorageDataProviders.SQLiteModels;
 
 #nullable disable
@@ -16,6 +17,7 @@ namespace StorageDataProviders
         public SQLiteDbContext(DbContextOptions<SQLiteDbContext> options)
             : base(options)
         {
+            
         }
 
         public virtual DbSet<Album> Albums { get; set; }
@@ -968,6 +970,6 @@ namespace StorageDataProviders
             OnModelCreatingPartial(modelBuilder);
         }
 
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);        
     }
 }
