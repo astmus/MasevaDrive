@@ -5,7 +5,7 @@
 <#@ include file="$(LinqToDBT4SQLiteTemplatesPath)PluralizationService.ttinclude"  once="true" #>
 <#
 	
-	NamespaceName = "StorageProviders.SQLite.NetCore";
+	NamespaceName = "StorageProviders.SQLite.NetFramewrok";
 	GetSchemaOptions.GetTables             = true;
 
 	GetSchemaOptions.GetForeignKeys        = true;
@@ -28,9 +28,26 @@
 	//GetSchemaOptions.GetAssociationMemberName = true;
 
 
-	EnableNullableReferenceTypes   = true;
+	EnableNullableReferenceTypes   = false;
 
-	EnforceModelNullability        = true;
+	EnforceModelNullability        = false;
+
+	Func<string, bool> IsValueType = IsValueTypeDefault;
+	IsValueType = typeName => {
+	
+    switch (typeName)
+    {
+      case "unresolved type name": return true; // or false for reference type
+        default: return IsValueTypeDefault(typeName);
+    }
+	};
+	
+	GenerateAssociations = true;
+	GenerateBackReferences        = true;
+	// Enables generation of associations as extension methods for related table mapping classes
+	GenerateAssociationExtensions = false;
+	DataContextName = "SQLiteContext";
+	GenerateFindExtensions        = true;
 	LoadSQLiteMetadata("Data Source=e:\\StorageDB\\MediaDb.v1.sqlite");
 	
 	GenerateModel();

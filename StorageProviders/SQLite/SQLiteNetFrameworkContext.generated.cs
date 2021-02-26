@@ -6,7 +6,6 @@
 //---------------------------------------------------------------------------------------------------
 
 #pragma warning disable 1591
-#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -16,14 +15,14 @@ using LinqToDB;
 using LinqToDB.Configuration;
 using LinqToDB.Mapping;
 
-namespace StorageProviders.SQLite.NetCore
+namespace StorageProviders.SQLite.NetFramewrok
 {
 	/// <summary>
 	/// Database       : MediaDb.v1
 	/// Data Source    : MediaDb.v1
 	/// Server Version : 3.24.0
 	/// </summary>
-	public partial class MediaDbV1DB : LinqToDB.Data.DataConnection
+	public partial class SQLiteContext : LinqToDB.Data.DataConnection
 	{
 		public ITable<Album>                            Albums                            { get { return this.GetTable<Album>(); } }
 		public ITable<AlbumItemLink>                    AlbumItemLinks                    { get { return this.GetTable<AlbumItemLink>(); } }
@@ -153,20 +152,20 @@ namespace StorageProviders.SQLite.NetCore
 		public ITable<UserActionView>                   UserActionViews                   { get { return this.GetTable<UserActionView>(); } }
 		public ITable<VideoFaceOccurrence>              VideoFaceOccurrences              { get { return this.GetTable<VideoFaceOccurrence>(); } }
 
-		public MediaDbV1DB()
+		public SQLiteContext()
 		{
 			InitDataContext();
 			InitMappingSchema();
 		}
 
-		public MediaDbV1DB(string configuration)
+		public SQLiteContext(string configuration)
 			: base(configuration)
 		{
 			InitDataContext();
 			InitMappingSchema();
 		}
 
-		public MediaDbV1DB(LinqToDbConnectionOptions options)
+		public SQLiteContext(LinqToDbConnectionOptions options)
 			: base(options)
 		{
 			InitDataContext();
@@ -181,12 +180,12 @@ namespace StorageProviders.SQLite.NetCore
 	public partial class Album
 	{
 		[Column("Album_Id"),                          PrimaryKey,  NotNull] public long    AlbumId                          { get; set; } // integer
-		[Column("Album_Name"),                           Nullable         ] public string? AlbumName                        { get; set; } // text(max)
+		[Column("Album_Name"),                           Nullable         ] public string  AlbumName                        { get; set; } // text(max)
 		[Column("Album_Type"),                                     NotNull] public long    AlbumType                        { get; set; } // integer
 		[Column("Album_State"),                                    NotNull] public long    AlbumState                       { get; set; } // integer
 		[Column("Album_QueryType"),                                NotNull] public long    AlbumQueryType                   { get; set; } // integer
 		[Column("Album_QueryBoundsType"),                          NotNull] public long    AlbumQueryBoundsType             { get; set; } // integer
-		[Column("Album_Query"),                          Nullable         ] public string? AlbumQuery                       { get; set; } // text(max)
+		[Column("Album_Query"),                          Nullable         ] public string  AlbumQuery                       { get; set; } // text(max)
 		[Column("Album_DateCreated"),                              NotNull] public long    AlbumDateCreated                 { get; set; } // integer
 		[Column("Album_DateUpdated"),                    Nullable         ] public long?   AlbumDateUpdated                 { get; set; } // integer
 		[Column("Album_DateUserModified"),               Nullable         ] public long?   AlbumDateUserModified            { get; set; } // integer
@@ -208,7 +207,7 @@ namespace StorageProviders.SQLite.NetCore
 		[Column("Album_PublishState"),                   Nullable         ] public long?   AlbumPublishState                { get; set; } // integer
 		[Column("Album_PendingTelemetryUploadState"),    Nullable         ] public long?   AlbumPendingTelemetryUploadState { get; set; } // integer
 		[Column("Album_SentTelemetryUploadState"),       Nullable         ] public long?   AlbumSentTelemetryUploadState    { get; set; } // integer
-		[Column("Album_ETag"),                           Nullable         ] public string? AlbumETag                        { get; set; } // text(max)
+		[Column("Album_ETag"),                           Nullable         ] public string  AlbumETag                        { get; set; } // text(max)
 		[Column("Album_CreationType"),                   Nullable         ] public long?   AlbumCreationType                { get; set; } // integer
 		[Column("Album_Order"),                          Nullable         ] public long?   AlbumOrder                       { get; set; } // integer
 
@@ -218,61 +217,61 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_Album_1_0
 		/// </summary>
 		[Association(ThisKey="AlbumCoverItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Album_1_0", BackReferenceName="Albums")]
-		public Item? AlbumCoverItem { get; set; }
+		public Item AlbumCoverItem { get; set; }
 
 		/// <summary>
 		/// FK_AlbumItemLink_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="AlbumId", OtherKey="AlbumItemLinkAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<AlbumItemLink> AlbumItemLinks { get; set; } = null!;
+		public IEnumerable<AlbumItemLink> AlbumItemLinks { get; set; }
 
 		/// <summary>
 		/// FK_CloudAlbum_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="AlbumId", OtherKey="CloudAlbumAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<CloudAlbum> CloudAlbums { get; set; } = null!;
+		public IEnumerable<CloudAlbum> CloudAlbums { get; set; }
 
 		/// <summary>
 		/// FK_ExcludedAlbum_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="AlbumId", OtherKey="ExcludedAlbumAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ExcludedAlbum> ExcludedAlbums { get; set; } = null!;
+		public IEnumerable<ExcludedAlbum> ExcludedAlbums { get; set; }
 
 		/// <summary>
 		/// FK_PendingUploadItem_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="AlbumId", OtherKey="PendingUploadItemAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<PendingUploadItem> PendingUploadItems { get; set; } = null!;
+		public IEnumerable<PendingUploadItem> PendingUploadItems { get; set; }
 
 		/// <summary>
 		/// FK_Project_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="AlbumId", OtherKey="ProjectAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Project> Projects { get; set; } = null!;
+		public IEnumerable<Project> Projects { get; set; }
 
 		/// <summary>
 		/// FK_RemoteAlbum_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="AlbumId", OtherKey="RemoteAlbumAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
-		public RemoteAlbum? RemoteAlbum { get; set; }
+		public RemoteAlbum RemoteAlbum { get; set; }
 
 		/// <summary>
 		/// FK_Album_0_0
 		/// </summary>
 		[Association(ThisKey="AlbumSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Album_0_0", BackReferenceName="Albums")]
-		public Source? Source { get; set; }
+		public Source Source { get; set; }
 
 		/// <summary>
 		/// FK_UserActionAlbumView_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="AlbumId", OtherKey="UserActionAlbumViewAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<UserActionAlbumView> UserActionAlbumViews { get; set; } = null!;
+		public IEnumerable<UserActionAlbumView> UserActionAlbumViews { get; set; }
 
 		/// <summary>
 		/// FK_UserActionSlideshow_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="AlbumId", OtherKey="UserActionSlideshowAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<UserActionSlideshow> UserActionSlideshows { get; set; } = null!;
+		public IEnumerable<UserActionSlideshow> UserActionSlideshows { get; set; }
 
 		#endregion
 	}
@@ -280,10 +279,10 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("AlbumItemLink")]
 	public partial class AlbumItemLink
 	{
-		[Column("AlbumItemLink_AlbumId"),           NotNull    ] public long    AlbumItemLinkAlbumId           { get; set; } // integer
-		[Column("AlbumItemLink_ItemId"),            NotNull    ] public long    AlbumItemLinkItemId            { get; set; } // integer
-		[Column("AlbumItemLink_Order"),                Nullable] public long?   AlbumItemLinkOrder             { get; set; } // integer
-		[Column("AlbumItemLink_ItemPhotosCloudId"),    Nullable] public string? AlbumItemLinkItemPhotosCloudId { get; set; } // text(max)
+		[Column("AlbumItemLink_AlbumId"),           NotNull    ] public long   AlbumItemLinkAlbumId           { get; set; } // integer
+		[Column("AlbumItemLink_ItemId"),            NotNull    ] public long   AlbumItemLinkItemId            { get; set; } // integer
+		[Column("AlbumItemLink_Order"),                Nullable] public long?  AlbumItemLinkOrder             { get; set; } // integer
+		[Column("AlbumItemLink_ItemPhotosCloudId"),    Nullable] public string AlbumItemLinkItemPhotosCloudId { get; set; } // text(max)
 
 		#region Associations
 
@@ -291,13 +290,13 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_AlbumItemLink_1_0
 		/// </summary>
 		[Association(ThisKey="AlbumItemLinkAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_AlbumItemLink_1_0", BackReferenceName="AlbumItemLinks")]
-		public Album AlbumItemLinkAlbum { get; set; } = null!;
+		public Album AlbumItemLinkAlbum { get; set; }
 
 		/// <summary>
 		/// FK_AlbumItemLink_0_0
 		/// </summary>
 		[Association(ThisKey="AlbumItemLinkItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_AlbumItemLink_0_0", BackReferenceName="AlbumItemLinks")]
-		public Item AlbumItemLinkItem { get; set; } = null!;
+		public Item AlbumItemLinkItem { get; set; }
 
 		#endregion
 	}
@@ -305,85 +304,85 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("AlbumNameFts")]
 	public partial class AlbumNameFt
 	{
-		[Column("Album_Name"), Nullable] public object? AlbumName { get; set; }
+		[Column("Album_Name"), Nullable] public object AlbumName { get; set; }
 	}
 
 	[Table("AlbumNameFts_docsize")]
 	public partial class AlbumNameFtsDocsize
 	{
-		[Column("docid"), PrimaryKey,  NotNull] public long    Docid { get; set; } // integer
-		[Column("size"),     Nullable         ] public byte[]? Size  { get; set; } // blob
+		[Column("docid"), PrimaryKey,  NotNull] public long   Docid { get; set; } // integer
+		[Column("size"),     Nullable         ] public byte[] Size  { get; set; } // blob
 	}
 
 	[Table("AlbumNameFts_segdir")]
 	public partial class AlbumNameFtsSegdir
 	{
-		[Column("level"),            PrimaryKey(0), NotNull] public long    Level          { get; set; } // integer
-		[Column("idx"),              PrimaryKey(1), NotNull] public long    Idx            { get; set; } // integer
-		[Column("start_block"),         Nullable           ] public long?   StartBlock     { get; set; } // integer
-		[Column("leaves_end_block"),    Nullable           ] public long?   LeavesEndBlock { get; set; } // integer
-		[Column("end_block"),           Nullable           ] public long?   EndBlock       { get; set; } // integer
-		[Column("root"),                Nullable           ] public byte[]? Root           { get; set; } // blob
+		[Column("level"),            PrimaryKey(0), NotNull] public long   Level          { get; set; } // integer
+		[Column("idx"),              PrimaryKey(1), NotNull] public long   Idx            { get; set; } // integer
+		[Column("start_block"),         Nullable           ] public long?  StartBlock     { get; set; } // integer
+		[Column("leaves_end_block"),    Nullable           ] public long?  LeavesEndBlock { get; set; } // integer
+		[Column("end_block"),           Nullable           ] public long?  EndBlock       { get; set; } // integer
+		[Column("root"),                Nullable           ] public byte[] Root           { get; set; } // blob
 	}
 
 	[Table("AlbumNameFts_segments")]
 	public partial class AlbumNameFtsSegment
 	{
-		[Column("blockid"), PrimaryKey,  NotNull] public long    Blockid { get; set; } // integer
-		[Column("block"),      Nullable         ] public byte[]? Block   { get; set; } // blob
+		[Column("blockid"), PrimaryKey,  NotNull] public long   Blockid { get; set; } // integer
+		[Column("block"),      Nullable         ] public byte[] Block   { get; set; } // blob
 	}
 
 	[Table("AlbumNameFts_stat")]
 	public partial class AlbumNameFtsStat
 	{
-		[Column("id"),    PrimaryKey,  NotNull] public long    Id    { get; set; } // integer
-		[Column("value"),    Nullable         ] public byte[]? Value { get; set; } // blob
+		[Column("id"),    PrimaryKey,  NotNull] public long   Id    { get; set; } // integer
+		[Column("value"),    Nullable         ] public byte[] Value { get; set; } // blob
 	}
 
 	[Table("AppGlobalState")]
 	public partial class AppGlobalState
 	{
-		[Column("AppGlobalState_DeferredUpgradeVersion"),                    Nullable] public long?   AppGlobalStateDeferredUpgradeVersion                 { get; set; } // integer
-		[Column("AppGlobalState_AnalysisVersion"),                           Nullable] public string? AppGlobalStateAnalysisVersion                        { get; set; } // text(max)
-		[Column("AppGlobalState_DateLastLocalReconciled"),                   Nullable] public long?   AppGlobalStateDateLastLocalReconciled                { get; set; } // integer
-		[Column("AppGlobalState_CountLastReconciliationQueryResults"),       Nullable] public long?   AppGlobalStateCountLastReconciliationQueryResults    { get; set; } // integer
-		[Column("AppGlobalState_DateLastAlbumsMaintenance"),                 Nullable] public long?   AppGlobalStateDateLastAlbumsMaintenance              { get; set; } // integer
-		[Column("AppGlobalState_DateLastTagAlbumsMaintenance"),              Nullable] public long?   AppGlobalStateDateLastTagAlbumsMaintenance           { get; set; } // integer
-		[Column("AppGlobalState_DateLastPetAlbumsMaintenance"),              Nullable] public long?   AppGlobalStateDateLastPetAlbumsMaintenance           { get; set; } // integer
-		[Column("AppGlobalState_DateLastWeddingAlbumsMaintenance"),          Nullable] public long?   AppGlobalStateDateLastWeddingAlbumsMaintenance       { get; set; } // integer
-		[Column("AppGlobalState_LastDateUsedInWeddingAlbumsMaintenance"),    Nullable] public long?   AppGlobalStateLastDateUsedInWeddingAlbumsMaintenance { get; set; } // integer
-		[Column("AppGlobalState_DateLastSeasonalAlbumsMaintenance"),         Nullable] public long?   AppGlobalStateDateLastSeasonalAlbumsMaintenance      { get; set; } // integer
-		[Column("AppGlobalState_DateLastSmileAlbumsMaintenance"),            Nullable] public long?   AppGlobalStateDateLastSmileAlbumsMaintenance         { get; set; } // integer
-		[Column("AppGlobalState_DateLastCountryTripAlbumsMaintenance"),      Nullable] public long?   AppGlobalStateDateLastCountryTripAlbumsMaintenance   { get; set; } // integer
-		[Column("AppGlobalState_DateLastItemDeleted"),                       Nullable] public long?   AppGlobalStateDateLastItemDeleted                    { get; set; } // integer
-		[Column("AppGlobalState_DateLastCacheCleaned"),                      Nullable] public long?   AppGlobalStateDateLastCacheCleaned                   { get; set; } // integer
-		[Column("AppGlobalState_OneDriveDeltaSyncToken"),                    Nullable] public string? AppGlobalStateOneDriveDeltaSyncToken                 { get; set; } // text(max)
-		[Column("AppGlobalState_OneDriveFullSyncCompleted"),                 Nullable] public long?   AppGlobalStateOneDriveFullSyncCompleted              { get; set; } // integer
-		[Column("AppGlobalState_OneDriveAlbumDeltaSyncToken"),               Nullable] public string? AppGlobalStateOneDriveAlbumDeltaSyncToken            { get; set; } // text(max)
-		[Column("AppGlobalState_OneDriveKnownFoldersNeedUpgrade"),           Nullable] public long?   AppGlobalStateOneDriveKnownFoldersNeedUpgrade        { get; set; } // integer
-		[Column("AppGlobalState_OneDriveItemsResyncing"),                    Nullable] public long?   AppGlobalStateOneDriveItemsResyncing                 { get; set; } // integer
-		[Column("AppGlobalState_OneDriveAlbumsResyncing"),                   Nullable] public long?   AppGlobalStateOneDriveAlbumsResyncing                { get; set; } // integer
-		[Column("AppGlobalState_TruncateWALFilePending"),                    Nullable] public long?   AppGlobalStateTruncateWALFilePending                 { get; set; } // integer
-		[Column("AppGlobalState_RichMediaGrovelVersion"),                    Nullable] public long?   AppGlobalStateRichMediaGrovelVersion                 { get; set; } // integer
-		[Column("AppGlobalState_CurrentAutoEnhanceEnabledState"),            Nullable] public long?   AppGlobalStateCurrentAutoEnhanceEnabledState         { get; set; } // integer
-		[Column("AppGlobalState_RunDedupWork"),                           NotNull    ] public long    AppGlobalStateRunDedupWork                           { get; set; } // integer
-		[Column("AppGlobalState_OneDriveIdentifyPicturesScope"),             Nullable] public long?   AppGlobalStateOneDriveIdentifyPicturesScope          { get; set; } // integer
-		[Column("AppGlobalState_CachedLocalCollectionSize"),                 Nullable] public long?   AppGlobalStateCachedLocalCollectionSize              { get; set; } // integer
-		[Column("AppGlobalState_NewAlbumsBadgeCount"),                       Nullable] public long?   AppGlobalStateNewAlbumsBadgeCount                    { get; set; } // integer
-		[Column("AppGlobalState_ImportBadgeDisplayState"),                   Nullable] public long?   AppGlobalStateImportBadgeDisplayState                { get; set; } // integer
-		[Column("AppGlobalState_DateLastLocationLookupReady"),               Nullable] public long?   AppGlobalStateDateLastLocationLookupReady            { get; set; } // integer
-		[Column("AppGlobalState_DateLastDbAnalyze"),                         Nullable] public long?   AppGlobalStateDateLastDbAnalyze                      { get; set; } // integer
-		[Column("AppGlobalState_DateLastDbVacuum"),                          Nullable] public long?   AppGlobalStateDateLastDbVacuum                       { get; set; } // integer
-		[Column("AppGlobalState_XboxLiveItemsResyncing"),                    Nullable] public long?   AppGlobalStateXboxLiveItemsResyncing                 { get; set; } // integer
-		[Column("AppGlobalState_FaceRecognitionConsentDate"),                Nullable] public long?   AppGlobalStateFaceRecognitionConsentDate             { get; set; } // integer
-		[Column("AppGlobalState_ExistingItemsSyncStarted"),                  Nullable] public long?   AppGlobalStateExistingItemsSyncStarted               { get; set; } // integer
+		[Column("AppGlobalState_DeferredUpgradeVersion"),                    Nullable] public long?  AppGlobalStateDeferredUpgradeVersion                 { get; set; } // integer
+		[Column("AppGlobalState_AnalysisVersion"),                           Nullable] public string AppGlobalStateAnalysisVersion                        { get; set; } // text(max)
+		[Column("AppGlobalState_DateLastLocalReconciled"),                   Nullable] public long?  AppGlobalStateDateLastLocalReconciled                { get; set; } // integer
+		[Column("AppGlobalState_CountLastReconciliationQueryResults"),       Nullable] public long?  AppGlobalStateCountLastReconciliationQueryResults    { get; set; } // integer
+		[Column("AppGlobalState_DateLastAlbumsMaintenance"),                 Nullable] public long?  AppGlobalStateDateLastAlbumsMaintenance              { get; set; } // integer
+		[Column("AppGlobalState_DateLastTagAlbumsMaintenance"),              Nullable] public long?  AppGlobalStateDateLastTagAlbumsMaintenance           { get; set; } // integer
+		[Column("AppGlobalState_DateLastPetAlbumsMaintenance"),              Nullable] public long?  AppGlobalStateDateLastPetAlbumsMaintenance           { get; set; } // integer
+		[Column("AppGlobalState_DateLastWeddingAlbumsMaintenance"),          Nullable] public long?  AppGlobalStateDateLastWeddingAlbumsMaintenance       { get; set; } // integer
+		[Column("AppGlobalState_LastDateUsedInWeddingAlbumsMaintenance"),    Nullable] public long?  AppGlobalStateLastDateUsedInWeddingAlbumsMaintenance { get; set; } // integer
+		[Column("AppGlobalState_DateLastSeasonalAlbumsMaintenance"),         Nullable] public long?  AppGlobalStateDateLastSeasonalAlbumsMaintenance      { get; set; } // integer
+		[Column("AppGlobalState_DateLastSmileAlbumsMaintenance"),            Nullable] public long?  AppGlobalStateDateLastSmileAlbumsMaintenance         { get; set; } // integer
+		[Column("AppGlobalState_DateLastCountryTripAlbumsMaintenance"),      Nullable] public long?  AppGlobalStateDateLastCountryTripAlbumsMaintenance   { get; set; } // integer
+		[Column("AppGlobalState_DateLastItemDeleted"),                       Nullable] public long?  AppGlobalStateDateLastItemDeleted                    { get; set; } // integer
+		[Column("AppGlobalState_DateLastCacheCleaned"),                      Nullable] public long?  AppGlobalStateDateLastCacheCleaned                   { get; set; } // integer
+		[Column("AppGlobalState_OneDriveDeltaSyncToken"),                    Nullable] public string AppGlobalStateOneDriveDeltaSyncToken                 { get; set; } // text(max)
+		[Column("AppGlobalState_OneDriveFullSyncCompleted"),                 Nullable] public long?  AppGlobalStateOneDriveFullSyncCompleted              { get; set; } // integer
+		[Column("AppGlobalState_OneDriveAlbumDeltaSyncToken"),               Nullable] public string AppGlobalStateOneDriveAlbumDeltaSyncToken            { get; set; } // text(max)
+		[Column("AppGlobalState_OneDriveKnownFoldersNeedUpgrade"),           Nullable] public long?  AppGlobalStateOneDriveKnownFoldersNeedUpgrade        { get; set; } // integer
+		[Column("AppGlobalState_OneDriveItemsResyncing"),                    Nullable] public long?  AppGlobalStateOneDriveItemsResyncing                 { get; set; } // integer
+		[Column("AppGlobalState_OneDriveAlbumsResyncing"),                   Nullable] public long?  AppGlobalStateOneDriveAlbumsResyncing                { get; set; } // integer
+		[Column("AppGlobalState_TruncateWALFilePending"),                    Nullable] public long?  AppGlobalStateTruncateWALFilePending                 { get; set; } // integer
+		[Column("AppGlobalState_RichMediaGrovelVersion"),                    Nullable] public long?  AppGlobalStateRichMediaGrovelVersion                 { get; set; } // integer
+		[Column("AppGlobalState_CurrentAutoEnhanceEnabledState"),            Nullable] public long?  AppGlobalStateCurrentAutoEnhanceEnabledState         { get; set; } // integer
+		[Column("AppGlobalState_RunDedupWork"),                           NotNull    ] public long   AppGlobalStateRunDedupWork                           { get; set; } // integer
+		[Column("AppGlobalState_OneDriveIdentifyPicturesScope"),             Nullable] public long?  AppGlobalStateOneDriveIdentifyPicturesScope          { get; set; } // integer
+		[Column("AppGlobalState_CachedLocalCollectionSize"),                 Nullable] public long?  AppGlobalStateCachedLocalCollectionSize              { get; set; } // integer
+		[Column("AppGlobalState_NewAlbumsBadgeCount"),                       Nullable] public long?  AppGlobalStateNewAlbumsBadgeCount                    { get; set; } // integer
+		[Column("AppGlobalState_ImportBadgeDisplayState"),                   Nullable] public long?  AppGlobalStateImportBadgeDisplayState                { get; set; } // integer
+		[Column("AppGlobalState_DateLastLocationLookupReady"),               Nullable] public long?  AppGlobalStateDateLastLocationLookupReady            { get; set; } // integer
+		[Column("AppGlobalState_DateLastDbAnalyze"),                         Nullable] public long?  AppGlobalStateDateLastDbAnalyze                      { get; set; } // integer
+		[Column("AppGlobalState_DateLastDbVacuum"),                          Nullable] public long?  AppGlobalStateDateLastDbVacuum                       { get; set; } // integer
+		[Column("AppGlobalState_XboxLiveItemsResyncing"),                    Nullable] public long?  AppGlobalStateXboxLiveItemsResyncing                 { get; set; } // integer
+		[Column("AppGlobalState_FaceRecognitionConsentDate"),                Nullable] public long?  AppGlobalStateFaceRecognitionConsentDate             { get; set; } // integer
+		[Column("AppGlobalState_ExistingItemsSyncStarted"),                  Nullable] public long?  AppGlobalStateExistingItemsSyncStarted               { get; set; } // integer
 	}
 
 	[Table("ApplicationName")]
 	public partial class ApplicationName
 	{
-		[Column("ApplicationName_Id"),   PrimaryKey,  NotNull] public long    ApplicationNameId   { get; set; } // integer
-		[Column("ApplicationName_Text"),    Nullable         ] public string? ApplicationNameText { get; set; } // text(max)
+		[Column("ApplicationName_Id"),   PrimaryKey,  NotNull] public long   ApplicationNameId   { get; set; } // integer
+		[Column("ApplicationName_Text"),    Nullable         ] public string ApplicationNameText { get; set; } // text(max)
 
 		#region Associations
 
@@ -391,7 +390,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_Item_3_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ApplicationNameId", OtherKey="ItemApplicationNameId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Item> Items { get; set; } = null!;
+		public IEnumerable<Item> Items { get; set; }
 
 		#endregion
 	}
@@ -399,19 +398,19 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("AppTelemetryState")]
 	public partial class AppTelemetryState
 	{
-		[Column("AppTelemetryState_EventName"),     Nullable] public string? AppTelemetryStateEventName     { get; set; } // text(max)
-		[Column("AppTelemetryState_EventFireTime"), Nullable] public long?   AppTelemetryStateEventFireTime { get; set; } // integer
+		[Column("AppTelemetryState_EventName"),     Nullable] public string AppTelemetryStateEventName     { get; set; } // text(max)
+		[Column("AppTelemetryState_EventFireTime"), Nullable] public long?  AppTelemetryStateEventFireTime { get; set; } // integer
 	}
 
 	[Table("Audio")]
 	public partial class Audio
 	{
 		[Column("Audio_Id"),                PrimaryKey, NotNull] public long   AudioId                { get; set; } // integer
-		[Column("Audio_Url"),                           NotNull] public string AudioUrl               { get; set; } = null!; // text(max)
+		[Column("Audio_Url"),                           NotNull] public string AudioUrl               { get; set; } // text(max)
 		[Column("Audio_SampleRate"),                    NotNull] public long   AudioSampleRate        { get; set; } // integer
 		[Column("Audio_ChannelCount"),                  NotNull] public long   AudioChannelCount      { get; set; } // integer
 		[Column("Audio_IntegratedLUFS"),                NotNull] public double AudioIntegratedLUFS    { get; set; } // real
-		[Column("Audio_WindowInfos"),                   NotNull] public byte[] AudioWindowInfos       { get; set; } = null!; // blob
+		[Column("Audio_WindowInfos"),                   NotNull] public byte[] AudioWindowInfos       { get; set; } // blob
 		[Column("Audio_DurationPerWindow"),             NotNull] public long   AudioDurationPerWindow { get; set; } // integer
 	}
 
@@ -425,17 +424,17 @@ namespace StorageProviders.SQLite.NetCore
 		[Column("BackgroundTaskTelemetry_TotalTime"),          Nullable] public long?  BackgroundTaskTelemetryTotalTime       { get; set; } // integer
 		[Column("BackgroundTaskTelemetry_MinTime"),            Nullable] public long?  BackgroundTaskTelemetryMinTime         { get; set; } // integer
 		[Column("BackgroundTaskTelemetry_MaxTime"),            Nullable] public long?  BackgroundTaskTelemetryMaxTime         { get; set; } // integer
-		[Column("BackgroundTaskTelemetry_CorrelationGuid"), NotNull    ] public string BackgroundTaskTelemetryCorrelationGuid { get; set; } = null!; // text(max)
+		[Column("BackgroundTaskTelemetry_CorrelationGuid"), NotNull    ] public string BackgroundTaskTelemetryCorrelationGuid { get; set; } // text(max)
 	}
 
 	[Table("Cache")]
 	public partial class Cache
 	{
-		[Column("Cache_Id"),                  PrimaryKey,  NotNull] public long    CacheId                  { get; set; } // integer
-		[Column("Cache_ItemId"),                 Nullable         ] public long?   CacheItemId              { get; set; } // integer
-		[Column("Cache_Filename"),               Nullable         ] public string? CacheFilename            { get; set; } // text(max)
-		[Column("Cache_DateAccessed"),           Nullable         ] public long?   CacheDateAccessed        { get; set; } // integer
-		[Column("Cache_ModificationVersion"),    Nullable         ] public long?   CacheModificationVersion { get; set; } // integer
+		[Column("Cache_Id"),                  PrimaryKey,  NotNull] public long   CacheId                  { get; set; } // integer
+		[Column("Cache_ItemId"),                 Nullable         ] public long?  CacheItemId              { get; set; } // integer
+		[Column("Cache_Filename"),               Nullable         ] public string CacheFilename            { get; set; } // text(max)
+		[Column("Cache_DateAccessed"),           Nullable         ] public long?  CacheDateAccessed        { get; set; } // integer
+		[Column("Cache_ModificationVersion"),    Nullable         ] public long?  CacheModificationVersion { get; set; } // integer
 
 		#region Associations
 
@@ -443,7 +442,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_Cache_0_0
 		/// </summary>
 		[Association(ThisKey="CacheItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Cache_0_0", BackReferenceName="Caches")]
-		public Item? CacheItem { get; set; }
+		public Item CacheItem { get; set; }
 
 		#endregion
 	}
@@ -451,8 +450,8 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("CameraManufacturer")]
 	public partial class CameraManufacturer
 	{
-		[Column("CameraManufacturer_Id"),   PrimaryKey,  NotNull] public long    CameraManufacturerId   { get; set; } // integer
-		[Column("CameraManufacturer_Text"),    Nullable         ] public string? CameraManufacturerText { get; set; } // text(max)
+		[Column("CameraManufacturer_Id"),   PrimaryKey,  NotNull] public long   CameraManufacturerId   { get; set; } // integer
+		[Column("CameraManufacturer_Text"),    Nullable         ] public string CameraManufacturerText { get; set; } // text(max)
 
 		#region Associations
 
@@ -460,7 +459,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_Item_2_0_BackReference
 		/// </summary>
 		[Association(ThisKey="CameraManufacturerId", OtherKey="ItemCameraManufacturerId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Item> Items { get; set; } = null!;
+		public IEnumerable<Item> Items { get; set; }
 
 		#endregion
 	}
@@ -468,8 +467,8 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("CameraModel")]
 	public partial class CameraModel
 	{
-		[Column("CameraModel_Id"),   PrimaryKey,  NotNull] public long    CameraModelId   { get; set; } // integer
-		[Column("CameraModel_Text"),    Nullable         ] public string? CameraModelText { get; set; } // text(max)
+		[Column("CameraModel_Id"),   PrimaryKey,  NotNull] public long   CameraModelId   { get; set; } // integer
+		[Column("CameraModel_Text"),    Nullable         ] public string CameraModelText { get; set; } // text(max)
 
 		#region Associations
 
@@ -477,7 +476,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_Item_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="CameraModelId", OtherKey="ItemCameraModelId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Item> Items { get; set; } = null!;
+		public IEnumerable<Item> Items { get; set; }
 
 		#endregion
 	}
@@ -485,10 +484,10 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("CloudAlbum")]
 	public partial class CloudAlbum
 	{
-		[Column("CloudAlbum_Id"),                     PrimaryKey,  NotNull] public long    CloudAlbumId                     { get; set; } // integer
-		[Column("CloudAlbum_AlbumId"),                             NotNull] public long    CloudAlbumAlbumId                { get; set; } // integer
-		[Column("CloudAlbum_CloudId"),                   Nullable         ] public string? CloudAlbumCloudId                { get; set; } // text(max)
-		[Column("CloudAlbum_CloudAlbumDefinitionId"),    Nullable         ] public long?   CloudAlbumCloudAlbumDefinitionId { get; set; } // integer
+		[Column("CloudAlbum_Id"),                     PrimaryKey,  NotNull] public long   CloudAlbumId                     { get; set; } // integer
+		[Column("CloudAlbum_AlbumId"),                             NotNull] public long   CloudAlbumAlbumId                { get; set; } // integer
+		[Column("CloudAlbum_CloudId"),                   Nullable         ] public string CloudAlbumCloudId                { get; set; } // text(max)
+		[Column("CloudAlbum_CloudAlbumDefinitionId"),    Nullable         ] public long?  CloudAlbumCloudAlbumDefinitionId { get; set; } // integer
 
 		#region Associations
 
@@ -496,13 +495,13 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_CloudAlbum_1_0
 		/// </summary>
 		[Association(ThisKey="CloudAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_CloudAlbum_1_0", BackReferenceName="CloudAlbums")]
-		public Album CloudAlbumAlbum { get; set; } = null!;
+		public Album CloudAlbumAlbum { get; set; }
 
 		/// <summary>
 		/// FK_CloudAlbum_0_0
 		/// </summary>
 		[Association(ThisKey="CloudAlbumCloudAlbumDefinitionId", OtherKey="CloudAlbumDefinitionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_CloudAlbum_0_0", BackReferenceName="CloudAlbums")]
-		public CloudAlbumDefinition? CloudAlbumCloudAlbumDefinition { get; set; }
+		public CloudAlbumDefinition CloudAlbumCloudAlbumDefinition { get; set; }
 
 		#endregion
 	}
@@ -510,12 +509,12 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("CloudAlbumDefinition")]
 	public partial class CloudAlbumDefinition
 	{
-		[Column("CloudAlbumDefinition_Id"),                        PrimaryKey,  NotNull] public long    CloudAlbumDefinitionId                        { get; set; } // integer
-		[Column("CloudAlbumDefinition_CloudId"),                      Nullable         ] public string? CloudAlbumDefinitionCloudId                   { get; set; } // text(max)
-		[Column("CloudAlbumDefinition_CloudQuery"),                   Nullable         ] public string? CloudAlbumDefinitionCloudQuery                { get; set; } // text(max)
-		[Column("CloudAlbumDefinition_CloudFriendlyName"),            Nullable         ] public string? CloudAlbumDefinitionCloudFriendlyName         { get; set; } // text(max)
-		[Column("CloudAlbumDefinition_DateLastAlbumsMaintenance"),    Nullable         ] public long?   CloudAlbumDefinitionDateLastAlbumsMaintenance { get; set; } // integer
-		[Column("CloudAlbumDefinition_QueryType"),                    Nullable         ] public long?   CloudAlbumDefinitionQueryType                 { get; set; } // integer
+		[Column("CloudAlbumDefinition_Id"),                        PrimaryKey,  NotNull] public long   CloudAlbumDefinitionId                        { get; set; } // integer
+		[Column("CloudAlbumDefinition_CloudId"),                      Nullable         ] public string CloudAlbumDefinitionCloudId                   { get; set; } // text(max)
+		[Column("CloudAlbumDefinition_CloudQuery"),                   Nullable         ] public string CloudAlbumDefinitionCloudQuery                { get; set; } // text(max)
+		[Column("CloudAlbumDefinition_CloudFriendlyName"),            Nullable         ] public string CloudAlbumDefinitionCloudFriendlyName         { get; set; } // text(max)
+		[Column("CloudAlbumDefinition_DateLastAlbumsMaintenance"),    Nullable         ] public long?  CloudAlbumDefinitionDateLastAlbumsMaintenance { get; set; } // integer
+		[Column("CloudAlbumDefinition_QueryType"),                    Nullable         ] public long?  CloudAlbumDefinitionQueryType                 { get; set; } // integer
 
 		#region Associations
 
@@ -523,7 +522,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_CloudAlbum_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="CloudAlbumDefinitionId", OtherKey="CloudAlbumCloudAlbumDefinitionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<CloudAlbum> CloudAlbums { get; set; } = null!;
+		public IEnumerable<CloudAlbum> CloudAlbums { get; set; }
 
 		#endregion
 	}
@@ -537,10 +536,10 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("DbRecoveryTaskState")]
 	public partial class DbRecoveryTaskState
 	{
-		[Column("DbRecoveryTaskState_Id"),           PrimaryKey,  NotNull] public long    DbRecoveryTaskStateId           { get; set; } // integer
-		[Column("DbRecoveryTaskState_TaskName"),                  NotNull] public string  DbRecoveryTaskStateTaskName     { get; set; } = null!; // text(max)
-		[Column("DbRecoveryTaskState_LastRun"),                   NotNull] public long    DbRecoveryTaskStateLastRun      { get; set; } // integer
-		[Column("DbRecoveryTaskState_StatePayload"),    Nullable         ] public string? DbRecoveryTaskStateStatePayload { get; set; } // text(max)
+		[Column("DbRecoveryTaskState_Id"),           PrimaryKey,  NotNull] public long   DbRecoveryTaskStateId           { get; set; } // integer
+		[Column("DbRecoveryTaskState_TaskName"),                  NotNull] public string DbRecoveryTaskStateTaskName     { get; set; } // text(max)
+		[Column("DbRecoveryTaskState_LastRun"),                   NotNull] public long   DbRecoveryTaskStateLastRun      { get; set; } // integer
+		[Column("DbRecoveryTaskState_StatePayload"),    Nullable         ] public string DbRecoveryTaskStateStatePayload { get; set; } // text(max)
 	}
 
 	[Table("Event")]
@@ -557,7 +556,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_Item_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="EventId", OtherKey="ItemEventId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Item> Items { get; set; } = null!;
+		public IEnumerable<Item> Items { get; set; }
 
 		#endregion
 	}
@@ -576,7 +575,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExcludedAlbum_0_0
 		/// </summary>
 		[Association(ThisKey="ExcludedAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedAlbum_0_0", BackReferenceName="ExcludedAlbums")]
-		public Album ExcludedAlbumAlbum { get; set; } = null!;
+		public Album ExcludedAlbumAlbum { get; set; }
 
 		#endregion
 	}
@@ -596,13 +595,13 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExcludedFace_0_0
 		/// </summary>
 		[Association(ThisKey="ExcludedFaceFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedFace_0_0", BackReferenceName="ExcludedFaces")]
-		public Face ExcludedFaceFace { get; set; } = null!;
+		public Face ExcludedFaceFace { get; set; }
 
 		/// <summary>
 		/// FK_ExcludedFace_1_0
 		/// </summary>
 		[Association(ThisKey="ExcludedFaceFaceClusterId", OtherKey="FaceClusterId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedFace_1_0", BackReferenceName="ExcludedFaces")]
-		public FaceCluster ExcludedFaceFaceCluster { get; set; } = null!;
+		public FaceCluster ExcludedFaceFaceCluster { get; set; }
 
 		#endregion
 	}
@@ -635,13 +634,13 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExcludedItemTag_1_0
 		/// </summary>
 		[Association(ThisKey="ExcludedItemTagItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedItemTag_1_0", BackReferenceName="ExcludedItemTags")]
-		public Item ExcludedItemTagItem { get; set; } = null!;
+		public Item ExcludedItemTagItem { get; set; }
 
 		/// <summary>
 		/// FK_ExcludedItemTag_0_0
 		/// </summary>
 		[Association(ThisKey="ExcludedItemTagTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedItemTag_0_0", BackReferenceName="ExcludedItemTags")]
-		public Tag ExcludedItemTagTag { get; set; } = null!;
+		public Tag ExcludedItemTagTag { get; set; }
 
 		#endregion
 	}
@@ -660,7 +659,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExcludedLocation_0_0
 		/// </summary>
 		[Association(ThisKey="ExcludedLocationLocationId", OtherKey="LocationId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedLocation_0_0", BackReferenceName="ExcludedLocations")]
-		public Location ExcludedLocationLocation { get; set; } = null!;
+		public Location ExcludedLocationLocation { get; set; }
 
 		#endregion
 	}
@@ -679,7 +678,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExcludedPerson_0_0
 		/// </summary>
 		[Association(ThisKey="ExcludedPersonPersonId", OtherKey="PersonId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedPerson_0_0", BackReferenceName="ExcludedPeople")]
-		public Person ExcludedPersonPerson { get; set; } = null!;
+		public Person ExcludedPersonPerson { get; set; }
 
 		#endregion
 	}
@@ -698,7 +697,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExcludedTag_0_0
 		/// </summary>
 		[Association(ThisKey="ExcludedTagTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedTag_0_0", BackReferenceName="ExcludedTags")]
-		public Tag ExcludedTagTag { get; set; } = null!;
+		public Tag ExcludedTagTag { get; set; }
 
 		#endregion
 	}
@@ -706,9 +705,9 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("ExtractedText")]
 	public partial class ExtractedText
 	{
-		[Column("ExtractedText_Id"),     PrimaryKey,  NotNull] public long    ExtractedTextId     { get; set; } // integer
-		[Column("ExtractedText_ItemId"),              NotNull] public long    ExtractedTextItemId { get; set; } // integer
-		[Column("ExtractedText_Text"),      Nullable         ] public string? ExtractedTextText   { get; set; } // text(max)
+		[Column("ExtractedText_Id"),     PrimaryKey,  NotNull] public long   ExtractedTextId     { get; set; } // integer
+		[Column("ExtractedText_ItemId"),              NotNull] public long   ExtractedTextItemId { get; set; } // integer
+		[Column("ExtractedText_Text"),      Nullable         ] public string ExtractedTextText   { get; set; } // text(max)
 
 		#region Associations
 
@@ -716,7 +715,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExtractedText_0_0
 		/// </summary>
 		[Association(ThisKey="ExtractedTextItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExtractedText_0_0", BackReferenceName="ExtractedTexts")]
-		public Item ExtractedTextItem { get; set; } = null!;
+		public Item ExtractedTextItem { get; set; }
 
 		#endregion
 	}
@@ -755,7 +754,7 @@ namespace StorageProviders.SQLite.NetCore
 		[Column("Face_CutOffState"),                   Nullable         ] public long?   FaceCutOffState                { get; set; } // integer
 		[Column("Face_FaceSharpness"),                 Nullable         ] public long?   FaceFaceSharpness              { get; set; } // integer
 		[Column("Face_Expression"),                    Nullable         ] public long?   FaceExpression                 { get; set; } // integer
-		[Column("Face_RecoExemplar"),                  Nullable         ] public byte[]? FaceRecoExemplar               { get; set; } // blob
+		[Column("Face_RecoExemplar"),                  Nullable         ] public byte[]  FaceRecoExemplar               { get; set; } // blob
 		[Column("Face_ExemplarScore"),                 Nullable         ] public double? FaceExemplarScore              { get; set; } // real
 		[Column("Face_Version"),                       Nullable         ] public long?   FaceVersion                    { get; set; } // integer
 		[Column("Face_SmileProbability"),              Nullable         ] public double? FaceSmileProbability           { get; set; } // real
@@ -767,55 +766,55 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExcludedFace_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="FaceId", OtherKey="ExcludedFaceFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ExcludedFace> ExcludedFaces { get; set; } = null!;
+		public IEnumerable<ExcludedFace> ExcludedFaces { get; set; }
 
 		/// <summary>
 		/// FK_FaceCluster_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="FaceId", OtherKey="FaceClusterBestFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<FaceCluster> FaceClusters { get; set; } = null!;
+		public IEnumerable<FaceCluster> FaceClusters { get; set; }
 
 		/// <summary>
 		/// FK_Face_1_0
 		/// </summary>
 		[Association(ThisKey="FaceFaceClusterId", OtherKey="FaceClusterId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_1_0", BackReferenceName="Faces")]
-		public FaceCluster? FaceFaceCluster { get; set; }
+		public FaceCluster FaceFaceCluster { get; set; }
 
 		/// <summary>
 		/// FK_FaceFeature_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="FaceId", OtherKey="FaceFeatureFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<FaceFeature> FaceFeatures { get; set; } = null!;
+		public IEnumerable<FaceFeature> FaceFeatures { get; set; }
 
 		/// <summary>
 		/// FK_Face_2_0
 		/// </summary>
 		[Association(ThisKey="FaceItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_2_0", BackReferenceName="Faces")]
-		public Item FaceItem { get; set; } = null!;
+		public Item FaceItem { get; set; }
 
 		/// <summary>
 		/// FK_Face_0_0
 		/// </summary>
 		[Association(ThisKey="FacePersonId", OtherKey="PersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_0_0", BackReferenceName="Faces")]
-		public Person? FacePerson { get; set; }
+		public Person FacePerson { get; set; }
 
 		/// <summary>
 		/// FK_Person_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="FaceId", OtherKey="PersonBestFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Person> FkPerson10BackReferences { get; set; } = null!;
+		public IEnumerable<Person> FkPerson10BackReferences { get; set; }
 
 		/// <summary>
 		/// FK_Person_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="FaceId", OtherKey="PersonSafeBestFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Person> People { get; set; } = null!;
+		public IEnumerable<Person> People { get; set; }
 
 		/// <summary>
 		/// FK_VideoFaceOccurrence_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="FaceId", OtherKey="VideoFaceOccurrenceFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<VideoFaceOccurrence> VideoFaceOccurrences { get; set; } = null!;
+		public IEnumerable<VideoFaceOccurrence> VideoFaceOccurrences { get; set; }
 
 		#endregion
 	}
@@ -833,25 +832,25 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExcludedFace_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="FaceClusterId", OtherKey="ExcludedFaceFaceClusterId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ExcludedFace> ExcludedFaces { get; set; } = null!;
+		public IEnumerable<ExcludedFace> ExcludedFaces { get; set; }
 
 		/// <summary>
 		/// FK_FaceCluster_0_0
 		/// </summary>
 		[Association(ThisKey="FaceClusterBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceCluster_0_0", BackReferenceName="FaceClusters")]
-		public Face? FaceClusterBestFace { get; set; }
+		public Face FaceClusterBestFace { get; set; }
 
 		/// <summary>
 		/// FK_FaceCluster_1_0
 		/// </summary>
 		[Association(ThisKey="FaceClusterPersonId", OtherKey="PersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceCluster_1_0", BackReferenceName="FaceClusters")]
-		public Person? FaceClusterPerson { get; set; }
+		public Person FaceClusterPerson { get; set; }
 
 		/// <summary>
 		/// FK_Face_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="FaceClusterId", OtherKey="FaceFaceClusterId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Face> Faces { get; set; } = null!;
+		public IEnumerable<Face> Faces { get; set; }
 
 		#endregion
 	}
@@ -870,7 +869,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_FaceFeature_0_0
 		/// </summary>
 		[Association(ThisKey="FaceFeatureFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceFeature_0_0", BackReferenceName="FaceFeatures")]
-		public Face FaceFeatureFace { get; set; } = null!;
+		public Face FaceFeatureFace { get; set; }
 
 		#endregion
 	}
@@ -878,96 +877,96 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("FileExtensionFts")]
 	public partial class FileExtensionFt
 	{
-		[Column("Item_FileExtension"), Nullable] public object? ItemFileExtension { get; set; }
+		[Column("Item_FileExtension"), Nullable] public object ItemFileExtension { get; set; }
 	}
 
 	[Table("FileExtensionFts_docsize")]
 	public partial class FileExtensionFtsDocsize
 	{
-		[Column("docid"), PrimaryKey,  NotNull] public long    Docid { get; set; } // integer
-		[Column("size"),     Nullable         ] public byte[]? Size  { get; set; } // blob
+		[Column("docid"), PrimaryKey,  NotNull] public long   Docid { get; set; } // integer
+		[Column("size"),     Nullable         ] public byte[] Size  { get; set; } // blob
 	}
 
 	[Table("FileExtensionFts_segdir")]
 	public partial class FileExtensionFtsSegdir
 	{
-		[Column("level"),            PrimaryKey(0), NotNull] public long    Level          { get; set; } // integer
-		[Column("idx"),              PrimaryKey(1), NotNull] public long    Idx            { get; set; } // integer
-		[Column("start_block"),         Nullable           ] public long?   StartBlock     { get; set; } // integer
-		[Column("leaves_end_block"),    Nullable           ] public long?   LeavesEndBlock { get; set; } // integer
-		[Column("end_block"),           Nullable           ] public long?   EndBlock       { get; set; } // integer
-		[Column("root"),                Nullable           ] public byte[]? Root           { get; set; } // blob
+		[Column("level"),            PrimaryKey(0), NotNull] public long   Level          { get; set; } // integer
+		[Column("idx"),              PrimaryKey(1), NotNull] public long   Idx            { get; set; } // integer
+		[Column("start_block"),         Nullable           ] public long?  StartBlock     { get; set; } // integer
+		[Column("leaves_end_block"),    Nullable           ] public long?  LeavesEndBlock { get; set; } // integer
+		[Column("end_block"),           Nullable           ] public long?  EndBlock       { get; set; } // integer
+		[Column("root"),                Nullable           ] public byte[] Root           { get; set; } // blob
 	}
 
 	[Table("FileExtensionFts_segments")]
 	public partial class FileExtensionFtsSegment
 	{
-		[Column("blockid"), PrimaryKey,  NotNull] public long    Blockid { get; set; } // integer
-		[Column("block"),      Nullable         ] public byte[]? Block   { get; set; } // blob
+		[Column("blockid"), PrimaryKey,  NotNull] public long   Blockid { get; set; } // integer
+		[Column("block"),      Nullable         ] public byte[] Block   { get; set; } // blob
 	}
 
 	[Table("FileExtensionFts_stat")]
 	public partial class FileExtensionFtsStat
 	{
-		[Column("id"),    PrimaryKey,  NotNull] public long    Id    { get; set; } // integer
-		[Column("value"),    Nullable         ] public byte[]? Value { get; set; } // blob
+		[Column("id"),    PrimaryKey,  NotNull] public long   Id    { get; set; } // integer
+		[Column("value"),    Nullable         ] public byte[] Value { get; set; } // blob
 	}
 
 	[Table("FilenameFts")]
 	public partial class FilenameFt
 	{
-		[Column("Item_Filename"), Nullable] public object? ItemFilename { get; set; }
+		[Column("Item_Filename"), Nullable] public object ItemFilename { get; set; }
 	}
 
 	[Table("FilenameFts_docsize")]
 	public partial class FilenameFtsDocsize
 	{
-		[Column("docid"), PrimaryKey,  NotNull] public long    Docid { get; set; } // integer
-		[Column("size"),     Nullable         ] public byte[]? Size  { get; set; } // blob
+		[Column("docid"), PrimaryKey,  NotNull] public long   Docid { get; set; } // integer
+		[Column("size"),     Nullable         ] public byte[] Size  { get; set; } // blob
 	}
 
 	[Table("FilenameFts_segdir")]
 	public partial class FilenameFtsSegdir
 	{
-		[Column("level"),            PrimaryKey(0), NotNull] public long    Level          { get; set; } // integer
-		[Column("idx"),              PrimaryKey(1), NotNull] public long    Idx            { get; set; } // integer
-		[Column("start_block"),         Nullable           ] public long?   StartBlock     { get; set; } // integer
-		[Column("leaves_end_block"),    Nullable           ] public long?   LeavesEndBlock { get; set; } // integer
-		[Column("end_block"),           Nullable           ] public long?   EndBlock       { get; set; } // integer
-		[Column("root"),                Nullable           ] public byte[]? Root           { get; set; } // blob
+		[Column("level"),            PrimaryKey(0), NotNull] public long   Level          { get; set; } // integer
+		[Column("idx"),              PrimaryKey(1), NotNull] public long   Idx            { get; set; } // integer
+		[Column("start_block"),         Nullable           ] public long?  StartBlock     { get; set; } // integer
+		[Column("leaves_end_block"),    Nullable           ] public long?  LeavesEndBlock { get; set; } // integer
+		[Column("end_block"),           Nullable           ] public long?  EndBlock       { get; set; } // integer
+		[Column("root"),                Nullable           ] public byte[] Root           { get; set; } // blob
 	}
 
 	[Table("FilenameFts_segments")]
 	public partial class FilenameFtsSegment
 	{
-		[Column("blockid"), PrimaryKey,  NotNull] public long    Blockid { get; set; } // integer
-		[Column("block"),      Nullable         ] public byte[]? Block   { get; set; } // blob
+		[Column("blockid"), PrimaryKey,  NotNull] public long   Blockid { get; set; } // integer
+		[Column("block"),      Nullable         ] public byte[] Block   { get; set; } // blob
 	}
 
 	[Table("FilenameFts_stat")]
 	public partial class FilenameFtsStat
 	{
-		[Column("id"),    PrimaryKey,  NotNull] public long    Id    { get; set; } // integer
-		[Column("value"),    Nullable         ] public byte[]? Value { get; set; } // blob
+		[Column("id"),    PrimaryKey,  NotNull] public long   Id    { get; set; } // integer
+		[Column("value"),    Nullable         ] public byte[] Value { get; set; } // blob
 	}
 
 	[Table("Folder")]
 	public partial class Folder
 	{
-		[Column("Folder_Id"),                      PrimaryKey,  NotNull] public long    FolderId                      { get; set; } // integer
-		[Column("Folder_ParentFolderId"),             Nullable         ] public long?   FolderParentFolderId          { get; set; } // integer
-		[Column("Folder_LibraryRelationship"),        Nullable         ] public long?   FolderLibraryRelationship     { get; set; } // integer
-		[Column("Folder_Source"),                     Nullable         ] public long?   FolderSource                  { get; set; } // integer
-		[Column("Folder_SourceId"),                   Nullable         ] public long?   FolderSourceId                { get; set; } // integer
-		[Column("Folder_Path"),                       Nullable         ] public string? FolderPath                    { get; set; } // text(max)
-		[Column("Folder_DisplayName"),                Nullable         ] public string? FolderDisplayName             { get; set; } // text(max)
-		[Column("Folder_DateCreated"),                Nullable         ] public long?   FolderDateCreated             { get; set; } // integer
-		[Column("Folder_DateModified"),               Nullable         ] public long?   FolderDateModified            { get; set; } // integer
-		[Column("Folder_KnownFolderType"),            Nullable         ] public long?   FolderKnownFolderType         { get; set; } // integer
-		[Column("Folder_SyncWith"),                   Nullable         ] public long?   FolderSyncWith                { get; set; } // integer
-		[Column("Folder_StorageProviderFileId"),      Nullable         ] public string? FolderStorageProviderFileId   { get; set; } // text(max)
-		[Column("Folder_InOneDrivePicturesScope"),    Nullable         ] public long?   FolderInOneDrivePicturesScope { get; set; } // integer
-		[Column("Folder_ItemCount"),                  Nullable         ] public long?   FolderItemCount               { get; set; } // integer
+		[Column("Folder_Id"),                      PrimaryKey,  NotNull] public long   FolderId                      { get; set; } // integer
+		[Column("Folder_ParentFolderId"),             Nullable         ] public long?  FolderParentFolderId          { get; set; } // integer
+		[Column("Folder_LibraryRelationship"),        Nullable         ] public long?  FolderLibraryRelationship     { get; set; } // integer
+		[Column("Folder_Source"),                     Nullable         ] public long?  FolderSource                  { get; set; } // integer
+		[Column("Folder_SourceId"),                   Nullable         ] public long?  FolderSourceId                { get; set; } // integer
+		[Column("Folder_Path"),                       Nullable         ] public string FolderPath                    { get; set; } // text(max)
+		[Column("Folder_DisplayName"),                Nullable         ] public string FolderDisplayName             { get; set; } // text(max)
+		[Column("Folder_DateCreated"),                Nullable         ] public long?  FolderDateCreated             { get; set; } // integer
+		[Column("Folder_DateModified"),               Nullable         ] public long?  FolderDateModified            { get; set; } // integer
+		[Column("Folder_KnownFolderType"),            Nullable         ] public long?  FolderKnownFolderType         { get; set; } // integer
+		[Column("Folder_SyncWith"),                   Nullable         ] public long?  FolderSyncWith                { get; set; } // integer
+		[Column("Folder_StorageProviderFileId"),      Nullable         ] public string FolderStorageProviderFileId   { get; set; } // text(max)
+		[Column("Folder_InOneDrivePicturesScope"),    Nullable         ] public long?  FolderInOneDrivePicturesScope { get; set; } // integer
+		[Column("Folder_ItemCount"),                  Nullable         ] public long?  FolderItemCount               { get; set; } // integer
 
 		#region Associations
 
@@ -975,31 +974,31 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_Folder_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="FolderId", OtherKey="FolderParentFolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Folder> FkFolder10BackReferences { get; set; } = null!;
+		public IEnumerable<Folder> FkFolder10BackReferences { get; set; }
 
 		/// <summary>
 		/// FK_Folder_1_0
 		/// </summary>
 		[Association(ThisKey="FolderParentFolderId", OtherKey="FolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Folder_1_0", BackReferenceName="FkFolder10BackReferences")]
-		public Folder? FolderParentFolder { get; set; }
+		public Folder FolderParentFolder { get; set; }
 
 		/// <summary>
 		/// FK_Item_6_0_BackReference
 		/// </summary>
 		[Association(ThisKey="FolderId", OtherKey="ItemParentFolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Item> Items { get; set; } = null!;
+		public IEnumerable<Item> Items { get; set; }
 
 		/// <summary>
 		/// FK_RemoteItem_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="FolderId", OtherKey="RemoteItemFolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<RemoteItem> RemoteItems { get; set; } = null!;
+		public IEnumerable<RemoteItem> RemoteItems { get; set; }
 
 		/// <summary>
 		/// FK_Folder_0_0
 		/// </summary>
 		[Association(ThisKey="FolderSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Folder_0_0", BackReferenceName="Folders")]
-		public Source? Source { get; set; }
+		public Source Source { get; set; }
 
 		#endregion
 	}
@@ -1007,39 +1006,39 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("FolderNameFts")]
 	public partial class FolderNameFt
 	{
-		[Column("Folder_DisplayName"), Nullable] public object? FolderDisplayName { get; set; }
+		[Column("Folder_DisplayName"), Nullable] public object FolderDisplayName { get; set; }
 	}
 
 	[Table("FolderNameFts_docsize")]
 	public partial class FolderNameFtsDocsize
 	{
-		[Column("docid"), PrimaryKey,  NotNull] public long    Docid { get; set; } // integer
-		[Column("size"),     Nullable         ] public byte[]? Size  { get; set; } // blob
+		[Column("docid"), PrimaryKey,  NotNull] public long   Docid { get; set; } // integer
+		[Column("size"),     Nullable         ] public byte[] Size  { get; set; } // blob
 	}
 
 	[Table("FolderNameFts_segdir")]
 	public partial class FolderNameFtsSegdir
 	{
-		[Column("level"),            PrimaryKey(0), NotNull] public long    Level          { get; set; } // integer
-		[Column("idx"),              PrimaryKey(1), NotNull] public long    Idx            { get; set; } // integer
-		[Column("start_block"),         Nullable           ] public long?   StartBlock     { get; set; } // integer
-		[Column("leaves_end_block"),    Nullable           ] public long?   LeavesEndBlock { get; set; } // integer
-		[Column("end_block"),           Nullable           ] public long?   EndBlock       { get; set; } // integer
-		[Column("root"),                Nullable           ] public byte[]? Root           { get; set; } // blob
+		[Column("level"),            PrimaryKey(0), NotNull] public long   Level          { get; set; } // integer
+		[Column("idx"),              PrimaryKey(1), NotNull] public long   Idx            { get; set; } // integer
+		[Column("start_block"),         Nullable           ] public long?  StartBlock     { get; set; } // integer
+		[Column("leaves_end_block"),    Nullable           ] public long?  LeavesEndBlock { get; set; } // integer
+		[Column("end_block"),           Nullable           ] public long?  EndBlock       { get; set; } // integer
+		[Column("root"),                Nullable           ] public byte[] Root           { get; set; } // blob
 	}
 
 	[Table("FolderNameFts_segments")]
 	public partial class FolderNameFtsSegment
 	{
-		[Column("blockid"), PrimaryKey,  NotNull] public long    Blockid { get; set; } // integer
-		[Column("block"),      Nullable         ] public byte[]? Block   { get; set; } // blob
+		[Column("blockid"), PrimaryKey,  NotNull] public long   Blockid { get; set; } // integer
+		[Column("block"),      Nullable         ] public byte[] Block   { get; set; } // blob
 	}
 
 	[Table("FolderNameFts_stat")]
 	public partial class FolderNameFtsStat
 	{
-		[Column("id"),    PrimaryKey,  NotNull] public long    Id    { get; set; } // integer
-		[Column("value"),    Nullable         ] public byte[]? Value { get; set; } // blob
+		[Column("id"),    PrimaryKey,  NotNull] public long   Id    { get; set; } // integer
+		[Column("value"),    Nullable         ] public byte[] Value { get; set; } // blob
 	}
 
 	[Table("ImageAnalysis")]
@@ -1047,7 +1046,7 @@ namespace StorageProviders.SQLite.NetCore
 	{
 		[Column("ImageAnalysis_ItemId"),                    PrimaryKey,  NotNull] public long    ImageAnalysisItemId                    { get; set; } // integer
 		[Column("ImageAnalysis_ReDoAnalysis"),                 Nullable         ] public long?   ImageAnalysisReDoAnalysis              { get; set; } // integer
-		[Column("ImageAnalysis_AnalysisModuleVersion"),        Nullable         ] public byte[]? ImageAnalysisAnalysisModuleVersion     { get; set; } // blob
+		[Column("ImageAnalysis_AnalysisModuleVersion"),        Nullable         ] public byte[]  ImageAnalysisAnalysisModuleVersion     { get; set; } // blob
 		[Column("ImageAnalysis_SaliencyScore"),                Nullable         ] public double? ImageAnalysisSaliencyScore             { get; set; } // real
 		[Column("ImageAnalysis_RelevantFacesPercentage"),      Nullable         ] public double? ImageAnalysisRelevantFacesPercentage   { get; set; } // real
 		[Column("ImageAnalysis_PortraitType"),                 Nullable         ] public long?   ImageAnalysisPortraitType              { get; set; } // integer
@@ -1100,8 +1099,8 @@ namespace StorageProviders.SQLite.NetCore
 		[Column("ImageAnalysis_ShadowsChromaNoise"),           Nullable         ] public double? ImageAnalysisShadowsChromaNoise        { get; set; } // real
 		[Column("ImageAnalysis_ShadowsDetailsNoise"),          Nullable         ] public double? ImageAnalysisShadowsDetailsNoise       { get; set; } // real
 		[Column("ImageAnalysis_Utility"),                      Nullable         ] public long?   ImageAnalysisUtility                   { get; set; } // integer
-		[Column("ImageAnalysis_HistogramBuckets"),             Nullable         ] public byte[]? ImageAnalysisHistogramBuckets          { get; set; } // blob
-		[Column("ImageAnalysis_Tone"),                         Nullable         ] public byte[]? ImageAnalysisTone                      { get; set; } // blob
+		[Column("ImageAnalysis_HistogramBuckets"),             Nullable         ] public byte[]  ImageAnalysisHistogramBuckets          { get; set; } // blob
+		[Column("ImageAnalysis_Tone"),                         Nullable         ] public byte[]  ImageAnalysisTone                      { get; set; } // blob
 
 		#region Associations
 
@@ -1109,7 +1108,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ImageAnalysis_0_0
 		/// </summary>
 		[Association(ThisKey="ImageAnalysisItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_ImageAnalysis_0_0", BackReferenceName="ImageAnalysis")]
-		public Item ImageAnalysisItem { get; set; } = null!;
+		public Item ImageAnalysisItem { get; set; }
 
 		#endregion
 	}
@@ -1131,12 +1130,12 @@ namespace StorageProviders.SQLite.NetCore
 		[Column("Item_ExclusiveDateTaken"),                      Nullable         ] public long?   ItemExclusiveDateTaken                   { get; set; } // integer
 		[Column("Item_SystemThumbnailCacheId"),                  Nullable         ] public long?   ItemSystemThumbnailCacheId               { get; set; } // integer
 		[Column("Item_ParentFolderId"),                                    NotNull] public long    ItemParentFolderId                       { get; set; } // integer
-		[Column("Item_FileName"),                                Nullable         ] public string? ItemFileName                             { get; set; } // text(max)
-		[Column("Item_FileExtension"),                           Nullable         ] public string? ItemFileExtension                        { get; set; } // text(max)
+		[Column("Item_FileName"),                                Nullable         ] public string  ItemFileName                             { get; set; } // text(max)
+		[Column("Item_FileExtension"),                           Nullable         ] public string  ItemFileExtension                        { get; set; } // text(max)
 		[Column("Item_FileSize"),                                Nullable         ] public long?   ItemFileSize                             { get; set; } // integer
 		[Column("Item_Latitude"),                                Nullable         ] public double? ItemLatitude                             { get; set; } // real
 		[Column("Item_Longitude"),                               Nullable         ] public double? ItemLongitude                            { get; set; } // real
-		[Column("Item_Caption"),                                 Nullable         ] public string? ItemCaption                              { get; set; } // text(max)
+		[Column("Item_Caption"),                                 Nullable         ] public string  ItemCaption                              { get; set; } // text(max)
 		[Column("Item_SimpleRating"),                            Nullable         ] public long?   ItemSimpleRating                         { get; set; } // integer
 		[Column("Item_Duration"),                                Nullable         ] public long?   ItemDuration                             { get; set; } // integer
 		[Column("Item_QualityScore"),                            Nullable         ] public double? ItemQualityScore                         { get; set; } // real
@@ -1175,23 +1174,23 @@ namespace StorageProviders.SQLite.NetCore
 		[Column("Item_DupState"),                                Nullable         ] public long?   ItemDupState                             { get; set; } // integer
 		[Column("Item_UserSelectedDupId"),                       Nullable         ] public long?   ItemUserSelectedDupId                    { get; set; } // integer
 		[Column("Item_UserUnlink"),                              Nullable         ] public long?   ItemUserUnlink                           { get; set; } // integer
-		[Column("Item_MetadataHash"),                            Nullable         ] public string? ItemMetadataHash                         { get; set; } // text(max)
-		[Column("Item_PixelHash"),                               Nullable         ] public string? ItemPixelHash                            { get; set; } // text(max)
+		[Column("Item_MetadataHash"),                            Nullable         ] public string  ItemMetadataHash                         { get; set; } // text(max)
+		[Column("Item_PixelHash"),                               Nullable         ] public string  ItemPixelHash                            { get; set; } // text(max)
 		[Column("Item_CameraSettingFNumber"),                    Nullable         ] public double? ItemCameraSettingFNumber                 { get; set; } // real
 		[Column("Item_CameraSettingFocalLength"),                Nullable         ] public double? ItemCameraSettingFocalLength             { get; set; } // real
 		[Column("Item_CameraSettingISOSpeed"),                   Nullable         ] public long?   ItemCameraSettingISOSpeed                { get; set; } // integer
 		[Column("Item_CameraSettingExposureTime"),               Nullable         ] public double? ItemCameraSettingExposureTime            { get; set; } // real
-		[Column("Item_EditList"),                                Nullable         ] public byte[]? ItemEditList                             { get; set; } // blob
+		[Column("Item_EditList"),                                Nullable         ] public byte[]  ItemEditList                             { get; set; } // blob
 		[Column("Item_ModificationVersion"),                     Nullable         ] public long?   ItemModificationVersion                  { get; set; } // integer
-		[Column("Item_RichMediaId"),                             Nullable         ] public string? ItemRichMediaId                          { get; set; } // text(max)
-		[Column("Item_RichMediaAppId"),                          Nullable         ] public string? ItemRichMediaAppId                       { get; set; } // text(max)
+		[Column("Item_RichMediaId"),                             Nullable         ] public string  ItemRichMediaId                          { get; set; } // text(max)
+		[Column("Item_RichMediaAppId"),                          Nullable         ] public string  ItemRichMediaAppId                       { get; set; } // text(max)
 		[Column("Item_RichMediaLaunchOptions"),                  Nullable         ] public long?   ItemRichMediaLaunchOptions               { get; set; } // integer
 		[Column("Item_RichMediaSlowGrovelPending"),              Nullable         ] public long?   ItemRichMediaSlowGrovelPending           { get; set; } // integer
 		[Column("Item_ThumbnailPrecacheAttempted"),              Nullable         ] public long?   ItemThumbnailPrecacheAttempted           { get; set; } // integer
 		[Column("Item_PendingTelemetryUploadState"),             Nullable         ] public long?   ItemPendingTelemetryUploadState          { get; set; } // integer
 		[Column("Item_SentTelemetryUploadState"),                Nullable         ] public long?   ItemSentTelemetryUploadState             { get; set; } // integer
 		[Column("Item_InAppRotatePending"),                      Nullable         ] public long?   ItemInAppRotatePending                   { get; set; } // integer
-		[Column("Item_StorageProviderFileId"),                   Nullable         ] public string? ItemStorageProviderFileId                { get; set; } // text(max)
+		[Column("Item_StorageProviderFileId"),                   Nullable         ] public string  ItemStorageProviderFileId                { get; set; } // text(max)
 		[Column("Item_NDEThumbnailGenerationErrorCount"),        Nullable         ] public long?   ItemNDEThumbnailGenerationErrorCount     { get; set; } // integer
 		[Column("Item_FrameRate"),                               Nullable         ] public double? ItemFrameRate                            { get; set; } // real
 		[Column("Item_ImportSession"),                           Nullable         ] public long?   ItemImportSession                        { get; set; } // integer
@@ -1201,12 +1200,12 @@ namespace StorageProviders.SQLite.NetCore
 		[Column("Item_UploadAttempts"),                          Nullable         ] public long?   ItemUploadAttempts                       { get; set; } // integer
 		[Column("Item_UploadRequestTime"),                       Nullable         ] public long?   ItemUploadRequestTime                    { get; set; } // integer
 		[Column("Item_LastUploadAttemptTime"),                   Nullable         ] public long?   ItemLastUploadAttemptTime                { get; set; } // integer
-		[Column("Item_ETag"),                                    Nullable         ] public string? ItemETag                                 { get; set; } // text(max)
+		[Column("Item_ETag"),                                    Nullable         ] public string  ItemETag                                 { get; set; } // text(max)
 		[Column("Item_RewriteSupplementaryPropertiesNeeded"),              NotNull] public long    ItemRewriteSupplementaryPropertiesNeeded { get; set; } // integer
 		[Column("Item_LastEditDate"),                            Nullable         ] public long?   ItemLastEditDate                         { get; set; } // integer
 		[Column("Item_IsInked"),                                 Nullable         ] public long?   ItemIsInked                              { get; set; } // integer
 		[Column("Item_IsExportedMovie"),                         Nullable         ] public long?   ItemIsExportedMovie                      { get; set; } // integer
-		[Column("Item_OnlineContentAttributionString"),          Nullable         ] public string? ItemOnlineContentAttributionString       { get; set; } // text(max)
+		[Column("Item_OnlineContentAttributionString"),          Nullable         ] public string  ItemOnlineContentAttributionString       { get; set; } // text(max)
 
 		#region Associations
 
@@ -1214,199 +1213,199 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_AlbumItemLink_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="AlbumItemLinkItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<AlbumItemLink> AlbumItemLinks { get; set; } = null!;
+		public IEnumerable<AlbumItemLink> AlbumItemLinks { get; set; }
 
 		/// <summary>
 		/// FK_Album_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="AlbumCoverItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Album> Albums { get; set; } = null!;
+		public IEnumerable<Album> Albums { get; set; }
 
 		/// <summary>
 		/// FK_Cache_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="CacheItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Cache> Caches { get; set; } = null!;
+		public IEnumerable<Cache> Caches { get; set; }
 
 		/// <summary>
 		/// FK_ExcludedItemTag_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="ExcludedItemTagItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ExcludedItemTag> ExcludedItemTags { get; set; } = null!;
+		public IEnumerable<ExcludedItemTag> ExcludedItemTags { get; set; }
 
 		/// <summary>
 		/// FK_ExtractedText_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="ExtractedTextItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ExtractedText> ExtractedTexts { get; set; } = null!;
+		public IEnumerable<ExtractedText> ExtractedTexts { get; set; }
 
 		/// <summary>
 		/// FK_Face_2_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="FaceItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Face> Faces { get; set; } = null!;
+		public IEnumerable<Face> Faces { get; set; }
 
 		/// <summary>
 		/// FK_Item_5_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="ItemBurstPrevItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Item> FkItem50BackReferences { get; set; } = null!;
+		public IEnumerable<Item> FkItem50BackReferences { get; set; }
 
 		/// <summary>
 		/// FK_ImageAnalysis_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="ImageAnalysisItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
-		public ImageAnalysis? ImageAnalysis { get; set; }
+		public ImageAnalysis ImageAnalysis { get; set; }
 
 		/// <summary>
 		/// FK_Item_3_0
 		/// </summary>
 		[Association(ThisKey="ItemApplicationNameId", OtherKey="ApplicationNameId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_3_0", BackReferenceName="Items")]
-		public ApplicationName? ItemApplicationName { get; set; }
+		public ApplicationName ItemApplicationName { get; set; }
 
 		/// <summary>
 		/// FK_Item_5_0
 		/// </summary>
 		[Association(ThisKey="ItemBurstPrevItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_5_0", BackReferenceName="FkItem50BackReferences")]
-		public Item? ItemBurstPrevItem { get; set; }
+		public Item ItemBurstPrevItem { get; set; }
 
 		/// <summary>
 		/// FK_Item_2_0
 		/// </summary>
 		[Association(ThisKey="ItemCameraManufacturerId", OtherKey="CameraManufacturerId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_2_0", BackReferenceName="Items")]
-		public CameraManufacturer? ItemCameraManufacturer { get; set; }
+		public CameraManufacturer ItemCameraManufacturer { get; set; }
 
 		/// <summary>
 		/// FK_Item_1_0
 		/// </summary>
 		[Association(ThisKey="ItemCameraModelId", OtherKey="CameraModelId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_1_0", BackReferenceName="Items")]
-		public CameraModel? ItemCameraModel { get; set; }
+		public CameraModel ItemCameraModel { get; set; }
 
 		/// <summary>
 		/// FK_ItemEdit_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="ItemEditItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemEdit> ItemEdits { get; set; } = null!;
+		public IEnumerable<ItemEdit> ItemEdits { get; set; }
 
 		/// <summary>
 		/// FK_ItemEngineExemplar_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="ItemEngineExemplarItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemEngineExemplar> ItemEngineExemplars { get; set; } = null!;
+		public IEnumerable<ItemEngineExemplar> ItemEngineExemplars { get; set; }
 
 		/// <summary>
 		/// FK_ItemEngineStatus_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="ItemEngineStatusItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemEngineStatus> ItemEngineStatus { get; set; } = null!;
+		public IEnumerable<ItemEngineStatus> ItemEngineStatus { get; set; }
 
 		/// <summary>
 		/// FK_Item_0_0
 		/// </summary>
 		[Association(ThisKey="ItemEventId", OtherKey="EventId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_0_0", BackReferenceName="Items")]
-		public Event? ItemEvent { get; set; }
+		public Event ItemEvent { get; set; }
 
 		/// <summary>
 		/// FK_Item_4_0
 		/// </summary>
 		[Association(ThisKey="ItemLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_4_0", BackReferenceName="Items")]
-		public Location? ItemLocation { get; set; }
+		public Location ItemLocation { get; set; }
 
 		/// <summary>
 		/// FK_Item_6_0
 		/// </summary>
 		[Association(ThisKey="ItemParentFolderId", OtherKey="FolderId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_6_0", BackReferenceName="Items")]
-		public Folder ItemParentFolder { get; set; } = null!;
+		public Folder ItemParentFolder { get; set; }
 
 		/// <summary>
 		/// FK_ItemTags_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="ItemTagsItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemTag> ItemTags { get; set; } = null!;
+		public IEnumerable<ItemTag> ItemTags { get; set; }
 
 		/// <summary>
 		/// FK_ItemVideoQuality_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="ItemVideoQualityItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemVideoQuality> ItemVideoQualities { get; set; } = null!;
+		public IEnumerable<ItemVideoQuality> ItemVideoQualities { get; set; }
 
 		/// <summary>
 		/// FK_LiveTile_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="LiveTileItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
-		public LiveTile? LiveTile { get; set; }
+		public LiveTile LiveTile { get; set; }
 
 		/// <summary>
 		/// FK_Location_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="LocationCoverItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Location> Locations { get; set; } = null!;
+		public IEnumerable<Location> Locations { get; set; }
 
 		/// <summary>
 		/// FK_OCRItem_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="OCRItemItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<OCRItem> OCRItems { get; set; } = null!;
+		public IEnumerable<OCRItem> OCRItems { get; set; }
 
 		/// <summary>
 		/// FK_PendingUploadItem_2_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="PendingUploadItemItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<PendingUploadItem> PendingUploadItems { get; set; } = null!;
+		public IEnumerable<PendingUploadItem> PendingUploadItems { get; set; }
 
 		/// <summary>
 		/// FK_RemoteItem_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="RemoteItemItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<RemoteItem> RemoteItems { get; set; } = null!;
+		public IEnumerable<RemoteItem> RemoteItems { get; set; }
 
 		/// <summary>
 		/// FK_RemoteThumbnail_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="RemoteThumbnailItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<RemoteThumbnail> RemoteThumbnails { get; set; } = null!;
+		public IEnumerable<RemoteThumbnail> RemoteThumbnails { get; set; }
 
 		/// <summary>
 		/// FK_SalientRect_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="SalientRectItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<SalientRect> SalientRects { get; set; } = null!;
+		public IEnumerable<SalientRect> SalientRects { get; set; }
 
 		/// <summary>
 		/// FK_SearchAnalysisItemPriority_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="SearchAnalysisItemPriorityItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<SearchAnalysisItemPriority> SearchAnalysisItemPriorities { get; set; } = null!;
+		public IEnumerable<SearchAnalysisItemPriority> SearchAnalysisItemPriorities { get; set; }
 
 		/// <summary>
 		/// FK_Item_7_0
 		/// </summary>
 		[Association(ThisKey="ItemSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_7_0", BackReferenceName="Items")]
-		public Source? Source { get; set; }
+		public Source Source { get; set; }
 
 		/// <summary>
 		/// FK_UserActionPrint_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="UserActionPrintItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<UserActionPrint> UserActionPrints { get; set; } = null!;
+		public IEnumerable<UserActionPrint> UserActionPrints { get; set; }
 
 		/// <summary>
 		/// FK_UserActionShare_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="UserActionShareItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<UserActionShare> UserActionShares { get; set; } = null!;
+		public IEnumerable<UserActionShare> UserActionShares { get; set; }
 
 		/// <summary>
 		/// FK_UserActionSlideshow_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="UserActionSlideshowItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<UserActionSlideshow> UserActionSlideshows { get; set; } = null!;
+		public IEnumerable<UserActionSlideshow> UserActionSlideshows { get; set; }
 
 		/// <summary>
 		/// FK_UserActionView_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="UserActionViewItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<UserActionView> UserActionViews { get; set; } = null!;
+		public IEnumerable<UserActionView> UserActionViews { get; set; }
 
 		#endregion
 	}
@@ -1434,7 +1433,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ItemEdit_0_0
 		/// </summary>
 		[Association(ThisKey="ItemEditItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEdit_0_0", BackReferenceName="ItemEdits")]
-		public Item ItemEditItem { get; set; } = null!;
+		public Item ItemEditItem { get; set; }
 
 		#endregion
 	}
@@ -1442,9 +1441,9 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("ItemEngineExemplar")]
 	public partial class ItemEngineExemplar
 	{
-		[Column("ItemEngineExemplar_Id"),       PrimaryKey,  NotNull] public long    ItemEngineExemplarId       { get; set; } // integer
-		[Column("ItemEngineExemplar_ItemId"),                NotNull] public long    ItemEngineExemplarItemId   { get; set; } // integer
-		[Column("ItemEngineExemplar_Exemplar"),    Nullable         ] public byte[]? ItemEngineExemplarExemplar { get; set; } // blob
+		[Column("ItemEngineExemplar_Id"),       PrimaryKey,  NotNull] public long   ItemEngineExemplarId       { get; set; } // integer
+		[Column("ItemEngineExemplar_ItemId"),                NotNull] public long   ItemEngineExemplarItemId   { get; set; } // integer
+		[Column("ItemEngineExemplar_Exemplar"),    Nullable         ] public byte[] ItemEngineExemplarExemplar { get; set; } // blob
 
 		#region Associations
 
@@ -1452,7 +1451,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ItemEngineExemplar_0_0
 		/// </summary>
 		[Association(ThisKey="ItemEngineExemplarItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEngineExemplar_0_0", BackReferenceName="ItemEngineExemplars")]
-		public Item ItemEngineExemplarItem { get; set; } = null!;
+		public Item ItemEngineExemplarItem { get; set; }
 
 		#endregion
 	}
@@ -1460,17 +1459,17 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("ItemEngineStatus")]
 	public partial class ItemEngineStatus
 	{
-		[Column("ItemEngineStatus_Id"),                  PrimaryKey,  NotNull] public long    ItemEngineStatusId                  { get; set; } // integer
-		[Column("ItemEngineStatus_ItemId"),                           NotNull] public long    ItemEngineStatusItemId              { get; set; } // integer
-		[Column("ItemEngineStatus_Status"),                 Nullable         ] public long?   ItemEngineStatusStatus              { get; set; } // integer
-		[Column("ItemEngineStatus_ErrorCode"),              Nullable         ] public long?   ItemEngineStatusErrorCode           { get; set; } // integer
-		[Column("ItemEngineStatus_ErrorString"),            Nullable         ] public string? ItemEngineStatusErrorString         { get; set; } // text(max)
-		[Column("ItemEngineStatus_RetryCount"),             Nullable         ] public long?   ItemEngineStatusRetryCount          { get; set; } // integer
-		[Column("ItemEngineStatus_Version"),                Nullable         ] public string? ItemEngineStatusVersion             { get; set; } // text(max)
-		[Column("ItemEngineStatus_LastRun"),                Nullable         ] public long?   ItemEngineStatusLastRun             { get; set; } // integer
-		[Column("ItemEngineStatus_LastFrameAnalyzed"),      Nullable         ] public long?   ItemEngineStatusLastFrameAnalyzed   { get; set; } // integer
-		[Column("ItemEngineStatus_PartialVideoVersion"),    Nullable         ] public string? ItemEngineStatusPartialVideoVersion { get; set; } // text(max)
-		[Column("ItemEngineStatus_AnalysisDone"),                     NotNull] public long    ItemEngineStatusAnalysisDone        { get; set; } // integer
+		[Column("ItemEngineStatus_Id"),                  PrimaryKey,  NotNull] public long   ItemEngineStatusId                  { get; set; } // integer
+		[Column("ItemEngineStatus_ItemId"),                           NotNull] public long   ItemEngineStatusItemId              { get; set; } // integer
+		[Column("ItemEngineStatus_Status"),                 Nullable         ] public long?  ItemEngineStatusStatus              { get; set; } // integer
+		[Column("ItemEngineStatus_ErrorCode"),              Nullable         ] public long?  ItemEngineStatusErrorCode           { get; set; } // integer
+		[Column("ItemEngineStatus_ErrorString"),            Nullable         ] public string ItemEngineStatusErrorString         { get; set; } // text(max)
+		[Column("ItemEngineStatus_RetryCount"),             Nullable         ] public long?  ItemEngineStatusRetryCount          { get; set; } // integer
+		[Column("ItemEngineStatus_Version"),                Nullable         ] public string ItemEngineStatusVersion             { get; set; } // text(max)
+		[Column("ItemEngineStatus_LastRun"),                Nullable         ] public long?  ItemEngineStatusLastRun             { get; set; } // integer
+		[Column("ItemEngineStatus_LastFrameAnalyzed"),      Nullable         ] public long?  ItemEngineStatusLastFrameAnalyzed   { get; set; } // integer
+		[Column("ItemEngineStatus_PartialVideoVersion"),    Nullable         ] public string ItemEngineStatusPartialVideoVersion { get; set; } // text(max)
+		[Column("ItemEngineStatus_AnalysisDone"),                     NotNull] public long   ItemEngineStatusAnalysisDone        { get; set; } // integer
 
 		#region Associations
 
@@ -1478,7 +1477,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ItemEngineStatus_0_0
 		/// </summary>
 		[Association(ThisKey="ItemEngineStatusItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEngineStatus_0_0", BackReferenceName="ItemEngineStatus")]
-		public Item ItemEngineStatusItem { get; set; } = null!;
+		public Item ItemEngineStatusItem { get; set; }
 
 		#endregion
 	}
@@ -1486,8 +1485,8 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("ItemInferredLocationExperimental")]
 	public partial class ItemInferredLocationExperimental
 	{
-		[Column("ItemInferredLocationExperimental_ItemId"),             PrimaryKey,  NotNull] public long    ItemInferredLocationExperimentalItemId             { get; set; } // integer
-		[Column("ItemInferredLocationExperimental_InferredLocationId"),    Nullable         ] public object? ItemInferredLocationExperimentalInferredLocationId { get; set; }
+		[Column("ItemInferredLocationExperimental_ItemId"),             PrimaryKey,  NotNull] public long   ItemInferredLocationExperimentalItemId             { get; set; } // integer
+		[Column("ItemInferredLocationExperimental_InferredLocationId"),    Nullable         ] public object ItemInferredLocationExperimentalInferredLocationId { get; set; }
 
 		#region Associations
 
@@ -1495,7 +1494,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ItemInferredLocationExperimental_0_0
 		/// </summary>
 		[Association(ThisKey="ItemInferredLocationExperimentalInferredLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemInferredLocationExperimental_0_0", BackReferenceName="ItemInferredLocationExperimentals")]
-		public Location? ItemInferredLocationExperimentalInferredLocation { get; set; }
+		public Location ItemInferredLocationExperimentalInferredLocation { get; set; }
 
 		#endregion
 	}
@@ -1514,19 +1513,19 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ItemTags_1_0
 		/// </summary>
 		[Association(ThisKey="ItemTagsItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemTags_1_0", BackReferenceName="ItemTags")]
-		public Item ItemTagsItem { get; set; } = null!;
+		public Item ItemTagsItem { get; set; }
 
 		/// <summary>
 		/// FK_ItemTags_0_0
 		/// </summary>
 		[Association(ThisKey="ItemTagsTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemTags_0_0", BackReferenceName="ItemTags")]
-		public Tag ItemTagsTag { get; set; } = null!;
+		public Tag ItemTagsTag { get; set; }
 
 		/// <summary>
 		/// FK_ItemVideoTags_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemTagsId", OtherKey="ItemVideoTagsItemTagsId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemVideoTag> ItemVideoTags { get; set; } = null!;
+		public IEnumerable<ItemVideoTag> ItemVideoTags { get; set; }
 
 		#endregion
 	}
@@ -1547,7 +1546,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ItemVideoQuality_0_0
 		/// </summary>
 		[Association(ThisKey="ItemVideoQualityItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemVideoQuality_0_0", BackReferenceName="ItemVideoQualities")]
-		public Item ItemVideoQualityItem { get; set; } = null!;
+		public Item ItemVideoQualityItem { get; set; }
 
 		#endregion
 	}
@@ -1567,7 +1566,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ItemVideoTags_0_0
 		/// </summary>
 		[Association(ThisKey="ItemVideoTagsItemTagsId", OtherKey="ItemTagsId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemVideoTags_0_0", BackReferenceName="ItemVideoTags")]
-		public ItemTag ItemVideoTagsItemTag { get; set; } = null!;
+		public ItemTag ItemVideoTagsItemTag { get; set; }
 
 		#endregion
 	}
@@ -1583,7 +1582,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_LiveTile_0_0
 		/// </summary>
 		[Association(ThisKey="LiveTileItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_LiveTile_0_0", BackReferenceName="LiveTile")]
-		public Item LiveTileItem { get; set; } = null!;
+		public Item LiveTileItem { get; set; }
 
 		#endregion
 	}
@@ -1591,13 +1590,13 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("Location")]
 	public partial class Location
 	{
-		[Column("Location_Id"),                 PrimaryKey,  NotNull] public long    LocationId                 { get; set; } // integer
-		[Column("Location_Name"),                  Nullable         ] public string? LocationName               { get; set; } // text(max)
-		[Column("Location_LocationRegionId"),      Nullable         ] public long?   LocationLocationRegionId   { get; set; } // integer
-		[Column("Location_LocationDistrictId"),    Nullable         ] public long?   LocationLocationDistrictId { get; set; } // integer
-		[Column("Location_LocationCountryId"),     Nullable         ] public long?   LocationLocationCountryId  { get; set; } // integer
-		[Column("Location_ItemsCountExcDupes"),    Nullable         ] public long?   LocationItemsCountExcDupes { get; set; } // integer
-		[Column("Location_CoverItemId"),           Nullable         ] public long?   LocationCoverItemId        { get; set; } // integer
+		[Column("Location_Id"),                 PrimaryKey,  NotNull] public long   LocationId                 { get; set; } // integer
+		[Column("Location_Name"),                  Nullable         ] public string LocationName               { get; set; } // text(max)
+		[Column("Location_LocationRegionId"),      Nullable         ] public long?  LocationLocationRegionId   { get; set; } // integer
+		[Column("Location_LocationDistrictId"),    Nullable         ] public long?  LocationLocationDistrictId { get; set; } // integer
+		[Column("Location_LocationCountryId"),     Nullable         ] public long?  LocationLocationCountryId  { get; set; } // integer
+		[Column("Location_ItemsCountExcDupes"),    Nullable         ] public long?  LocationItemsCountExcDupes { get; set; } // integer
+		[Column("Location_CoverItemId"),           Nullable         ] public long?  LocationCoverItemId        { get; set; } // integer
 
 		#region Associations
 
@@ -1605,49 +1604,49 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExcludedLocation_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="LocationId", OtherKey="ExcludedLocationLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ExcludedLocation> ExcludedLocations { get; set; } = null!;
+		public IEnumerable<ExcludedLocation> ExcludedLocations { get; set; }
 
 		/// <summary>
 		/// FK_ItemInferredLocationExperimental_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="LocationId", OtherKey="ItemInferredLocationExperimentalInferredLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemInferredLocationExperimental> ItemInferredLocationExperimentals { get; set; } = null!;
+		public IEnumerable<ItemInferredLocationExperimental> ItemInferredLocationExperimentals { get; set; }
 
 		/// <summary>
 		/// FK_Item_4_0_BackReference
 		/// </summary>
 		[Association(ThisKey="LocationId", OtherKey="ItemLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Item> Items { get; set; } = null!;
+		public IEnumerable<Item> Items { get; set; }
 
 		/// <summary>
 		/// FK_Location_0_0
 		/// </summary>
 		[Association(ThisKey="LocationCoverItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_0_0", BackReferenceName="Locations")]
-		public Item? LocationCoverItem { get; set; }
+		public Item LocationCoverItem { get; set; }
 
 		/// <summary>
 		/// FK_LocationGrid_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="LocationId", OtherKey="LocationGridLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<LocationGrid> LocationGrids { get; set; } = null!;
+		public IEnumerable<LocationGrid> LocationGrids { get; set; }
 
 		/// <summary>
 		/// FK_Location_1_0
 		/// </summary>
 		[Association(ThisKey="LocationLocationCountryId", OtherKey="LocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_1_0", BackReferenceName="Locations")]
-		public LocationCountry? LocationLocationCountry { get; set; }
+		public LocationCountry LocationLocationCountry { get; set; }
 
 		/// <summary>
 		/// FK_Location_2_0
 		/// </summary>
 		[Association(ThisKey="LocationLocationDistrictId", OtherKey="LocationDistrictId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_2_0", BackReferenceName="Locations")]
-		public LocationDistrict? LocationLocationDistrict { get; set; }
+		public LocationDistrict LocationLocationDistrict { get; set; }
 
 		/// <summary>
 		/// FK_Location_3_0
 		/// </summary>
 		[Association(ThisKey="LocationLocationRegionId", OtherKey="LocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_3_0", BackReferenceName="Locations")]
-		public LocationRegion? LocationLocationRegion { get; set; }
+		public LocationRegion LocationLocationRegion { get; set; }
 
 		#endregion
 	}
@@ -1655,8 +1654,8 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("LocationCountry")]
 	public partial class LocationCountry
 	{
-		[Column("LocationCountry_Id"),   PrimaryKey,  NotNull] public long    LocationCountryId   { get; set; } // integer
-		[Column("LocationCountry_Name"),    Nullable         ] public string? LocationCountryName { get; set; } // text(max)
+		[Column("LocationCountry_Id"),   PrimaryKey,  NotNull] public long   LocationCountryId   { get; set; } // integer
+		[Column("LocationCountry_Name"),    Nullable         ] public string LocationCountryName { get; set; } // text(max)
 
 		#region Associations
 
@@ -1664,13 +1663,13 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_LocationRegion_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="LocationCountryId", OtherKey="LocationRegionLocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<LocationRegion> LocationRegions { get; set; } = null!;
+		public IEnumerable<LocationRegion> LocationRegions { get; set; }
 
 		/// <summary>
 		/// FK_Location_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="LocationCountryId", OtherKey="LocationLocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Location> Locations { get; set; } = null!;
+		public IEnumerable<Location> Locations { get; set; }
 
 		#endregion
 	}
@@ -1678,47 +1677,47 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("LocationCountryFts")]
 	public partial class LocationCountryFt
 	{
-		[Column("LocationCountry_Name"), Nullable] public object? LocationCountryName { get; set; }
+		[Column("LocationCountry_Name"), Nullable] public object LocationCountryName { get; set; }
 	}
 
 	[Table("LocationCountryFts_docsize")]
 	public partial class LocationCountryFtsDocsize
 	{
-		[Column("docid"), PrimaryKey,  NotNull] public long    Docid { get; set; } // integer
-		[Column("size"),     Nullable         ] public byte[]? Size  { get; set; } // blob
+		[Column("docid"), PrimaryKey,  NotNull] public long   Docid { get; set; } // integer
+		[Column("size"),     Nullable         ] public byte[] Size  { get; set; } // blob
 	}
 
 	[Table("LocationCountryFts_segdir")]
 	public partial class LocationCountryFtsSegdir
 	{
-		[Column("level"),            PrimaryKey(0), NotNull] public long    Level          { get; set; } // integer
-		[Column("idx"),              PrimaryKey(1), NotNull] public long    Idx            { get; set; } // integer
-		[Column("start_block"),         Nullable           ] public long?   StartBlock     { get; set; } // integer
-		[Column("leaves_end_block"),    Nullable           ] public long?   LeavesEndBlock { get; set; } // integer
-		[Column("end_block"),           Nullable           ] public long?   EndBlock       { get; set; } // integer
-		[Column("root"),                Nullable           ] public byte[]? Root           { get; set; } // blob
+		[Column("level"),            PrimaryKey(0), NotNull] public long   Level          { get; set; } // integer
+		[Column("idx"),              PrimaryKey(1), NotNull] public long   Idx            { get; set; } // integer
+		[Column("start_block"),         Nullable           ] public long?  StartBlock     { get; set; } // integer
+		[Column("leaves_end_block"),    Nullable           ] public long?  LeavesEndBlock { get; set; } // integer
+		[Column("end_block"),           Nullable           ] public long?  EndBlock       { get; set; } // integer
+		[Column("root"),                Nullable           ] public byte[] Root           { get; set; } // blob
 	}
 
 	[Table("LocationCountryFts_segments")]
 	public partial class LocationCountryFtsSegment
 	{
-		[Column("blockid"), PrimaryKey,  NotNull] public long    Blockid { get; set; } // integer
-		[Column("block"),      Nullable         ] public byte[]? Block   { get; set; } // blob
+		[Column("blockid"), PrimaryKey,  NotNull] public long   Blockid { get; set; } // integer
+		[Column("block"),      Nullable         ] public byte[] Block   { get; set; } // blob
 	}
 
 	[Table("LocationCountryFts_stat")]
 	public partial class LocationCountryFtsStat
 	{
-		[Column("id"),    PrimaryKey,  NotNull] public long    Id    { get; set; } // integer
-		[Column("value"),    Nullable         ] public byte[]? Value { get; set; } // blob
+		[Column("id"),    PrimaryKey,  NotNull] public long   Id    { get; set; } // integer
+		[Column("value"),    Nullable         ] public byte[] Value { get; set; } // blob
 	}
 
 	[Table("LocationDistrict")]
 	public partial class LocationDistrict
 	{
-		[Column("LocationDistrict_Id"),               PrimaryKey,  NotNull] public long    LocationDistrictId               { get; set; } // integer
-		[Column("LocationDistrict_Name"),                Nullable         ] public string? LocationDistrictName             { get; set; } // text(max)
-		[Column("LocationDistrict_LocationRegionId"),    Nullable         ] public long?   LocationDistrictLocationRegionId { get; set; } // integer
+		[Column("LocationDistrict_Id"),               PrimaryKey,  NotNull] public long   LocationDistrictId               { get; set; } // integer
+		[Column("LocationDistrict_Name"),                Nullable         ] public string LocationDistrictName             { get; set; } // text(max)
+		[Column("LocationDistrict_LocationRegionId"),    Nullable         ] public long?  LocationDistrictLocationRegionId { get; set; } // integer
 
 		#region Associations
 
@@ -1726,13 +1725,13 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_LocationDistrict_0_0
 		/// </summary>
 		[Association(ThisKey="LocationDistrictLocationRegionId", OtherKey="LocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationDistrict_0_0", BackReferenceName="LocationDistricts")]
-		public LocationRegion? LocationDistrictLocationRegion { get; set; }
+		public LocationRegion LocationDistrictLocationRegion { get; set; }
 
 		/// <summary>
 		/// FK_Location_2_0_BackReference
 		/// </summary>
 		[Association(ThisKey="LocationDistrictId", OtherKey="LocationLocationDistrictId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Location> Locations { get; set; } = null!;
+		public IEnumerable<Location> Locations { get; set; }
 
 		#endregion
 	}
@@ -1740,77 +1739,77 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("LocationDistrictFts")]
 	public partial class LocationDistrictFt
 	{
-		[Column("LocationDistrict_Name"), Nullable] public object? LocationDistrictName { get; set; }
+		[Column("LocationDistrict_Name"), Nullable] public object LocationDistrictName { get; set; }
 	}
 
 	[Table("LocationDistrictFts_docsize")]
 	public partial class LocationDistrictFtsDocsize
 	{
-		[Column("docid"), PrimaryKey,  NotNull] public long    Docid { get; set; } // integer
-		[Column("size"),     Nullable         ] public byte[]? Size  { get; set; } // blob
+		[Column("docid"), PrimaryKey,  NotNull] public long   Docid { get; set; } // integer
+		[Column("size"),     Nullable         ] public byte[] Size  { get; set; } // blob
 	}
 
 	[Table("LocationDistrictFts_segdir")]
 	public partial class LocationDistrictFtsSegdir
 	{
-		[Column("level"),            PrimaryKey(0), NotNull] public long    Level          { get; set; } // integer
-		[Column("idx"),              PrimaryKey(1), NotNull] public long    Idx            { get; set; } // integer
-		[Column("start_block"),         Nullable           ] public long?   StartBlock     { get; set; } // integer
-		[Column("leaves_end_block"),    Nullable           ] public long?   LeavesEndBlock { get; set; } // integer
-		[Column("end_block"),           Nullable           ] public long?   EndBlock       { get; set; } // integer
-		[Column("root"),                Nullable           ] public byte[]? Root           { get; set; } // blob
+		[Column("level"),            PrimaryKey(0), NotNull] public long   Level          { get; set; } // integer
+		[Column("idx"),              PrimaryKey(1), NotNull] public long   Idx            { get; set; } // integer
+		[Column("start_block"),         Nullable           ] public long?  StartBlock     { get; set; } // integer
+		[Column("leaves_end_block"),    Nullable           ] public long?  LeavesEndBlock { get; set; } // integer
+		[Column("end_block"),           Nullable           ] public long?  EndBlock       { get; set; } // integer
+		[Column("root"),                Nullable           ] public byte[] Root           { get; set; } // blob
 	}
 
 	[Table("LocationDistrictFts_segments")]
 	public partial class LocationDistrictFtsSegment
 	{
-		[Column("blockid"), PrimaryKey,  NotNull] public long    Blockid { get; set; } // integer
-		[Column("block"),      Nullable         ] public byte[]? Block   { get; set; } // blob
+		[Column("blockid"), PrimaryKey,  NotNull] public long   Blockid { get; set; } // integer
+		[Column("block"),      Nullable         ] public byte[] Block   { get; set; } // blob
 	}
 
 	[Table("LocationDistrictFts_stat")]
 	public partial class LocationDistrictFtsStat
 	{
-		[Column("id"),    PrimaryKey,  NotNull] public long    Id    { get; set; } // integer
-		[Column("value"),    Nullable         ] public byte[]? Value { get; set; } // blob
+		[Column("id"),    PrimaryKey,  NotNull] public long   Id    { get; set; } // integer
+		[Column("value"),    Nullable         ] public byte[] Value { get; set; } // blob
 	}
 
 	[Table("LocationFts")]
 	public partial class LocationFt
 	{
-		[Column("Location_Name"), Nullable] public object? LocationName { get; set; }
+		[Column("Location_Name"), Nullable] public object LocationName { get; set; }
 	}
 
 	[Table("LocationFts_docsize")]
 	public partial class LocationFtsDocsize
 	{
-		[Column("docid"), PrimaryKey,  NotNull] public long    Docid { get; set; } // integer
-		[Column("size"),     Nullable         ] public byte[]? Size  { get; set; } // blob
+		[Column("docid"), PrimaryKey,  NotNull] public long   Docid { get; set; } // integer
+		[Column("size"),     Nullable         ] public byte[] Size  { get; set; } // blob
 	}
 
 	[Table("LocationFts_segdir")]
 	public partial class LocationFtsSegdir
 	{
-		[Column("level"),            PrimaryKey(0), NotNull] public long    Level          { get; set; } // integer
-		[Column("idx"),              PrimaryKey(1), NotNull] public long    Idx            { get; set; } // integer
-		[Column("start_block"),         Nullable           ] public long?   StartBlock     { get; set; } // integer
-		[Column("leaves_end_block"),    Nullable           ] public long?   LeavesEndBlock { get; set; } // integer
-		[Column("end_block"),           Nullable           ] public long?   EndBlock       { get; set; } // integer
-		[Column("root"),                Nullable           ] public byte[]? Root           { get; set; } // blob
+		[Column("level"),            PrimaryKey(0), NotNull] public long   Level          { get; set; } // integer
+		[Column("idx"),              PrimaryKey(1), NotNull] public long   Idx            { get; set; } // integer
+		[Column("start_block"),         Nullable           ] public long?  StartBlock     { get; set; } // integer
+		[Column("leaves_end_block"),    Nullable           ] public long?  LeavesEndBlock { get; set; } // integer
+		[Column("end_block"),           Nullable           ] public long?  EndBlock       { get; set; } // integer
+		[Column("root"),                Nullable           ] public byte[] Root           { get; set; } // blob
 	}
 
 	[Table("LocationFts_segments")]
 	public partial class LocationFtsSegment
 	{
-		[Column("blockid"), PrimaryKey,  NotNull] public long    Blockid { get; set; } // integer
-		[Column("block"),      Nullable         ] public byte[]? Block   { get; set; } // blob
+		[Column("blockid"), PrimaryKey,  NotNull] public long   Blockid { get; set; } // integer
+		[Column("block"),      Nullable         ] public byte[] Block   { get; set; } // blob
 	}
 
 	[Table("LocationFts_stat")]
 	public partial class LocationFtsStat
 	{
-		[Column("id"),    PrimaryKey,  NotNull] public long    Id    { get; set; } // integer
-		[Column("value"),    Nullable         ] public byte[]? Value { get; set; } // blob
+		[Column("id"),    PrimaryKey,  NotNull] public long   Id    { get; set; } // integer
+		[Column("value"),    Nullable         ] public byte[] Value { get; set; } // blob
 	}
 
 	[Table("LocationGrid")]
@@ -1829,7 +1828,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_LocationGrid_0_0
 		/// </summary>
 		[Association(ThisKey="LocationGridLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationGrid_0_0", BackReferenceName="LocationGrids")]
-		public Location? LocationGridLocation { get; set; }
+		public Location LocationGridLocation { get; set; }
 
 		#endregion
 	}
@@ -1837,9 +1836,9 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("LocationRegion")]
 	public partial class LocationRegion
 	{
-		[Column("LocationRegion_Id"),                PrimaryKey,  NotNull] public long    LocationRegionId                { get; set; } // integer
-		[Column("LocationRegion_Name"),                 Nullable         ] public string? LocationRegionName              { get; set; } // text(max)
-		[Column("LocationRegion_LocationCountryId"),    Nullable         ] public long?   LocationRegionLocationCountryId { get; set; } // integer
+		[Column("LocationRegion_Id"),                PrimaryKey,  NotNull] public long   LocationRegionId                { get; set; } // integer
+		[Column("LocationRegion_Name"),                 Nullable         ] public string LocationRegionName              { get; set; } // text(max)
+		[Column("LocationRegion_LocationCountryId"),    Nullable         ] public long?  LocationRegionLocationCountryId { get; set; } // integer
 
 		#region Associations
 
@@ -1847,19 +1846,19 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_LocationDistrict_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="LocationRegionId", OtherKey="LocationDistrictLocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<LocationDistrict> LocationDistricts { get; set; } = null!;
+		public IEnumerable<LocationDistrict> LocationDistricts { get; set; }
 
 		/// <summary>
 		/// FK_LocationRegion_0_0
 		/// </summary>
 		[Association(ThisKey="LocationRegionLocationCountryId", OtherKey="LocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationRegion_0_0", BackReferenceName="LocationRegions")]
-		public LocationCountry? LocationRegionLocationCountry { get; set; }
+		public LocationCountry LocationRegionLocationCountry { get; set; }
 
 		/// <summary>
 		/// FK_Location_3_0_BackReference
 		/// </summary>
 		[Association(ThisKey="LocationRegionId", OtherKey="LocationLocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Location> Locations { get; set; } = null!;
+		public IEnumerable<Location> Locations { get; set; }
 
 		#endregion
 	}
@@ -1867,39 +1866,39 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("LocationRegionFts")]
 	public partial class LocationRegionFt
 	{
-		[Column("LocationRegion_Name"), Nullable] public object? LocationRegionName { get; set; }
+		[Column("LocationRegion_Name"), Nullable] public object LocationRegionName { get; set; }
 	}
 
 	[Table("LocationRegionFts_docsize")]
 	public partial class LocationRegionFtsDocsize
 	{
-		[Column("docid"), PrimaryKey,  NotNull] public long    Docid { get; set; } // integer
-		[Column("size"),     Nullable         ] public byte[]? Size  { get; set; } // blob
+		[Column("docid"), PrimaryKey,  NotNull] public long   Docid { get; set; } // integer
+		[Column("size"),     Nullable         ] public byte[] Size  { get; set; } // blob
 	}
 
 	[Table("LocationRegionFts_segdir")]
 	public partial class LocationRegionFtsSegdir
 	{
-		[Column("level"),            PrimaryKey(0), NotNull] public long    Level          { get; set; } // integer
-		[Column("idx"),              PrimaryKey(1), NotNull] public long    Idx            { get; set; } // integer
-		[Column("start_block"),         Nullable           ] public long?   StartBlock     { get; set; } // integer
-		[Column("leaves_end_block"),    Nullable           ] public long?   LeavesEndBlock { get; set; } // integer
-		[Column("end_block"),           Nullable           ] public long?   EndBlock       { get; set; } // integer
-		[Column("root"),                Nullable           ] public byte[]? Root           { get; set; } // blob
+		[Column("level"),            PrimaryKey(0), NotNull] public long   Level          { get; set; } // integer
+		[Column("idx"),              PrimaryKey(1), NotNull] public long   Idx            { get; set; } // integer
+		[Column("start_block"),         Nullable           ] public long?  StartBlock     { get; set; } // integer
+		[Column("leaves_end_block"),    Nullable           ] public long?  LeavesEndBlock { get; set; } // integer
+		[Column("end_block"),           Nullable           ] public long?  EndBlock       { get; set; } // integer
+		[Column("root"),                Nullable           ] public byte[] Root           { get; set; } // blob
 	}
 
 	[Table("LocationRegionFts_segments")]
 	public partial class LocationRegionFtsSegment
 	{
-		[Column("blockid"), PrimaryKey,  NotNull] public long    Blockid { get; set; } // integer
-		[Column("block"),      Nullable         ] public byte[]? Block   { get; set; } // blob
+		[Column("blockid"), PrimaryKey,  NotNull] public long   Blockid { get; set; } // integer
+		[Column("block"),      Nullable         ] public byte[] Block   { get; set; } // blob
 	}
 
 	[Table("LocationRegionFts_stat")]
 	public partial class LocationRegionFtsStat
 	{
-		[Column("id"),    PrimaryKey,  NotNull] public long    Id    { get; set; } // integer
-		[Column("value"),    Nullable         ] public byte[]? Value { get; set; } // blob
+		[Column("id"),    PrimaryKey,  NotNull] public long   Id    { get; set; } // integer
+		[Column("value"),    Nullable         ] public byte[] Value { get; set; } // blob
 	}
 
 	[Table("NetworkTelemetry")]
@@ -1925,13 +1924,13 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_OCRItem_0_0
 		/// </summary>
 		[Association(ThisKey="OCRItemItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRItem_0_0", BackReferenceName="OCRItems")]
-		public Item OCRItemItem { get; set; } = null!;
+		public Item OCRItemItem { get; set; }
 
 		/// <summary>
 		/// FK_OCRLine_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="OCRItemId", OtherKey="OCRLineOCRItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<OCRLine> OCRLines { get; set; } = null!;
+		public IEnumerable<OCRLine> OCRLines { get; set; }
 
 		#endregion
 	}
@@ -1939,46 +1938,46 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("OCRItemTextView", IsView=true)]
 	public partial class OCRItemTextView
 	{
-		[Column("rowid"),                NotNull    ] public long    Rowid               { get; set; } // integer
-		[Column("OCRItemTextView_Text"),    Nullable] public object? OCRItemTextViewText { get; set; }
+		[Column("rowid"),                NotNull    ] public long   Rowid               { get; set; } // integer
+		[Column("OCRItemTextView_Text"),    Nullable] public object OCRItemTextViewText { get; set; }
 	}
 
 	[Table("OCRItemTextViewFts")]
 	public partial class OCRItemTextViewFt
 	{
-		[Column("OCRItemTextView_Text"), Nullable] public object? OCRItemTextViewText { get; set; }
+		[Column("OCRItemTextView_Text"), Nullable] public object OCRItemTextViewText { get; set; }
 	}
 
 	[Table("OCRItemTextViewFts_docsize")]
 	public partial class OCRItemTextViewFtsDocsize
 	{
-		[Column("docid"), PrimaryKey,  NotNull] public long    Docid { get; set; } // integer
-		[Column("size"),     Nullable         ] public byte[]? Size  { get; set; } // blob
+		[Column("docid"), PrimaryKey,  NotNull] public long   Docid { get; set; } // integer
+		[Column("size"),     Nullable         ] public byte[] Size  { get; set; } // blob
 	}
 
 	[Table("OCRItemTextViewFts_segdir")]
 	public partial class OCRItemTextViewFtsSegdir
 	{
-		[Column("level"),            PrimaryKey(0), NotNull] public long    Level          { get; set; } // integer
-		[Column("idx"),              PrimaryKey(1), NotNull] public long    Idx            { get; set; } // integer
-		[Column("start_block"),         Nullable           ] public long?   StartBlock     { get; set; } // integer
-		[Column("leaves_end_block"),    Nullable           ] public long?   LeavesEndBlock { get; set; } // integer
-		[Column("end_block"),           Nullable           ] public long?   EndBlock       { get; set; } // integer
-		[Column("root"),                Nullable           ] public byte[]? Root           { get; set; } // blob
+		[Column("level"),            PrimaryKey(0), NotNull] public long   Level          { get; set; } // integer
+		[Column("idx"),              PrimaryKey(1), NotNull] public long   Idx            { get; set; } // integer
+		[Column("start_block"),         Nullable           ] public long?  StartBlock     { get; set; } // integer
+		[Column("leaves_end_block"),    Nullable           ] public long?  LeavesEndBlock { get; set; } // integer
+		[Column("end_block"),           Nullable           ] public long?  EndBlock       { get; set; } // integer
+		[Column("root"),                Nullable           ] public byte[] Root           { get; set; } // blob
 	}
 
 	[Table("OCRItemTextViewFts_segments")]
 	public partial class OCRItemTextViewFtsSegment
 	{
-		[Column("blockid"), PrimaryKey,  NotNull] public long    Blockid { get; set; } // integer
-		[Column("block"),      Nullable         ] public byte[]? Block   { get; set; } // blob
+		[Column("blockid"), PrimaryKey,  NotNull] public long   Blockid { get; set; } // integer
+		[Column("block"),      Nullable         ] public byte[] Block   { get; set; } // blob
 	}
 
 	[Table("OCRItemTextViewFts_stat")]
 	public partial class OCRItemTextViewFtsStat
 	{
-		[Column("id"),    PrimaryKey,  NotNull] public long    Id    { get; set; } // integer
-		[Column("value"),    Nullable         ] public byte[]? Value { get; set; } // blob
+		[Column("id"),    PrimaryKey,  NotNull] public long   Id    { get; set; } // integer
+		[Column("value"),    Nullable         ] public byte[] Value { get; set; } // blob
 	}
 
 	[Table("OCRLine")]
@@ -1994,13 +1993,13 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_OCRLine_0_0
 		/// </summary>
 		[Association(ThisKey="OCRLineOCRItemId", OtherKey="OCRItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRLine_0_0", BackReferenceName="OCRLines")]
-		public OCRItem OCRLineOCRItem { get; set; } = null!;
+		public OCRItem OCRLineOCRItem { get; set; }
 
 		/// <summary>
 		/// FK_OCRWord_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="OCRLineId", OtherKey="OCRWordOCRLineId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<OCRWord> OCRWords { get; set; } = null!;
+		public IEnumerable<OCRWord> OCRWords { get; set; }
 
 		#endregion
 	}
@@ -2011,7 +2010,7 @@ namespace StorageProviders.SQLite.NetCore
 		[Column("OCRWord_Id"),          PrimaryKey, NotNull] public long   OCRWordId          { get; set; } // integer
 		[Column("OCRWord_OCRLineId"),               NotNull] public long   OCRWordOCRLineId   { get; set; } // integer
 		[Column("OCRWord_IndexOnLine"),             NotNull] public long   OCRWordIndexOnLine { get; set; } // integer
-		[Column("OCRWord_Text"),                    NotNull] public string OCRWordText        { get; set; } = null!; // text(max)
+		[Column("OCRWord_Text"),                    NotNull] public string OCRWordText        { get; set; } // text(max)
 		[Column("OCRWord_Height"),                  NotNull] public double OCRWordHeight      { get; set; } // real
 		[Column("OCRWord_Width"),                   NotNull] public double OCRWordWidth       { get; set; } // real
 		[Column("OCRWord_X"),                       NotNull] public double OCRWordX           { get; set; } // real
@@ -2023,7 +2022,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_OCRWord_0_0
 		/// </summary>
 		[Association(ThisKey="OCRWordOCRLineId", OtherKey="OCRLineId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRWord_0_0", BackReferenceName="OCRWords")]
-		public OCRLine OCRWordOCRLine { get; set; } = null!;
+		public OCRLine OCRWordOCRLine { get; set; }
 
 		#endregion
 	}
@@ -2031,29 +2030,29 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("OneDriveStorageAndUpsellInfo")]
 	public partial class OneDriveStorageAndUpsellInfo
 	{
-		[Column("OneDriveStorageAndUpsellInfo_UserId"),                 PrimaryKey,  NotNull] public string  OneDriveStorageAndUpsellInfoUserId                 { get; set; } = null!; // text(max)
-		[Column("OneDriveStorageAndUpsellInfo_TotalSpace"),                Nullable         ] public long?   OneDriveStorageAndUpsellInfoTotalSpace             { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_UsedSpace"),                 Nullable         ] public long?   OneDriveStorageAndUpsellInfoUsedSpace              { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_IsHighestPlan"),             Nullable         ] public long?   OneDriveStorageAndUpsellInfoIsHighestPlan          { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_PaidSpace"),                 Nullable         ] public long?   OneDriveStorageAndUpsellInfoPaidSpace              { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_CountOfClickUpsellLink"),    Nullable         ] public long?   OneDriveStorageAndUpsellInfoCountOfClickUpsellLink { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_TotalSpaceForDisplay"),      Nullable         ] public string? OneDriveStorageAndUpsellInfoTotalSpaceForDisplay   { get; set; } // text(max)
-		[Column("OneDriveStorageAndUpsellInfo_UsedSpaceForDisplay"),       Nullable         ] public string? OneDriveStorageAndUpsellInfoUsedSpaceForDisplay    { get; set; } // text(max)
-		[Column("OneDriveStorageAndUpsellInfo_PriceForDisplay"),           Nullable         ] public string? OneDriveStorageAndUpsellInfoPriceForDisplay        { get; set; } // text(max)
-		[Column("OneDriveStorageAndUpsellInfo_UpsellUrl"),                 Nullable         ] public string? OneDriveStorageAndUpsellInfoUpsellUrl              { get; set; } // text(max)
-		[Column("OneDriveStorageAndUpsellInfo_UpsellState"),               Nullable         ] public long?   OneDriveStorageAndUpsellInfoUpsellState            { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_LastGetQuotaTime"),          Nullable         ] public long?   OneDriveStorageAndUpsellInfoLastGetQuotaTime       { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_LastGetUpsellInfoTime"),     Nullable         ] public long?   OneDriveStorageAndUpsellInfoLastGetUpsellInfoTime  { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_CurrentPlan"),               Nullable         ] public long?   OneDriveStorageAndUpsellInfoCurrentPlan            { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_QuotaStatus"),               Nullable         ] public long?   OneDriveStorageAndUpsellInfoQuotaStatus            { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_UserId"),                 PrimaryKey,  NotNull] public string OneDriveStorageAndUpsellInfoUserId                 { get; set; } // text(max)
+		[Column("OneDriveStorageAndUpsellInfo_TotalSpace"),                Nullable         ] public long?  OneDriveStorageAndUpsellInfoTotalSpace             { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_UsedSpace"),                 Nullable         ] public long?  OneDriveStorageAndUpsellInfoUsedSpace              { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_IsHighestPlan"),             Nullable         ] public long?  OneDriveStorageAndUpsellInfoIsHighestPlan          { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_PaidSpace"),                 Nullable         ] public long?  OneDriveStorageAndUpsellInfoPaidSpace              { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_CountOfClickUpsellLink"),    Nullable         ] public long?  OneDriveStorageAndUpsellInfoCountOfClickUpsellLink { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_TotalSpaceForDisplay"),      Nullable         ] public string OneDriveStorageAndUpsellInfoTotalSpaceForDisplay   { get; set; } // text(max)
+		[Column("OneDriveStorageAndUpsellInfo_UsedSpaceForDisplay"),       Nullable         ] public string OneDriveStorageAndUpsellInfoUsedSpaceForDisplay    { get; set; } // text(max)
+		[Column("OneDriveStorageAndUpsellInfo_PriceForDisplay"),           Nullable         ] public string OneDriveStorageAndUpsellInfoPriceForDisplay        { get; set; } // text(max)
+		[Column("OneDriveStorageAndUpsellInfo_UpsellUrl"),                 Nullable         ] public string OneDriveStorageAndUpsellInfoUpsellUrl              { get; set; } // text(max)
+		[Column("OneDriveStorageAndUpsellInfo_UpsellState"),               Nullable         ] public long?  OneDriveStorageAndUpsellInfoUpsellState            { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_LastGetQuotaTime"),          Nullable         ] public long?  OneDriveStorageAndUpsellInfoLastGetQuotaTime       { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_LastGetUpsellInfoTime"),     Nullable         ] public long?  OneDriveStorageAndUpsellInfoLastGetUpsellInfoTime  { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_CurrentPlan"),               Nullable         ] public long?  OneDriveStorageAndUpsellInfoCurrentPlan            { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_QuotaStatus"),               Nullable         ] public long?  OneDriveStorageAndUpsellInfoQuotaStatus            { get; set; } // integer
 	}
 
 	[Table("PendingCloudAlbumDelete")]
 	public partial class PendingCloudAlbumDelete
 	{
-		[Column("PendingCloudAlbumDelete_Id"),            PrimaryKey,  NotNull] public long    PendingCloudAlbumDeleteId            { get; set; } // integer
-		[Column("PendingCloudAlbumDelete_PhotosCloudId"),    Nullable         ] public string? PendingCloudAlbumDeletePhotosCloudId { get; set; } // text(max)
-		[Column("PendingCloudAlbumDelete_SourceId"),         Nullable         ] public long?   PendingCloudAlbumDeleteSourceId      { get; set; } // integer
+		[Column("PendingCloudAlbumDelete_Id"),            PrimaryKey,  NotNull] public long   PendingCloudAlbumDeleteId            { get; set; } // integer
+		[Column("PendingCloudAlbumDelete_PhotosCloudId"),    Nullable         ] public string PendingCloudAlbumDeletePhotosCloudId { get; set; } // text(max)
+		[Column("PendingCloudAlbumDelete_SourceId"),         Nullable         ] public long?  PendingCloudAlbumDeleteSourceId      { get; set; } // integer
 
 		#region Associations
 
@@ -2061,7 +2060,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_PendingCloudAlbumDelete_0_0
 		/// </summary>
 		[Association(ThisKey="PendingCloudAlbumDeleteSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingCloudAlbumDelete_0_0", BackReferenceName="PendingCloudAlbumDeletes")]
-		public Source? PendingCloudAlbumDeleteSource { get; set; }
+		public Source PendingCloudAlbumDeleteSource { get; set; }
 
 		#endregion
 	}
@@ -2069,18 +2068,18 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("PendingUploadItem")]
 	public partial class PendingUploadItem
 	{
-		[Column("PendingUploadItem_ItemId"),               NotNull    ] public long    PendingUploadItemItemId               { get; set; } // integer
-		[Column("PendingUploadItem_AlbumId"),              NotNull    ] public long    PendingUploadItemAlbumId              { get; set; } // integer
-		[Column("PendingUploadItem_Result"),                  Nullable] public long?   PendingUploadItemResult               { get; set; } // integer
-		[Column("PendingUploadItem_ResourceId"),              Nullable] public string? PendingUploadItemResourceId           { get; set; } // text(max)
-		[Column("PendingUploadItem_SourceId"),                Nullable] public long?   PendingUploadItemSourceId             { get; set; } // integer
-		[Column("PendingUploadItem_Type"),                    Nullable] public long?   PendingUploadItemType                 { get; set; } // integer
-		[Column("PendingUploadItem_NeedsAEUpload"),           Nullable] public long?   PendingUploadItemNeedsAEUpload        { get; set; } // integer
-		[Column("PendingUploadItem_ActionAfterUpload"),       Nullable] public long?   PendingUploadItemActionAfterUpload    { get; set; } // integer
-		[Column("PendingUploadItem_AlbumRemoteId"),           Nullable] public string? PendingUploadItemAlbumRemoteId        { get; set; } // text(max)
-		[Column("PendingUploadItem_ResourceIdSourceType"),    Nullable] public long?   PendingUploadItemResourceIdSourceType { get; set; } // integer
-		[Column("PendingUploadItem_UploadSessionUrl"),        Nullable] public string? PendingUploadItemUploadSessionUrl     { get; set; } // text(max)
-		[Column("PendingUploadItem_ResumableUploadUrl"),      Nullable] public string? PendingUploadItemResumableUploadUrl   { get; set; } // text(max)
+		[Column("PendingUploadItem_ItemId"),               NotNull    ] public long   PendingUploadItemItemId               { get; set; } // integer
+		[Column("PendingUploadItem_AlbumId"),              NotNull    ] public long   PendingUploadItemAlbumId              { get; set; } // integer
+		[Column("PendingUploadItem_Result"),                  Nullable] public long?  PendingUploadItemResult               { get; set; } // integer
+		[Column("PendingUploadItem_ResourceId"),              Nullable] public string PendingUploadItemResourceId           { get; set; } // text(max)
+		[Column("PendingUploadItem_SourceId"),                Nullable] public long?  PendingUploadItemSourceId             { get; set; } // integer
+		[Column("PendingUploadItem_Type"),                    Nullable] public long?  PendingUploadItemType                 { get; set; } // integer
+		[Column("PendingUploadItem_NeedsAEUpload"),           Nullable] public long?  PendingUploadItemNeedsAEUpload        { get; set; } // integer
+		[Column("PendingUploadItem_ActionAfterUpload"),       Nullable] public long?  PendingUploadItemActionAfterUpload    { get; set; } // integer
+		[Column("PendingUploadItem_AlbumRemoteId"),           Nullable] public string PendingUploadItemAlbumRemoteId        { get; set; } // text(max)
+		[Column("PendingUploadItem_ResourceIdSourceType"),    Nullable] public long?  PendingUploadItemResourceIdSourceType { get; set; } // integer
+		[Column("PendingUploadItem_UploadSessionUrl"),        Nullable] public string PendingUploadItemUploadSessionUrl     { get; set; } // text(max)
+		[Column("PendingUploadItem_ResumableUploadUrl"),      Nullable] public string PendingUploadItemResumableUploadUrl   { get; set; } // text(max)
 
 		#region Associations
 
@@ -2088,19 +2087,19 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_PendingUploadItem_1_0
 		/// </summary>
 		[Association(ThisKey="PendingUploadItemAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_1_0", BackReferenceName="PendingUploadItems")]
-		public Album PendingUploadItemAlbum { get; set; } = null!;
+		public Album PendingUploadItemAlbum { get; set; }
 
 		/// <summary>
 		/// FK_PendingUploadItem_2_0
 		/// </summary>
 		[Association(ThisKey="PendingUploadItemItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_2_0", BackReferenceName="PendingUploadItems")]
-		public Item PendingUploadItemItem { get; set; } = null!;
+		public Item PendingUploadItemItem { get; set; }
 
 		/// <summary>
 		/// FK_PendingUploadItem_0_0
 		/// </summary>
 		[Association(ThisKey="PendingUploadItemSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_0_0", BackReferenceName="PendingUploadItems")]
-		public Source? PendingUploadItemSource { get; set; }
+		public Source PendingUploadItemSource { get; set; }
 
 		#endregion
 	}
@@ -2108,19 +2107,19 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("Person")]
 	public partial class Person
 	{
-		[Column("Person_Id"),                        PrimaryKey,  NotNull] public long    PersonId                        { get; set; } // integer
-		[Column("Person_CID"),                          Nullable         ] public long?   PersonCid                       { get; set; } // integer
-		[Column("Person_BestFaceId"),                   Nullable         ] public long?   PersonBestFaceId                { get; set; } // integer
-		[Column("Person_SafeBestFaceId"),               Nullable         ] public long?   PersonSafeBestFaceId            { get; set; } // integer
-		[Column("Person_ServiceId"),                    Nullable         ] public long?   PersonServiceId                 { get; set; } // integer
-		[Column("Person_Name"),                         Nullable         ] public string? PersonName                      { get; set; } // text(max)
-		[Column("Person_SourceAndId"),                  Nullable         ] public string? PersonSourceAndId               { get; set; } // text(max)
-		[Column("Person_ItemCount"),                    Nullable         ] public long?   PersonItemCount                 { get; set; } // integer
-		[Column("Person_EmailDigest"),                  Nullable         ] public byte[]? PersonEmailDigest               { get; set; } // blob
-		[Column("Person_RepresentativeThumbStream"),    Nullable         ] public byte[]? PersonRepresentativeThumbStream { get; set; } // blob
-		[Column("Person_Rank"),                         Nullable         ] public long?   PersonRank                      { get; set; } // integer
-		[Column("Person_RecalcBestFace"),               Nullable         ] public long?   PersonRecalcBestFace            { get; set; } // integer
-		[Column("Person_RecalcRank"),                   Nullable         ] public long?   PersonRecalcRank                { get; set; } // integer
+		[Column("Person_Id"),                        PrimaryKey,  NotNull] public long   PersonId                        { get; set; } // integer
+		[Column("Person_CID"),                          Nullable         ] public long?  PersonCid                       { get; set; } // integer
+		[Column("Person_BestFaceId"),                   Nullable         ] public long?  PersonBestFaceId                { get; set; } // integer
+		[Column("Person_SafeBestFaceId"),               Nullable         ] public long?  PersonSafeBestFaceId            { get; set; } // integer
+		[Column("Person_ServiceId"),                    Nullable         ] public long?  PersonServiceId                 { get; set; } // integer
+		[Column("Person_Name"),                         Nullable         ] public string PersonName                      { get; set; } // text(max)
+		[Column("Person_SourceAndId"),                  Nullable         ] public string PersonSourceAndId               { get; set; } // text(max)
+		[Column("Person_ItemCount"),                    Nullable         ] public long?  PersonItemCount                 { get; set; } // integer
+		[Column("Person_EmailDigest"),                  Nullable         ] public byte[] PersonEmailDigest               { get; set; } // blob
+		[Column("Person_RepresentativeThumbStream"),    Nullable         ] public byte[] PersonRepresentativeThumbStream { get; set; } // blob
+		[Column("Person_Rank"),                         Nullable         ] public long?  PersonRank                      { get; set; } // integer
+		[Column("Person_RecalcBestFace"),               Nullable         ] public long?  PersonRecalcBestFace            { get; set; } // integer
+		[Column("Person_RecalcRank"),                   Nullable         ] public long?  PersonRecalcRank                { get; set; } // integer
 
 		#region Associations
 
@@ -2128,31 +2127,31 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExcludedPerson_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="PersonId", OtherKey="ExcludedPersonPersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ExcludedPerson> ExcludedPeople { get; set; } = null!;
+		public IEnumerable<ExcludedPerson> ExcludedPeople { get; set; }
 
 		/// <summary>
 		/// FK_FaceCluster_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="PersonId", OtherKey="FaceClusterPersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<FaceCluster> FaceClusters { get; set; } = null!;
+		public IEnumerable<FaceCluster> FaceClusters { get; set; }
 
 		/// <summary>
 		/// FK_Face_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="PersonId", OtherKey="FacePersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Face> Faces { get; set; } = null!;
+		public IEnumerable<Face> Faces { get; set; }
 
 		/// <summary>
 		/// FK_Person_1_0
 		/// </summary>
 		[Association(ThisKey="PersonBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Person_1_0", BackReferenceName="FkPerson10BackReferences")]
-		public Face? PersonBestFace { get; set; }
+		public Face PersonBestFace { get; set; }
 
 		/// <summary>
 		/// FK_Person_0_0
 		/// </summary>
 		[Association(ThisKey="PersonSafeBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Person_0_0", BackReferenceName="People")]
-		public Face? PersonSafeBestFace { get; set; }
+		public Face PersonSafeBestFace { get; set; }
 
 		#endregion
 	}
@@ -2160,61 +2159,61 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("PersonFts")]
 	public partial class PersonFt
 	{
-		[Column("Person_Name"), Nullable] public object? PersonName { get; set; }
+		[Column("Person_Name"), Nullable] public object PersonName { get; set; }
 	}
 
 	[Table("PersonFts_docsize")]
 	public partial class PersonFtsDocsize
 	{
-		[Column("docid"), PrimaryKey,  NotNull] public long    Docid { get; set; } // integer
-		[Column("size"),     Nullable         ] public byte[]? Size  { get; set; } // blob
+		[Column("docid"), PrimaryKey,  NotNull] public long   Docid { get; set; } // integer
+		[Column("size"),     Nullable         ] public byte[] Size  { get; set; } // blob
 	}
 
 	[Table("PersonFts_segdir")]
 	public partial class PersonFtsSegdir
 	{
-		[Column("level"),            PrimaryKey(0), NotNull] public long    Level          { get; set; } // integer
-		[Column("idx"),              PrimaryKey(1), NotNull] public long    Idx            { get; set; } // integer
-		[Column("start_block"),         Nullable           ] public long?   StartBlock     { get; set; } // integer
-		[Column("leaves_end_block"),    Nullable           ] public long?   LeavesEndBlock { get; set; } // integer
-		[Column("end_block"),           Nullable           ] public long?   EndBlock       { get; set; } // integer
-		[Column("root"),                Nullable           ] public byte[]? Root           { get; set; } // blob
+		[Column("level"),            PrimaryKey(0), NotNull] public long   Level          { get; set; } // integer
+		[Column("idx"),              PrimaryKey(1), NotNull] public long   Idx            { get; set; } // integer
+		[Column("start_block"),         Nullable           ] public long?  StartBlock     { get; set; } // integer
+		[Column("leaves_end_block"),    Nullable           ] public long?  LeavesEndBlock { get; set; } // integer
+		[Column("end_block"),           Nullable           ] public long?  EndBlock       { get; set; } // integer
+		[Column("root"),                Nullable           ] public byte[] Root           { get; set; } // blob
 	}
 
 	[Table("PersonFts_segments")]
 	public partial class PersonFtsSegment
 	{
-		[Column("blockid"), PrimaryKey,  NotNull] public long    Blockid { get; set; } // integer
-		[Column("block"),      Nullable         ] public byte[]? Block   { get; set; } // blob
+		[Column("blockid"), PrimaryKey,  NotNull] public long   Blockid { get; set; } // integer
+		[Column("block"),      Nullable         ] public byte[] Block   { get; set; } // blob
 	}
 
 	[Table("PersonFts_stat")]
 	public partial class PersonFtsStat
 	{
-		[Column("id"),    PrimaryKey,  NotNull] public long    Id    { get; set; } // integer
-		[Column("value"),    Nullable         ] public byte[]? Value { get; set; } // blob
+		[Column("id"),    PrimaryKey,  NotNull] public long   Id    { get; set; } // integer
+		[Column("value"),    Nullable         ] public byte[] Value { get; set; } // blob
 	}
 
 	[Table("PinnedSearch")]
 	public partial class PinnedSearch
 	{
-		[Column("PinnedSearch_Id"),         PrimaryKey,  NotNull] public long    PinnedSearchId         { get; set; } // integer
-		[Column("PinnedSearch_PinnedDate"),              NotNull] public long    PinnedSearchPinnedDate { get; set; } // integer
-		[Column("PinnedSearch_SearchText"),    Nullable         ] public string? PinnedSearchSearchText { get; set; } // text(max)
+		[Column("PinnedSearch_Id"),         PrimaryKey,  NotNull] public long   PinnedSearchId         { get; set; } // integer
+		[Column("PinnedSearch_PinnedDate"),              NotNull] public long   PinnedSearchPinnedDate { get; set; } // integer
+		[Column("PinnedSearch_SearchText"),    Nullable         ] public string PinnedSearchSearchText { get; set; } // text(max)
 	}
 
 	[Table("Project")]
 	public partial class Project
 	{
-		[Column("Project_Id"),                       PrimaryKey,  NotNull] public long    ProjectId                       { get; set; } // integer
-		[Column("Project_AlbumId"),                     Nullable         ] public long?   ProjectAlbumId                  { get; set; } // integer
-		[Column("Project_Guid"),                                  NotNull] public string  ProjectGuid                     { get; set; } = null!; // text(max)
-		[Column("Project_Name"),                        Nullable         ] public string? ProjectName                     { get; set; } // text(max)
-		[Column("Project_RpmState"),                    Nullable         ] public string? ProjectRpmState                 { get; set; } // text(max)
-		[Column("Project_AgmState"),                    Nullable         ] public string? ProjectAgmState                 { get; set; } // text(max)
-		[Column("Project_DateCreated"),                           NotNull] public long    ProjectDateCreated              { get; set; } // integer
-		[Column("Project_Duration"),                    Nullable         ] public long?   ProjectDuration                 { get; set; } // integer
-		[Column("Project_StoryBuilderProjectState"),    Nullable         ] public byte[]? ProjectStoryBuilderProjectState { get; set; } // blob
+		[Column("Project_Id"),                       PrimaryKey,  NotNull] public long   ProjectId                       { get; set; } // integer
+		[Column("Project_AlbumId"),                     Nullable         ] public long?  ProjectAlbumId                  { get; set; } // integer
+		[Column("Project_Guid"),                                  NotNull] public string ProjectGuid                     { get; set; } // text(max)
+		[Column("Project_Name"),                        Nullable         ] public string ProjectName                     { get; set; } // text(max)
+		[Column("Project_RpmState"),                    Nullable         ] public string ProjectRpmState                 { get; set; } // text(max)
+		[Column("Project_AgmState"),                    Nullable         ] public string ProjectAgmState                 { get; set; } // text(max)
+		[Column("Project_DateCreated"),                           NotNull] public long   ProjectDateCreated              { get; set; } // integer
+		[Column("Project_Duration"),                    Nullable         ] public long?  ProjectDuration                 { get; set; } // integer
+		[Column("Project_StoryBuilderProjectState"),    Nullable         ] public byte[] ProjectStoryBuilderProjectState { get; set; } // blob
 
 		#region Associations
 
@@ -2222,13 +2221,13 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_Project_0_0
 		/// </summary>
 		[Association(ThisKey="ProjectAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Project_0_0", BackReferenceName="Projects")]
-		public Album? ProjectAlbum { get; set; }
+		public Album ProjectAlbum { get; set; }
 
 		/// <summary>
 		/// FK_RemoteProject_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ProjectGuid", OtherKey="RemoteProjectProjectGuid", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<RemoteProject> RemoteProjects { get; set; } = null!;
+		public IEnumerable<RemoteProject> RemoteProjects { get; set; }
 
 		#endregion
 	}
@@ -2236,14 +2235,14 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("RemoteAlbum")]
 	public partial class RemoteAlbum
 	{
-		[Column("RemoteAlbum_AlbumId"),           PrimaryKey,  NotNull] public long    RemoteAlbumAlbumId           { get; set; } // integer
-		[Column("RemoteAlbum_RemoteId"),             Nullable         ] public string? RemoteAlbumRemoteId          { get; set; } // text(max)
-		[Column("RemoteAlbum_PresentAtSync"),        Nullable         ] public long?   RemoteAlbumPresentAtSync     { get; set; } // integer
-		[Column("RemoteAlbum_GenericViewUrl"),       Nullable         ] public string? RemoteAlbumGenericViewUrl    { get; set; } // text(max)
-		[Column("RemoteAlbum_CoverDuringUpload"),    Nullable         ] public string? RemoteAlbumCoverDuringUpload { get; set; } // text(max)
-		[Column("RemoteAlbum_AlbumType"),            Nullable         ] public long?   RemoteAlbumAlbumType         { get; set; } // integer
-		[Column("RemoteAlbum_PhotosCloudId"),        Nullable         ] public string? RemoteAlbumPhotosCloudId     { get; set; } // text(max)
-		[Column("RemoteAlbum_ETag"),                 Nullable         ] public string? RemoteAlbumETag              { get; set; } // text(max)
+		[Column("RemoteAlbum_AlbumId"),           PrimaryKey,  NotNull] public long   RemoteAlbumAlbumId           { get; set; } // integer
+		[Column("RemoteAlbum_RemoteId"),             Nullable         ] public string RemoteAlbumRemoteId          { get; set; } // text(max)
+		[Column("RemoteAlbum_PresentAtSync"),        Nullable         ] public long?  RemoteAlbumPresentAtSync     { get; set; } // integer
+		[Column("RemoteAlbum_GenericViewUrl"),       Nullable         ] public string RemoteAlbumGenericViewUrl    { get; set; } // text(max)
+		[Column("RemoteAlbum_CoverDuringUpload"),    Nullable         ] public string RemoteAlbumCoverDuringUpload { get; set; } // text(max)
+		[Column("RemoteAlbum_AlbumType"),            Nullable         ] public long?  RemoteAlbumAlbumType         { get; set; } // integer
+		[Column("RemoteAlbum_PhotosCloudId"),        Nullable         ] public string RemoteAlbumPhotosCloudId     { get; set; } // text(max)
+		[Column("RemoteAlbum_ETag"),                 Nullable         ] public string RemoteAlbumETag              { get; set; } // text(max)
 
 		#region Associations
 
@@ -2251,7 +2250,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_RemoteAlbum_0_0
 		/// </summary>
 		[Association(ThisKey="RemoteAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_RemoteAlbum_0_0", BackReferenceName="RemoteAlbum")]
-		public Album RemoteAlbumAlbum { get; set; } = null!;
+		public Album RemoteAlbumAlbum { get; set; }
 
 		#endregion
 	}
@@ -2259,13 +2258,13 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("RemoteItem")]
 	public partial class RemoteItem
 	{
-		[Column("RemoteItem_RemoteId"),       Nullable] public string? RemoteItemRemoteId       { get; set; } // text(max)
-		[Column("RemoteItem_RemoteParentId"), Nullable] public string? RemoteItemRemoteParentId { get; set; } // text(max)
-		[Column("RemoteItem_ItemId"),         Nullable] public long?   RemoteItemItemId         { get; set; } // integer
-		[Column("RemoteItem_FolderId"),       Nullable] public long?   RemoteItemFolderId       { get; set; } // integer
-		[Column("RemoteItem_DownloadUrl"),    Nullable] public string? RemoteItemDownloadUrl    { get; set; } // text(max)
-		[Column("RemoteItem_PresentAtSync"),  Nullable] public long?   RemoteItemPresentAtSync  { get; set; } // integer
-		[Column("RemoteItem_PhotosCloudId"),  Nullable] public string? RemoteItemPhotosCloudId  { get; set; } // text(max)
+		[Column("RemoteItem_RemoteId"),       Nullable] public string RemoteItemRemoteId       { get; set; } // text(max)
+		[Column("RemoteItem_RemoteParentId"), Nullable] public string RemoteItemRemoteParentId { get; set; } // text(max)
+		[Column("RemoteItem_ItemId"),         Nullable] public long?  RemoteItemItemId         { get; set; } // integer
+		[Column("RemoteItem_FolderId"),       Nullable] public long?  RemoteItemFolderId       { get; set; } // integer
+		[Column("RemoteItem_DownloadUrl"),    Nullable] public string RemoteItemDownloadUrl    { get; set; } // text(max)
+		[Column("RemoteItem_PresentAtSync"),  Nullable] public long?  RemoteItemPresentAtSync  { get; set; } // integer
+		[Column("RemoteItem_PhotosCloudId"),  Nullable] public string RemoteItemPhotosCloudId  { get; set; } // text(max)
 
 		#region Associations
 
@@ -2273,13 +2272,13 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_RemoteItem_0_0
 		/// </summary>
 		[Association(ThisKey="RemoteItemFolderId", OtherKey="FolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteItem_0_0", BackReferenceName="RemoteItems")]
-		public Folder? RemoteItemFolder { get; set; }
+		public Folder RemoteItemFolder { get; set; }
 
 		/// <summary>
 		/// FK_RemoteItem_1_0
 		/// </summary>
 		[Association(ThisKey="RemoteItemItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteItem_1_0", BackReferenceName="RemoteItems")]
-		public Item? RemoteItemItem { get; set; }
+		public Item RemoteItemItem { get; set; }
 
 		#endregion
 	}
@@ -2287,13 +2286,13 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("RemoteProject")]
 	public partial class RemoteProject
 	{
-		[Column("RemoteProject_Id"),                PrimaryKey,  NotNull] public long    RemoteProjectId                { get; set; } // integer
-		[Column("RemoteProject_ProjectGuid"),                    NotNull] public string  RemoteProjectProjectGuid       { get; set; } = null!; // text(max)
-		[Column("RemoteProject_PhotosCloudId"),        Nullable         ] public string? RemoteProjectPhotosCloudId     { get; set; } // text(max)
-		[Column("RemoteProject_PublishState"),                   NotNull] public long    RemoteProjectPublishState      { get; set; } // integer
-		[Column("RemoteProject_DateLastSynced"),       Nullable         ] public long?   RemoteProjectDateLastSynced    { get; set; } // integer
-		[Column("RemoteProject_ETag"),                 Nullable         ] public string? RemoteProjectETag              { get; set; } // text(max)
-		[Column("RemoteProject_MigratedFromCloud"),              NotNull] public long    RemoteProjectMigratedFromCloud { get; set; } // integer
+		[Column("RemoteProject_Id"),                PrimaryKey,  NotNull] public long   RemoteProjectId                { get; set; } // integer
+		[Column("RemoteProject_ProjectGuid"),                    NotNull] public string RemoteProjectProjectGuid       { get; set; } // text(max)
+		[Column("RemoteProject_PhotosCloudId"),        Nullable         ] public string RemoteProjectPhotosCloudId     { get; set; } // text(max)
+		[Column("RemoteProject_PublishState"),                   NotNull] public long   RemoteProjectPublishState      { get; set; } // integer
+		[Column("RemoteProject_DateLastSynced"),       Nullable         ] public long?  RemoteProjectDateLastSynced    { get; set; } // integer
+		[Column("RemoteProject_ETag"),                 Nullable         ] public string RemoteProjectETag              { get; set; } // text(max)
+		[Column("RemoteProject_MigratedFromCloud"),              NotNull] public long   RemoteProjectMigratedFromCloud { get; set; } // integer
 
 		#region Associations
 
@@ -2301,7 +2300,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_RemoteProject_0_0
 		/// </summary>
 		[Association(ThisKey="RemoteProjectProjectGuid", OtherKey="ProjectGuid", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteProject_0_0", BackReferenceName="RemoteProjects")]
-		public Project RemoteProjectProjectGu { get; set; } = null!;
+		public Project RemoteProjectProjectGu { get; set; }
 
 		#endregion
 	}
@@ -2309,10 +2308,10 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("RemoteThumbnail")]
 	public partial class RemoteThumbnail
 	{
-		[Column("RemoteThumbnail_ItemId"), NotNull    ] public long    RemoteThumbnailItemId { get; set; } // integer
-		[Column("RemoteThumbnail_Width"),     Nullable] public long?   RemoteThumbnailWidth  { get; set; } // integer
-		[Column("RemoteThumbnail_Height"),    Nullable] public long?   RemoteThumbnailHeight { get; set; } // integer
-		[Column("RemoteThumbnail_Url"),       Nullable] public string? RemoteThumbnailUrl    { get; set; } // text(max)
+		[Column("RemoteThumbnail_ItemId"), NotNull    ] public long   RemoteThumbnailItemId { get; set; } // integer
+		[Column("RemoteThumbnail_Width"),     Nullable] public long?  RemoteThumbnailWidth  { get; set; } // integer
+		[Column("RemoteThumbnail_Height"),    Nullable] public long?  RemoteThumbnailHeight { get; set; } // integer
+		[Column("RemoteThumbnail_Url"),       Nullable] public string RemoteThumbnailUrl    { get; set; } // text(max)
 
 		#region Associations
 
@@ -2320,7 +2319,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_RemoteThumbnail_0_0
 		/// </summary>
 		[Association(ThisKey="RemoteThumbnailItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteThumbnail_0_0", BackReferenceName="RemoteThumbnails")]
-		public Item RemoteThumbnailItem { get; set; } = null!;
+		public Item RemoteThumbnailItem { get; set; }
 
 		#endregion
 	}
@@ -2344,7 +2343,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_SalientRect_0_0
 		/// </summary>
 		[Association(ThisKey="SalientRectItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_SalientRect_0_0", BackReferenceName="SalientRects")]
-		public Item SalientRectItem { get; set; } = null!;
+		public Item SalientRectItem { get; set; }
 
 		#endregion
 	}
@@ -2362,7 +2361,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_SearchAnalysisItemPriority_0_0
 		/// </summary>
 		[Association(ThisKey="SearchAnalysisItemPriorityItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_SearchAnalysisItemPriority_0_0", BackReferenceName="SearchAnalysisItemPriorities")]
-		public Item SearchAnalysisItemPriorityItem { get; set; } = null!;
+		public Item SearchAnalysisItemPriorityItem { get; set; }
 
 		#endregion
 	}
@@ -2370,18 +2369,18 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("Source")]
 	public partial class Source
 	{
-		[Column("Source_Id"),                      PrimaryKey,  NotNull] public long    SourceId                      { get; set; } // integer
-		[Column("Source_Type"),                       Nullable         ] public long?   SourceType                    { get; set; } // integer
-		[Column("Source_UserId"),                     Nullable         ] public string? SourceUserId                  { get; set; } // text(max)
-		[Column("Source_UserName"),                   Nullable         ] public string? SourceUserName                { get; set; } // text(max)
-		[Column("Source_Status"),                     Nullable         ] public long?   SourceStatus                  { get; set; } // integer
-		[Column("Source_UserEnabled"),                Nullable         ] public long?   SourceUserEnabled             { get; set; } // integer
-		[Column("Source_PhotosCloudUserId"),          Nullable         ] public string? SourcePhotosCloudUserId       { get; set; } // text(max)
-		[Column("Source_DeltaSyncToken"),             Nullable         ] public string? SourceDeltaSyncToken          { get; set; } // text(max)
-		[Column("Source_FullSyncCompleted"),          Nullable         ] public long?   SourceFullSyncCompleted       { get; set; } // integer
-		[Column("Source_ItemsResyncing"),             Nullable         ] public long?   SourceItemsResyncing          { get; set; } // integer
-		[Column("Source_SignOutTime"),                Nullable         ] public long?   SourceSignOutTime             { get; set; } // integer
-		[Column("Source_ODSyncThrottleStartTime"),    Nullable         ] public long?   SourceODSyncThrottleStartTime { get; set; } // integer
+		[Column("Source_Id"),                      PrimaryKey,  NotNull] public long   SourceId                      { get; set; } // integer
+		[Column("Source_Type"),                       Nullable         ] public long?  SourceType                    { get; set; } // integer
+		[Column("Source_UserId"),                     Nullable         ] public string SourceUserId                  { get; set; } // text(max)
+		[Column("Source_UserName"),                   Nullable         ] public string SourceUserName                { get; set; } // text(max)
+		[Column("Source_Status"),                     Nullable         ] public long?  SourceStatus                  { get; set; } // integer
+		[Column("Source_UserEnabled"),                Nullable         ] public long?  SourceUserEnabled             { get; set; } // integer
+		[Column("Source_PhotosCloudUserId"),          Nullable         ] public string SourcePhotosCloudUserId       { get; set; } // text(max)
+		[Column("Source_DeltaSyncToken"),             Nullable         ] public string SourceDeltaSyncToken          { get; set; } // text(max)
+		[Column("Source_FullSyncCompleted"),          Nullable         ] public long?  SourceFullSyncCompleted       { get; set; } // integer
+		[Column("Source_ItemsResyncing"),             Nullable         ] public long?  SourceItemsResyncing          { get; set; } // integer
+		[Column("Source_SignOutTime"),                Nullable         ] public long?  SourceSignOutTime             { get; set; } // integer
+		[Column("Source_ODSyncThrottleStartTime"),    Nullable         ] public long?  SourceODSyncThrottleStartTime { get; set; } // integer
 
 		#region Associations
 
@@ -2389,31 +2388,31 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_Album_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="SourceId", OtherKey="AlbumSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Album> Albums { get; set; } = null!;
+		public IEnumerable<Album> Albums { get; set; }
 
 		/// <summary>
 		/// FK_Folder_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="SourceId", OtherKey="FolderSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Folder> Folders { get; set; } = null!;
+		public IEnumerable<Folder> Folders { get; set; }
 
 		/// <summary>
 		/// FK_Item_7_0_BackReference
 		/// </summary>
 		[Association(ThisKey="SourceId", OtherKey="ItemSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<Item> Items { get; set; } = null!;
+		public IEnumerable<Item> Items { get; set; }
 
 		/// <summary>
 		/// FK_PendingCloudAlbumDelete_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="SourceId", OtherKey="PendingCloudAlbumDeleteSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<PendingCloudAlbumDelete> PendingCloudAlbumDeletes { get; set; } = null!;
+		public IEnumerable<PendingCloudAlbumDelete> PendingCloudAlbumDeletes { get; set; }
 
 		/// <summary>
 		/// FK_PendingUploadItem_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="SourceId", OtherKey="PendingUploadItemSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<PendingUploadItem> PendingUploadItems { get; set; } = null!;
+		public IEnumerable<PendingUploadItem> PendingUploadItems { get; set; }
 
 		#endregion
 	}
@@ -2431,19 +2430,19 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_ExcludedItemTag_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="TagId", OtherKey="ExcludedItemTagTagId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ExcludedItemTag> ExcludedItemTags { get; set; } = null!;
+		public IEnumerable<ExcludedItemTag> ExcludedItemTags { get; set; }
 
 		/// <summary>
 		/// FK_ExcludedTag_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="TagId", OtherKey="ExcludedTagTagId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ExcludedTag> ExcludedTags { get; set; } = null!;
+		public IEnumerable<ExcludedTag> ExcludedTags { get; set; }
 
 		/// <summary>
 		/// FK_ItemTags_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="TagId", OtherKey="ItemTagsTagId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemTag> ItemTags { get; set; } = null!;
+		public IEnumerable<ItemTag> ItemTags { get; set; }
 
 		#endregion
 	}
@@ -2451,48 +2450,48 @@ namespace StorageProviders.SQLite.NetCore
 	[Table("TagVariant")]
 	public partial class TagVariant
 	{
-		[Column("TagVariant_Id"),            PrimaryKey,  NotNull] public long    TagVariantId            { get; set; } // integer
-		[Column("TagVariant_TagResourceId"),    Nullable         ] public long?   TagVariantTagResourceId { get; set; } // integer
-		[Column("TagVariant_Text"),             Nullable         ] public string? TagVariantText          { get; set; } // text(max)
-		[Column("TagVariant_IsPrimary"),        Nullable         ] public long?   TagVariantIsPrimary     { get; set; } // integer
+		[Column("TagVariant_Id"),            PrimaryKey,  NotNull] public long   TagVariantId            { get; set; } // integer
+		[Column("TagVariant_TagResourceId"),    Nullable         ] public long?  TagVariantTagResourceId { get; set; } // integer
+		[Column("TagVariant_Text"),             Nullable         ] public string TagVariantText          { get; set; } // text(max)
+		[Column("TagVariant_IsPrimary"),        Nullable         ] public long?  TagVariantIsPrimary     { get; set; } // integer
 	}
 
 	[Table("TagVariantFts")]
 	public partial class TagVariantFt
 	{
-		[Column("TagVariant_Text"), Nullable] public object? TagVariantText { get; set; }
+		[Column("TagVariant_Text"), Nullable] public object TagVariantText { get; set; }
 	}
 
 	[Table("TagVariantFts_docsize")]
 	public partial class TagVariantFtsDocsize
 	{
-		[Column("docid"), PrimaryKey,  NotNull] public long    Docid { get; set; } // integer
-		[Column("size"),     Nullable         ] public byte[]? Size  { get; set; } // blob
+		[Column("docid"), PrimaryKey,  NotNull] public long   Docid { get; set; } // integer
+		[Column("size"),     Nullable         ] public byte[] Size  { get; set; } // blob
 	}
 
 	[Table("TagVariantFts_segdir")]
 	public partial class TagVariantFtsSegdir
 	{
-		[Column("level"),            PrimaryKey(0), NotNull] public long    Level          { get; set; } // integer
-		[Column("idx"),              PrimaryKey(1), NotNull] public long    Idx            { get; set; } // integer
-		[Column("start_block"),         Nullable           ] public long?   StartBlock     { get; set; } // integer
-		[Column("leaves_end_block"),    Nullable           ] public long?   LeavesEndBlock { get; set; } // integer
-		[Column("end_block"),           Nullable           ] public long?   EndBlock       { get; set; } // integer
-		[Column("root"),                Nullable           ] public byte[]? Root           { get; set; } // blob
+		[Column("level"),            PrimaryKey(0), NotNull] public long   Level          { get; set; } // integer
+		[Column("idx"),              PrimaryKey(1), NotNull] public long   Idx            { get; set; } // integer
+		[Column("start_block"),         Nullable           ] public long?  StartBlock     { get; set; } // integer
+		[Column("leaves_end_block"),    Nullable           ] public long?  LeavesEndBlock { get; set; } // integer
+		[Column("end_block"),           Nullable           ] public long?  EndBlock       { get; set; } // integer
+		[Column("root"),                Nullable           ] public byte[] Root           { get; set; } // blob
 	}
 
 	[Table("TagVariantFts_segments")]
 	public partial class TagVariantFtsSegment
 	{
-		[Column("blockid"), PrimaryKey,  NotNull] public long    Blockid { get; set; } // integer
-		[Column("block"),      Nullable         ] public byte[]? Block   { get; set; } // blob
+		[Column("blockid"), PrimaryKey,  NotNull] public long   Blockid { get; set; } // integer
+		[Column("block"),      Nullable         ] public byte[] Block   { get; set; } // blob
 	}
 
 	[Table("TagVariantFts_stat")]
 	public partial class TagVariantFtsStat
 	{
-		[Column("id"),    PrimaryKey,  NotNull] public long    Id    { get; set; } // integer
-		[Column("value"),    Nullable         ] public byte[]? Value { get; set; } // blob
+		[Column("id"),    PrimaryKey,  NotNull] public long   Id    { get; set; } // integer
+		[Column("value"),    Nullable         ] public byte[] Value { get; set; } // blob
 	}
 
 	[Table("UserActionAlbumView")]
@@ -2509,7 +2508,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_UserActionAlbumView_0_0
 		/// </summary>
 		[Association(ThisKey="UserActionAlbumViewAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionAlbumView_0_0", BackReferenceName="UserActionAlbumViews")]
-		public Album? UserActionAlbumViewAlbum { get; set; }
+		public Album UserActionAlbumViewAlbum { get; set; }
 
 		#endregion
 	}
@@ -2520,10 +2519,10 @@ namespace StorageProviders.SQLite.NetCore
 		[Column("UserActionImport_Id"),           PrimaryKey, Identity] public long   UserActionImportId           { get; set; } // integer
 		[Column("UserActionImport_Date"),         NotNull             ] public long   UserActionImportDate         { get; set; } // integer
 		[Column("UserActionImport_SessionId"),    NotNull             ] public long   UserActionImportSessionId    { get; set; } // integer
-		[Column("UserActionImport_Destination"),  NotNull             ] public string UserActionImportDestination  { get; set; } = null!; // text(max)
+		[Column("UserActionImport_Destination"),  NotNull             ] public string UserActionImportDestination  { get; set; } // text(max)
 		[Column("UserActionImport_ActionOrigin"), NotNull             ] public long   UserActionImportActionOrigin { get; set; } // integer
-		[Column("UserActionImport_Manufacturer"), NotNull             ] public string UserActionImportManufacturer { get; set; } = null!; // text(max)
-		[Column("UserActionImport_Model"),        NotNull             ] public string UserActionImportModel        { get; set; } = null!; // text(max)
+		[Column("UserActionImport_Manufacturer"), NotNull             ] public string UserActionImportManufacturer { get; set; } // text(max)
+		[Column("UserActionImport_Model"),        NotNull             ] public string UserActionImportModel        { get; set; } // text(max)
 		[Column("UserActionImport_TotalCount"),   NotNull             ] public long   UserActionImportTotalCount   { get; set; } // integer
 	}
 
@@ -2549,7 +2548,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_UserActionPrint_0_0
 		/// </summary>
 		[Association(ThisKey="UserActionPrintItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionPrint_0_0", BackReferenceName="UserActionPrints")]
-		public Item? UserActionPrintItem { get; set; }
+		public Item UserActionPrintItem { get; set; }
 
 		#endregion
 	}
@@ -2559,8 +2558,8 @@ namespace StorageProviders.SQLite.NetCore
 	{
 		[Column("UserActionSearch_Id"),                  PrimaryKey, Identity] public long   UserActionSearchId                  { get; set; } // integer
 		[Column("UserActionSearch_Date"),                NotNull             ] public long   UserActionSearchDate                { get; set; } // integer
-		[Column("UserActionSearch_Json"),                NotNull             ] public string UserActionSearchJson                { get; set; } = null!; // text(max)
-		[Column("UserActionSearch_Textbox"),             NotNull             ] public string UserActionSearchTextbox             { get; set; } = null!; // text(max)
+		[Column("UserActionSearch_Json"),                NotNull             ] public string UserActionSearchJson                { get; set; } // text(max)
+		[Column("UserActionSearch_Textbox"),             NotNull             ] public string UserActionSearchTextbox             { get; set; } // text(max)
 		[Column("UserActionSearch_ActionOrigin"),        NotNull             ] public long   UserActionSearchActionOrigin        { get; set; } // integer
 		[Column("UserActionSearch_RequestOrigin"),       NotNull             ] public long   UserActionSearchRequestOrigin       { get; set; } // integer
 		[Column("UserActionSearch_NumberOfResults"),     NotNull             ] public long   UserActionSearchNumberOfResults     { get; set; } // integer
@@ -2574,7 +2573,7 @@ namespace StorageProviders.SQLite.NetCore
 		[Column("UserActionShare_Date"),         NotNull              ] public long   UserActionShareDate         { get; set; } // integer
 		[Column("UserActionShare_ItemId"),          Nullable          ] public long?  UserActionShareItemId       { get; set; } // integer
 		[Column("UserActionShare_ActionOrigin"), NotNull              ] public long   UserActionShareActionOrigin { get; set; } // integer
-		[Column("UserActionShare_Target"),       NotNull              ] public string UserActionShareTarget       { get; set; } = null!; // text(max)
+		[Column("UserActionShare_Target"),       NotNull              ] public string UserActionShareTarget       { get; set; } // text(max)
 		[Column("UserActionShare_Result"),       NotNull              ] public long   UserActionShareResult       { get; set; } // integer
 
 		#region Associations
@@ -2583,7 +2582,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_UserActionShare_0_0
 		/// </summary>
 		[Association(ThisKey="UserActionShareItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionShare_0_0", BackReferenceName="UserActionShares")]
-		public Item? UserActionShareItem { get; set; }
+		public Item UserActionShareItem { get; set; }
 
 		#endregion
 	}
@@ -2603,13 +2602,13 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_UserActionSlideshow_1_0
 		/// </summary>
 		[Association(ThisKey="UserActionSlideshowAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionSlideshow_1_0", BackReferenceName="UserActionSlideshows")]
-		public Album? UserActionSlideshowAlbum { get; set; }
+		public Album UserActionSlideshowAlbum { get; set; }
 
 		/// <summary>
 		/// FK_UserActionSlideshow_0_0
 		/// </summary>
 		[Association(ThisKey="UserActionSlideshowItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionSlideshow_0_0", BackReferenceName="UserActionSlideshows")]
-		public Item? UserActionSlideshowItem { get; set; }
+		public Item UserActionSlideshowItem { get; set; }
 
 		#endregion
 	}
@@ -2628,7 +2627,7 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_UserActionView_0_0
 		/// </summary>
 		[Association(ThisKey="UserActionViewItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionView_0_0", BackReferenceName="UserActionViews")]
-		public Item? UserActionViewItem { get; set; }
+		public Item UserActionViewItem { get; set; }
 
 		#endregion
 	}
@@ -2648,437 +2647,437 @@ namespace StorageProviders.SQLite.NetCore
 		/// FK_VideoFaceOccurrence_0_0
 		/// </summary>
 		[Association(ThisKey="VideoFaceOccurrenceFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_VideoFaceOccurrence_0_0", BackReferenceName="VideoFaceOccurrences")]
-		public Face VideoFaceOccurrenceFace { get; set; } = null!;
+		public Face VideoFaceOccurrenceFace { get; set; }
 
 		#endregion
 	}
 
 	public static partial class TableExtensions
 	{
-		public static Album? Find(this ITable<Album> table, long AlbumId)
+		public static Album Find(this ITable<Album> table, long AlbumId)
 		{
 			return table.FirstOrDefault(t =>
 				t.AlbumId == AlbumId);
 		}
 
-		public static AlbumNameFtsDocsize? Find(this ITable<AlbumNameFtsDocsize> table, long Docid)
+		public static AlbumNameFtsDocsize Find(this ITable<AlbumNameFtsDocsize> table, long Docid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Docid == Docid);
 		}
 
-		public static AlbumNameFtsSegdir? Find(this ITable<AlbumNameFtsSegdir> table, long Level, long Idx)
+		public static AlbumNameFtsSegdir Find(this ITable<AlbumNameFtsSegdir> table, long Level, long Idx)
 		{
 			return table.FirstOrDefault(t =>
 				t.Level == Level &&
 				t.Idx   == Idx);
 		}
 
-		public static AlbumNameFtsSegment? Find(this ITable<AlbumNameFtsSegment> table, long Blockid)
+		public static AlbumNameFtsSegment Find(this ITable<AlbumNameFtsSegment> table, long Blockid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Blockid == Blockid);
 		}
 
-		public static AlbumNameFtsStat? Find(this ITable<AlbumNameFtsStat> table, long Id)
+		public static AlbumNameFtsStat Find(this ITable<AlbumNameFtsStat> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
 		}
 
-		public static ApplicationName? Find(this ITable<ApplicationName> table, long ApplicationNameId)
+		public static ApplicationName Find(this ITable<ApplicationName> table, long ApplicationNameId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ApplicationNameId == ApplicationNameId);
 		}
 
-		public static Audio? Find(this ITable<Audio> table, long AudioId)
+		public static Audio Find(this ITable<Audio> table, long AudioId)
 		{
 			return table.FirstOrDefault(t =>
 				t.AudioId == AudioId);
 		}
 
-		public static Cache? Find(this ITable<Cache> table, long CacheId)
+		public static Cache Find(this ITable<Cache> table, long CacheId)
 		{
 			return table.FirstOrDefault(t =>
 				t.CacheId == CacheId);
 		}
 
-		public static CameraManufacturer? Find(this ITable<CameraManufacturer> table, long CameraManufacturerId)
+		public static CameraManufacturer Find(this ITable<CameraManufacturer> table, long CameraManufacturerId)
 		{
 			return table.FirstOrDefault(t =>
 				t.CameraManufacturerId == CameraManufacturerId);
 		}
 
-		public static CameraModel? Find(this ITable<CameraModel> table, long CameraModelId)
+		public static CameraModel Find(this ITable<CameraModel> table, long CameraModelId)
 		{
 			return table.FirstOrDefault(t =>
 				t.CameraModelId == CameraModelId);
 		}
 
-		public static CloudAlbum? Find(this ITable<CloudAlbum> table, long CloudAlbumId)
+		public static CloudAlbum Find(this ITable<CloudAlbum> table, long CloudAlbumId)
 		{
 			return table.FirstOrDefault(t =>
 				t.CloudAlbumId == CloudAlbumId);
 		}
 
-		public static CloudAlbumDefinition? Find(this ITable<CloudAlbumDefinition> table, long CloudAlbumDefinitionId)
+		public static CloudAlbumDefinition Find(this ITable<CloudAlbumDefinition> table, long CloudAlbumDefinitionId)
 		{
 			return table.FirstOrDefault(t =>
 				t.CloudAlbumDefinitionId == CloudAlbumDefinitionId);
 		}
 
-		public static DbRecoveryTaskState? Find(this ITable<DbRecoveryTaskState> table, long DbRecoveryTaskStateId)
+		public static DbRecoveryTaskState Find(this ITable<DbRecoveryTaskState> table, long DbRecoveryTaskStateId)
 		{
 			return table.FirstOrDefault(t =>
 				t.DbRecoveryTaskStateId == DbRecoveryTaskStateId);
 		}
 
-		public static Event? Find(this ITable<Event> table, long EventId)
+		public static Event Find(this ITable<Event> table, long EventId)
 		{
 			return table.FirstOrDefault(t =>
 				t.EventId == EventId);
 		}
 
-		public static ExcludedAlbum? Find(this ITable<ExcludedAlbum> table, long ExcludedAlbumId)
+		public static ExcludedAlbum Find(this ITable<ExcludedAlbum> table, long ExcludedAlbumId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ExcludedAlbumId == ExcludedAlbumId);
 		}
 
-		public static ExcludedFace? Find(this ITable<ExcludedFace> table, long ExcludedFaceId)
+		public static ExcludedFace Find(this ITable<ExcludedFace> table, long ExcludedFaceId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ExcludedFaceId == ExcludedFaceId);
 		}
 
-		public static ExcludedImport? Find(this ITable<ExcludedImport> table, long ExcludedImportId)
+		public static ExcludedImport Find(this ITable<ExcludedImport> table, long ExcludedImportId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ExcludedImportId == ExcludedImportId);
 		}
 
-		public static ExcludedItemTag? Find(this ITable<ExcludedItemTag> table, long ExcludedItemTagId)
+		public static ExcludedItemTag Find(this ITable<ExcludedItemTag> table, long ExcludedItemTagId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ExcludedItemTagId == ExcludedItemTagId);
 		}
 
-		public static ExcludedLocation? Find(this ITable<ExcludedLocation> table, long ExcludedLocationId)
+		public static ExcludedLocation Find(this ITable<ExcludedLocation> table, long ExcludedLocationId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ExcludedLocationId == ExcludedLocationId);
 		}
 
-		public static ExcludedPerson? Find(this ITable<ExcludedPerson> table, long ExcludedPersonId)
+		public static ExcludedPerson Find(this ITable<ExcludedPerson> table, long ExcludedPersonId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ExcludedPersonId == ExcludedPersonId);
 		}
 
-		public static ExcludedTag? Find(this ITable<ExcludedTag> table, long ExcludedTagId)
+		public static ExcludedTag Find(this ITable<ExcludedTag> table, long ExcludedTagId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ExcludedTagId == ExcludedTagId);
 		}
 
-		public static ExtractedText? Find(this ITable<ExtractedText> table, long ExtractedTextId)
+		public static ExtractedText Find(this ITable<ExtractedText> table, long ExtractedTextId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ExtractedTextId == ExtractedTextId);
 		}
 
-		public static Face? Find(this ITable<Face> table, long FaceId)
+		public static Face Find(this ITable<Face> table, long FaceId)
 		{
 			return table.FirstOrDefault(t =>
 				t.FaceId == FaceId);
 		}
 
-		public static FaceCluster? Find(this ITable<FaceCluster> table, long FaceClusterId)
+		public static FaceCluster Find(this ITable<FaceCluster> table, long FaceClusterId)
 		{
 			return table.FirstOrDefault(t =>
 				t.FaceClusterId == FaceClusterId);
 		}
 
-		public static FaceFeature? Find(this ITable<FaceFeature> table, long FaceFeatureFaceId, long FaceFeatureFeatureType)
+		public static FaceFeature Find(this ITable<FaceFeature> table, long FaceFeatureFaceId, long FaceFeatureFeatureType)
 		{
 			return table.FirstOrDefault(t =>
 				t.FaceFeatureFaceId      == FaceFeatureFaceId &&
 				t.FaceFeatureFeatureType == FaceFeatureFeatureType);
 		}
 
-		public static FileExtensionFtsDocsize? Find(this ITable<FileExtensionFtsDocsize> table, long Docid)
+		public static FileExtensionFtsDocsize Find(this ITable<FileExtensionFtsDocsize> table, long Docid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Docid == Docid);
 		}
 
-		public static FileExtensionFtsSegdir? Find(this ITable<FileExtensionFtsSegdir> table, long Level, long Idx)
+		public static FileExtensionFtsSegdir Find(this ITable<FileExtensionFtsSegdir> table, long Level, long Idx)
 		{
 			return table.FirstOrDefault(t =>
 				t.Level == Level &&
 				t.Idx   == Idx);
 		}
 
-		public static FileExtensionFtsSegment? Find(this ITable<FileExtensionFtsSegment> table, long Blockid)
+		public static FileExtensionFtsSegment Find(this ITable<FileExtensionFtsSegment> table, long Blockid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Blockid == Blockid);
 		}
 
-		public static FileExtensionFtsStat? Find(this ITable<FileExtensionFtsStat> table, long Id)
+		public static FileExtensionFtsStat Find(this ITable<FileExtensionFtsStat> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
 		}
 
-		public static FilenameFtsDocsize? Find(this ITable<FilenameFtsDocsize> table, long Docid)
+		public static FilenameFtsDocsize Find(this ITable<FilenameFtsDocsize> table, long Docid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Docid == Docid);
 		}
 
-		public static FilenameFtsSegdir? Find(this ITable<FilenameFtsSegdir> table, long Level, long Idx)
+		public static FilenameFtsSegdir Find(this ITable<FilenameFtsSegdir> table, long Level, long Idx)
 		{
 			return table.FirstOrDefault(t =>
 				t.Level == Level &&
 				t.Idx   == Idx);
 		}
 
-		public static FilenameFtsSegment? Find(this ITable<FilenameFtsSegment> table, long Blockid)
+		public static FilenameFtsSegment Find(this ITable<FilenameFtsSegment> table, long Blockid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Blockid == Blockid);
 		}
 
-		public static FilenameFtsStat? Find(this ITable<FilenameFtsStat> table, long Id)
+		public static FilenameFtsStat Find(this ITable<FilenameFtsStat> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
 		}
 
-		public static Folder? Find(this ITable<Folder> table, long FolderId)
+		public static Folder Find(this ITable<Folder> table, long FolderId)
 		{
 			return table.FirstOrDefault(t =>
 				t.FolderId == FolderId);
 		}
 
-		public static FolderNameFtsDocsize? Find(this ITable<FolderNameFtsDocsize> table, long Docid)
+		public static FolderNameFtsDocsize Find(this ITable<FolderNameFtsDocsize> table, long Docid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Docid == Docid);
 		}
 
-		public static FolderNameFtsSegdir? Find(this ITable<FolderNameFtsSegdir> table, long Level, long Idx)
+		public static FolderNameFtsSegdir Find(this ITable<FolderNameFtsSegdir> table, long Level, long Idx)
 		{
 			return table.FirstOrDefault(t =>
 				t.Level == Level &&
 				t.Idx   == Idx);
 		}
 
-		public static FolderNameFtsSegment? Find(this ITable<FolderNameFtsSegment> table, long Blockid)
+		public static FolderNameFtsSegment Find(this ITable<FolderNameFtsSegment> table, long Blockid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Blockid == Blockid);
 		}
 
-		public static FolderNameFtsStat? Find(this ITable<FolderNameFtsStat> table, long Id)
+		public static FolderNameFtsStat Find(this ITable<FolderNameFtsStat> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
 		}
 
-		public static ImageAnalysis? Find(this ITable<ImageAnalysis> table, long ImageAnalysisItemId)
+		public static ImageAnalysis Find(this ITable<ImageAnalysis> table, long ImageAnalysisItemId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ImageAnalysisItemId == ImageAnalysisItemId);
 		}
 
-		public static Item? Find(this ITable<Item> table, long ItemId)
+		public static Item Find(this ITable<Item> table, long ItemId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ItemId == ItemId);
 		}
 
-		public static ItemDateTaken? Find(this ITable<ItemDateTaken> table, long ItemDateTakenItemId)
+		public static ItemDateTaken Find(this ITable<ItemDateTaken> table, long ItemDateTakenItemId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ItemDateTakenItemId == ItemDateTakenItemId);
 		}
 
-		public static ItemEngineExemplar? Find(this ITable<ItemEngineExemplar> table, long ItemEngineExemplarId)
+		public static ItemEngineExemplar Find(this ITable<ItemEngineExemplar> table, long ItemEngineExemplarId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ItemEngineExemplarId == ItemEngineExemplarId);
 		}
 
-		public static ItemEngineStatus? Find(this ITable<ItemEngineStatus> table, long ItemEngineStatusId)
+		public static ItemEngineStatus Find(this ITable<ItemEngineStatus> table, long ItemEngineStatusId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ItemEngineStatusId == ItemEngineStatusId);
 		}
 
-		public static ItemInferredLocationExperimental? Find(this ITable<ItemInferredLocationExperimental> table, long ItemInferredLocationExperimentalItemId)
+		public static ItemInferredLocationExperimental Find(this ITable<ItemInferredLocationExperimental> table, long ItemInferredLocationExperimentalItemId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ItemInferredLocationExperimentalItemId == ItemInferredLocationExperimentalItemId);
 		}
 
-		public static ItemTag? Find(this ITable<ItemTag> table, long ItemTagsId)
+		public static ItemTag Find(this ITable<ItemTag> table, long ItemTagsId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ItemTagsId == ItemTagsId);
 		}
 
-		public static ItemVideoQuality? Find(this ITable<ItemVideoQuality> table, long ItemVideoQualityId)
+		public static ItemVideoQuality Find(this ITable<ItemVideoQuality> table, long ItemVideoQualityId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ItemVideoQualityId == ItemVideoQualityId);
 		}
 
-		public static ItemVideoTag? Find(this ITable<ItemVideoTag> table, long ItemVideoTagsId)
+		public static ItemVideoTag Find(this ITable<ItemVideoTag> table, long ItemVideoTagsId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ItemVideoTagsId == ItemVideoTagsId);
 		}
 
-		public static LiveTile? Find(this ITable<LiveTile> table, long LiveTileItemId)
+		public static LiveTile Find(this ITable<LiveTile> table, long LiveTileItemId)
 		{
 			return table.FirstOrDefault(t =>
 				t.LiveTileItemId == LiveTileItemId);
 		}
 
-		public static Location? Find(this ITable<Location> table, long LocationId)
+		public static Location Find(this ITable<Location> table, long LocationId)
 		{
 			return table.FirstOrDefault(t =>
 				t.LocationId == LocationId);
 		}
 
-		public static LocationCountry? Find(this ITable<LocationCountry> table, long LocationCountryId)
+		public static LocationCountry Find(this ITable<LocationCountry> table, long LocationCountryId)
 		{
 			return table.FirstOrDefault(t =>
 				t.LocationCountryId == LocationCountryId);
 		}
 
-		public static LocationCountryFtsDocsize? Find(this ITable<LocationCountryFtsDocsize> table, long Docid)
+		public static LocationCountryFtsDocsize Find(this ITable<LocationCountryFtsDocsize> table, long Docid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Docid == Docid);
 		}
 
-		public static LocationCountryFtsSegdir? Find(this ITable<LocationCountryFtsSegdir> table, long Level, long Idx)
+		public static LocationCountryFtsSegdir Find(this ITable<LocationCountryFtsSegdir> table, long Level, long Idx)
 		{
 			return table.FirstOrDefault(t =>
 				t.Level == Level &&
 				t.Idx   == Idx);
 		}
 
-		public static LocationCountryFtsSegment? Find(this ITable<LocationCountryFtsSegment> table, long Blockid)
+		public static LocationCountryFtsSegment Find(this ITable<LocationCountryFtsSegment> table, long Blockid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Blockid == Blockid);
 		}
 
-		public static LocationCountryFtsStat? Find(this ITable<LocationCountryFtsStat> table, long Id)
+		public static LocationCountryFtsStat Find(this ITable<LocationCountryFtsStat> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
 		}
 
-		public static LocationDistrict? Find(this ITable<LocationDistrict> table, long LocationDistrictId)
+		public static LocationDistrict Find(this ITable<LocationDistrict> table, long LocationDistrictId)
 		{
 			return table.FirstOrDefault(t =>
 				t.LocationDistrictId == LocationDistrictId);
 		}
 
-		public static LocationDistrictFtsDocsize? Find(this ITable<LocationDistrictFtsDocsize> table, long Docid)
+		public static LocationDistrictFtsDocsize Find(this ITable<LocationDistrictFtsDocsize> table, long Docid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Docid == Docid);
 		}
 
-		public static LocationDistrictFtsSegdir? Find(this ITable<LocationDistrictFtsSegdir> table, long Level, long Idx)
+		public static LocationDistrictFtsSegdir Find(this ITable<LocationDistrictFtsSegdir> table, long Level, long Idx)
 		{
 			return table.FirstOrDefault(t =>
 				t.Level == Level &&
 				t.Idx   == Idx);
 		}
 
-		public static LocationDistrictFtsSegment? Find(this ITable<LocationDistrictFtsSegment> table, long Blockid)
+		public static LocationDistrictFtsSegment Find(this ITable<LocationDistrictFtsSegment> table, long Blockid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Blockid == Blockid);
 		}
 
-		public static LocationDistrictFtsStat? Find(this ITable<LocationDistrictFtsStat> table, long Id)
+		public static LocationDistrictFtsStat Find(this ITable<LocationDistrictFtsStat> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
 		}
 
-		public static LocationFtsDocsize? Find(this ITable<LocationFtsDocsize> table, long Docid)
+		public static LocationFtsDocsize Find(this ITable<LocationFtsDocsize> table, long Docid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Docid == Docid);
 		}
 
-		public static LocationFtsSegdir? Find(this ITable<LocationFtsSegdir> table, long Level, long Idx)
+		public static LocationFtsSegdir Find(this ITable<LocationFtsSegdir> table, long Level, long Idx)
 		{
 			return table.FirstOrDefault(t =>
 				t.Level == Level &&
 				t.Idx   == Idx);
 		}
 
-		public static LocationFtsSegment? Find(this ITable<LocationFtsSegment> table, long Blockid)
+		public static LocationFtsSegment Find(this ITable<LocationFtsSegment> table, long Blockid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Blockid == Blockid);
 		}
 
-		public static LocationFtsStat? Find(this ITable<LocationFtsStat> table, long Id)
+		public static LocationFtsStat Find(this ITable<LocationFtsStat> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
 		}
 
-		public static LocationGrid? Find(this ITable<LocationGrid> table, long LocationGridId)
+		public static LocationGrid Find(this ITable<LocationGrid> table, long LocationGridId)
 		{
 			return table.FirstOrDefault(t =>
 				t.LocationGridId == LocationGridId);
 		}
 
-		public static LocationRegion? Find(this ITable<LocationRegion> table, long LocationRegionId)
+		public static LocationRegion Find(this ITable<LocationRegion> table, long LocationRegionId)
 		{
 			return table.FirstOrDefault(t =>
 				t.LocationRegionId == LocationRegionId);
 		}
 
-		public static LocationRegionFtsDocsize? Find(this ITable<LocationRegionFtsDocsize> table, long Docid)
+		public static LocationRegionFtsDocsize Find(this ITable<LocationRegionFtsDocsize> table, long Docid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Docid == Docid);
 		}
 
-		public static LocationRegionFtsSegdir? Find(this ITable<LocationRegionFtsSegdir> table, long Level, long Idx)
+		public static LocationRegionFtsSegdir Find(this ITable<LocationRegionFtsSegdir> table, long Level, long Idx)
 		{
 			return table.FirstOrDefault(t =>
 				t.Level == Level &&
 				t.Idx   == Idx);
 		}
 
-		public static LocationRegionFtsSegment? Find(this ITable<LocationRegionFtsSegment> table, long Blockid)
+		public static LocationRegionFtsSegment Find(this ITable<LocationRegionFtsSegment> table, long Blockid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Blockid == Blockid);
 		}
 
-		public static LocationRegionFtsStat? Find(this ITable<LocationRegionFtsStat> table, long Id)
+		public static LocationRegionFtsStat Find(this ITable<LocationRegionFtsStat> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
 		}
 
-		public static NetworkTelemetry? Find(this ITable<NetworkTelemetry> table, long NetworkTelemetrySource, long NetworkTelemetryRequestType, long NetworkTelemetryIsBackgroundTaskHost)
+		public static NetworkTelemetry Find(this ITable<NetworkTelemetry> table, long NetworkTelemetrySource, long NetworkTelemetryRequestType, long NetworkTelemetryIsBackgroundTaskHost)
 		{
 			return table.FirstOrDefault(t =>
 				t.NetworkTelemetrySource               == NetworkTelemetrySource      &&
@@ -3086,220 +3085,220 @@ namespace StorageProviders.SQLite.NetCore
 				t.NetworkTelemetryIsBackgroundTaskHost == NetworkTelemetryIsBackgroundTaskHost);
 		}
 
-		public static OCRItem? Find(this ITable<OCRItem> table, long OCRItemId)
+		public static OCRItem Find(this ITable<OCRItem> table, long OCRItemId)
 		{
 			return table.FirstOrDefault(t =>
 				t.OCRItemId == OCRItemId);
 		}
 
-		public static OCRItemTextViewFtsDocsize? Find(this ITable<OCRItemTextViewFtsDocsize> table, long Docid)
+		public static OCRItemTextViewFtsDocsize Find(this ITable<OCRItemTextViewFtsDocsize> table, long Docid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Docid == Docid);
 		}
 
-		public static OCRItemTextViewFtsSegdir? Find(this ITable<OCRItemTextViewFtsSegdir> table, long Level, long Idx)
+		public static OCRItemTextViewFtsSegdir Find(this ITable<OCRItemTextViewFtsSegdir> table, long Level, long Idx)
 		{
 			return table.FirstOrDefault(t =>
 				t.Level == Level &&
 				t.Idx   == Idx);
 		}
 
-		public static OCRItemTextViewFtsSegment? Find(this ITable<OCRItemTextViewFtsSegment> table, long Blockid)
+		public static OCRItemTextViewFtsSegment Find(this ITable<OCRItemTextViewFtsSegment> table, long Blockid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Blockid == Blockid);
 		}
 
-		public static OCRItemTextViewFtsStat? Find(this ITable<OCRItemTextViewFtsStat> table, long Id)
+		public static OCRItemTextViewFtsStat Find(this ITable<OCRItemTextViewFtsStat> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
 		}
 
-		public static OCRLine? Find(this ITable<OCRLine> table, long OCRLineId)
+		public static OCRLine Find(this ITable<OCRLine> table, long OCRLineId)
 		{
 			return table.FirstOrDefault(t =>
 				t.OCRLineId == OCRLineId);
 		}
 
-		public static OCRWord? Find(this ITable<OCRWord> table, long OCRWordId)
+		public static OCRWord Find(this ITable<OCRWord> table, long OCRWordId)
 		{
 			return table.FirstOrDefault(t =>
 				t.OCRWordId == OCRWordId);
 		}
 
-		public static OneDriveStorageAndUpsellInfo? Find(this ITable<OneDriveStorageAndUpsellInfo> table, string OneDriveStorageAndUpsellInfoUserId)
+		public static OneDriveStorageAndUpsellInfo Find(this ITable<OneDriveStorageAndUpsellInfo> table, string OneDriveStorageAndUpsellInfoUserId)
 		{
 			return table.FirstOrDefault(t =>
 				t.OneDriveStorageAndUpsellInfoUserId == OneDriveStorageAndUpsellInfoUserId);
 		}
 
-		public static PendingCloudAlbumDelete? Find(this ITable<PendingCloudAlbumDelete> table, long PendingCloudAlbumDeleteId)
+		public static PendingCloudAlbumDelete Find(this ITable<PendingCloudAlbumDelete> table, long PendingCloudAlbumDeleteId)
 		{
 			return table.FirstOrDefault(t =>
 				t.PendingCloudAlbumDeleteId == PendingCloudAlbumDeleteId);
 		}
 
-		public static Person? Find(this ITable<Person> table, long PersonId)
+		public static Person Find(this ITable<Person> table, long PersonId)
 		{
 			return table.FirstOrDefault(t =>
 				t.PersonId == PersonId);
 		}
 
-		public static PersonFtsDocsize? Find(this ITable<PersonFtsDocsize> table, long Docid)
+		public static PersonFtsDocsize Find(this ITable<PersonFtsDocsize> table, long Docid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Docid == Docid);
 		}
 
-		public static PersonFtsSegdir? Find(this ITable<PersonFtsSegdir> table, long Level, long Idx)
+		public static PersonFtsSegdir Find(this ITable<PersonFtsSegdir> table, long Level, long Idx)
 		{
 			return table.FirstOrDefault(t =>
 				t.Level == Level &&
 				t.Idx   == Idx);
 		}
 
-		public static PersonFtsSegment? Find(this ITable<PersonFtsSegment> table, long Blockid)
+		public static PersonFtsSegment Find(this ITable<PersonFtsSegment> table, long Blockid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Blockid == Blockid);
 		}
 
-		public static PersonFtsStat? Find(this ITable<PersonFtsStat> table, long Id)
+		public static PersonFtsStat Find(this ITable<PersonFtsStat> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
 		}
 
-		public static PinnedSearch? Find(this ITable<PinnedSearch> table, long PinnedSearchId)
+		public static PinnedSearch Find(this ITable<PinnedSearch> table, long PinnedSearchId)
 		{
 			return table.FirstOrDefault(t =>
 				t.PinnedSearchId == PinnedSearchId);
 		}
 
-		public static Project? Find(this ITable<Project> table, long ProjectId)
+		public static Project Find(this ITable<Project> table, long ProjectId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ProjectId == ProjectId);
 		}
 
-		public static RemoteAlbum? Find(this ITable<RemoteAlbum> table, long RemoteAlbumAlbumId)
+		public static RemoteAlbum Find(this ITable<RemoteAlbum> table, long RemoteAlbumAlbumId)
 		{
 			return table.FirstOrDefault(t =>
 				t.RemoteAlbumAlbumId == RemoteAlbumAlbumId);
 		}
 
-		public static RemoteProject? Find(this ITable<RemoteProject> table, long RemoteProjectId)
+		public static RemoteProject Find(this ITable<RemoteProject> table, long RemoteProjectId)
 		{
 			return table.FirstOrDefault(t =>
 				t.RemoteProjectId == RemoteProjectId);
 		}
 
-		public static SalientRect? Find(this ITable<SalientRect> table, long SalientRectId)
+		public static SalientRect Find(this ITable<SalientRect> table, long SalientRectId)
 		{
 			return table.FirstOrDefault(t =>
 				t.SalientRectId == SalientRectId);
 		}
 
-		public static SearchAnalysisItemPriority? Find(this ITable<SearchAnalysisItemPriority> table, long SearchAnalysisItemPriorityId)
+		public static SearchAnalysisItemPriority Find(this ITable<SearchAnalysisItemPriority> table, long SearchAnalysisItemPriorityId)
 		{
 			return table.FirstOrDefault(t =>
 				t.SearchAnalysisItemPriorityId == SearchAnalysisItemPriorityId);
 		}
 
-		public static Source? Find(this ITable<Source> table, long SourceId)
+		public static Source Find(this ITable<Source> table, long SourceId)
 		{
 			return table.FirstOrDefault(t =>
 				t.SourceId == SourceId);
 		}
 
-		public static Tag? Find(this ITable<Tag> table, long TagId)
+		public static Tag Find(this ITable<Tag> table, long TagId)
 		{
 			return table.FirstOrDefault(t =>
 				t.TagId == TagId);
 		}
 
-		public static TagVariant? Find(this ITable<TagVariant> table, long TagVariantId)
+		public static TagVariant Find(this ITable<TagVariant> table, long TagVariantId)
 		{
 			return table.FirstOrDefault(t =>
 				t.TagVariantId == TagVariantId);
 		}
 
-		public static TagVariantFtsDocsize? Find(this ITable<TagVariantFtsDocsize> table, long Docid)
+		public static TagVariantFtsDocsize Find(this ITable<TagVariantFtsDocsize> table, long Docid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Docid == Docid);
 		}
 
-		public static TagVariantFtsSegdir? Find(this ITable<TagVariantFtsSegdir> table, long Level, long Idx)
+		public static TagVariantFtsSegdir Find(this ITable<TagVariantFtsSegdir> table, long Level, long Idx)
 		{
 			return table.FirstOrDefault(t =>
 				t.Level == Level &&
 				t.Idx   == Idx);
 		}
 
-		public static TagVariantFtsSegment? Find(this ITable<TagVariantFtsSegment> table, long Blockid)
+		public static TagVariantFtsSegment Find(this ITable<TagVariantFtsSegment> table, long Blockid)
 		{
 			return table.FirstOrDefault(t =>
 				t.Blockid == Blockid);
 		}
 
-		public static TagVariantFtsStat? Find(this ITable<TagVariantFtsStat> table, long Id)
+		public static TagVariantFtsStat Find(this ITable<TagVariantFtsStat> table, long Id)
 		{
 			return table.FirstOrDefault(t =>
 				t.Id == Id);
 		}
 
-		public static UserActionAlbumView? Find(this ITable<UserActionAlbumView> table, long UserActionAlbumViewId)
+		public static UserActionAlbumView Find(this ITable<UserActionAlbumView> table, long UserActionAlbumViewId)
 		{
 			return table.FirstOrDefault(t =>
 				t.UserActionAlbumViewId == UserActionAlbumViewId);
 		}
 
-		public static UserActionImport? Find(this ITable<UserActionImport> table, long UserActionImportId)
+		public static UserActionImport Find(this ITable<UserActionImport> table, long UserActionImportId)
 		{
 			return table.FirstOrDefault(t =>
 				t.UserActionImportId == UserActionImportId);
 		}
 
-		public static UserActionLaunch? Find(this ITable<UserActionLaunch> table, long UserActionLaunchId)
+		public static UserActionLaunch Find(this ITable<UserActionLaunch> table, long UserActionLaunchId)
 		{
 			return table.FirstOrDefault(t =>
 				t.UserActionLaunchId == UserActionLaunchId);
 		}
 
-		public static UserActionPrint? Find(this ITable<UserActionPrint> table, long UserActionPrintId)
+		public static UserActionPrint Find(this ITable<UserActionPrint> table, long UserActionPrintId)
 		{
 			return table.FirstOrDefault(t =>
 				t.UserActionPrintId == UserActionPrintId);
 		}
 
-		public static UserActionSearch? Find(this ITable<UserActionSearch> table, long UserActionSearchId)
+		public static UserActionSearch Find(this ITable<UserActionSearch> table, long UserActionSearchId)
 		{
 			return table.FirstOrDefault(t =>
 				t.UserActionSearchId == UserActionSearchId);
 		}
 
-		public static UserActionShare? Find(this ITable<UserActionShare> table, long UserActionShareId)
+		public static UserActionShare Find(this ITable<UserActionShare> table, long UserActionShareId)
 		{
 			return table.FirstOrDefault(t =>
 				t.UserActionShareId == UserActionShareId);
 		}
 
-		public static UserActionSlideshow? Find(this ITable<UserActionSlideshow> table, long UserActionSlideshowId)
+		public static UserActionSlideshow Find(this ITable<UserActionSlideshow> table, long UserActionSlideshowId)
 		{
 			return table.FirstOrDefault(t =>
 				t.UserActionSlideshowId == UserActionSlideshowId);
 		}
 
-		public static UserActionView? Find(this ITable<UserActionView> table, long UserActionViewId)
+		public static UserActionView Find(this ITable<UserActionView> table, long UserActionViewId)
 		{
 			return table.FirstOrDefault(t =>
 				t.UserActionViewId == UserActionViewId);
 		}
 
-		public static VideoFaceOccurrence? Find(this ITable<VideoFaceOccurrence> table, long VideoFaceOccurrenceId)
+		public static VideoFaceOccurrence Find(this ITable<VideoFaceOccurrence> table, long VideoFaceOccurrenceId)
 		{
 			return table.FirstOrDefault(t =>
 				t.VideoFaceOccurrenceId == VideoFaceOccurrenceId);
