@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 using StorageDataProviders.SQLite.Models;
 
@@ -11,15 +12,16 @@ namespace StorageDataProviders.Win10
     {
         public SQLiteContext()
         {
-            
+            int i = 0;
         }
 
         public SQLiteContext(DbContextOptions<SQLiteContext> options)
             : base(options)
         {
+            int i = 0;
         }
-
-        public virtual DbSet<Album> Albums { get; set; }
+		#region Tab
+		public virtual DbSet<Album> Albums { get; set; }
         public virtual DbSet<AlbumItemLink> AlbumItemLinks { get; set; }
         public virtual DbSet<AlbumNameFt> AlbumNameFts { get; set; }
         public virtual DbSet<AlbumNameFtsDocsize> AlbumNameFtsDocsizes { get; set; }
@@ -145,8 +147,8 @@ namespace StorageDataProviders.Win10
         public virtual DbSet<UserActionSlideshow> UserActionSlideshows { get; set; }
         public virtual DbSet<UserActionView> UserActionViews { get; set; }
         public virtual DbSet<VideoFaceOccurrence> VideoFaceOccurrences { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		#endregion
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Album>(entity =>
             {
@@ -1527,7 +1529,7 @@ namespace StorageDataProviders.Win10
 
                 entity.Property(e => e.ItemFileHeight).HasColumnName("Item_FileHeight");
 
-                entity.Property(e => e.ItemFileName).HasColumnName("Item_FileName");
+                entity.Property(e => e.ItemFileName).HasColumnName("Item_FileName").UseCollation("NoCaseUnicode");
 
                 entity.Property(e => e.ItemFileSize).HasColumnName("Item_FileSize");
 
@@ -3272,5 +3274,11 @@ namespace StorageDataProviders.Win10
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-    }
+
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+            
+
+        }
+	}
 }

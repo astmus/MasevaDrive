@@ -39,6 +39,7 @@ namespace StorageDataProviders.SQLite.Models
         public long? ItemExclusiveDateTaken { get; set; }
         public long? ItemSystemThumbnailCacheId { get; set; }
         public long ItemParentFolderId { get; set; }
+        
         public string ItemFileName { get; set; }
         public string ItemFileExtension { get; set; }
         public long? ItemFileSize { get; set; }
