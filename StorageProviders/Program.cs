@@ -1,9 +1,7 @@
 ﻿using System;
-using Microsoft.Extensions.Configuration;
 using LinqToDB.Common;
 using LinqToDB.Configuration;
 using LinqToDB.Data;
-using Microsoft.Extensions.Hosting;
 using LinqToDB;
 using LinqToDB.SchemaProvider;
 using System.Collections.Generic;
@@ -54,7 +52,6 @@ namespace StorageProviders
 			Console.ReadKey();
 
 		}
-		static IHostBuilder CreateHostBuilder(string[] args) => Host.CreateDefaultBuilder(args);
 	}
 
 

@@ -23,7 +23,7 @@
 
 	GetSchemaOptions.IncludedCatalogs = null;
 	GetSchemaOptions.ExcludedCatalogs = null;
-	GetSchemaOptions.LoadProcedure  = _ => true;          
+	
 	//GetSchemaOptions.GetAssociationMemberName = true;
 
 
