@@ -1,62 +1,44 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>netcoreapp2.1</TargetFramework>
+		<OutputType>Library</OutputType>
+		<TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
 		<LangVersion>8.0</LangVersion>
 		<UserSecretsId>b8d3c49e-a8f8-4d7e-9768-b55cf8dba7f3</UserSecretsId>
-		<StartupObject>StorageProviders.Program</StartupObject>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DefineConstants>DEBUG;TRACE</DefineConstants>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<None Remove="appsettings.json" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="appsettings.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
 		<PackageReference Include="linq2db.SQLite" Version="3.2.3" />
 		<PackageReference Include="linq2db.SQLite.MS" Version="3.2.3" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Update="SQLite\SQLiteNetFrameworkContext.tt">
-			<LastGenOutput>SQLiteNetFrameworkContext.generated.cs</LastGenOutput>
-			<Generator>TextTemplatingFileGenerator</Generator>
-		</None>
 		<None Update="SQLite\SQLiteContext.tt">
 			<Generator>TextTemplatingFileGenerator</Generator>
 			<LastGenOutput>SQLiteContext.generated.cs</LastGenOutput>
 		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<Compile Update="SQLite\SQLiteContext.generated.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>SQLiteContext.tt</DependentUpon>
 		</Compile>
+	</ItemGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+		<PackageReference Include="linq2db.SQLite" Version="3.2.3" />
+		<PackageReference Include="linq2db.SQLite.MS" Version="3.2.3" />
+		<None Update="SQLite\SQLiteNetFrameworkContext.tt">
+			<LastGenOutput>SQLiteNetFrameworkContext.generated.cs</LastGenOutput>
+			<Generator>TextTemplatingFileGenerator</Generator>
+		</None>
 		<Compile Update="SQLite\SQLiteNetFrameworkContext.generated.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
 			<DependentUpon>SQLiteNetFrameworkContext.tt</DependentUpon>
 		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
 	</ItemGroup>
 
 </Project>
