@@ -16,157 +16,151 @@ using LinqToDB;
 using LinqToDB.Configuration;
 using LinqToDB.Mapping;
 
-namespace StorageProviders.SQLite.NetCore
+namespace StorageProviders.NetCore.DBs.SQLite
 {
-	/// <summary>
-	/// Database       : MediaDb.v1
-	/// Data Source    : MediaDb.v1
-	/// Server Version : 3.24.0
-	/// </summary>
-	public partial class MediaDbV1DB : LinqToDB.Data.DataConnection
+	public partial class SQLiteProvider : LinqToDB.Data.DataConnection
 	{
-		public ITable<Album>                            Albums                            { get { return this.GetTable<Album>(); } }
-		public ITable<AlbumItemLink>                    AlbumItemLinks                    { get { return this.GetTable<AlbumItemLink>(); } }
-		public ITable<AlbumNameFt>                      AlbumNameFts                      { get { return this.GetTable<AlbumNameFt>(); } }
-		public ITable<AlbumNameFtsDocsize>              AlbumNameFtsDocsizes              { get { return this.GetTable<AlbumNameFtsDocsize>(); } }
-		public ITable<AlbumNameFtsSegdir>               AlbumNameFtsSegdirs               { get { return this.GetTable<AlbumNameFtsSegdir>(); } }
-		public ITable<AlbumNameFtsSegment>              AlbumNameFtsSegments              { get { return this.GetTable<AlbumNameFtsSegment>(); } }
-		public ITable<AlbumNameFtsStat>                 AlbumNameFtsStats                 { get { return this.GetTable<AlbumNameFtsStat>(); } }
-		public ITable<AppGlobalState>                   AppGlobalStates                   { get { return this.GetTable<AppGlobalState>(); } }
-		public ITable<ApplicationName>                  ApplicationNames                  { get { return this.GetTable<ApplicationName>(); } }
-		public ITable<AppTelemetryState>                AppTelemetryStates                { get { return this.GetTable<AppTelemetryState>(); } }
-		public ITable<Audio>                            Audios                            { get { return this.GetTable<Audio>(); } }
-		public ITable<BackgroundTaskTelemetry>          BackgroundTaskTelemetries         { get { return this.GetTable<BackgroundTaskTelemetry>(); } }
-		public ITable<Cache>                            Caches                            { get { return this.GetTable<Cache>(); } }
-		public ITable<CameraManufacturer>               CameraManufacturers               { get { return this.GetTable<CameraManufacturer>(); } }
-		public ITable<CameraModel>                      CameraModels                      { get { return this.GetTable<CameraModel>(); } }
-		public ITable<CloudAlbum>                       CloudAlbums                       { get { return this.GetTable<CloudAlbum>(); } }
-		public ITable<CloudAlbumDefinition>             CloudAlbumDefinitions             { get { return this.GetTable<CloudAlbumDefinition>(); } }
-		public ITable<ConceptTagSuppressedTagList>      ConceptTagSuppressedTagLists      { get { return this.GetTable<ConceptTagSuppressedTagList>(); } }
-		public ITable<DbRecoveryTaskState>              DbRecoveryTaskStates              { get { return this.GetTable<DbRecoveryTaskState>(); } }
-		public ITable<Event>                            Events                            { get { return this.GetTable<Event>(); } }
-		public ITable<ExcludedAlbum>                    ExcludedAlbums                    { get { return this.GetTable<ExcludedAlbum>(); } }
-		public ITable<ExcludedFace>                     ExcludedFaces                     { get { return this.GetTable<ExcludedFace>(); } }
-		public ITable<ExcludedImport>                   ExcludedImports                   { get { return this.GetTable<ExcludedImport>(); } }
-		public ITable<ExcludedItemTag>                  ExcludedItemTags                  { get { return this.GetTable<ExcludedItemTag>(); } }
-		public ITable<ExcludedLocation>                 ExcludedLocations                 { get { return this.GetTable<ExcludedLocation>(); } }
-		public ITable<ExcludedPerson>                   ExcludedPeople                    { get { return this.GetTable<ExcludedPerson>(); } }
-		public ITable<ExcludedTag>                      ExcludedTags                      { get { return this.GetTable<ExcludedTag>(); } }
-		public ITable<ExtractedText>                    ExtractedTexts                    { get { return this.GetTable<ExtractedText>(); } }
-		public ITable<Face>                             Faces                             { get { return this.GetTable<Face>(); } }
-		public ITable<FaceCluster>                      FaceClusters                      { get { return this.GetTable<FaceCluster>(); } }
-		public ITable<FaceFeature>                      FaceFeatures                      { get { return this.GetTable<FaceFeature>(); } }
-		public ITable<FileExtensionFt>                  FileExtensionFts                  { get { return this.GetTable<FileExtensionFt>(); } }
-		public ITable<FileExtensionFtsDocsize>          FileExtensionFtsDocsizes          { get { return this.GetTable<FileExtensionFtsDocsize>(); } }
-		public ITable<FileExtensionFtsSegdir>           FileExtensionFtsSegdirs           { get { return this.GetTable<FileExtensionFtsSegdir>(); } }
-		public ITable<FileExtensionFtsSegment>          FileExtensionFtsSegments          { get { return this.GetTable<FileExtensionFtsSegment>(); } }
-		public ITable<FileExtensionFtsStat>             FileExtensionFtsStats             { get { return this.GetTable<FileExtensionFtsStat>(); } }
-		public ITable<FilenameFt>                       FilenameFts                       { get { return this.GetTable<FilenameFt>(); } }
-		public ITable<FilenameFtsDocsize>               FilenameFtsDocsizes               { get { return this.GetTable<FilenameFtsDocsize>(); } }
-		public ITable<FilenameFtsSegdir>                FilenameFtsSegdirs                { get { return this.GetTable<FilenameFtsSegdir>(); } }
-		public ITable<FilenameFtsSegment>               FilenameFtsSegments               { get { return this.GetTable<FilenameFtsSegment>(); } }
-		public ITable<FilenameFtsStat>                  FilenameFtsStats                  { get { return this.GetTable<FilenameFtsStat>(); } }
-		public ITable<Folder>                           Folders                           { get { return this.GetTable<Folder>(); } }
-		public ITable<FolderNameFt>                     FolderNameFts                     { get { return this.GetTable<FolderNameFt>(); } }
-		public ITable<FolderNameFtsDocsize>             FolderNameFtsDocsizes             { get { return this.GetTable<FolderNameFtsDocsize>(); } }
-		public ITable<FolderNameFtsSegdir>              FolderNameFtsSegdirs              { get { return this.GetTable<FolderNameFtsSegdir>(); } }
-		public ITable<FolderNameFtsSegment>             FolderNameFtsSegments             { get { return this.GetTable<FolderNameFtsSegment>(); } }
-		public ITable<FolderNameFtsStat>                FolderNameFtsStats                { get { return this.GetTable<FolderNameFtsStat>(); } }
-		public ITable<ImageAnalysis>                    ImageAnalyses                     { get { return this.GetTable<ImageAnalysis>(); } }
-		public ITable<Item>                             Items                             { get { return this.GetTable<Item>(); } }
-		public ITable<ItemDateTaken>                    ItemDateTakens                    { get { return this.GetTable<ItemDateTaken>(); } }
-		public ITable<ItemEdit>                         ItemEdits                         { get { return this.GetTable<ItemEdit>(); } }
-		public ITable<ItemEngineExemplar>               ItemEngineExemplars               { get { return this.GetTable<ItemEngineExemplar>(); } }
-		public ITable<ItemEngineStatus>                 ItemEngineStatus                  { get { return this.GetTable<ItemEngineStatus>(); } }
-		public ITable<ItemInferredLocationExperimental> ItemInferredLocationExperimentals { get { return this.GetTable<ItemInferredLocationExperimental>(); } }
-		public ITable<ItemTag>                          ItemTags                          { get { return this.GetTable<ItemTag>(); } }
-		public ITable<ItemVideoQuality>                 ItemVideoQualities                { get { return this.GetTable<ItemVideoQuality>(); } }
-		public ITable<ItemVideoTag>                     ItemVideoTags                     { get { return this.GetTable<ItemVideoTag>(); } }
-		public ITable<LiveTile>                         LiveTiles                         { get { return this.GetTable<LiveTile>(); } }
-		public ITable<Location>                         Locations                         { get { return this.GetTable<Location>(); } }
-		public ITable<LocationCountry>                  LocationCountries                 { get { return this.GetTable<LocationCountry>(); } }
-		public ITable<LocationCountryFt>                LocationCountryFts                { get { return this.GetTable<LocationCountryFt>(); } }
-		public ITable<LocationCountryFtsDocsize>        LocationCountryFtsDocsizes        { get { return this.GetTable<LocationCountryFtsDocsize>(); } }
-		public ITable<LocationCountryFtsSegdir>         LocationCountryFtsSegdirs         { get { return this.GetTable<LocationCountryFtsSegdir>(); } }
-		public ITable<LocationCountryFtsSegment>        LocationCountryFtsSegments        { get { return this.GetTable<LocationCountryFtsSegment>(); } }
-		public ITable<LocationCountryFtsStat>           LocationCountryFtsStats           { get { return this.GetTable<LocationCountryFtsStat>(); } }
-		public ITable<LocationDistrict>                 LocationDistricts                 { get { return this.GetTable<LocationDistrict>(); } }
-		public ITable<LocationDistrictFt>               LocationDistrictFts               { get { return this.GetTable<LocationDistrictFt>(); } }
-		public ITable<LocationDistrictFtsDocsize>       LocationDistrictFtsDocsizes       { get { return this.GetTable<LocationDistrictFtsDocsize>(); } }
-		public ITable<LocationDistrictFtsSegdir>        LocationDistrictFtsSegdirs        { get { return this.GetTable<LocationDistrictFtsSegdir>(); } }
-		public ITable<LocationDistrictFtsSegment>       LocationDistrictFtsSegments       { get { return this.GetTable<LocationDistrictFtsSegment>(); } }
-		public ITable<LocationDistrictFtsStat>          LocationDistrictFtsStats          { get { return this.GetTable<LocationDistrictFtsStat>(); } }
-		public ITable<LocationFt>                       LocationFts                       { get { return this.GetTable<LocationFt>(); } }
-		public ITable<LocationFtsDocsize>               LocationFtsDocsizes               { get { return this.GetTable<LocationFtsDocsize>(); } }
-		public ITable<LocationFtsSegdir>                LocationFtsSegdirs                { get { return this.GetTable<LocationFtsSegdir>(); } }
-		public ITable<LocationFtsSegment>               LocationFtsSegments               { get { return this.GetTable<LocationFtsSegment>(); } }
-		public ITable<LocationFtsStat>                  LocationFtsStats                  { get { return this.GetTable<LocationFtsStat>(); } }
-		public ITable<LocationGrid>                     LocationGrids                     { get { return this.GetTable<LocationGrid>(); } }
-		public ITable<LocationRegion>                   LocationRegions                   { get { return this.GetTable<LocationRegion>(); } }
-		public ITable<LocationRegionFt>                 LocationRegionFts                 { get { return this.GetTable<LocationRegionFt>(); } }
-		public ITable<LocationRegionFtsDocsize>         LocationRegionFtsDocsizes         { get { return this.GetTable<LocationRegionFtsDocsize>(); } }
-		public ITable<LocationRegionFtsSegdir>          LocationRegionFtsSegdirs          { get { return this.GetTable<LocationRegionFtsSegdir>(); } }
-		public ITable<LocationRegionFtsSegment>         LocationRegionFtsSegments         { get { return this.GetTable<LocationRegionFtsSegment>(); } }
-		public ITable<LocationRegionFtsStat>            LocationRegionFtsStats            { get { return this.GetTable<LocationRegionFtsStat>(); } }
-		public ITable<NetworkTelemetry>                 NetworkTelemetries                { get { return this.GetTable<NetworkTelemetry>(); } }
-		public ITable<OCRItem>                          OCRItems                          { get { return this.GetTable<OCRItem>(); } }
-		public ITable<OCRItemTextView>                  OCRItemTextViews                  { get { return this.GetTable<OCRItemTextView>(); } }
-		public ITable<OCRItemTextViewFt>                OCRItemTextViewFts                { get { return this.GetTable<OCRItemTextViewFt>(); } }
-		public ITable<OCRItemTextViewFtsDocsize>        OCRItemTextViewFtsDocsizes        { get { return this.GetTable<OCRItemTextViewFtsDocsize>(); } }
-		public ITable<OCRItemTextViewFtsSegdir>         OCRItemTextViewFtsSegdirs         { get { return this.GetTable<OCRItemTextViewFtsSegdir>(); } }
-		public ITable<OCRItemTextViewFtsSegment>        OCRItemTextViewFtsSegments        { get { return this.GetTable<OCRItemTextViewFtsSegment>(); } }
-		public ITable<OCRItemTextViewFtsStat>           OCRItemTextViewFtsStats           { get { return this.GetTable<OCRItemTextViewFtsStat>(); } }
-		public ITable<OCRLine>                          OCRLines                          { get { return this.GetTable<OCRLine>(); } }
-		public ITable<OCRWord>                          OCRWords                          { get { return this.GetTable<OCRWord>(); } }
-		public ITable<OneDriveStorageAndUpsellInfo>     OneDriveStorageAndUpsellInfo      { get { return this.GetTable<OneDriveStorageAndUpsellInfo>(); } }
-		public ITable<PendingCloudAlbumDelete>          PendingCloudAlbumDeletes          { get { return this.GetTable<PendingCloudAlbumDelete>(); } }
-		public ITable<PendingUploadItem>                PendingUploadItems                { get { return this.GetTable<PendingUploadItem>(); } }
-		public ITable<Person>                           People                            { get { return this.GetTable<Person>(); } }
-		public ITable<PersonFt>                         PersonFts                         { get { return this.GetTable<PersonFt>(); } }
-		public ITable<PersonFtsDocsize>                 PersonFtsDocsizes                 { get { return this.GetTable<PersonFtsDocsize>(); } }
-		public ITable<PersonFtsSegdir>                  PersonFtsSegdirs                  { get { return this.GetTable<PersonFtsSegdir>(); } }
-		public ITable<PersonFtsSegment>                 PersonFtsSegments                 { get { return this.GetTable<PersonFtsSegment>(); } }
-		public ITable<PersonFtsStat>                    PersonFtsStats                    { get { return this.GetTable<PersonFtsStat>(); } }
-		public ITable<PinnedSearch>                     PinnedSearches                    { get { return this.GetTable<PinnedSearch>(); } }
-		public ITable<Project>                          Projects                          { get { return this.GetTable<Project>(); } }
-		public ITable<RemoteAlbum>                      RemoteAlbums                      { get { return this.GetTable<RemoteAlbum>(); } }
-		public ITable<RemoteItem>                       RemoteItems                       { get { return this.GetTable<RemoteItem>(); } }
-		public ITable<RemoteProject>                    RemoteProjects                    { get { return this.GetTable<RemoteProject>(); } }
-		public ITable<RemoteThumbnail>                  RemoteThumbnails                  { get { return this.GetTable<RemoteThumbnail>(); } }
-		public ITable<SalientRect>                      SalientRects                      { get { return this.GetTable<SalientRect>(); } }
-		public ITable<SearchAnalysisItemPriority>       SearchAnalysisItemPriorities      { get { return this.GetTable<SearchAnalysisItemPriority>(); } }
-		public ITable<Source>                           Sources                           { get { return this.GetTable<Source>(); } }
-		public ITable<Tag>                              Tags                              { get { return this.GetTable<Tag>(); } }
-		public ITable<TagVariant>                       TagVariants                       { get { return this.GetTable<TagVariant>(); } }
-		public ITable<TagVariantFt>                     TagVariantFts                     { get { return this.GetTable<TagVariantFt>(); } }
-		public ITable<TagVariantFtsDocsize>             TagVariantFtsDocsizes             { get { return this.GetTable<TagVariantFtsDocsize>(); } }
-		public ITable<TagVariantFtsSegdir>              TagVariantFtsSegdirs              { get { return this.GetTable<TagVariantFtsSegdir>(); } }
-		public ITable<TagVariantFtsSegment>             TagVariantFtsSegments             { get { return this.GetTable<TagVariantFtsSegment>(); } }
-		public ITable<TagVariantFtsStat>                TagVariantFtsStats                { get { return this.GetTable<TagVariantFtsStat>(); } }
-		public ITable<UserActionAlbumView>              UserActionAlbumViews              { get { return this.GetTable<UserActionAlbumView>(); } }
-		public ITable<UserActionImport>                 UserActionImports                 { get { return this.GetTable<UserActionImport>(); } }
-		public ITable<UserActionLaunch>                 UserActionLaunches                { get { return this.GetTable<UserActionLaunch>(); } }
-		public ITable<UserActionPrint>                  UserActionPrints                  { get { return this.GetTable<UserActionPrint>(); } }
-		public ITable<UserActionSearch>                 UserActionSearches                { get { return this.GetTable<UserActionSearch>(); } }
-		public ITable<UserActionShare>                  UserActionShares                  { get { return this.GetTable<UserActionShare>(); } }
-		public ITable<UserActionSlideshow>              UserActionSlideshows              { get { return this.GetTable<UserActionSlideshow>(); } }
-		public ITable<UserActionView>                   UserActionViews                   { get { return this.GetTable<UserActionView>(); } }
-		public ITable<VideoFaceOccurrence>              VideoFaceOccurrences              { get { return this.GetTable<VideoFaceOccurrence>(); } }
+		public ITable<Album>                        Albums                       { get { return this.GetTable<Album>(); } }
+		public ITable<AlbumItemLink>                AlbumItemLinks               { get { return this.GetTable<AlbumItemLink>(); } }
+		public ITable<AlbumNameFt>                  AlbumNameFts                 { get { return this.GetTable<AlbumNameFt>(); } }
+		public ITable<AlbumNameFtsDocsize>          AlbumNameFtsDocsizes         { get { return this.GetTable<AlbumNameFtsDocsize>(); } }
+		public ITable<AlbumNameFtsSegdir>           AlbumNameFtsSegdirs          { get { return this.GetTable<AlbumNameFtsSegdir>(); } }
+		public ITable<AlbumNameFtsSegment>          AlbumNameFtsSegments         { get { return this.GetTable<AlbumNameFtsSegment>(); } }
+		public ITable<AlbumNameFtsStat>             AlbumNameFtsStats            { get { return this.GetTable<AlbumNameFtsStat>(); } }
+		public ITable<AppGlobalState>               AppGlobalStates              { get { return this.GetTable<AppGlobalState>(); } }
+		public ITable<ApplicationName>              ApplicationNames             { get { return this.GetTable<ApplicationName>(); } }
+		public ITable<AppTelemetryState>            AppTelemetryStates           { get { return this.GetTable<AppTelemetryState>(); } }
+		public ITable<Audio>                        Audios                       { get { return this.GetTable<Audio>(); } }
+		public ITable<BackgroundTaskTelemetry>      BackgroundTaskTelemetries    { get { return this.GetTable<BackgroundTaskTelemetry>(); } }
+		public ITable<Cache>                        Caches                       { get { return this.GetTable<Cache>(); } }
+		public ITable<CameraManufacturer>           CameraManufacturers          { get { return this.GetTable<CameraManufacturer>(); } }
+		public ITable<CameraModel>                  CameraModels                 { get { return this.GetTable<CameraModel>(); } }
+		public ITable<CloudAlbum>                   CloudAlbums                  { get { return this.GetTable<CloudAlbum>(); } }
+		public ITable<CloudAlbumDefinition>         CloudAlbumDefinitions        { get { return this.GetTable<CloudAlbumDefinition>(); } }
+		public ITable<ConceptTagSuppressedTagList>  ConceptTagSuppressedTagLists { get { return this.GetTable<ConceptTagSuppressedTagList>(); } }
+		public ITable<DbRecoveryTaskState>          DbRecoveryTaskStates         { get { return this.GetTable<DbRecoveryTaskState>(); } }
+		public ITable<Event>                        Events                       { get { return this.GetTable<Event>(); } }
+		public ITable<ExcludedAlbum>                ExcludedAlbums               { get { return this.GetTable<ExcludedAlbum>(); } }
+		public ITable<ExcludedFace>                 ExcludedFaces                { get { return this.GetTable<ExcludedFace>(); } }
+		public ITable<ExcludedImport>               ExcludedImports              { get { return this.GetTable<ExcludedImport>(); } }
+		public ITable<ExcludedItemTag>              ExcludedItemTags             { get { return this.GetTable<ExcludedItemTag>(); } }
+		public ITable<ExcludedLocation>             ExcludedLocations            { get { return this.GetTable<ExcludedLocation>(); } }
+		public ITable<ExcludedPerson>               ExcludedPeople               { get { return this.GetTable<ExcludedPerson>(); } }
+		public ITable<ExcludedTag>                  ExcludedTags                 { get { return this.GetTable<ExcludedTag>(); } }
+		public ITable<ExtractedText>                ExtractedTexts               { get { return this.GetTable<ExtractedText>(); } }
+		public ITable<Face>                         Faces                        { get { return this.GetTable<Face>(); } }
+		public ITable<FaceCluster>                  FaceClusters                 { get { return this.GetTable<FaceCluster>(); } }
+		public ITable<FaceFeature>                  FaceFeatures                 { get { return this.GetTable<FaceFeature>(); } }
+		public ITable<FileExtensionFt>              FileExtensionFts             { get { return this.GetTable<FileExtensionFt>(); } }
+		public ITable<FileExtensionFtsDocsize>      FileExtensionFtsDocsizes     { get { return this.GetTable<FileExtensionFtsDocsize>(); } }
+		public ITable<FileExtensionFtsSegdir>       FileExtensionFtsSegdirs      { get { return this.GetTable<FileExtensionFtsSegdir>(); } }
+		public ITable<FileExtensionFtsSegment>      FileExtensionFtsSegments     { get { return this.GetTable<FileExtensionFtsSegment>(); } }
+		public ITable<FileExtensionFtsStat>         FileExtensionFtsStats        { get { return this.GetTable<FileExtensionFtsStat>(); } }
+		public ITable<FilenameFt>                   FilenameFts                  { get { return this.GetTable<FilenameFt>(); } }
+		public ITable<FilenameFtsDocsize>           FilenameFtsDocsizes          { get { return this.GetTable<FilenameFtsDocsize>(); } }
+		public ITable<FilenameFtsSegdir>            FilenameFtsSegdirs           { get { return this.GetTable<FilenameFtsSegdir>(); } }
+		public ITable<FilenameFtsSegment>           FilenameFtsSegments          { get { return this.GetTable<FilenameFtsSegment>(); } }
+		public ITable<FilenameFtsStat>              FilenameFtsStats             { get { return this.GetTable<FilenameFtsStat>(); } }
+		public ITable<Folder>                       Folders                      { get { return this.GetTable<Folder>(); } }
+		public ITable<FolderNameFt>                 FolderNameFts                { get { return this.GetTable<FolderNameFt>(); } }
+		public ITable<FolderNameFtsDocsize>         FolderNameFtsDocsizes        { get { return this.GetTable<FolderNameFtsDocsize>(); } }
+		public ITable<FolderNameFtsSegdir>          FolderNameFtsSegdirs         { get { return this.GetTable<FolderNameFtsSegdir>(); } }
+		public ITable<FolderNameFtsSegment>         FolderNameFtsSegments        { get { return this.GetTable<FolderNameFtsSegment>(); } }
+		public ITable<FolderNameFtsStat>            FolderNameFtsStats           { get { return this.GetTable<FolderNameFtsStat>(); } }
+		public ITable<ImageAnalysis>                ImageAnalyses                { get { return this.GetTable<ImageAnalysis>(); } }
+		public ITable<Item>                         Items                        { get { return this.GetTable<Item>(); } }
+		public ITable<ItemDateTaken>                ItemDateTakens               { get { return this.GetTable<ItemDateTaken>(); } }
+		public ITable<ItemEdit>                     ItemEdits                    { get { return this.GetTable<ItemEdit>(); } }
+		public ITable<ItemEngineExemplar>           ItemEngineExemplars          { get { return this.GetTable<ItemEngineExemplar>(); } }
+		public ITable<ItemEngineStatus>             ItemEngineStatus             { get { return this.GetTable<ItemEngineStatus>(); } }
+		public ITable<ItemTag>                      ItemTags                     { get { return this.GetTable<ItemTag>(); } }
+		public ITable<ItemVideoQuality>             ItemVideoQualities           { get { return this.GetTable<ItemVideoQuality>(); } }
+		public ITable<ItemVideoTag>                 ItemVideoTags                { get { return this.GetTable<ItemVideoTag>(); } }
+		public ITable<LiveTile>                     LiveTiles                    { get { return this.GetTable<LiveTile>(); } }
+		public ITable<Location>                     Locations                    { get { return this.GetTable<Location>(); } }
+		public ITable<LocationCountry>              LocationCountries            { get { return this.GetTable<LocationCountry>(); } }
+		public ITable<LocationCountryFt>            LocationCountryFts           { get { return this.GetTable<LocationCountryFt>(); } }
+		public ITable<LocationCountryFtsDocsize>    LocationCountryFtsDocsizes   { get { return this.GetTable<LocationCountryFtsDocsize>(); } }
+		public ITable<LocationCountryFtsSegdir>     LocationCountryFtsSegdirs    { get { return this.GetTable<LocationCountryFtsSegdir>(); } }
+		public ITable<LocationCountryFtsSegment>    LocationCountryFtsSegments   { get { return this.GetTable<LocationCountryFtsSegment>(); } }
+		public ITable<LocationCountryFtsStat>       LocationCountryFtsStats      { get { return this.GetTable<LocationCountryFtsStat>(); } }
+		public ITable<LocationDistrict>             LocationDistricts            { get { return this.GetTable<LocationDistrict>(); } }
+		public ITable<LocationDistrictFt>           LocationDistrictFts          { get { return this.GetTable<LocationDistrictFt>(); } }
+		public ITable<LocationDistrictFtsDocsize>   LocationDistrictFtsDocsizes  { get { return this.GetTable<LocationDistrictFtsDocsize>(); } }
+		public ITable<LocationDistrictFtsSegdir>    LocationDistrictFtsSegdirs   { get { return this.GetTable<LocationDistrictFtsSegdir>(); } }
+		public ITable<LocationDistrictFtsSegment>   LocationDistrictFtsSegments  { get { return this.GetTable<LocationDistrictFtsSegment>(); } }
+		public ITable<LocationDistrictFtsStat>      LocationDistrictFtsStats     { get { return this.GetTable<LocationDistrictFtsStat>(); } }
+		public ITable<LocationFt>                   LocationFts                  { get { return this.GetTable<LocationFt>(); } }
+		public ITable<LocationFtsDocsize>           LocationFtsDocsizes          { get { return this.GetTable<LocationFtsDocsize>(); } }
+		public ITable<LocationFtsSegdir>            LocationFtsSegdirs           { get { return this.GetTable<LocationFtsSegdir>(); } }
+		public ITable<LocationFtsSegment>           LocationFtsSegments          { get { return this.GetTable<LocationFtsSegment>(); } }
+		public ITable<LocationFtsStat>              LocationFtsStats             { get { return this.GetTable<LocationFtsStat>(); } }
+		public ITable<LocationGrid>                 LocationGrids                { get { return this.GetTable<LocationGrid>(); } }
+		public ITable<LocationRegion>               LocationRegions              { get { return this.GetTable<LocationRegion>(); } }
+		public ITable<LocationRegionFt>             LocationRegionFts            { get { return this.GetTable<LocationRegionFt>(); } }
+		public ITable<LocationRegionFtsDocsize>     LocationRegionFtsDocsizes    { get { return this.GetTable<LocationRegionFtsDocsize>(); } }
+		public ITable<LocationRegionFtsSegdir>      LocationRegionFtsSegdirs     { get { return this.GetTable<LocationRegionFtsSegdir>(); } }
+		public ITable<LocationRegionFtsSegment>     LocationRegionFtsSegments    { get { return this.GetTable<LocationRegionFtsSegment>(); } }
+		public ITable<LocationRegionFtsStat>        LocationRegionFtsStats       { get { return this.GetTable<LocationRegionFtsStat>(); } }
+		public ITable<NetworkTelemetry>             NetworkTelemetries           { get { return this.GetTable<NetworkTelemetry>(); } }
+		public ITable<OCRItem>                      OCRItems                     { get { return this.GetTable<OCRItem>(); } }
+		public ITable<OCRItemTextView>              OCRItemTextViews             { get { return this.GetTable<OCRItemTextView>(); } }
+		public ITable<OCRItemTextViewFt>            OCRItemTextViewFts           { get { return this.GetTable<OCRItemTextViewFt>(); } }
+		public ITable<OCRItemTextViewFtsDocsize>    OCRItemTextViewFtsDocsizes   { get { return this.GetTable<OCRItemTextViewFtsDocsize>(); } }
+		public ITable<OCRItemTextViewFtsSegdir>     OCRItemTextViewFtsSegdirs    { get { return this.GetTable<OCRItemTextViewFtsSegdir>(); } }
+		public ITable<OCRItemTextViewFtsSegment>    OCRItemTextViewFtsSegments   { get { return this.GetTable<OCRItemTextViewFtsSegment>(); } }
+		public ITable<OCRItemTextViewFtsStat>       OCRItemTextViewFtsStats      { get { return this.GetTable<OCRItemTextViewFtsStat>(); } }
+		public ITable<OCRLine>                      OCRLines                     { get { return this.GetTable<OCRLine>(); } }
+		public ITable<OCRWord>                      OCRWords                     { get { return this.GetTable<OCRWord>(); } }
+		public ITable<OneDriveStorageAndUpsellInfo> OneDriveStorageAndUpsellInfo { get { return this.GetTable<OneDriveStorageAndUpsellInfo>(); } }
+		public ITable<PendingCloudAlbumDelete>      PendingCloudAlbumDeletes     { get { return this.GetTable<PendingCloudAlbumDelete>(); } }
+		public ITable<PendingUploadItem>            PendingUploadItems           { get { return this.GetTable<PendingUploadItem>(); } }
+		public ITable<Person>                       People                       { get { return this.GetTable<Person>(); } }
+		public ITable<PersonFt>                     PersonFts                    { get { return this.GetTable<PersonFt>(); } }
+		public ITable<PersonFtsDocsize>             PersonFtsDocsizes            { get { return this.GetTable<PersonFtsDocsize>(); } }
+		public ITable<PersonFtsSegdir>              PersonFtsSegdirs             { get { return this.GetTable<PersonFtsSegdir>(); } }
+		public ITable<PersonFtsSegment>             PersonFtsSegments            { get { return this.GetTable<PersonFtsSegment>(); } }
+		public ITable<PersonFtsStat>                PersonFtsStats               { get { return this.GetTable<PersonFtsStat>(); } }
+		public ITable<PinnedSearch>                 PinnedSearches               { get { return this.GetTable<PinnedSearch>(); } }
+		public ITable<Project>                      Projects                     { get { return this.GetTable<Project>(); } }
+		public ITable<RemoteAlbum>                  RemoteAlbums                 { get { return this.GetTable<RemoteAlbum>(); } }
+		public ITable<RemoteItem>                   RemoteItems                  { get { return this.GetTable<RemoteItem>(); } }
+		public ITable<RemoteProject>                RemoteProjects               { get { return this.GetTable<RemoteProject>(); } }
+		public ITable<RemoteThumbnail>              RemoteThumbnails             { get { return this.GetTable<RemoteThumbnail>(); } }
+		public ITable<SalientRect>                  SalientRects                 { get { return this.GetTable<SalientRect>(); } }
+		public ITable<SearchAnalysisItemPriority>   SearchAnalysisItemPriorities { get { return this.GetTable<SearchAnalysisItemPriority>(); } }
+		public ITable<Source>                       Sources                      { get { return this.GetTable<Source>(); } }
+		public ITable<Tag>                          Tags                         { get { return this.GetTable<Tag>(); } }
+		public ITable<TagVariant>                   TagVariants                  { get { return this.GetTable<TagVariant>(); } }
+		public ITable<TagVariantFt>                 TagVariantFts                { get { return this.GetTable<TagVariantFt>(); } }
+		public ITable<TagVariantFtsDocsize>         TagVariantFtsDocsizes        { get { return this.GetTable<TagVariantFtsDocsize>(); } }
+		public ITable<TagVariantFtsSegdir>          TagVariantFtsSegdirs         { get { return this.GetTable<TagVariantFtsSegdir>(); } }
+		public ITable<TagVariantFtsSegment>         TagVariantFtsSegments        { get { return this.GetTable<TagVariantFtsSegment>(); } }
+		public ITable<TagVariantFtsStat>            TagVariantFtsStats           { get { return this.GetTable<TagVariantFtsStat>(); } }
+		public ITable<UserActionAlbumView>          UserActionAlbumViews         { get { return this.GetTable<UserActionAlbumView>(); } }
+		public ITable<UserActionImport>             UserActionImports            { get { return this.GetTable<UserActionImport>(); } }
+		public ITable<UserActionLaunch>             UserActionLaunches           { get { return this.GetTable<UserActionLaunch>(); } }
+		public ITable<UserActionPrint>              UserActionPrints             { get { return this.GetTable<UserActionPrint>(); } }
+		public ITable<UserActionSearch>             UserActionSearches           { get { return this.GetTable<UserActionSearch>(); } }
+		public ITable<UserActionShare>              UserActionShares             { get { return this.GetTable<UserActionShare>(); } }
+		public ITable<UserActionSlideshow>          UserActionSlideshows         { get { return this.GetTable<UserActionSlideshow>(); } }
+		public ITable<UserActionView>               UserActionViews              { get { return this.GetTable<UserActionView>(); } }
+		public ITable<VideoFaceOccurrence>          VideoFaceOccurrences         { get { return this.GetTable<VideoFaceOccurrence>(); } }
 
-		public MediaDbV1DB()
+		public SQLiteProvider()
 		{
 			InitDataContext();
 			InitMappingSchema();
 		}
 
-		public MediaDbV1DB(string configuration)
+		public SQLiteProvider(string configuration)
 			: base(configuration)
 		{
 			InitDataContext();
 			InitMappingSchema();
 		}
 
-		public MediaDbV1DB(LinqToDbConnectionOptions options)
+		public SQLiteProvider(LinqToDbConnectionOptions options)
 			: base(options)
 		{
 			InitDataContext();
@@ -1483,23 +1477,6 @@ namespace StorageProviders.SQLite.NetCore
 		#endregion
 	}
 
-	[Table("ItemInferredLocationExperimental")]
-	public partial class ItemInferredLocationExperimental
-	{
-		[Column("ItemInferredLocationExperimental_ItemId"),             PrimaryKey,  NotNull] public long    ItemInferredLocationExperimentalItemId             { get; set; } // integer
-		[Column("ItemInferredLocationExperimental_InferredLocationId"),    Nullable         ] public object? ItemInferredLocationExperimentalInferredLocationId { get; set; }
-
-		#region Associations
-
-		/// <summary>
-		/// FK_ItemInferredLocationExperimental_0_0
-		/// </summary>
-		[Association(ThisKey="ItemInferredLocationExperimentalInferredLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemInferredLocationExperimental_0_0", BackReferenceName="ItemInferredLocationExperimentals")]
-		public Location? ItemInferredLocationExperimentalInferredLocation { get; set; }
-
-		#endregion
-	}
-
 	[Table("ItemTags")]
 	public partial class ItemTag
 	{
@@ -1606,12 +1583,6 @@ namespace StorageProviders.SQLite.NetCore
 		/// </summary>
 		[Association(ThisKey="LocationId", OtherKey="ExcludedLocationLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<ExcludedLocation> ExcludedLocations { get; set; } = null!;
-
-		/// <summary>
-		/// FK_ItemInferredLocationExperimental_0_0_BackReference
-		/// </summary>
-		[Association(ThisKey="LocationId", OtherKey="ItemInferredLocationExperimentalInferredLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemInferredLocationExperimental> ItemInferredLocationExperimentals { get; set; } = null!;
 
 		/// <summary>
 		/// FK_Item_4_0_BackReference
@@ -2918,12 +2889,6 @@ namespace StorageProviders.SQLite.NetCore
 				t.ItemEngineStatusId == ItemEngineStatusId);
 		}
 
-		public static ItemInferredLocationExperimental? Find(this ITable<ItemInferredLocationExperimental> table, long ItemInferredLocationExperimentalItemId)
-		{
-			return table.FirstOrDefault(t =>
-				t.ItemInferredLocationExperimentalItemId == ItemInferredLocationExperimentalItemId);
-		}
-
 		public static ItemTag? Find(this ITable<ItemTag> table, long ItemTagsId)
 		{
 			return table.FirstOrDefault(t =>
@@ -3304,6 +3269,2201 @@ namespace StorageProviders.SQLite.NetCore
 			return table.FirstOrDefault(t =>
 				t.VideoFaceOccurrenceId == VideoFaceOccurrenceId);
 		}
+
+		#region Associations
+
+		#region Album Associations
+
+		/// <summary>
+		/// FK_Album_1_0
+		/// </summary>
+		[Association(ThisKey="AlbumCoverItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Album_1_0", BackReferenceName="Albums")]
+		public static IQueryable<Item> AlbumCoverItems(this Album obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.AlbumCoverItemId);
+		}
+
+		/// <summary>
+		/// FK_Album_1_0
+		/// </summary>
+		[Association(ThisKey="AlbumCoverItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Album_1_0", BackReferenceName="Albums")]
+		public static Album? AlbumCoverItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumCoverItemId == obj.ItemId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_AlbumItemLink_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="AlbumItemLinkAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<AlbumItemLink> AlbumItemLinks(this Album obj, IDataContext db)
+		{
+			return db.GetTable<AlbumItemLink>().Where(c => c.AlbumItemLinkAlbumId == obj.AlbumId);
+		}
+
+		/// <summary>
+		/// FK_CloudAlbum_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="CloudAlbumAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<CloudAlbum> CloudAlbums(this Album obj, IDataContext db)
+		{
+			return db.GetTable<CloudAlbum>().Where(c => c.CloudAlbumAlbumId == obj.AlbumId);
+		}
+
+		/// <summary>
+		/// FK_ExcludedAlbum_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="ExcludedAlbumAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ExcludedAlbum> ExcludedAlbums(this Album obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedAlbum>().Where(c => c.ExcludedAlbumAlbumId == obj.AlbumId);
+		}
+
+		/// <summary>
+		/// FK_PendingUploadItem_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="PendingUploadItemAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<PendingUploadItem> PendingUploadItems(this Album obj, IDataContext db)
+		{
+			return db.GetTable<PendingUploadItem>().Where(c => c.PendingUploadItemAlbumId == obj.AlbumId);
+		}
+
+		/// <summary>
+		/// FK_Project_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="ProjectAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Project> Projects(this Album obj, IDataContext db)
+		{
+			return db.GetTable<Project>().Where(c => c.ProjectAlbumId == obj.AlbumId);
+		}
+
+		/// <summary>
+		/// FK_RemoteAlbum_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="RemoteAlbumAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
+		public static IQueryable<RemoteAlbum> RemoteAlbums(this Album obj, IDataContext db)
+		{
+			return db.GetTable<RemoteAlbum>().Where(c => c.RemoteAlbumAlbumId == obj.AlbumId);
+		}
+
+		/// <summary>
+		/// FK_RemoteAlbum_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="RemoteAlbumAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
+		public static Album? RemoteAlbum(this RemoteAlbum obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumId == obj.RemoteAlbumAlbumId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Album_0_0
+		/// </summary>
+		[Association(ThisKey="AlbumSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Album_0_0", BackReferenceName="Albums")]
+		public static IQueryable<Source> Sources(this Album obj, IDataContext db)
+		{
+			return db.GetTable<Source>().Where(c => c.SourceId == obj.AlbumSourceId);
+		}
+
+		/// <summary>
+		/// FK_Album_0_0
+		/// </summary>
+		[Association(ThisKey="AlbumSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Album_0_0", BackReferenceName="Albums")]
+		public static Album? Source(this Source obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumSourceId == obj.SourceId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_UserActionAlbumView_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="UserActionAlbumViewAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<UserActionAlbumView> UserActionAlbumViews(this Album obj, IDataContext db)
+		{
+			return db.GetTable<UserActionAlbumView>().Where(c => c.UserActionAlbumViewAlbumId == obj.AlbumId);
+		}
+
+		/// <summary>
+		/// FK_UserActionSlideshow_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="UserActionSlideshowAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<UserActionSlideshow> UserActionSlideshows(this Album obj, IDataContext db)
+		{
+			return db.GetTable<UserActionSlideshow>().Where(c => c.UserActionSlideshowAlbumId == obj.AlbumId);
+		}
+
+		#endregion
+
+		#region AlbumItemLink Associations
+
+		/// <summary>
+		/// FK_AlbumItemLink_1_0
+		/// </summary>
+		[Association(ThisKey="AlbumItemLinkAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_AlbumItemLink_1_0", BackReferenceName="AlbumItemLinks")]
+		public static IQueryable<Album> AlbumItemLinkAlbums(this AlbumItemLink obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumId == obj.AlbumItemLinkAlbumId);
+		}
+
+		/// <summary>
+		/// FK_AlbumItemLink_1_0
+		/// </summary>
+		[Association(ThisKey="AlbumItemLinkAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_AlbumItemLink_1_0", BackReferenceName="AlbumItemLinks")]
+		public static AlbumItemLink AlbumItemLinkAlbum(this Album obj, IDataContext db)
+		{
+			return db.GetTable<AlbumItemLink>().Where(c => c.AlbumItemLinkAlbumId == obj.AlbumId).First();
+		}
+
+		/// <summary>
+		/// FK_AlbumItemLink_0_0
+		/// </summary>
+		[Association(ThisKey="AlbumItemLinkItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_AlbumItemLink_0_0", BackReferenceName="AlbumItemLinks")]
+		public static IQueryable<Item> AlbumItemLinkItems(this AlbumItemLink obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.AlbumItemLinkItemId);
+		}
+
+		/// <summary>
+		/// FK_AlbumItemLink_0_0
+		/// </summary>
+		[Association(ThisKey="AlbumItemLinkItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_AlbumItemLink_0_0", BackReferenceName="AlbumItemLinks")]
+		public static AlbumItemLink AlbumItemLinkItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<AlbumItemLink>().Where(c => c.AlbumItemLinkItemId == obj.ItemId).First();
+		}
+
+		#endregion
+
+		#region ApplicationName Associations
+
+		/// <summary>
+		/// FK_Item_3_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ApplicationNameId", OtherKey="ItemApplicationNameId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Item> Items(this ApplicationName obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemApplicationNameId == obj.ApplicationNameId);
+		}
+
+		#endregion
+
+		#region Cache Associations
+
+		/// <summary>
+		/// FK_Cache_0_0
+		/// </summary>
+		[Association(ThisKey="CacheItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Cache_0_0", BackReferenceName="Caches")]
+		public static IQueryable<Item> CacheItems(this Cache obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.CacheItemId);
+		}
+
+		/// <summary>
+		/// FK_Cache_0_0
+		/// </summary>
+		[Association(ThisKey="CacheItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Cache_0_0", BackReferenceName="Caches")]
+		public static Cache? CacheItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Cache>().Where(c => c.CacheItemId == obj.ItemId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region CameraManufacturer Associations
+
+		/// <summary>
+		/// FK_Item_2_0_BackReference
+		/// </summary>
+		[Association(ThisKey="CameraManufacturerId", OtherKey="ItemCameraManufacturerId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Item> Items0(this CameraManufacturer obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemCameraManufacturerId == obj.CameraManufacturerId);
+		}
+
+		#endregion
+
+		#region CameraModel Associations
+
+		/// <summary>
+		/// FK_Item_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="CameraModelId", OtherKey="ItemCameraModelId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Item> Items1(this CameraModel obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemCameraModelId == obj.CameraModelId);
+		}
+
+		#endregion
+
+		#region CloudAlbum Associations
+
+		/// <summary>
+		/// FK_CloudAlbum_1_0
+		/// </summary>
+		[Association(ThisKey="CloudAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_CloudAlbum_1_0", BackReferenceName="CloudAlbums")]
+		public static IQueryable<Album> CloudAlbumAlbums(this CloudAlbum obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumId == obj.CloudAlbumAlbumId);
+		}
+
+		/// <summary>
+		/// FK_CloudAlbum_1_0
+		/// </summary>
+		[Association(ThisKey="CloudAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_CloudAlbum_1_0", BackReferenceName="CloudAlbums")]
+		public static CloudAlbum CloudAlbumAlbum(this Album obj, IDataContext db)
+		{
+			return db.GetTable<CloudAlbum>().Where(c => c.CloudAlbumAlbumId == obj.AlbumId).First();
+		}
+
+		/// <summary>
+		/// FK_CloudAlbum_0_0
+		/// </summary>
+		[Association(ThisKey="CloudAlbumCloudAlbumDefinitionId", OtherKey="CloudAlbumDefinitionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_CloudAlbum_0_0", BackReferenceName="CloudAlbums")]
+		public static IQueryable<CloudAlbumDefinition> CloudAlbumCloudAlbumDefinitions(this CloudAlbum obj, IDataContext db)
+		{
+			return db.GetTable<CloudAlbumDefinition>().Where(c => c.CloudAlbumDefinitionId == obj.CloudAlbumCloudAlbumDefinitionId);
+		}
+
+		/// <summary>
+		/// FK_CloudAlbum_0_0
+		/// </summary>
+		[Association(ThisKey="CloudAlbumCloudAlbumDefinitionId", OtherKey="CloudAlbumDefinitionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_CloudAlbum_0_0", BackReferenceName="CloudAlbums")]
+		public static CloudAlbum? CloudAlbumCloudAlbumDefinition(this CloudAlbumDefinition obj, IDataContext db)
+		{
+			return db.GetTable<CloudAlbum>().Where(c => c.CloudAlbumCloudAlbumDefinitionId == obj.CloudAlbumDefinitionId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region CloudAlbumDefinition Associations
+
+		/// <summary>
+		/// FK_CloudAlbum_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="CloudAlbumDefinitionId", OtherKey="CloudAlbumCloudAlbumDefinitionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<CloudAlbum> CloudAlbums0(this CloudAlbumDefinition obj, IDataContext db)
+		{
+			return db.GetTable<CloudAlbum>().Where(c => c.CloudAlbumCloudAlbumDefinitionId == obj.CloudAlbumDefinitionId);
+		}
+
+		#endregion
+
+		#region Event Associations
+
+		/// <summary>
+		/// FK_Item_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="EventId", OtherKey="ItemEventId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Item> Items2(this Event obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemEventId == obj.EventId);
+		}
+
+		#endregion
+
+		#region ExcludedAlbum Associations
+
+		/// <summary>
+		/// FK_ExcludedAlbum_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedAlbum_0_0", BackReferenceName="ExcludedAlbums")]
+		public static IQueryable<Album> ExcludedAlbumAlbums(this ExcludedAlbum obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumId == obj.ExcludedAlbumAlbumId);
+		}
+
+		/// <summary>
+		/// FK_ExcludedAlbum_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedAlbum_0_0", BackReferenceName="ExcludedAlbums")]
+		public static ExcludedAlbum ExcludedAlbumAlbum(this Album obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedAlbum>().Where(c => c.ExcludedAlbumAlbumId == obj.AlbumId).First();
+		}
+
+		#endregion
+
+		#region ExcludedFace Associations
+
+		/// <summary>
+		/// FK_ExcludedFace_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedFaceFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedFace_0_0", BackReferenceName="ExcludedFaces")]
+		public static IQueryable<Face> ExcludedFaceFaces(this ExcludedFace obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FaceId == obj.ExcludedFaceFaceId);
+		}
+
+		/// <summary>
+		/// FK_ExcludedFace_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedFaceFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedFace_0_0", BackReferenceName="ExcludedFaces")]
+		public static ExcludedFace ExcludedFaceFace(this Face obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedFace>().Where(c => c.ExcludedFaceFaceId == obj.FaceId).First();
+		}
+
+		/// <summary>
+		/// FK_ExcludedFace_1_0
+		/// </summary>
+		[Association(ThisKey="ExcludedFaceFaceClusterId", OtherKey="FaceClusterId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedFace_1_0", BackReferenceName="ExcludedFaces")]
+		public static IQueryable<FaceCluster> ExcludedFaceFaceClusters(this ExcludedFace obj, IDataContext db)
+		{
+			return db.GetTable<FaceCluster>().Where(c => c.FaceClusterId == obj.ExcludedFaceFaceClusterId);
+		}
+
+		/// <summary>
+		/// FK_ExcludedFace_1_0
+		/// </summary>
+		[Association(ThisKey="ExcludedFaceFaceClusterId", OtherKey="FaceClusterId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedFace_1_0", BackReferenceName="ExcludedFaces")]
+		public static ExcludedFace ExcludedFaceFaceCluster(this FaceCluster obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedFace>().Where(c => c.ExcludedFaceFaceClusterId == obj.FaceClusterId).First();
+		}
+
+		#endregion
+
+		#region ExcludedItemTag Associations
+
+		/// <summary>
+		/// FK_ExcludedItemTag_1_0
+		/// </summary>
+		[Association(ThisKey="ExcludedItemTagItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedItemTag_1_0", BackReferenceName="ExcludedItemTags")]
+		public static IQueryable<Item> ExcludedItemTagItems(this ExcludedItemTag obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.ExcludedItemTagItemId);
+		}
+
+		/// <summary>
+		/// FK_ExcludedItemTag_1_0
+		/// </summary>
+		[Association(ThisKey="ExcludedItemTagItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedItemTag_1_0", BackReferenceName="ExcludedItemTags")]
+		public static ExcludedItemTag ExcludedItemTagItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedItemTag>().Where(c => c.ExcludedItemTagItemId == obj.ItemId).First();
+		}
+
+		/// <summary>
+		/// FK_ExcludedItemTag_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedItemTagTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedItemTag_0_0", BackReferenceName="ExcludedItemTags")]
+		public static IQueryable<Tag> ExcludedItemTagTags(this ExcludedItemTag obj, IDataContext db)
+		{
+			return db.GetTable<Tag>().Where(c => c.TagId == obj.ExcludedItemTagTagId);
+		}
+
+		/// <summary>
+		/// FK_ExcludedItemTag_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedItemTagTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedItemTag_0_0", BackReferenceName="ExcludedItemTags")]
+		public static ExcludedItemTag ExcludedItemTagTag(this Tag obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedItemTag>().Where(c => c.ExcludedItemTagTagId == obj.TagId).First();
+		}
+
+		#endregion
+
+		#region ExcludedLocation Associations
+
+		/// <summary>
+		/// FK_ExcludedLocation_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedLocationLocationId", OtherKey="LocationId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedLocation_0_0", BackReferenceName="ExcludedLocations")]
+		public static IQueryable<Location> ExcludedLocationLocations(this ExcludedLocation obj, IDataContext db)
+		{
+			return db.GetTable<Location>().Where(c => c.LocationId == obj.ExcludedLocationLocationId);
+		}
+
+		/// <summary>
+		/// FK_ExcludedLocation_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedLocationLocationId", OtherKey="LocationId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedLocation_0_0", BackReferenceName="ExcludedLocations")]
+		public static ExcludedLocation ExcludedLocationLocation(this Location obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedLocation>().Where(c => c.ExcludedLocationLocationId == obj.LocationId).First();
+		}
+
+		#endregion
+
+		#region ExcludedPerson Associations
+
+		/// <summary>
+		/// FK_ExcludedPerson_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedPersonPersonId", OtherKey="PersonId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedPerson_0_0", BackReferenceName="ExcludedPeople")]
+		public static IQueryable<Person> ExcludedPersonPeople(this ExcludedPerson obj, IDataContext db)
+		{
+			return db.GetTable<Person>().Where(c => c.PersonId == obj.ExcludedPersonPersonId);
+		}
+
+		/// <summary>
+		/// FK_ExcludedPerson_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedPersonPersonId", OtherKey="PersonId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedPerson_0_0", BackReferenceName="ExcludedPeople")]
+		public static ExcludedPerson ExcludedPersonPerson(this Person obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedPerson>().Where(c => c.ExcludedPersonPersonId == obj.PersonId).First();
+		}
+
+		#endregion
+
+		#region ExcludedTag Associations
+
+		/// <summary>
+		/// FK_ExcludedTag_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedTagTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedTag_0_0", BackReferenceName="ExcludedTags")]
+		public static IQueryable<Tag> ExcludedTagTags(this ExcludedTag obj, IDataContext db)
+		{
+			return db.GetTable<Tag>().Where(c => c.TagId == obj.ExcludedTagTagId);
+		}
+
+		/// <summary>
+		/// FK_ExcludedTag_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedTagTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedTag_0_0", BackReferenceName="ExcludedTags")]
+		public static ExcludedTag ExcludedTagTag(this Tag obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedTag>().Where(c => c.ExcludedTagTagId == obj.TagId).First();
+		}
+
+		#endregion
+
+		#region ExtractedText Associations
+
+		/// <summary>
+		/// FK_ExtractedText_0_0
+		/// </summary>
+		[Association(ThisKey="ExtractedTextItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExtractedText_0_0", BackReferenceName="ExtractedTexts")]
+		public static IQueryable<Item> ExtractedTextItems(this ExtractedText obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.ExtractedTextItemId);
+		}
+
+		/// <summary>
+		/// FK_ExtractedText_0_0
+		/// </summary>
+		[Association(ThisKey="ExtractedTextItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExtractedText_0_0", BackReferenceName="ExtractedTexts")]
+		public static ExtractedText ExtractedTextItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ExtractedText>().Where(c => c.ExtractedTextItemId == obj.ItemId).First();
+		}
+
+		#endregion
+
+		#region Face Associations
+
+		/// <summary>
+		/// FK_ExcludedFace_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="ExcludedFaceFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ExcludedFace> ExcludedFaces(this Face obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedFace>().Where(c => c.ExcludedFaceFaceId == obj.FaceId);
+		}
+
+		/// <summary>
+		/// FK_FaceCluster_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="FaceClusterBestFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<FaceCluster> FaceClusters(this Face obj, IDataContext db)
+		{
+			return db.GetTable<FaceCluster>().Where(c => c.FaceClusterBestFaceId == obj.FaceId);
+		}
+
+		/// <summary>
+		/// FK_Face_1_0
+		/// </summary>
+		[Association(ThisKey="FaceFaceClusterId", OtherKey="FaceClusterId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_1_0", BackReferenceName="Faces")]
+		public static IQueryable<FaceCluster> FaceFaceClusters(this Face obj, IDataContext db)
+		{
+			return db.GetTable<FaceCluster>().Where(c => c.FaceClusterId == obj.FaceFaceClusterId);
+		}
+
+		/// <summary>
+		/// FK_Face_1_0
+		/// </summary>
+		[Association(ThisKey="FaceFaceClusterId", OtherKey="FaceClusterId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_1_0", BackReferenceName="Faces")]
+		public static Face? FaceFaceCluster(this FaceCluster obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FaceFaceClusterId == obj.FaceClusterId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_FaceFeature_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="FaceFeatureFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<FaceFeature> FaceFeatures(this Face obj, IDataContext db)
+		{
+			return db.GetTable<FaceFeature>().Where(c => c.FaceFeatureFaceId == obj.FaceId);
+		}
+
+		/// <summary>
+		/// FK_Face_2_0
+		/// </summary>
+		[Association(ThisKey="FaceItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_2_0", BackReferenceName="Faces")]
+		public static IQueryable<Item> FaceItems(this Face obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.FaceItemId);
+		}
+
+		/// <summary>
+		/// FK_Face_2_0
+		/// </summary>
+		[Association(ThisKey="FaceItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_2_0", BackReferenceName="Faces")]
+		public static Face FaceItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FaceItemId == obj.ItemId).First();
+		}
+
+		/// <summary>
+		/// FK_Face_0_0
+		/// </summary>
+		[Association(ThisKey="FacePersonId", OtherKey="PersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_0_0", BackReferenceName="Faces")]
+		public static IQueryable<Person> FacePeople(this Face obj, IDataContext db)
+		{
+			return db.GetTable<Person>().Where(c => c.PersonId == obj.FacePersonId);
+		}
+
+		/// <summary>
+		/// FK_Face_0_0
+		/// </summary>
+		[Association(ThisKey="FacePersonId", OtherKey="PersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_0_0", BackReferenceName="Faces")]
+		public static Face? FacePerson(this Person obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FacePersonId == obj.PersonId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Person_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="PersonBestFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Person> FkPerson10BackReferences(this Face obj, IDataContext db)
+		{
+			return db.GetTable<Person>().Where(c => c.PersonBestFaceId == obj.FaceId);
+		}
+
+		/// <summary>
+		/// FK_Person_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="PersonSafeBestFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Person> People(this Face obj, IDataContext db)
+		{
+			return db.GetTable<Person>().Where(c => c.PersonSafeBestFaceId == obj.FaceId);
+		}
+
+		/// <summary>
+		/// FK_VideoFaceOccurrence_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="VideoFaceOccurrenceFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<VideoFaceOccurrence> VideoFaceOccurrences(this Face obj, IDataContext db)
+		{
+			return db.GetTable<VideoFaceOccurrence>().Where(c => c.VideoFaceOccurrenceFaceId == obj.FaceId);
+		}
+
+		#endregion
+
+		#region FaceCluster Associations
+
+		/// <summary>
+		/// FK_ExcludedFace_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceClusterId", OtherKey="ExcludedFaceFaceClusterId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ExcludedFace> ExcludedFaces0(this FaceCluster obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedFace>().Where(c => c.ExcludedFaceFaceClusterId == obj.FaceClusterId);
+		}
+
+		/// <summary>
+		/// FK_FaceCluster_0_0
+		/// </summary>
+		[Association(ThisKey="FaceClusterBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceCluster_0_0", BackReferenceName="FaceClusters")]
+		public static IQueryable<Face> FaceClusterBestFaces(this FaceCluster obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FaceId == obj.FaceClusterBestFaceId);
+		}
+
+		/// <summary>
+		/// FK_FaceCluster_0_0
+		/// </summary>
+		[Association(ThisKey="FaceClusterBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceCluster_0_0", BackReferenceName="FaceClusters")]
+		public static FaceCluster? FaceClusterBestFace(this Face obj, IDataContext db)
+		{
+			return db.GetTable<FaceCluster>().Where(c => c.FaceClusterBestFaceId == obj.FaceId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_FaceCluster_1_0
+		/// </summary>
+		[Association(ThisKey="FaceClusterPersonId", OtherKey="PersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceCluster_1_0", BackReferenceName="FaceClusters")]
+		public static IQueryable<Person> FaceClusterPeople(this FaceCluster obj, IDataContext db)
+		{
+			return db.GetTable<Person>().Where(c => c.PersonId == obj.FaceClusterPersonId);
+		}
+
+		/// <summary>
+		/// FK_FaceCluster_1_0
+		/// </summary>
+		[Association(ThisKey="FaceClusterPersonId", OtherKey="PersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceCluster_1_0", BackReferenceName="FaceClusters")]
+		public static FaceCluster? FaceClusterPerson(this Person obj, IDataContext db)
+		{
+			return db.GetTable<FaceCluster>().Where(c => c.FaceClusterPersonId == obj.PersonId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Face_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceClusterId", OtherKey="FaceFaceClusterId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Face> Faces(this FaceCluster obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FaceFaceClusterId == obj.FaceClusterId);
+		}
+
+		#endregion
+
+		#region FaceFeature Associations
+
+		/// <summary>
+		/// FK_FaceFeature_0_0
+		/// </summary>
+		[Association(ThisKey="FaceFeatureFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceFeature_0_0", BackReferenceName="FaceFeatures")]
+		public static IQueryable<Face> FaceFeatureFaces(this FaceFeature obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FaceId == obj.FaceFeatureFaceId);
+		}
+
+		/// <summary>
+		/// FK_FaceFeature_0_0
+		/// </summary>
+		[Association(ThisKey="FaceFeatureFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceFeature_0_0", BackReferenceName="FaceFeatures")]
+		public static FaceFeature FaceFeatureFace(this Face obj, IDataContext db)
+		{
+			return db.GetTable<FaceFeature>().Where(c => c.FaceFeatureFaceId == obj.FaceId).First();
+		}
+
+		#endregion
+
+		#region Folder Associations
+
+		/// <summary>
+		/// FK_Folder_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FolderId", OtherKey="FolderParentFolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Folder> FkFolder10BackReferences(this Folder obj, IDataContext db)
+		{
+			return db.GetTable<Folder>().Where(c => c.FolderParentFolderId == obj.FolderId);
+		}
+
+		/// <summary>
+		/// FK_Folder_1_0
+		/// </summary>
+		[Association(ThisKey="FolderParentFolderId", OtherKey="FolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Folder_1_0", BackReferenceName="FkFolder10BackReferences")]
+		public static IQueryable<Folder> FolderParentFolders(this Folder obj, IDataContext db)
+		{
+			return db.GetTable<Folder>().Where(c => c.FolderId == obj.FolderParentFolderId);
+		}
+
+		/// <summary>
+		/// FK_Folder_1_0
+		/// </summary>
+		[Association(ThisKey="FolderParentFolderId", OtherKey="FolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Folder_1_0", BackReferenceName="FkFolder10BackReferences")]
+		public static Folder? FolderParentFolder(this Folder obj, IDataContext db)
+		{
+			return db.GetTable<Folder>().Where(c => c.FolderParentFolderId == obj.FolderId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Item_6_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FolderId", OtherKey="ItemParentFolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Item> Items3(this Folder obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemParentFolderId == obj.FolderId);
+		}
+
+		/// <summary>
+		/// FK_RemoteItem_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FolderId", OtherKey="RemoteItemFolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<RemoteItem> RemoteItems(this Folder obj, IDataContext db)
+		{
+			return db.GetTable<RemoteItem>().Where(c => c.RemoteItemFolderId == obj.FolderId);
+		}
+
+		/// <summary>
+		/// FK_Folder_0_0
+		/// </summary>
+		[Association(ThisKey="FolderSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Folder_0_0", BackReferenceName="Folders")]
+		public static IQueryable<Source> Sources0(this Folder obj, IDataContext db)
+		{
+			return db.GetTable<Source>().Where(c => c.SourceId == obj.FolderSourceId);
+		}
+
+		/// <summary>
+		/// FK_Folder_0_0
+		/// </summary>
+		[Association(ThisKey="FolderSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Folder_0_0", BackReferenceName="Folders")]
+		public static Folder? Source0(this Source obj, IDataContext db)
+		{
+			return db.GetTable<Folder>().Where(c => c.FolderSourceId == obj.SourceId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region ImageAnalysis Associations
+
+		/// <summary>
+		/// FK_ImageAnalysis_0_0
+		/// </summary>
+		[Association(ThisKey="ImageAnalysisItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_ImageAnalysis_0_0", BackReferenceName="ImageAnalysis")]
+		public static IQueryable<Item> ImageAnalysisItems(this ImageAnalysis obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.ImageAnalysisItemId);
+		}
+
+		/// <summary>
+		/// FK_ImageAnalysis_0_0
+		/// </summary>
+		[Association(ThisKey="ImageAnalysisItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_ImageAnalysis_0_0", BackReferenceName="ImageAnalysis")]
+		public static ImageAnalysis ImageAnalysisItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ImageAnalysis>().Where(c => c.ImageAnalysisItemId == obj.ItemId).First();
+		}
+
+		#endregion
+
+		#region Item Associations
+
+		/// <summary>
+		/// FK_AlbumItemLink_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="AlbumItemLinkItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<AlbumItemLink> AlbumItemLinks0(this Item obj, IDataContext db)
+		{
+			return db.GetTable<AlbumItemLink>().Where(c => c.AlbumItemLinkItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_Album_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="AlbumCoverItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Album> Albums(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumCoverItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_Cache_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="CacheItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Cache> Caches(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Cache>().Where(c => c.CacheItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_ExcludedItemTag_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ExcludedItemTagItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ExcludedItemTag> ExcludedItemTags(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedItemTag>().Where(c => c.ExcludedItemTagItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_ExtractedText_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ExtractedTextItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ExtractedText> ExtractedTexts(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ExtractedText>().Where(c => c.ExtractedTextItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_Face_2_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="FaceItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Face> Faces0(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FaceItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_Item_5_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemBurstPrevItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Item> FkItem50BackReferences(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemBurstPrevItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_ImageAnalysis_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ImageAnalysisItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
+		public static IQueryable<ImageAnalysis> ImageAnalyses(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ImageAnalysis>().Where(c => c.ImageAnalysisItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_ImageAnalysis_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ImageAnalysisItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
+		public static Item? ImageAnalysis(this ImageAnalysis obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.ImageAnalysisItemId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Item_3_0
+		/// </summary>
+		[Association(ThisKey="ItemApplicationNameId", OtherKey="ApplicationNameId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_3_0", BackReferenceName="Items")]
+		public static IQueryable<ApplicationName> ItemApplicationNames(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ApplicationName>().Where(c => c.ApplicationNameId == obj.ItemApplicationNameId);
+		}
+
+		/// <summary>
+		/// FK_Item_3_0
+		/// </summary>
+		[Association(ThisKey="ItemApplicationNameId", OtherKey="ApplicationNameId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_3_0", BackReferenceName="Items")]
+		public static Item? ItemApplicationName(this ApplicationName obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemApplicationNameId == obj.ApplicationNameId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Item_5_0
+		/// </summary>
+		[Association(ThisKey="ItemBurstPrevItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_5_0", BackReferenceName="FkItem50BackReferences")]
+		public static IQueryable<Item> ItemBurstPrevItems(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.ItemBurstPrevItemId);
+		}
+
+		/// <summary>
+		/// FK_Item_5_0
+		/// </summary>
+		[Association(ThisKey="ItemBurstPrevItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_5_0", BackReferenceName="FkItem50BackReferences")]
+		public static Item? ItemBurstPrevItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemBurstPrevItemId == obj.ItemId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Item_2_0
+		/// </summary>
+		[Association(ThisKey="ItemCameraManufacturerId", OtherKey="CameraManufacturerId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_2_0", BackReferenceName="Items")]
+		public static IQueryable<CameraManufacturer> ItemCameraManufacturers(this Item obj, IDataContext db)
+		{
+			return db.GetTable<CameraManufacturer>().Where(c => c.CameraManufacturerId == obj.ItemCameraManufacturerId);
+		}
+
+		/// <summary>
+		/// FK_Item_2_0
+		/// </summary>
+		[Association(ThisKey="ItemCameraManufacturerId", OtherKey="CameraManufacturerId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_2_0", BackReferenceName="Items")]
+		public static Item? ItemCameraManufacturer(this CameraManufacturer obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemCameraManufacturerId == obj.CameraManufacturerId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Item_1_0
+		/// </summary>
+		[Association(ThisKey="ItemCameraModelId", OtherKey="CameraModelId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_1_0", BackReferenceName="Items")]
+		public static IQueryable<CameraModel> ItemCameraModels(this Item obj, IDataContext db)
+		{
+			return db.GetTable<CameraModel>().Where(c => c.CameraModelId == obj.ItemCameraModelId);
+		}
+
+		/// <summary>
+		/// FK_Item_1_0
+		/// </summary>
+		[Association(ThisKey="ItemCameraModelId", OtherKey="CameraModelId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_1_0", BackReferenceName="Items")]
+		public static Item? ItemCameraModel(this CameraModel obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemCameraModelId == obj.CameraModelId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_ItemEdit_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemEditItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ItemEdit> ItemEdits(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ItemEdit>().Where(c => c.ItemEditItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_ItemEngineExemplar_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemEngineExemplarItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ItemEngineExemplar> ItemEngineExemplars(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ItemEngineExemplar>().Where(c => c.ItemEngineExemplarItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_ItemEngineStatus_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemEngineStatusItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ItemEngineStatus> ItemEngineStatus(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ItemEngineStatus>().Where(c => c.ItemEngineStatusItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_Item_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEventId", OtherKey="EventId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_0_0", BackReferenceName="Items")]
+		public static IQueryable<Event> ItemEvents(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Event>().Where(c => c.EventId == obj.ItemEventId);
+		}
+
+		/// <summary>
+		/// FK_Item_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEventId", OtherKey="EventId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_0_0", BackReferenceName="Items")]
+		public static Item? ItemEvent(this Event obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemEventId == obj.EventId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Item_4_0
+		/// </summary>
+		[Association(ThisKey="ItemLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_4_0", BackReferenceName="Items")]
+		public static IQueryable<Location> ItemLocations(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Location>().Where(c => c.LocationId == obj.ItemLocationId);
+		}
+
+		/// <summary>
+		/// FK_Item_4_0
+		/// </summary>
+		[Association(ThisKey="ItemLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_4_0", BackReferenceName="Items")]
+		public static Item? ItemLocation(this Location obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemLocationId == obj.LocationId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Item_6_0
+		/// </summary>
+		[Association(ThisKey="ItemParentFolderId", OtherKey="FolderId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_6_0", BackReferenceName="Items")]
+		public static IQueryable<Folder> ItemParentFolders(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Folder>().Where(c => c.FolderId == obj.ItemParentFolderId);
+		}
+
+		/// <summary>
+		/// FK_Item_6_0
+		/// </summary>
+		[Association(ThisKey="ItemParentFolderId", OtherKey="FolderId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_6_0", BackReferenceName="Items")]
+		public static Item ItemParentFolder(this Folder obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemParentFolderId == obj.FolderId).First();
+		}
+
+		/// <summary>
+		/// FK_ItemTags_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemTagsItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ItemTag> ItemTags(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ItemTag>().Where(c => c.ItemTagsItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_ItemVideoQuality_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemVideoQualityItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ItemVideoQuality> ItemVideoQualities(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ItemVideoQuality>().Where(c => c.ItemVideoQualityItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_LiveTile_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="LiveTileItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
+		public static IQueryable<LiveTile> LiveTiles(this Item obj, IDataContext db)
+		{
+			return db.GetTable<LiveTile>().Where(c => c.LiveTileItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_LiveTile_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="LiveTileItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
+		public static Item? LiveTile(this LiveTile obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.LiveTileItemId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Location_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="LocationCoverItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Location> Locations(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Location>().Where(c => c.LocationCoverItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_OCRItem_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="OCRItemItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<OCRItem> OCRItems(this Item obj, IDataContext db)
+		{
+			return db.GetTable<OCRItem>().Where(c => c.OCRItemItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_PendingUploadItem_2_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="PendingUploadItemItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<PendingUploadItem> PendingUploadItems0(this Item obj, IDataContext db)
+		{
+			return db.GetTable<PendingUploadItem>().Where(c => c.PendingUploadItemItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_RemoteItem_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="RemoteItemItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<RemoteItem> RemoteItems0(this Item obj, IDataContext db)
+		{
+			return db.GetTable<RemoteItem>().Where(c => c.RemoteItemItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_RemoteThumbnail_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="RemoteThumbnailItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<RemoteThumbnail> RemoteThumbnails(this Item obj, IDataContext db)
+		{
+			return db.GetTable<RemoteThumbnail>().Where(c => c.RemoteThumbnailItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_SalientRect_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="SalientRectItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<SalientRect> SalientRects(this Item obj, IDataContext db)
+		{
+			return db.GetTable<SalientRect>().Where(c => c.SalientRectItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_SearchAnalysisItemPriority_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="SearchAnalysisItemPriorityItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<SearchAnalysisItemPriority> SearchAnalysisItemPriorities(this Item obj, IDataContext db)
+		{
+			return db.GetTable<SearchAnalysisItemPriority>().Where(c => c.SearchAnalysisItemPriorityItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_Item_7_0
+		/// </summary>
+		[Association(ThisKey="ItemSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_7_0", BackReferenceName="Items")]
+		public static IQueryable<Source> Sources1(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Source>().Where(c => c.SourceId == obj.ItemSourceId);
+		}
+
+		/// <summary>
+		/// FK_Item_7_0
+		/// </summary>
+		[Association(ThisKey="ItemSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_7_0", BackReferenceName="Items")]
+		public static Item? Source1(this Source obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemSourceId == obj.SourceId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_UserActionPrint_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="UserActionPrintItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<UserActionPrint> UserActionPrints(this Item obj, IDataContext db)
+		{
+			return db.GetTable<UserActionPrint>().Where(c => c.UserActionPrintItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_UserActionShare_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="UserActionShareItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<UserActionShare> UserActionShares(this Item obj, IDataContext db)
+		{
+			return db.GetTable<UserActionShare>().Where(c => c.UserActionShareItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_UserActionSlideshow_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="UserActionSlideshowItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<UserActionSlideshow> UserActionSlideshows0(this Item obj, IDataContext db)
+		{
+			return db.GetTable<UserActionSlideshow>().Where(c => c.UserActionSlideshowItemId == obj.ItemId);
+		}
+
+		/// <summary>
+		/// FK_UserActionView_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="UserActionViewItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<UserActionView> UserActionViews(this Item obj, IDataContext db)
+		{
+			return db.GetTable<UserActionView>().Where(c => c.UserActionViewItemId == obj.ItemId);
+		}
+
+		#endregion
+
+		#region ItemEdit Associations
+
+		/// <summary>
+		/// FK_ItemEdit_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEditItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEdit_0_0", BackReferenceName="ItemEdits")]
+		public static IQueryable<Item> ItemEditItems(this ItemEdit obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.ItemEditItemId);
+		}
+
+		/// <summary>
+		/// FK_ItemEdit_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEditItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEdit_0_0", BackReferenceName="ItemEdits")]
+		public static ItemEdit ItemEditItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ItemEdit>().Where(c => c.ItemEditItemId == obj.ItemId).First();
+		}
+
+		#endregion
+
+		#region ItemEngineExemplar Associations
+
+		/// <summary>
+		/// FK_ItemEngineExemplar_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEngineExemplarItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEngineExemplar_0_0", BackReferenceName="ItemEngineExemplars")]
+		public static IQueryable<Item> ItemEngineExemplarItems(this ItemEngineExemplar obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.ItemEngineExemplarItemId);
+		}
+
+		/// <summary>
+		/// FK_ItemEngineExemplar_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEngineExemplarItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEngineExemplar_0_0", BackReferenceName="ItemEngineExemplars")]
+		public static ItemEngineExemplar ItemEngineExemplarItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ItemEngineExemplar>().Where(c => c.ItemEngineExemplarItemId == obj.ItemId).First();
+		}
+
+		#endregion
+
+		#region ItemEngineStatus Associations
+
+		/// <summary>
+		/// FK_ItemEngineStatus_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEngineStatusItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEngineStatus_0_0", BackReferenceName="ItemEngineStatus")]
+		public static IQueryable<Item> ItemEngineStatusItems(this ItemEngineStatus obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.ItemEngineStatusItemId);
+		}
+
+		/// <summary>
+		/// FK_ItemEngineStatus_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEngineStatusItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEngineStatus_0_0", BackReferenceName="ItemEngineStatus")]
+		public static ItemEngineStatus ItemEngineStatusItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ItemEngineStatus>().Where(c => c.ItemEngineStatusItemId == obj.ItemId).First();
+		}
+
+		#endregion
+
+		#region ItemTag Associations
+
+		/// <summary>
+		/// FK_ItemTags_1_0
+		/// </summary>
+		[Association(ThisKey="ItemTagsItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemTags_1_0", BackReferenceName="ItemTags")]
+		public static IQueryable<Item> ItemTagsItems(this ItemTag obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.ItemTagsItemId);
+		}
+
+		/// <summary>
+		/// FK_ItemTags_1_0
+		/// </summary>
+		[Association(ThisKey="ItemTagsItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemTags_1_0", BackReferenceName="ItemTags")]
+		public static ItemTag ItemTagsItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ItemTag>().Where(c => c.ItemTagsItemId == obj.ItemId).First();
+		}
+
+		/// <summary>
+		/// FK_ItemTags_0_0
+		/// </summary>
+		[Association(ThisKey="ItemTagsTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemTags_0_0", BackReferenceName="ItemTags")]
+		public static IQueryable<Tag> ItemTagsTags(this ItemTag obj, IDataContext db)
+		{
+			return db.GetTable<Tag>().Where(c => c.TagId == obj.ItemTagsTagId);
+		}
+
+		/// <summary>
+		/// FK_ItemTags_0_0
+		/// </summary>
+		[Association(ThisKey="ItemTagsTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemTags_0_0", BackReferenceName="ItemTags")]
+		public static ItemTag ItemTagsTag(this Tag obj, IDataContext db)
+		{
+			return db.GetTable<ItemTag>().Where(c => c.ItemTagsTagId == obj.TagId).First();
+		}
+
+		/// <summary>
+		/// FK_ItemVideoTags_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemTagsId", OtherKey="ItemVideoTagsItemTagsId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ItemVideoTag> ItemVideoTags(this ItemTag obj, IDataContext db)
+		{
+			return db.GetTable<ItemVideoTag>().Where(c => c.ItemVideoTagsItemTagsId == obj.ItemTagsId);
+		}
+
+		#endregion
+
+		#region ItemVideoQuality Associations
+
+		/// <summary>
+		/// FK_ItemVideoQuality_0_0
+		/// </summary>
+		[Association(ThisKey="ItemVideoQualityItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemVideoQuality_0_0", BackReferenceName="ItemVideoQualities")]
+		public static IQueryable<Item> ItemVideoQualityItems(this ItemVideoQuality obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.ItemVideoQualityItemId);
+		}
+
+		/// <summary>
+		/// FK_ItemVideoQuality_0_0
+		/// </summary>
+		[Association(ThisKey="ItemVideoQualityItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemVideoQuality_0_0", BackReferenceName="ItemVideoQualities")]
+		public static ItemVideoQuality ItemVideoQualityItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<ItemVideoQuality>().Where(c => c.ItemVideoQualityItemId == obj.ItemId).First();
+		}
+
+		#endregion
+
+		#region ItemVideoTag Associations
+
+		/// <summary>
+		/// FK_ItemVideoTags_0_0
+		/// </summary>
+		[Association(ThisKey="ItemVideoTagsItemTagsId", OtherKey="ItemTagsId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemVideoTags_0_0", BackReferenceName="ItemVideoTags")]
+		public static IQueryable<ItemTag> ItemVideoTagsItemTags(this ItemVideoTag obj, IDataContext db)
+		{
+			return db.GetTable<ItemTag>().Where(c => c.ItemTagsId == obj.ItemVideoTagsItemTagsId);
+		}
+
+		/// <summary>
+		/// FK_ItemVideoTags_0_0
+		/// </summary>
+		[Association(ThisKey="ItemVideoTagsItemTagsId", OtherKey="ItemTagsId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemVideoTags_0_0", BackReferenceName="ItemVideoTags")]
+		public static ItemVideoTag ItemVideoTagsItemTag(this ItemTag obj, IDataContext db)
+		{
+			return db.GetTable<ItemVideoTag>().Where(c => c.ItemVideoTagsItemTagsId == obj.ItemTagsId).First();
+		}
+
+		#endregion
+
+		#region LiveTile Associations
+
+		/// <summary>
+		/// FK_LiveTile_0_0
+		/// </summary>
+		[Association(ThisKey="LiveTileItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_LiveTile_0_0", BackReferenceName="LiveTile")]
+		public static IQueryable<Item> LiveTileItems(this LiveTile obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.LiveTileItemId);
+		}
+
+		/// <summary>
+		/// FK_LiveTile_0_0
+		/// </summary>
+		[Association(ThisKey="LiveTileItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_LiveTile_0_0", BackReferenceName="LiveTile")]
+		public static LiveTile LiveTileItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<LiveTile>().Where(c => c.LiveTileItemId == obj.ItemId).First();
+		}
+
+		#endregion
+
+		#region Location Associations
+
+		/// <summary>
+		/// FK_ExcludedLocation_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationId", OtherKey="ExcludedLocationLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ExcludedLocation> ExcludedLocations(this Location obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedLocation>().Where(c => c.ExcludedLocationLocationId == obj.LocationId);
+		}
+
+		/// <summary>
+		/// FK_Item_4_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationId", OtherKey="ItemLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Item> Items4(this Location obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemLocationId == obj.LocationId);
+		}
+
+		/// <summary>
+		/// FK_Location_0_0
+		/// </summary>
+		[Association(ThisKey="LocationCoverItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_0_0", BackReferenceName="Locations")]
+		public static IQueryable<Item> LocationCoverItems(this Location obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.LocationCoverItemId);
+		}
+
+		/// <summary>
+		/// FK_Location_0_0
+		/// </summary>
+		[Association(ThisKey="LocationCoverItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_0_0", BackReferenceName="Locations")]
+		public static Location? LocationCoverItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<Location>().Where(c => c.LocationCoverItemId == obj.ItemId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_LocationGrid_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationId", OtherKey="LocationGridLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<LocationGrid> LocationGrids(this Location obj, IDataContext db)
+		{
+			return db.GetTable<LocationGrid>().Where(c => c.LocationGridLocationId == obj.LocationId);
+		}
+
+		/// <summary>
+		/// FK_Location_1_0
+		/// </summary>
+		[Association(ThisKey="LocationLocationCountryId", OtherKey="LocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_1_0", BackReferenceName="Locations")]
+		public static IQueryable<LocationCountry> LocationLocationCountries(this Location obj, IDataContext db)
+		{
+			return db.GetTable<LocationCountry>().Where(c => c.LocationCountryId == obj.LocationLocationCountryId);
+		}
+
+		/// <summary>
+		/// FK_Location_1_0
+		/// </summary>
+		[Association(ThisKey="LocationLocationCountryId", OtherKey="LocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_1_0", BackReferenceName="Locations")]
+		public static Location? LocationLocationCountry(this LocationCountry obj, IDataContext db)
+		{
+			return db.GetTable<Location>().Where(c => c.LocationLocationCountryId == obj.LocationCountryId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Location_2_0
+		/// </summary>
+		[Association(ThisKey="LocationLocationDistrictId", OtherKey="LocationDistrictId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_2_0", BackReferenceName="Locations")]
+		public static IQueryable<LocationDistrict> LocationLocationDistricts(this Location obj, IDataContext db)
+		{
+			return db.GetTable<LocationDistrict>().Where(c => c.LocationDistrictId == obj.LocationLocationDistrictId);
+		}
+
+		/// <summary>
+		/// FK_Location_2_0
+		/// </summary>
+		[Association(ThisKey="LocationLocationDistrictId", OtherKey="LocationDistrictId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_2_0", BackReferenceName="Locations")]
+		public static Location? LocationLocationDistrict(this LocationDistrict obj, IDataContext db)
+		{
+			return db.GetTable<Location>().Where(c => c.LocationLocationDistrictId == obj.LocationDistrictId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Location_3_0
+		/// </summary>
+		[Association(ThisKey="LocationLocationRegionId", OtherKey="LocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_3_0", BackReferenceName="Locations")]
+		public static IQueryable<LocationRegion> LocationLocationRegions(this Location obj, IDataContext db)
+		{
+			return db.GetTable<LocationRegion>().Where(c => c.LocationRegionId == obj.LocationLocationRegionId);
+		}
+
+		/// <summary>
+		/// FK_Location_3_0
+		/// </summary>
+		[Association(ThisKey="LocationLocationRegionId", OtherKey="LocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_3_0", BackReferenceName="Locations")]
+		public static Location? LocationLocationRegion(this LocationRegion obj, IDataContext db)
+		{
+			return db.GetTable<Location>().Where(c => c.LocationLocationRegionId == obj.LocationRegionId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region LocationCountry Associations
+
+		/// <summary>
+		/// FK_LocationRegion_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationCountryId", OtherKey="LocationRegionLocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<LocationRegion> LocationRegions(this LocationCountry obj, IDataContext db)
+		{
+			return db.GetTable<LocationRegion>().Where(c => c.LocationRegionLocationCountryId == obj.LocationCountryId);
+		}
+
+		/// <summary>
+		/// FK_Location_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationCountryId", OtherKey="LocationLocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Location> Locations0(this LocationCountry obj, IDataContext db)
+		{
+			return db.GetTable<Location>().Where(c => c.LocationLocationCountryId == obj.LocationCountryId);
+		}
+
+		#endregion
+
+		#region LocationDistrict Associations
+
+		/// <summary>
+		/// FK_LocationDistrict_0_0
+		/// </summary>
+		[Association(ThisKey="LocationDistrictLocationRegionId", OtherKey="LocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationDistrict_0_0", BackReferenceName="LocationDistricts")]
+		public static IQueryable<LocationRegion> LocationDistrictLocationRegions(this LocationDistrict obj, IDataContext db)
+		{
+			return db.GetTable<LocationRegion>().Where(c => c.LocationRegionId == obj.LocationDistrictLocationRegionId);
+		}
+
+		/// <summary>
+		/// FK_LocationDistrict_0_0
+		/// </summary>
+		[Association(ThisKey="LocationDistrictLocationRegionId", OtherKey="LocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationDistrict_0_0", BackReferenceName="LocationDistricts")]
+		public static LocationDistrict? LocationDistrictLocationRegion(this LocationRegion obj, IDataContext db)
+		{
+			return db.GetTable<LocationDistrict>().Where(c => c.LocationDistrictLocationRegionId == obj.LocationRegionId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Location_2_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationDistrictId", OtherKey="LocationLocationDistrictId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Location> Locations1(this LocationDistrict obj, IDataContext db)
+		{
+			return db.GetTable<Location>().Where(c => c.LocationLocationDistrictId == obj.LocationDistrictId);
+		}
+
+		#endregion
+
+		#region LocationGrid Associations
+
+		/// <summary>
+		/// FK_LocationGrid_0_0
+		/// </summary>
+		[Association(ThisKey="LocationGridLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationGrid_0_0", BackReferenceName="LocationGrids")]
+		public static IQueryable<Location> LocationGridLocations(this LocationGrid obj, IDataContext db)
+		{
+			return db.GetTable<Location>().Where(c => c.LocationId == obj.LocationGridLocationId);
+		}
+
+		/// <summary>
+		/// FK_LocationGrid_0_0
+		/// </summary>
+		[Association(ThisKey="LocationGridLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationGrid_0_0", BackReferenceName="LocationGrids")]
+		public static LocationGrid? LocationGridLocation(this Location obj, IDataContext db)
+		{
+			return db.GetTable<LocationGrid>().Where(c => c.LocationGridLocationId == obj.LocationId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region LocationRegion Associations
+
+		/// <summary>
+		/// FK_LocationDistrict_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationRegionId", OtherKey="LocationDistrictLocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<LocationDistrict> LocationDistricts(this LocationRegion obj, IDataContext db)
+		{
+			return db.GetTable<LocationDistrict>().Where(c => c.LocationDistrictLocationRegionId == obj.LocationRegionId);
+		}
+
+		/// <summary>
+		/// FK_LocationRegion_0_0
+		/// </summary>
+		[Association(ThisKey="LocationRegionLocationCountryId", OtherKey="LocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationRegion_0_0", BackReferenceName="LocationRegions")]
+		public static IQueryable<LocationCountry> LocationRegionLocationCountries(this LocationRegion obj, IDataContext db)
+		{
+			return db.GetTable<LocationCountry>().Where(c => c.LocationCountryId == obj.LocationRegionLocationCountryId);
+		}
+
+		/// <summary>
+		/// FK_LocationRegion_0_0
+		/// </summary>
+		[Association(ThisKey="LocationRegionLocationCountryId", OtherKey="LocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationRegion_0_0", BackReferenceName="LocationRegions")]
+		public static LocationRegion? LocationRegionLocationCountry(this LocationCountry obj, IDataContext db)
+		{
+			return db.GetTable<LocationRegion>().Where(c => c.LocationRegionLocationCountryId == obj.LocationCountryId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Location_3_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationRegionId", OtherKey="LocationLocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Location> Locations2(this LocationRegion obj, IDataContext db)
+		{
+			return db.GetTable<Location>().Where(c => c.LocationLocationRegionId == obj.LocationRegionId);
+		}
+
+		#endregion
+
+		#region OCRItem Associations
+
+		/// <summary>
+		/// FK_OCRItem_0_0
+		/// </summary>
+		[Association(ThisKey="OCRItemItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRItem_0_0", BackReferenceName="OCRItems")]
+		public static IQueryable<Item> OCRItemItems(this OCRItem obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.OCRItemItemId);
+		}
+
+		/// <summary>
+		/// FK_OCRItem_0_0
+		/// </summary>
+		[Association(ThisKey="OCRItemItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRItem_0_0", BackReferenceName="OCRItems")]
+		public static OCRItem OCRItemItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<OCRItem>().Where(c => c.OCRItemItemId == obj.ItemId).First();
+		}
+
+		/// <summary>
+		/// FK_OCRLine_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="OCRItemId", OtherKey="OCRLineOCRItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<OCRLine> OCRLines(this OCRItem obj, IDataContext db)
+		{
+			return db.GetTable<OCRLine>().Where(c => c.OCRLineOCRItemId == obj.OCRItemId);
+		}
+
+		#endregion
+
+		#region OCRLine Associations
+
+		/// <summary>
+		/// FK_OCRLine_0_0
+		/// </summary>
+		[Association(ThisKey="OCRLineOCRItemId", OtherKey="OCRItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRLine_0_0", BackReferenceName="OCRLines")]
+		public static IQueryable<OCRItem> OCRLineOCRItems(this OCRLine obj, IDataContext db)
+		{
+			return db.GetTable<OCRItem>().Where(c => c.OCRItemId == obj.OCRLineOCRItemId);
+		}
+
+		/// <summary>
+		/// FK_OCRLine_0_0
+		/// </summary>
+		[Association(ThisKey="OCRLineOCRItemId", OtherKey="OCRItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRLine_0_0", BackReferenceName="OCRLines")]
+		public static OCRLine OCRLineOCRItem(this OCRItem obj, IDataContext db)
+		{
+			return db.GetTable<OCRLine>().Where(c => c.OCRLineOCRItemId == obj.OCRItemId).First();
+		}
+
+		/// <summary>
+		/// FK_OCRWord_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="OCRLineId", OtherKey="OCRWordOCRLineId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<OCRWord> OCRWords(this OCRLine obj, IDataContext db)
+		{
+			return db.GetTable<OCRWord>().Where(c => c.OCRWordOCRLineId == obj.OCRLineId);
+		}
+
+		#endregion
+
+		#region OCRWord Associations
+
+		/// <summary>
+		/// FK_OCRWord_0_0
+		/// </summary>
+		[Association(ThisKey="OCRWordOCRLineId", OtherKey="OCRLineId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRWord_0_0", BackReferenceName="OCRWords")]
+		public static IQueryable<OCRLine> OCRWordOCRLines(this OCRWord obj, IDataContext db)
+		{
+			return db.GetTable<OCRLine>().Where(c => c.OCRLineId == obj.OCRWordOCRLineId);
+		}
+
+		/// <summary>
+		/// FK_OCRWord_0_0
+		/// </summary>
+		[Association(ThisKey="OCRWordOCRLineId", OtherKey="OCRLineId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRWord_0_0", BackReferenceName="OCRWords")]
+		public static OCRWord OCRWordOCRLine(this OCRLine obj, IDataContext db)
+		{
+			return db.GetTable<OCRWord>().Where(c => c.OCRWordOCRLineId == obj.OCRLineId).First();
+		}
+
+		#endregion
+
+		#region PendingCloudAlbumDelete Associations
+
+		/// <summary>
+		/// FK_PendingCloudAlbumDelete_0_0
+		/// </summary>
+		[Association(ThisKey="PendingCloudAlbumDeleteSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingCloudAlbumDelete_0_0", BackReferenceName="PendingCloudAlbumDeletes")]
+		public static IQueryable<Source> PendingCloudAlbumDeleteSources(this PendingCloudAlbumDelete obj, IDataContext db)
+		{
+			return db.GetTable<Source>().Where(c => c.SourceId == obj.PendingCloudAlbumDeleteSourceId);
+		}
+
+		/// <summary>
+		/// FK_PendingCloudAlbumDelete_0_0
+		/// </summary>
+		[Association(ThisKey="PendingCloudAlbumDeleteSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingCloudAlbumDelete_0_0", BackReferenceName="PendingCloudAlbumDeletes")]
+		public static PendingCloudAlbumDelete? PendingCloudAlbumDeleteSource(this Source obj, IDataContext db)
+		{
+			return db.GetTable<PendingCloudAlbumDelete>().Where(c => c.PendingCloudAlbumDeleteSourceId == obj.SourceId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region PendingUploadItem Associations
+
+		/// <summary>
+		/// FK_PendingUploadItem_1_0
+		/// </summary>
+		[Association(ThisKey="PendingUploadItemAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_1_0", BackReferenceName="PendingUploadItems")]
+		public static IQueryable<Album> PendingUploadItemAlbums(this PendingUploadItem obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumId == obj.PendingUploadItemAlbumId);
+		}
+
+		/// <summary>
+		/// FK_PendingUploadItem_1_0
+		/// </summary>
+		[Association(ThisKey="PendingUploadItemAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_1_0", BackReferenceName="PendingUploadItems")]
+		public static PendingUploadItem PendingUploadItemAlbum(this Album obj, IDataContext db)
+		{
+			return db.GetTable<PendingUploadItem>().Where(c => c.PendingUploadItemAlbumId == obj.AlbumId).First();
+		}
+
+		/// <summary>
+		/// FK_PendingUploadItem_2_0
+		/// </summary>
+		[Association(ThisKey="PendingUploadItemItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_2_0", BackReferenceName="PendingUploadItems")]
+		public static IQueryable<Item> PendingUploadItemItems(this PendingUploadItem obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.PendingUploadItemItemId);
+		}
+
+		/// <summary>
+		/// FK_PendingUploadItem_2_0
+		/// </summary>
+		[Association(ThisKey="PendingUploadItemItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_2_0", BackReferenceName="PendingUploadItems")]
+		public static PendingUploadItem PendingUploadItemItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<PendingUploadItem>().Where(c => c.PendingUploadItemItemId == obj.ItemId).First();
+		}
+
+		/// <summary>
+		/// FK_PendingUploadItem_0_0
+		/// </summary>
+		[Association(ThisKey="PendingUploadItemSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_0_0", BackReferenceName="PendingUploadItems")]
+		public static IQueryable<Source> PendingUploadItemSources(this PendingUploadItem obj, IDataContext db)
+		{
+			return db.GetTable<Source>().Where(c => c.SourceId == obj.PendingUploadItemSourceId);
+		}
+
+		/// <summary>
+		/// FK_PendingUploadItem_0_0
+		/// </summary>
+		[Association(ThisKey="PendingUploadItemSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_0_0", BackReferenceName="PendingUploadItems")]
+		public static PendingUploadItem? PendingUploadItemSource(this Source obj, IDataContext db)
+		{
+			return db.GetTable<PendingUploadItem>().Where(c => c.PendingUploadItemSourceId == obj.SourceId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region Person Associations
+
+		/// <summary>
+		/// FK_ExcludedPerson_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="PersonId", OtherKey="ExcludedPersonPersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ExcludedPerson> ExcludedPeople(this Person obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedPerson>().Where(c => c.ExcludedPersonPersonId == obj.PersonId);
+		}
+
+		/// <summary>
+		/// FK_FaceCluster_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="PersonId", OtherKey="FaceClusterPersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<FaceCluster> FaceClusters0(this Person obj, IDataContext db)
+		{
+			return db.GetTable<FaceCluster>().Where(c => c.FaceClusterPersonId == obj.PersonId);
+		}
+
+		/// <summary>
+		/// FK_Face_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="PersonId", OtherKey="FacePersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Face> Faces1(this Person obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FacePersonId == obj.PersonId);
+		}
+
+		/// <summary>
+		/// FK_Person_1_0
+		/// </summary>
+		[Association(ThisKey="PersonBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Person_1_0", BackReferenceName="FkPerson10BackReferences")]
+		public static IQueryable<Face> PersonBestFaces(this Person obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FaceId == obj.PersonBestFaceId);
+		}
+
+		/// <summary>
+		/// FK_Person_1_0
+		/// </summary>
+		[Association(ThisKey="PersonBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Person_1_0", BackReferenceName="FkPerson10BackReferences")]
+		public static Person? PersonBestFace(this Face obj, IDataContext db)
+		{
+			return db.GetTable<Person>().Where(c => c.PersonBestFaceId == obj.FaceId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_Person_0_0
+		/// </summary>
+		[Association(ThisKey="PersonSafeBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Person_0_0", BackReferenceName="People")]
+		public static IQueryable<Face> PersonSafeBestFaces(this Person obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FaceId == obj.PersonSafeBestFaceId);
+		}
+
+		/// <summary>
+		/// FK_Person_0_0
+		/// </summary>
+		[Association(ThisKey="PersonSafeBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Person_0_0", BackReferenceName="People")]
+		public static Person? PersonSafeBestFace(this Face obj, IDataContext db)
+		{
+			return db.GetTable<Person>().Where(c => c.PersonSafeBestFaceId == obj.FaceId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region Project Associations
+
+		/// <summary>
+		/// FK_Project_0_0
+		/// </summary>
+		[Association(ThisKey="ProjectAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Project_0_0", BackReferenceName="Projects")]
+		public static IQueryable<Album> ProjectAlbums(this Project obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumId == obj.ProjectAlbumId);
+		}
+
+		/// <summary>
+		/// FK_Project_0_0
+		/// </summary>
+		[Association(ThisKey="ProjectAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Project_0_0", BackReferenceName="Projects")]
+		public static Project? ProjectAlbum(this Album obj, IDataContext db)
+		{
+			return db.GetTable<Project>().Where(c => c.ProjectAlbumId == obj.AlbumId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_RemoteProject_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ProjectGuid", OtherKey="RemoteProjectProjectGuid", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<RemoteProject> RemoteProjects(this Project obj, IDataContext db)
+		{
+			return db.GetTable<RemoteProject>().Where(c => c.RemoteProjectProjectGuid == obj.ProjectGuid);
+		}
+
+		#endregion
+
+		#region RemoteAlbum Associations
+
+		/// <summary>
+		/// FK_RemoteAlbum_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_RemoteAlbum_0_0", BackReferenceName="RemoteAlbum")]
+		public static IQueryable<Album> RemoteAlbumAlbums(this RemoteAlbum obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumId == obj.RemoteAlbumAlbumId);
+		}
+
+		/// <summary>
+		/// FK_RemoteAlbum_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_RemoteAlbum_0_0", BackReferenceName="RemoteAlbum")]
+		public static RemoteAlbum RemoteAlbumAlbum(this Album obj, IDataContext db)
+		{
+			return db.GetTable<RemoteAlbum>().Where(c => c.RemoteAlbumAlbumId == obj.AlbumId).First();
+		}
+
+		#endregion
+
+		#region RemoteItem Associations
+
+		/// <summary>
+		/// FK_RemoteItem_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteItemFolderId", OtherKey="FolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteItem_0_0", BackReferenceName="RemoteItems")]
+		public static IQueryable<Folder> RemoteItemFolders(this RemoteItem obj, IDataContext db)
+		{
+			return db.GetTable<Folder>().Where(c => c.FolderId == obj.RemoteItemFolderId);
+		}
+
+		/// <summary>
+		/// FK_RemoteItem_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteItemFolderId", OtherKey="FolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteItem_0_0", BackReferenceName="RemoteItems")]
+		public static RemoteItem? RemoteItemFolder(this Folder obj, IDataContext db)
+		{
+			return db.GetTable<RemoteItem>().Where(c => c.RemoteItemFolderId == obj.FolderId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_RemoteItem_1_0
+		/// </summary>
+		[Association(ThisKey="RemoteItemItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteItem_1_0", BackReferenceName="RemoteItems")]
+		public static IQueryable<Item> RemoteItemItems(this RemoteItem obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.RemoteItemItemId);
+		}
+
+		/// <summary>
+		/// FK_RemoteItem_1_0
+		/// </summary>
+		[Association(ThisKey="RemoteItemItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteItem_1_0", BackReferenceName="RemoteItems")]
+		public static RemoteItem? RemoteItemItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<RemoteItem>().Where(c => c.RemoteItemItemId == obj.ItemId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region RemoteProject Associations
+
+		/// <summary>
+		/// FK_RemoteProject_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteProjectProjectGuid", OtherKey="ProjectGuid", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteProject_0_0", BackReferenceName="RemoteProjects")]
+		public static IQueryable<Project> RemoteProjectProjectGus(this RemoteProject obj, IDataContext db)
+		{
+			return db.GetTable<Project>().Where(c => c.ProjectGuid == obj.RemoteProjectProjectGuid);
+		}
+
+		/// <summary>
+		/// FK_RemoteProject_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteProjectProjectGuid", OtherKey="ProjectGuid", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteProject_0_0", BackReferenceName="RemoteProjects")]
+		public static RemoteProject RemoteProjectProjectGu(this Project obj, IDataContext db)
+		{
+			return db.GetTable<RemoteProject>().Where(c => c.RemoteProjectProjectGuid == obj.ProjectGuid).First();
+		}
+
+		#endregion
+
+		#region RemoteThumbnail Associations
+
+		/// <summary>
+		/// FK_RemoteThumbnail_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteThumbnailItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteThumbnail_0_0", BackReferenceName="RemoteThumbnails")]
+		public static IQueryable<Item> RemoteThumbnailItems(this RemoteThumbnail obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.RemoteThumbnailItemId);
+		}
+
+		/// <summary>
+		/// FK_RemoteThumbnail_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteThumbnailItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteThumbnail_0_0", BackReferenceName="RemoteThumbnails")]
+		public static RemoteThumbnail RemoteThumbnailItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<RemoteThumbnail>().Where(c => c.RemoteThumbnailItemId == obj.ItemId).First();
+		}
+
+		#endregion
+
+		#region SalientRect Associations
+
+		/// <summary>
+		/// FK_SalientRect_0_0
+		/// </summary>
+		[Association(ThisKey="SalientRectItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_SalientRect_0_0", BackReferenceName="SalientRects")]
+		public static IQueryable<Item> SalientRectItems(this SalientRect obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.SalientRectItemId);
+		}
+
+		/// <summary>
+		/// FK_SalientRect_0_0
+		/// </summary>
+		[Association(ThisKey="SalientRectItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_SalientRect_0_0", BackReferenceName="SalientRects")]
+		public static SalientRect SalientRectItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<SalientRect>().Where(c => c.SalientRectItemId == obj.ItemId).First();
+		}
+
+		#endregion
+
+		#region SearchAnalysisItemPriority Associations
+
+		/// <summary>
+		/// FK_SearchAnalysisItemPriority_0_0
+		/// </summary>
+		[Association(ThisKey="SearchAnalysisItemPriorityItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_SearchAnalysisItemPriority_0_0", BackReferenceName="SearchAnalysisItemPriorities")]
+		public static IQueryable<Item> SearchAnalysisItemPriorityItems(this SearchAnalysisItemPriority obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.SearchAnalysisItemPriorityItemId);
+		}
+
+		/// <summary>
+		/// FK_SearchAnalysisItemPriority_0_0
+		/// </summary>
+		[Association(ThisKey="SearchAnalysisItemPriorityItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_SearchAnalysisItemPriority_0_0", BackReferenceName="SearchAnalysisItemPriorities")]
+		public static SearchAnalysisItemPriority SearchAnalysisItemPriorityItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<SearchAnalysisItemPriority>().Where(c => c.SearchAnalysisItemPriorityItemId == obj.ItemId).First();
+		}
+
+		#endregion
+
+		#region Source Associations
+
+		/// <summary>
+		/// FK_Album_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="AlbumSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Album> Albums0(this Source obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumSourceId == obj.SourceId);
+		}
+
+		/// <summary>
+		/// FK_Folder_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="FolderSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Folder> Folders(this Source obj, IDataContext db)
+		{
+			return db.GetTable<Folder>().Where(c => c.FolderSourceId == obj.SourceId);
+		}
+
+		/// <summary>
+		/// FK_Item_7_0_BackReference
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="ItemSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<Item> Items5(this Source obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemSourceId == obj.SourceId);
+		}
+
+		/// <summary>
+		/// FK_PendingCloudAlbumDelete_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="PendingCloudAlbumDeleteSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<PendingCloudAlbumDelete> PendingCloudAlbumDeletes(this Source obj, IDataContext db)
+		{
+			return db.GetTable<PendingCloudAlbumDelete>().Where(c => c.PendingCloudAlbumDeleteSourceId == obj.SourceId);
+		}
+
+		/// <summary>
+		/// FK_PendingUploadItem_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="PendingUploadItemSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<PendingUploadItem> PendingUploadItems1(this Source obj, IDataContext db)
+		{
+			return db.GetTable<PendingUploadItem>().Where(c => c.PendingUploadItemSourceId == obj.SourceId);
+		}
+
+		#endregion
+
+		#region Tag Associations
+
+		/// <summary>
+		/// FK_ExcludedItemTag_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="TagId", OtherKey="ExcludedItemTagTagId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ExcludedItemTag> ExcludedItemTags0(this Tag obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedItemTag>().Where(c => c.ExcludedItemTagTagId == obj.TagId);
+		}
+
+		/// <summary>
+		/// FK_ExcludedTag_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="TagId", OtherKey="ExcludedTagTagId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ExcludedTag> ExcludedTags(this Tag obj, IDataContext db)
+		{
+			return db.GetTable<ExcludedTag>().Where(c => c.ExcludedTagTagId == obj.TagId);
+		}
+
+		/// <summary>
+		/// FK_ItemTags_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="TagId", OtherKey="ItemTagsTagId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public static IQueryable<ItemTag> ItemTags0(this Tag obj, IDataContext db)
+		{
+			return db.GetTable<ItemTag>().Where(c => c.ItemTagsTagId == obj.TagId);
+		}
+
+		#endregion
+
+		#region UserActionAlbumView Associations
+
+		/// <summary>
+		/// FK_UserActionAlbumView_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionAlbumViewAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionAlbumView_0_0", BackReferenceName="UserActionAlbumViews")]
+		public static IQueryable<Album> UserActionAlbumViewAlbums(this UserActionAlbumView obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumId == obj.UserActionAlbumViewAlbumId);
+		}
+
+		/// <summary>
+		/// FK_UserActionAlbumView_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionAlbumViewAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionAlbumView_0_0", BackReferenceName="UserActionAlbumViews")]
+		public static UserActionAlbumView? UserActionAlbumViewAlbum(this Album obj, IDataContext db)
+		{
+			return db.GetTable<UserActionAlbumView>().Where(c => c.UserActionAlbumViewAlbumId == obj.AlbumId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region UserActionPrint Associations
+
+		/// <summary>
+		/// FK_UserActionPrint_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionPrintItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionPrint_0_0", BackReferenceName="UserActionPrints")]
+		public static IQueryable<Item> UserActionPrintItems(this UserActionPrint obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.UserActionPrintItemId);
+		}
+
+		/// <summary>
+		/// FK_UserActionPrint_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionPrintItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionPrint_0_0", BackReferenceName="UserActionPrints")]
+		public static UserActionPrint? UserActionPrintItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<UserActionPrint>().Where(c => c.UserActionPrintItemId == obj.ItemId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region UserActionShare Associations
+
+		/// <summary>
+		/// FK_UserActionShare_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionShareItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionShare_0_0", BackReferenceName="UserActionShares")]
+		public static IQueryable<Item> UserActionShareItems(this UserActionShare obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.UserActionShareItemId);
+		}
+
+		/// <summary>
+		/// FK_UserActionShare_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionShareItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionShare_0_0", BackReferenceName="UserActionShares")]
+		public static UserActionShare? UserActionShareItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<UserActionShare>().Where(c => c.UserActionShareItemId == obj.ItemId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region UserActionSlideshow Associations
+
+		/// <summary>
+		/// FK_UserActionSlideshow_1_0
+		/// </summary>
+		[Association(ThisKey="UserActionSlideshowAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionSlideshow_1_0", BackReferenceName="UserActionSlideshows")]
+		public static IQueryable<Album> UserActionSlideshowAlbums(this UserActionSlideshow obj, IDataContext db)
+		{
+			return db.GetTable<Album>().Where(c => c.AlbumId == obj.UserActionSlideshowAlbumId);
+		}
+
+		/// <summary>
+		/// FK_UserActionSlideshow_1_0
+		/// </summary>
+		[Association(ThisKey="UserActionSlideshowAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionSlideshow_1_0", BackReferenceName="UserActionSlideshows")]
+		public static UserActionSlideshow? UserActionSlideshowAlbum(this Album obj, IDataContext db)
+		{
+			return db.GetTable<UserActionSlideshow>().Where(c => c.UserActionSlideshowAlbumId == obj.AlbumId).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// FK_UserActionSlideshow_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionSlideshowItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionSlideshow_0_0", BackReferenceName="UserActionSlideshows")]
+		public static IQueryable<Item> UserActionSlideshowItems(this UserActionSlideshow obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.UserActionSlideshowItemId);
+		}
+
+		/// <summary>
+		/// FK_UserActionSlideshow_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionSlideshowItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionSlideshow_0_0", BackReferenceName="UserActionSlideshows")]
+		public static UserActionSlideshow? UserActionSlideshowItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<UserActionSlideshow>().Where(c => c.UserActionSlideshowItemId == obj.ItemId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region UserActionView Associations
+
+		/// <summary>
+		/// FK_UserActionView_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionViewItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionView_0_0", BackReferenceName="UserActionViews")]
+		public static IQueryable<Item> UserActionViewItems(this UserActionView obj, IDataContext db)
+		{
+			return db.GetTable<Item>().Where(c => c.ItemId == obj.UserActionViewItemId);
+		}
+
+		/// <summary>
+		/// FK_UserActionView_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionViewItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionView_0_0", BackReferenceName="UserActionViews")]
+		public static UserActionView? UserActionViewItem(this Item obj, IDataContext db)
+		{
+			return db.GetTable<UserActionView>().Where(c => c.UserActionViewItemId == obj.ItemId).FirstOrDefault();
+		}
+
+		#endregion
+
+		#region VideoFaceOccurrence Associations
+
+		/// <summary>
+		/// FK_VideoFaceOccurrence_0_0
+		/// </summary>
+		[Association(ThisKey="VideoFaceOccurrenceFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_VideoFaceOccurrence_0_0", BackReferenceName="VideoFaceOccurrences")]
+		public static IQueryable<Face> VideoFaceOccurrenceFaces(this VideoFaceOccurrence obj, IDataContext db)
+		{
+			return db.GetTable<Face>().Where(c => c.FaceId == obj.VideoFaceOccurrenceFaceId);
+		}
+
+		/// <summary>
+		/// FK_VideoFaceOccurrence_0_0
+		/// </summary>
+		[Association(ThisKey="VideoFaceOccurrenceFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_VideoFaceOccurrence_0_0", BackReferenceName="VideoFaceOccurrences")]
+		public static VideoFaceOccurrence VideoFaceOccurrenceFace(this Face obj, IDataContext db)
+		{
+			return db.GetTable<VideoFaceOccurrence>().Where(c => c.VideoFaceOccurrenceFaceId == obj.FaceId).First();
+		}
+
+		#endregion
+
+		#endregion
 	}
 }
 

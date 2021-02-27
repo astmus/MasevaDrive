@@ -15,157 +15,156 @@ using LinqToDB;
 using LinqToDB.Configuration;
 using LinqToDB.Mapping;
 
-namespace StorageProviders.SQLite.NetFramewrok
+namespace StorageProviders.NetFramewrok.DBs.SQLite
 {
 	/// <summary>
 	/// Database       : MediaDb.v1
 	/// Data Source    : MediaDb.v1
 	/// Server Version : 3.24.0
 	/// </summary>
-	public partial class SQLiteContext : LinqToDB.Data.DataConnection
+	public partial class SQLiteProvider : LinqToDB.Data.DataConnection
 	{
-		public ITable<Album>                            Albums                            { get { return this.GetTable<Album>(); } }
-		public ITable<AlbumItemLink>                    AlbumItemLinks                    { get { return this.GetTable<AlbumItemLink>(); } }
-		public ITable<AlbumNameFt>                      AlbumNameFts                      { get { return this.GetTable<AlbumNameFt>(); } }
-		public ITable<AlbumNameFtsDocsize>              AlbumNameFtsDocsizes              { get { return this.GetTable<AlbumNameFtsDocsize>(); } }
-		public ITable<AlbumNameFtsSegdir>               AlbumNameFtsSegdirs               { get { return this.GetTable<AlbumNameFtsSegdir>(); } }
-		public ITable<AlbumNameFtsSegment>              AlbumNameFtsSegments              { get { return this.GetTable<AlbumNameFtsSegment>(); } }
-		public ITable<AlbumNameFtsStat>                 AlbumNameFtsStats                 { get { return this.GetTable<AlbumNameFtsStat>(); } }
-		public ITable<AppGlobalState>                   AppGlobalStates                   { get { return this.GetTable<AppGlobalState>(); } }
-		public ITable<ApplicationName>                  ApplicationNames                  { get { return this.GetTable<ApplicationName>(); } }
-		public ITable<AppTelemetryState>                AppTelemetryStates                { get { return this.GetTable<AppTelemetryState>(); } }
-		public ITable<Audio>                            Audios                            { get { return this.GetTable<Audio>(); } }
-		public ITable<BackgroundTaskTelemetry>          BackgroundTaskTelemetries         { get { return this.GetTable<BackgroundTaskTelemetry>(); } }
-		public ITable<Cache>                            Caches                            { get { return this.GetTable<Cache>(); } }
-		public ITable<CameraManufacturer>               CameraManufacturers               { get { return this.GetTable<CameraManufacturer>(); } }
-		public ITable<CameraModel>                      CameraModels                      { get { return this.GetTable<CameraModel>(); } }
-		public ITable<CloudAlbum>                       CloudAlbums                       { get { return this.GetTable<CloudAlbum>(); } }
-		public ITable<CloudAlbumDefinition>             CloudAlbumDefinitions             { get { return this.GetTable<CloudAlbumDefinition>(); } }
-		public ITable<ConceptTagSuppressedTagList>      ConceptTagSuppressedTagLists      { get { return this.GetTable<ConceptTagSuppressedTagList>(); } }
-		public ITable<DbRecoveryTaskState>              DbRecoveryTaskStates              { get { return this.GetTable<DbRecoveryTaskState>(); } }
-		public ITable<Event>                            Events                            { get { return this.GetTable<Event>(); } }
-		public ITable<ExcludedAlbum>                    ExcludedAlbums                    { get { return this.GetTable<ExcludedAlbum>(); } }
-		public ITable<ExcludedFace>                     ExcludedFaces                     { get { return this.GetTable<ExcludedFace>(); } }
-		public ITable<ExcludedImport>                   ExcludedImports                   { get { return this.GetTable<ExcludedImport>(); } }
-		public ITable<ExcludedItemTag>                  ExcludedItemTags                  { get { return this.GetTable<ExcludedItemTag>(); } }
-		public ITable<ExcludedLocation>                 ExcludedLocations                 { get { return this.GetTable<ExcludedLocation>(); } }
-		public ITable<ExcludedPerson>                   ExcludedPeople                    { get { return this.GetTable<ExcludedPerson>(); } }
-		public ITable<ExcludedTag>                      ExcludedTags                      { get { return this.GetTable<ExcludedTag>(); } }
-		public ITable<ExtractedText>                    ExtractedTexts                    { get { return this.GetTable<ExtractedText>(); } }
-		public ITable<Face>                             Faces                             { get { return this.GetTable<Face>(); } }
-		public ITable<FaceCluster>                      FaceClusters                      { get { return this.GetTable<FaceCluster>(); } }
-		public ITable<FaceFeature>                      FaceFeatures                      { get { return this.GetTable<FaceFeature>(); } }
-		public ITable<FileExtensionFt>                  FileExtensionFts                  { get { return this.GetTable<FileExtensionFt>(); } }
-		public ITable<FileExtensionFtsDocsize>          FileExtensionFtsDocsizes          { get { return this.GetTable<FileExtensionFtsDocsize>(); } }
-		public ITable<FileExtensionFtsSegdir>           FileExtensionFtsSegdirs           { get { return this.GetTable<FileExtensionFtsSegdir>(); } }
-		public ITable<FileExtensionFtsSegment>          FileExtensionFtsSegments          { get { return this.GetTable<FileExtensionFtsSegment>(); } }
-		public ITable<FileExtensionFtsStat>             FileExtensionFtsStats             { get { return this.GetTable<FileExtensionFtsStat>(); } }
-		public ITable<FilenameFt>                       FilenameFts                       { get { return this.GetTable<FilenameFt>(); } }
-		public ITable<FilenameFtsDocsize>               FilenameFtsDocsizes               { get { return this.GetTable<FilenameFtsDocsize>(); } }
-		public ITable<FilenameFtsSegdir>                FilenameFtsSegdirs                { get { return this.GetTable<FilenameFtsSegdir>(); } }
-		public ITable<FilenameFtsSegment>               FilenameFtsSegments               { get { return this.GetTable<FilenameFtsSegment>(); } }
-		public ITable<FilenameFtsStat>                  FilenameFtsStats                  { get { return this.GetTable<FilenameFtsStat>(); } }
-		public ITable<Folder>                           Folders                           { get { return this.GetTable<Folder>(); } }
-		public ITable<FolderNameFt>                     FolderNameFts                     { get { return this.GetTable<FolderNameFt>(); } }
-		public ITable<FolderNameFtsDocsize>             FolderNameFtsDocsizes             { get { return this.GetTable<FolderNameFtsDocsize>(); } }
-		public ITable<FolderNameFtsSegdir>              FolderNameFtsSegdirs              { get { return this.GetTable<FolderNameFtsSegdir>(); } }
-		public ITable<FolderNameFtsSegment>             FolderNameFtsSegments             { get { return this.GetTable<FolderNameFtsSegment>(); } }
-		public ITable<FolderNameFtsStat>                FolderNameFtsStats                { get { return this.GetTable<FolderNameFtsStat>(); } }
-		public ITable<ImageAnalysis>                    ImageAnalyses                     { get { return this.GetTable<ImageAnalysis>(); } }
-		public ITable<Item>                             Items                             { get { return this.GetTable<Item>(); } }
-		public ITable<ItemDateTaken>                    ItemDateTakens                    { get { return this.GetTable<ItemDateTaken>(); } }
-		public ITable<ItemEdit>                         ItemEdits                         { get { return this.GetTable<ItemEdit>(); } }
-		public ITable<ItemEngineExemplar>               ItemEngineExemplars               { get { return this.GetTable<ItemEngineExemplar>(); } }
-		public ITable<ItemEngineStatus>                 ItemEngineStatus                  { get { return this.GetTable<ItemEngineStatus>(); } }
-		public ITable<ItemInferredLocationExperimental> ItemInferredLocationExperimentals { get { return this.GetTable<ItemInferredLocationExperimental>(); } }
-		public ITable<ItemTag>                          ItemTags                          { get { return this.GetTable<ItemTag>(); } }
-		public ITable<ItemVideoQuality>                 ItemVideoQualities                { get { return this.GetTable<ItemVideoQuality>(); } }
-		public ITable<ItemVideoTag>                     ItemVideoTags                     { get { return this.GetTable<ItemVideoTag>(); } }
-		public ITable<LiveTile>                         LiveTiles                         { get { return this.GetTable<LiveTile>(); } }
-		public ITable<Location>                         Locations                         { get { return this.GetTable<Location>(); } }
-		public ITable<LocationCountry>                  LocationCountries                 { get { return this.GetTable<LocationCountry>(); } }
-		public ITable<LocationCountryFt>                LocationCountryFts                { get { return this.GetTable<LocationCountryFt>(); } }
-		public ITable<LocationCountryFtsDocsize>        LocationCountryFtsDocsizes        { get { return this.GetTable<LocationCountryFtsDocsize>(); } }
-		public ITable<LocationCountryFtsSegdir>         LocationCountryFtsSegdirs         { get { return this.GetTable<LocationCountryFtsSegdir>(); } }
-		public ITable<LocationCountryFtsSegment>        LocationCountryFtsSegments        { get { return this.GetTable<LocationCountryFtsSegment>(); } }
-		public ITable<LocationCountryFtsStat>           LocationCountryFtsStats           { get { return this.GetTable<LocationCountryFtsStat>(); } }
-		public ITable<LocationDistrict>                 LocationDistricts                 { get { return this.GetTable<LocationDistrict>(); } }
-		public ITable<LocationDistrictFt>               LocationDistrictFts               { get { return this.GetTable<LocationDistrictFt>(); } }
-		public ITable<LocationDistrictFtsDocsize>       LocationDistrictFtsDocsizes       { get { return this.GetTable<LocationDistrictFtsDocsize>(); } }
-		public ITable<LocationDistrictFtsSegdir>        LocationDistrictFtsSegdirs        { get { return this.GetTable<LocationDistrictFtsSegdir>(); } }
-		public ITable<LocationDistrictFtsSegment>       LocationDistrictFtsSegments       { get { return this.GetTable<LocationDistrictFtsSegment>(); } }
-		public ITable<LocationDistrictFtsStat>          LocationDistrictFtsStats          { get { return this.GetTable<LocationDistrictFtsStat>(); } }
-		public ITable<LocationFt>                       LocationFts                       { get { return this.GetTable<LocationFt>(); } }
-		public ITable<LocationFtsDocsize>               LocationFtsDocsizes               { get { return this.GetTable<LocationFtsDocsize>(); } }
-		public ITable<LocationFtsSegdir>                LocationFtsSegdirs                { get { return this.GetTable<LocationFtsSegdir>(); } }
-		public ITable<LocationFtsSegment>               LocationFtsSegments               { get { return this.GetTable<LocationFtsSegment>(); } }
-		public ITable<LocationFtsStat>                  LocationFtsStats                  { get { return this.GetTable<LocationFtsStat>(); } }
-		public ITable<LocationGrid>                     LocationGrids                     { get { return this.GetTable<LocationGrid>(); } }
-		public ITable<LocationRegion>                   LocationRegions                   { get { return this.GetTable<LocationRegion>(); } }
-		public ITable<LocationRegionFt>                 LocationRegionFts                 { get { return this.GetTable<LocationRegionFt>(); } }
-		public ITable<LocationRegionFtsDocsize>         LocationRegionFtsDocsizes         { get { return this.GetTable<LocationRegionFtsDocsize>(); } }
-		public ITable<LocationRegionFtsSegdir>          LocationRegionFtsSegdirs          { get { return this.GetTable<LocationRegionFtsSegdir>(); } }
-		public ITable<LocationRegionFtsSegment>         LocationRegionFtsSegments         { get { return this.GetTable<LocationRegionFtsSegment>(); } }
-		public ITable<LocationRegionFtsStat>            LocationRegionFtsStats            { get { return this.GetTable<LocationRegionFtsStat>(); } }
-		public ITable<NetworkTelemetry>                 NetworkTelemetries                { get { return this.GetTable<NetworkTelemetry>(); } }
-		public ITable<OCRItem>                          OCRItems                          { get { return this.GetTable<OCRItem>(); } }
-		public ITable<OCRItemTextView>                  OCRItemTextViews                  { get { return this.GetTable<OCRItemTextView>(); } }
-		public ITable<OCRItemTextViewFt>                OCRItemTextViewFts                { get { return this.GetTable<OCRItemTextViewFt>(); } }
-		public ITable<OCRItemTextViewFtsDocsize>        OCRItemTextViewFtsDocsizes        { get { return this.GetTable<OCRItemTextViewFtsDocsize>(); } }
-		public ITable<OCRItemTextViewFtsSegdir>         OCRItemTextViewFtsSegdirs         { get { return this.GetTable<OCRItemTextViewFtsSegdir>(); } }
-		public ITable<OCRItemTextViewFtsSegment>        OCRItemTextViewFtsSegments        { get { return this.GetTable<OCRItemTextViewFtsSegment>(); } }
-		public ITable<OCRItemTextViewFtsStat>           OCRItemTextViewFtsStats           { get { return this.GetTable<OCRItemTextViewFtsStat>(); } }
-		public ITable<OCRLine>                          OCRLines                          { get { return this.GetTable<OCRLine>(); } }
-		public ITable<OCRWord>                          OCRWords                          { get { return this.GetTable<OCRWord>(); } }
-		public ITable<OneDriveStorageAndUpsellInfo>     OneDriveStorageAndUpsellInfo      { get { return this.GetTable<OneDriveStorageAndUpsellInfo>(); } }
-		public ITable<PendingCloudAlbumDelete>          PendingCloudAlbumDeletes          { get { return this.GetTable<PendingCloudAlbumDelete>(); } }
-		public ITable<PendingUploadItem>                PendingUploadItems                { get { return this.GetTable<PendingUploadItem>(); } }
-		public ITable<Person>                           People                            { get { return this.GetTable<Person>(); } }
-		public ITable<PersonFt>                         PersonFts                         { get { return this.GetTable<PersonFt>(); } }
-		public ITable<PersonFtsDocsize>                 PersonFtsDocsizes                 { get { return this.GetTable<PersonFtsDocsize>(); } }
-		public ITable<PersonFtsSegdir>                  PersonFtsSegdirs                  { get { return this.GetTable<PersonFtsSegdir>(); } }
-		public ITable<PersonFtsSegment>                 PersonFtsSegments                 { get { return this.GetTable<PersonFtsSegment>(); } }
-		public ITable<PersonFtsStat>                    PersonFtsStats                    { get { return this.GetTable<PersonFtsStat>(); } }
-		public ITable<PinnedSearch>                     PinnedSearches                    { get { return this.GetTable<PinnedSearch>(); } }
-		public ITable<Project>                          Projects                          { get { return this.GetTable<Project>(); } }
-		public ITable<RemoteAlbum>                      RemoteAlbums                      { get { return this.GetTable<RemoteAlbum>(); } }
-		public ITable<RemoteItem>                       RemoteItems                       { get { return this.GetTable<RemoteItem>(); } }
-		public ITable<RemoteProject>                    RemoteProjects                    { get { return this.GetTable<RemoteProject>(); } }
-		public ITable<RemoteThumbnail>                  RemoteThumbnails                  { get { return this.GetTable<RemoteThumbnail>(); } }
-		public ITable<SalientRect>                      SalientRects                      { get { return this.GetTable<SalientRect>(); } }
-		public ITable<SearchAnalysisItemPriority>       SearchAnalysisItemPriorities      { get { return this.GetTable<SearchAnalysisItemPriority>(); } }
-		public ITable<Source>                           Sources                           { get { return this.GetTable<Source>(); } }
-		public ITable<Tag>                              Tags                              { get { return this.GetTable<Tag>(); } }
-		public ITable<TagVariant>                       TagVariants                       { get { return this.GetTable<TagVariant>(); } }
-		public ITable<TagVariantFt>                     TagVariantFts                     { get { return this.GetTable<TagVariantFt>(); } }
-		public ITable<TagVariantFtsDocsize>             TagVariantFtsDocsizes             { get { return this.GetTable<TagVariantFtsDocsize>(); } }
-		public ITable<TagVariantFtsSegdir>              TagVariantFtsSegdirs              { get { return this.GetTable<TagVariantFtsSegdir>(); } }
-		public ITable<TagVariantFtsSegment>             TagVariantFtsSegments             { get { return this.GetTable<TagVariantFtsSegment>(); } }
-		public ITable<TagVariantFtsStat>                TagVariantFtsStats                { get { return this.GetTable<TagVariantFtsStat>(); } }
-		public ITable<UserActionAlbumView>              UserActionAlbumViews              { get { return this.GetTable<UserActionAlbumView>(); } }
-		public ITable<UserActionImport>                 UserActionImports                 { get { return this.GetTable<UserActionImport>(); } }
-		public ITable<UserActionLaunch>                 UserActionLaunches                { get { return this.GetTable<UserActionLaunch>(); } }
-		public ITable<UserActionPrint>                  UserActionPrints                  { get { return this.GetTable<UserActionPrint>(); } }
-		public ITable<UserActionSearch>                 UserActionSearches                { get { return this.GetTable<UserActionSearch>(); } }
-		public ITable<UserActionShare>                  UserActionShares                  { get { return this.GetTable<UserActionShare>(); } }
-		public ITable<UserActionSlideshow>              UserActionSlideshows              { get { return this.GetTable<UserActionSlideshow>(); } }
-		public ITable<UserActionView>                   UserActionViews                   { get { return this.GetTable<UserActionView>(); } }
-		public ITable<VideoFaceOccurrence>              VideoFaceOccurrences              { get { return this.GetTable<VideoFaceOccurrence>(); } }
+		public ITable<Album>                        Albums                       { get { return this.GetTable<Album>(); } }
+		public ITable<AlbumItemLink>                AlbumItemLinks               { get { return this.GetTable<AlbumItemLink>(); } }
+		public ITable<AlbumNameFt>                  AlbumNameFts                 { get { return this.GetTable<AlbumNameFt>(); } }
+		public ITable<AlbumNameFtsDocsize>          AlbumNameFtsDocsizes         { get { return this.GetTable<AlbumNameFtsDocsize>(); } }
+		public ITable<AlbumNameFtsSegdir>           AlbumNameFtsSegdirs          { get { return this.GetTable<AlbumNameFtsSegdir>(); } }
+		public ITable<AlbumNameFtsSegment>          AlbumNameFtsSegments         { get { return this.GetTable<AlbumNameFtsSegment>(); } }
+		public ITable<AlbumNameFtsStat>             AlbumNameFtsStats            { get { return this.GetTable<AlbumNameFtsStat>(); } }
+		public ITable<AppGlobalState>               AppGlobalStates              { get { return this.GetTable<AppGlobalState>(); } }
+		public ITable<ApplicationName>              ApplicationNames             { get { return this.GetTable<ApplicationName>(); } }
+		public ITable<AppTelemetryState>            AppTelemetryStates           { get { return this.GetTable<AppTelemetryState>(); } }
+		public ITable<Audio>                        Audios                       { get { return this.GetTable<Audio>(); } }
+		public ITable<BackgroundTaskTelemetry>      BackgroundTaskTelemetries    { get { return this.GetTable<BackgroundTaskTelemetry>(); } }
+		public ITable<Cache>                        Caches                       { get { return this.GetTable<Cache>(); } }
+		public ITable<CameraManufacturer>           CameraManufacturers          { get { return this.GetTable<CameraManufacturer>(); } }
+		public ITable<CameraModel>                  CameraModels                 { get { return this.GetTable<CameraModel>(); } }
+		public ITable<CloudAlbum>                   CloudAlbums                  { get { return this.GetTable<CloudAlbum>(); } }
+		public ITable<CloudAlbumDefinition>         CloudAlbumDefinitions        { get { return this.GetTable<CloudAlbumDefinition>(); } }
+		public ITable<ConceptTagSuppressedTagList>  ConceptTagSuppressedTagLists { get { return this.GetTable<ConceptTagSuppressedTagList>(); } }
+		public ITable<DbRecoveryTaskState>          DbRecoveryTaskStates         { get { return this.GetTable<DbRecoveryTaskState>(); } }
+		public ITable<Event>                        Events                       { get { return this.GetTable<Event>(); } }
+		public ITable<ExcludedAlbum>                ExcludedAlbums               { get { return this.GetTable<ExcludedAlbum>(); } }
+		public ITable<ExcludedFace>                 ExcludedFaces                { get { return this.GetTable<ExcludedFace>(); } }
+		public ITable<ExcludedImport>               ExcludedImports              { get { return this.GetTable<ExcludedImport>(); } }
+		public ITable<ExcludedItemTag>              ExcludedItemTags             { get { return this.GetTable<ExcludedItemTag>(); } }
+		public ITable<ExcludedLocation>             ExcludedLocations            { get { return this.GetTable<ExcludedLocation>(); } }
+		public ITable<ExcludedPerson>               ExcludedPeople               { get { return this.GetTable<ExcludedPerson>(); } }
+		public ITable<ExcludedTag>                  ExcludedTags                 { get { return this.GetTable<ExcludedTag>(); } }
+		public ITable<ExtractedText>                ExtractedTexts               { get { return this.GetTable<ExtractedText>(); } }
+		public ITable<Face>                         Faces                        { get { return this.GetTable<Face>(); } }
+		public ITable<FaceCluster>                  FaceClusters                 { get { return this.GetTable<FaceCluster>(); } }
+		public ITable<FaceFeature>                  FaceFeatures                 { get { return this.GetTable<FaceFeature>(); } }
+		public ITable<FileExtensionFt>              FileExtensionFts             { get { return this.GetTable<FileExtensionFt>(); } }
+		public ITable<FileExtensionFtsDocsize>      FileExtensionFtsDocsizes     { get { return this.GetTable<FileExtensionFtsDocsize>(); } }
+		public ITable<FileExtensionFtsSegdir>       FileExtensionFtsSegdirs      { get { return this.GetTable<FileExtensionFtsSegdir>(); } }
+		public ITable<FileExtensionFtsSegment>      FileExtensionFtsSegments     { get { return this.GetTable<FileExtensionFtsSegment>(); } }
+		public ITable<FileExtensionFtsStat>         FileExtensionFtsStats        { get { return this.GetTable<FileExtensionFtsStat>(); } }
+		public ITable<FilenameFt>                   FilenameFts                  { get { return this.GetTable<FilenameFt>(); } }
+		public ITable<FilenameFtsDocsize>           FilenameFtsDocsizes          { get { return this.GetTable<FilenameFtsDocsize>(); } }
+		public ITable<FilenameFtsSegdir>            FilenameFtsSegdirs           { get { return this.GetTable<FilenameFtsSegdir>(); } }
+		public ITable<FilenameFtsSegment>           FilenameFtsSegments          { get { return this.GetTable<FilenameFtsSegment>(); } }
+		public ITable<FilenameFtsStat>              FilenameFtsStats             { get { return this.GetTable<FilenameFtsStat>(); } }
+		public ITable<Folder>                       Folders                      { get { return this.GetTable<Folder>(); } }
+		public ITable<FolderNameFt>                 FolderNameFts                { get { return this.GetTable<FolderNameFt>(); } }
+		public ITable<FolderNameFtsDocsize>         FolderNameFtsDocsizes        { get { return this.GetTable<FolderNameFtsDocsize>(); } }
+		public ITable<FolderNameFtsSegdir>          FolderNameFtsSegdirs         { get { return this.GetTable<FolderNameFtsSegdir>(); } }
+		public ITable<FolderNameFtsSegment>         FolderNameFtsSegments        { get { return this.GetTable<FolderNameFtsSegment>(); } }
+		public ITable<FolderNameFtsStat>            FolderNameFtsStats           { get { return this.GetTable<FolderNameFtsStat>(); } }
+		public ITable<ImageAnalysis>                ImageAnalyses                { get { return this.GetTable<ImageAnalysis>(); } }
+		public ITable<Item>                         Items                        { get { return this.GetTable<Item>(); } }
+		public ITable<ItemDateTaken>                ItemDateTakens               { get { return this.GetTable<ItemDateTaken>(); } }
+		public ITable<ItemEdit>                     ItemEdits                    { get { return this.GetTable<ItemEdit>(); } }
+		public ITable<ItemEngineExemplar>           ItemEngineExemplars          { get { return this.GetTable<ItemEngineExemplar>(); } }
+		public ITable<ItemEngineStatus>             ItemEngineStatus             { get { return this.GetTable<ItemEngineStatus>(); } }
+		public ITable<ItemTag>                      ItemTags                     { get { return this.GetTable<ItemTag>(); } }
+		public ITable<ItemVideoQuality>             ItemVideoQualities           { get { return this.GetTable<ItemVideoQuality>(); } }
+		public ITable<ItemVideoTag>                 ItemVideoTags                { get { return this.GetTable<ItemVideoTag>(); } }
+		public ITable<LiveTile>                     LiveTiles                    { get { return this.GetTable<LiveTile>(); } }
+		public ITable<Location>                     Locations                    { get { return this.GetTable<Location>(); } }
+		public ITable<LocationCountry>              LocationCountries            { get { return this.GetTable<LocationCountry>(); } }
+		public ITable<LocationCountryFt>            LocationCountryFts           { get { return this.GetTable<LocationCountryFt>(); } }
+		public ITable<LocationCountryFtsDocsize>    LocationCountryFtsDocsizes   { get { return this.GetTable<LocationCountryFtsDocsize>(); } }
+		public ITable<LocationCountryFtsSegdir>     LocationCountryFtsSegdirs    { get { return this.GetTable<LocationCountryFtsSegdir>(); } }
+		public ITable<LocationCountryFtsSegment>    LocationCountryFtsSegments   { get { return this.GetTable<LocationCountryFtsSegment>(); } }
+		public ITable<LocationCountryFtsStat>       LocationCountryFtsStats      { get { return this.GetTable<LocationCountryFtsStat>(); } }
+		public ITable<LocationDistrict>             LocationDistricts            { get { return this.GetTable<LocationDistrict>(); } }
+		public ITable<LocationDistrictFt>           LocationDistrictFts          { get { return this.GetTable<LocationDistrictFt>(); } }
+		public ITable<LocationDistrictFtsDocsize>   LocationDistrictFtsDocsizes  { get { return this.GetTable<LocationDistrictFtsDocsize>(); } }
+		public ITable<LocationDistrictFtsSegdir>    LocationDistrictFtsSegdirs   { get { return this.GetTable<LocationDistrictFtsSegdir>(); } }
+		public ITable<LocationDistrictFtsSegment>   LocationDistrictFtsSegments  { get { return this.GetTable<LocationDistrictFtsSegment>(); } }
+		public ITable<LocationDistrictFtsStat>      LocationDistrictFtsStats     { get { return this.GetTable<LocationDistrictFtsStat>(); } }
+		public ITable<LocationFt>                   LocationFts                  { get { return this.GetTable<LocationFt>(); } }
+		public ITable<LocationFtsDocsize>           LocationFtsDocsizes          { get { return this.GetTable<LocationFtsDocsize>(); } }
+		public ITable<LocationFtsSegdir>            LocationFtsSegdirs           { get { return this.GetTable<LocationFtsSegdir>(); } }
+		public ITable<LocationFtsSegment>           LocationFtsSegments          { get { return this.GetTable<LocationFtsSegment>(); } }
+		public ITable<LocationFtsStat>              LocationFtsStats             { get { return this.GetTable<LocationFtsStat>(); } }
+		public ITable<LocationGrid>                 LocationGrids                { get { return this.GetTable<LocationGrid>(); } }
+		public ITable<LocationRegion>               LocationRegions              { get { return this.GetTable<LocationRegion>(); } }
+		public ITable<LocationRegionFt>             LocationRegionFts            { get { return this.GetTable<LocationRegionFt>(); } }
+		public ITable<LocationRegionFtsDocsize>     LocationRegionFtsDocsizes    { get { return this.GetTable<LocationRegionFtsDocsize>(); } }
+		public ITable<LocationRegionFtsSegdir>      LocationRegionFtsSegdirs     { get { return this.GetTable<LocationRegionFtsSegdir>(); } }
+		public ITable<LocationRegionFtsSegment>     LocationRegionFtsSegments    { get { return this.GetTable<LocationRegionFtsSegment>(); } }
+		public ITable<LocationRegionFtsStat>        LocationRegionFtsStats       { get { return this.GetTable<LocationRegionFtsStat>(); } }
+		public ITable<NetworkTelemetry>             NetworkTelemetries           { get { return this.GetTable<NetworkTelemetry>(); } }
+		public ITable<OCRItem>                      OCRItems                     { get { return this.GetTable<OCRItem>(); } }
+		public ITable<OCRItemTextView>              OCRItemTextViews             { get { return this.GetTable<OCRItemTextView>(); } }
+		public ITable<OCRItemTextViewFt>            OCRItemTextViewFts           { get { return this.GetTable<OCRItemTextViewFt>(); } }
+		public ITable<OCRItemTextViewFtsDocsize>    OCRItemTextViewFtsDocsizes   { get { return this.GetTable<OCRItemTextViewFtsDocsize>(); } }
+		public ITable<OCRItemTextViewFtsSegdir>     OCRItemTextViewFtsSegdirs    { get { return this.GetTable<OCRItemTextViewFtsSegdir>(); } }
+		public ITable<OCRItemTextViewFtsSegment>    OCRItemTextViewFtsSegments   { get { return this.GetTable<OCRItemTextViewFtsSegment>(); } }
+		public ITable<OCRItemTextViewFtsStat>       OCRItemTextViewFtsStats      { get { return this.GetTable<OCRItemTextViewFtsStat>(); } }
+		public ITable<OCRLine>                      OCRLines                     { get { return this.GetTable<OCRLine>(); } }
+		public ITable<OCRWord>                      OCRWords                     { get { return this.GetTable<OCRWord>(); } }
+		public ITable<OneDriveStorageAndUpsellInfo> OneDriveStorageAndUpsellInfo { get { return this.GetTable<OneDriveStorageAndUpsellInfo>(); } }
+		public ITable<PendingCloudAlbumDelete>      PendingCloudAlbumDeletes     { get { return this.GetTable<PendingCloudAlbumDelete>(); } }
+		public ITable<PendingUploadItem>            PendingUploadItems           { get { return this.GetTable<PendingUploadItem>(); } }
+		public ITable<Person>                       People                       { get { return this.GetTable<Person>(); } }
+		public ITable<PersonFt>                     PersonFts                    { get { return this.GetTable<PersonFt>(); } }
+		public ITable<PersonFtsDocsize>             PersonFtsDocsizes            { get { return this.GetTable<PersonFtsDocsize>(); } }
+		public ITable<PersonFtsSegdir>              PersonFtsSegdirs             { get { return this.GetTable<PersonFtsSegdir>(); } }
+		public ITable<PersonFtsSegment>             PersonFtsSegments            { get { return this.GetTable<PersonFtsSegment>(); } }
+		public ITable<PersonFtsStat>                PersonFtsStats               { get { return this.GetTable<PersonFtsStat>(); } }
+		public ITable<PinnedSearch>                 PinnedSearches               { get { return this.GetTable<PinnedSearch>(); } }
+		public ITable<Project>                      Projects                     { get { return this.GetTable<Project>(); } }
+		public ITable<RemoteAlbum>                  RemoteAlbums                 { get { return this.GetTable<RemoteAlbum>(); } }
+		public ITable<RemoteItem>                   RemoteItems                  { get { return this.GetTable<RemoteItem>(); } }
+		public ITable<RemoteProject>                RemoteProjects               { get { return this.GetTable<RemoteProject>(); } }
+		public ITable<RemoteThumbnail>              RemoteThumbnails             { get { return this.GetTable<RemoteThumbnail>(); } }
+		public ITable<SalientRect>                  SalientRects                 { get { return this.GetTable<SalientRect>(); } }
+		public ITable<SearchAnalysisItemPriority>   SearchAnalysisItemPriorities { get { return this.GetTable<SearchAnalysisItemPriority>(); } }
+		public ITable<Source>                       Sources                      { get { return this.GetTable<Source>(); } }
+		public ITable<Tag>                          Tags                         { get { return this.GetTable<Tag>(); } }
+		public ITable<TagVariant>                   TagVariants                  { get { return this.GetTable<TagVariant>(); } }
+		public ITable<TagVariantFt>                 TagVariantFts                { get { return this.GetTable<TagVariantFt>(); } }
+		public ITable<TagVariantFtsDocsize>         TagVariantFtsDocsizes        { get { return this.GetTable<TagVariantFtsDocsize>(); } }
+		public ITable<TagVariantFtsSegdir>          TagVariantFtsSegdirs         { get { return this.GetTable<TagVariantFtsSegdir>(); } }
+		public ITable<TagVariantFtsSegment>         TagVariantFtsSegments        { get { return this.GetTable<TagVariantFtsSegment>(); } }
+		public ITable<TagVariantFtsStat>            TagVariantFtsStats           { get { return this.GetTable<TagVariantFtsStat>(); } }
+		public ITable<UserActionAlbumView>          UserActionAlbumViews         { get { return this.GetTable<UserActionAlbumView>(); } }
+		public ITable<UserActionImport>             UserActionImports            { get { return this.GetTable<UserActionImport>(); } }
+		public ITable<UserActionLaunch>             UserActionLaunches           { get { return this.GetTable<UserActionLaunch>(); } }
+		public ITable<UserActionPrint>              UserActionPrints             { get { return this.GetTable<UserActionPrint>(); } }
+		public ITable<UserActionSearch>             UserActionSearches           { get { return this.GetTable<UserActionSearch>(); } }
+		public ITable<UserActionShare>              UserActionShares             { get { return this.GetTable<UserActionShare>(); } }
+		public ITable<UserActionSlideshow>          UserActionSlideshows         { get { return this.GetTable<UserActionSlideshow>(); } }
+		public ITable<UserActionView>               UserActionViews              { get { return this.GetTable<UserActionView>(); } }
+		public ITable<VideoFaceOccurrence>          VideoFaceOccurrences         { get { return this.GetTable<VideoFaceOccurrence>(); } }
 
-		public SQLiteContext()
+		public SQLiteProvider()
 		{
 			InitDataContext();
 			InitMappingSchema();
 		}
 
-		public SQLiteContext(string configuration)
+		public SQLiteProvider(string configuration)
 			: base(configuration)
 		{
 			InitDataContext();
 			InitMappingSchema();
 		}
 
-		public SQLiteContext(LinqToDbConnectionOptions options)
+		public SQLiteProvider(LinqToDbConnectionOptions options)
 			: base(options)
 		{
 			InitDataContext();
@@ -1482,23 +1481,6 @@ namespace StorageProviders.SQLite.NetFramewrok
 		#endregion
 	}
 
-	[Table("ItemInferredLocationExperimental")]
-	public partial class ItemInferredLocationExperimental
-	{
-		[Column("ItemInferredLocationExperimental_ItemId"),             PrimaryKey,  NotNull] public long   ItemInferredLocationExperimentalItemId             { get; set; } // integer
-		[Column("ItemInferredLocationExperimental_InferredLocationId"),    Nullable         ] public object ItemInferredLocationExperimentalInferredLocationId { get; set; }
-
-		#region Associations
-
-		/// <summary>
-		/// FK_ItemInferredLocationExperimental_0_0
-		/// </summary>
-		[Association(ThisKey="ItemInferredLocationExperimentalInferredLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemInferredLocationExperimental_0_0", BackReferenceName="ItemInferredLocationExperimentals")]
-		public Location ItemInferredLocationExperimentalInferredLocation { get; set; }
-
-		#endregion
-	}
-
 	[Table("ItemTags")]
 	public partial class ItemTag
 	{
@@ -1605,12 +1587,6 @@ namespace StorageProviders.SQLite.NetFramewrok
 		/// </summary>
 		[Association(ThisKey="LocationId", OtherKey="ExcludedLocationLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
 		public IEnumerable<ExcludedLocation> ExcludedLocations { get; set; }
-
-		/// <summary>
-		/// FK_ItemInferredLocationExperimental_0_0_BackReference
-		/// </summary>
-		[Association(ThisKey="LocationId", OtherKey="ItemInferredLocationExperimentalInferredLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemInferredLocationExperimental> ItemInferredLocationExperimentals { get; set; }
 
 		/// <summary>
 		/// FK_Item_4_0_BackReference
@@ -2915,12 +2891,6 @@ namespace StorageProviders.SQLite.NetFramewrok
 		{
 			return table.FirstOrDefault(t =>
 				t.ItemEngineStatusId == ItemEngineStatusId);
-		}
-
-		public static ItemInferredLocationExperimental Find(this ITable<ItemInferredLocationExperimental> table, long ItemInferredLocationExperimentalItemId)
-		{
-			return table.FirstOrDefault(t =>
-				t.ItemInferredLocationExperimentalItemId == ItemInferredLocationExperimentalItemId);
 		}
 
 		public static ItemTag Find(this ITable<ItemTag> table, long ItemTagsId)

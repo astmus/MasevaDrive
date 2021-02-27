@@ -5,7 +5,7 @@
 <#@ include file="$(LinqToDBT4SQLiteTemplatesPath)PluralizationService.ttinclude"  once="true" #>
 <#
 	
-	NamespaceName = "StorageProviders.SQLite.NetFramewrok";
+	NamespaceName = "StorageProviders.NetFramewrok.DBs.SQLite";
 	GetSchemaOptions.GetTables             = true;
 
 	GetSchemaOptions.GetForeignKeys        = true;
@@ -23,7 +23,6 @@
 
 	GetSchemaOptions.IncludedCatalogs = null;
 	GetSchemaOptions.ExcludedCatalogs = null;
-	GetSchemaOptions.StringComparer = StringComparer.OrdinalIgnoreCase;
 	GetSchemaOptions.LoadProcedure  = _ => true;          
 	//GetSchemaOptions.GetAssociationMemberName = true;
 
@@ -46,8 +45,18 @@
 	GenerateBackReferences        = true;
 	// Enables generation of associations as extension methods for related table mapping classes
 	GenerateAssociationExtensions = false;
-	DataContextName = "SQLiteContext";
+	DataContextName = "SQLiteProvider";
 	GenerateFindExtensions        = true;
+
+	// Enables pluralization of table mapping classes
+PluralizeClassNames                 = false;
+// Enables singularization of table mapping classes
+SingularizeClassNames               = true;
+// Enables pluralization of ITable<> properties in data context
+PluralizeDataContextPropertyNames   = true;
+// Enables singularization of ITable<> properties in data context
+SingularizeDataContextPropertyNames = true;
+
 	LoadSQLiteMetadata("Data Source=e:\\StorageDB\\MediaDb.v1.sqlite");
 	
 	GenerateModel();
