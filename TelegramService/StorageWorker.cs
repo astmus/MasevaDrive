@@ -71,6 +71,7 @@ namespace TelegramService
 		{
 			var options = new DefaultStorageBotOptions();
 			_storageBot = new StorageTelegramBot(new DefaultStorageBotOptions());
+			_storageBot.InteractionRouter = new StorageInteractionsRouter();
 
 			_storageBot.StartReceiving(null, null, cancellationToken);
 			await base.StartAsync(cancellationToken);
@@ -85,21 +86,20 @@ namespace TelegramService
 				if (cancellationToken.IsCancellationRequested)
 					return;
 				_logger.LogInformation(update.ToString());
-
-				var handler = _storageBot.CreateInteractionHandler(update);
-				try
+				using (var scope = Services.CreateScope())
 				{
-					using (var scope = Services.CreateScope())
+					SQLiteProvider dbProvider = scope.ServiceProvider.GetRequiredService<SQLiteProvider>();
+					using (var handler = _storageBot.CreateInteractionHandler(update, context => { context.StorageItemsProvider = dbProvider; }))
 					{
-						var context = scope.ServiceProvider.GetRequiredService<SQLiteProvider>();
-						var items = context.Items.Take(10).ToList();
-						items.ForEach(i => _logger.LogInformation(i.ItemFileName));
-						await handler.HandleAsync(cancellationToken);
+						try
+						{
+							await handler.HandleAsync(cancellationToken);
+						}
+						catch (Exception error)
+						{
+							await handler.HandleErrorAsync(error, cancellationToken);
+						}
 					}
-				}
-				catch (Exception error)
-				{
-					await handler.HandleErrorAsync(error, cancellationToken);
 				}
 			}
 		}

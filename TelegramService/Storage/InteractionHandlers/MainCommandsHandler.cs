@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using StorageProviders.NetCore.DBs.SQLite;
 using Telegram.Bot.Connectivity;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Requests;
@@ -17,14 +18,16 @@ namespace Telegram.Bot.Storage.InteractionHandlers
 	public class StorageInteractionContext : InteractionContext
 	{
 		///
-		public object StorageItemsProvider { get; set; }
+		public SQLiteProvider StorageItemsProvider { get; set; }
 	}
 
 	/// <summary>
 	/// 
 	/// </summary>
-	public class MainCommandsHandler : BaseInteractionHandler<StorageInteractionContext>
+	public class MainCommandsHandler : BaseInteractionHandler<StorageInteractionContext>, IDisposable
 	{
+		private bool disposedValue;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -40,8 +43,8 @@ namespace Telegram.Bot.Storage.InteractionHandlers
 		/// <returns></returns>
 		public override async Task HandleAsync(CancellationToken cancelToken)
 		{
-			if (TypeOfMessage != MessageType.Text)
-				throw new NotSupportMessageTypeOfHandler(TypeOfMessage);
+			/*if (TypeOfMessage != MessageType.Text)
+				throw new NotSupportMessageTypeOfHandler(TypeOfMessage);*/
 			Message m = null;
 			switch (Command)
 			{
@@ -77,5 +80,35 @@ namespace Telegram.Bot.Storage.InteractionHandlers
 		}
 
 		private string Command => Context.Interaction.Message.Text;
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (!disposedValue)
+			{
+				if (disposing)
+				{
+					// TODO: dispose managed state (managed objects)
+					Context.Dispose();
+				}
+
+				// TODO: free unmanaged resources (unmanaged objects) and override finalizer
+				// TODO: set large fields to null
+				disposedValue = true;
+			}
+		}
+
+		// // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+		// ~MainCommandsHandler()
+		// {
+		//     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+		//     Dispose(disposing: false);
+		// }
+
+		void IDisposable.Dispose()
+		{
+			// Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+			Dispose(disposing: true);
+			GC.SuppressFinalize(this);
+		}
 	}
 }

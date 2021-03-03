@@ -26,7 +26,7 @@ namespace Telegram.Bot.Storage
 		/// <param name="options"></param>
 		public StorageTelegramBot(IBotOptions options) : base(options)
 		{
-			InteractionRouter = new StorageInteractionsRouter();
+
 		}
 		///
 		public override IInteractionRouter<StorageInteractionContext> InteractionRouter { get; set; }

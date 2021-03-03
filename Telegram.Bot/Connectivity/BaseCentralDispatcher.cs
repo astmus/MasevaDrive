@@ -38,12 +38,8 @@ namespace Telegram.Bot.Connectivity
 			SessionDispatcher = new SessionDispatcher();
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="interaction"></param>
-		/// <returns></returns>
-		public IInteractionHandler<T> CreateInteractionHandler(Update interaction)
+		///
+		public IInteractionHandler<T> CreateInteractionHandler(Update interaction, Action<T> configureContext)
 		{
 			int senderUserId = interaction.GetOwner().Id;
 			var session = SessionDispatcher[senderUserId];
@@ -58,13 +54,14 @@ namespace Telegram.Bot.Connectivity
 				}
 			}
 
-			var t = new T();
-			t.Session = session;
-			t.User = session.User;
-			t.Interaction = interaction;
-			t.Connection = Connection;
+			var context = new T();
+			context.Session = session;
+			context.User = session.User;
+			context.Interaction = interaction;
+			context.Connection = Connection;
+			configureContext(context);
 
-			return InteractionRouter.RouteInteraction(t);
+			return InteractionRouter.RouteInteraction(context);
 		}
 	}
 }
