@@ -9,7 +9,7 @@ namespace Telegram.Bot.Connectivity
 	/// <summary>
 	/// 
 	/// </summary>
-	public abstract class BaseCentralDispatcher : ICentralDispatcher
+	public abstract class BaseCentralDispatcher<T> : ICentralDispatcher<T> where T : InteractionContext, new()
 	{
 		/// <summary>
 		/// 
@@ -22,7 +22,7 @@ namespace Telegram.Bot.Connectivity
 		/// <summary>
 		/// 
 		/// </summary>
-		public abstract IInteractionRouter InteractionRouter { get; set; }
+		public abstract IInteractionRouter<T> InteractionRouter { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
@@ -30,21 +30,12 @@ namespace Telegram.Bot.Connectivity
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="concreteRouter"></param>
 		/// <param name="usersInfoProvider"></param>
-		public BaseCentralDispatcher(IInteractionRouter concreteRouter, IEnumerable<RegisteredUser> usersInfoProvider)
+		public BaseCentralDispatcher(IEnumerable<RegisteredUser> usersInfoProvider)
 		{
-			InteractionRouter = concreteRouter ?? SetupInteractionRouter();
+
 			RegisteredUsers = new List<RegisteredUser>(usersInfoProvider);
 			SessionDispatcher = new SessionDispatcher();
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		public virtual IInteractionRouter SetupInteractionRouter()
-		{
-			return new DefaultInteractionRouter();
 		}
 
 		/// <summary>
@@ -52,7 +43,7 @@ namespace Telegram.Bot.Connectivity
 		/// </summary>
 		/// <param name="interaction"></param>
 		/// <returns></returns>
-		public IInteractionHandler CreateInteractionHandler(Update interaction)
+		public IInteractionHandler<T> CreateInteractionHandler(Update interaction)
 		{
 			int senderUserId = interaction.GetOwner().Id;
 			var session = SessionDispatcher[senderUserId];
@@ -60,21 +51,20 @@ namespace Telegram.Bot.Connectivity
 			{
 				var regInfo = RegisteredUsers.FirstOrDefault(registered => registered.Id == senderUserId);
 				if (regInfo != null) //user registered but session not oppened yet
-					SessionDispatcher.StartSession(interaction.GetOwner().ToRegisteredUser(regInfo));
+					session = SessionDispatcher.StartSession(interaction.GetOwner().ToRegisteredUser(regInfo));
 				else
 				{
 					//start registration procedure place it in RouteInteraction with check if session is null
 				}
 			}
 
-			var context = SessionDispatcher.DispatchInteractionToSession(interaction);
-			SetupAPIConnection(context);
-			return InteractionRouter.RouteInteraction(context);
+			var t = new T();
+			t.Session = session;
+			t.User = session.User;
+			t.Interaction = interaction;
+			t.Connection = Connection;
+
+			return InteractionRouter.RouteInteraction(t);
 		}
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="context"></param>
-		protected abstract void SetupAPIConnection(InteractionContext context);
 	}
 }

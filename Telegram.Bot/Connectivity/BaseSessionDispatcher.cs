@@ -30,17 +30,6 @@ namespace Telegram.Bot.Connectivity
 		/// 
 		/// </summary>
 		public abstract void ResetSession();
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="interaction"></param>
-		/// <returns></returns>
-		public virtual InteractionContext DispatchInteractionToSession(Update interaction)
-		{
-			var session = this[interaction.GetOwner().Id];
-			return new InteractionContext(interaction, session?.User ?? interaction.GetOwner(), session, null);
-		}
-		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="user"></param>

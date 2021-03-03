@@ -30,7 +30,7 @@
 	EnableNullableReferenceTypes   = true;
 
 	EnforceModelNullability        = true;
-	GenerateDatabaseInfo          = false;
+	GenerateDatabaseInfo          = true;
 	GenerateConstructors          = true;  
 
 

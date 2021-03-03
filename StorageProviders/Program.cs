@@ -12,9 +12,22 @@ using LinqToDB.DataProvider.SQLite;
 
 namespace StorageProviders
 {
-	class Program
+	public class Program
 	{
-		static void Main(string[] args)
+		public static string ConnectionStringExample()
+		{
+			var b = new System.Data.SQLite.SQLiteConnectionStringBuilder(@"Data Source=e:\\StorageDB\\MediaDb.v1.sqlite");
+			b.CacheSize = 8192;
+			b.JournalMode = System.Data.SQLite.SQLiteJournalModeEnum.Wal;
+			b.ForeignKeys = true;
+			b.RecursiveTriggers = true;
+			b.Enlist = true;
+			b.SyncMode = System.Data.SQLite.SynchronizationModes.Normal;
+			b.ReadOnly = true;
+			b.Pooling = true;
+			return b.ToString();
+		}
+		public static void Main(string[] args)
 		{
 			// create options builder
 

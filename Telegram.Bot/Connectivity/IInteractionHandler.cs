@@ -9,12 +9,12 @@ namespace Telegram.Bot.Connectivity
 	/// <summary>
 	/// 
 	/// </summary>
-	public interface IInteractionHandler
+	public interface IInteractionHandler<T> where T : InteractionContext
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		InteractionContext Context { get; set; }
+		T Context { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>

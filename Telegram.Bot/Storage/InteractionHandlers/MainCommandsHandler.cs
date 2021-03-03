@@ -13,16 +13,23 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Telegram.Bot.Storage.InteractionHandlers
 {
+	///
+	public class StorageInteractionContext : InteractionContext
+	{
+		///
+		public object StorageItemsProvider { get; set; }
+	}
+
 	/// <summary>
 	/// 
 	/// </summary>
-	public class MainCommandsHandler : BaseInteractionHandler
+	public class MainCommandsHandler : BaseInteractionHandler<StorageInteractionContext>
 	{
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="context"></param>
-		public MainCommandsHandler(InteractionContext context) : base(context)
+		public MainCommandsHandler(StorageInteractionContext context) : base(context)
 		{
 
 		}

@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using LinqToDB;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StorageProviders.NetCore.DBs.SQLite;
+using Telegram.Bot;
 using Telegram.Bot.Connectivity;
 using Telegram.Bot.Storage;
+using Telegram.Bot.Storage.InteractionHandlers;
 
 namespace TelegramService
 {
@@ -22,7 +28,7 @@ namespace TelegramService
 		/// <summary>
 		/// 
 		/// </summary>
-		public string ApiToken => Environment.GetEnvironmentVariable("MasevaBotKey", EnvironmentVariableTarget.User);
+		public string ApiToken => Environment.GetEnvironmentVariable("JarviseKey", EnvironmentVariableTarget.User);
 		/// <summary>
 		/// 
 		/// </summary>
@@ -38,55 +44,70 @@ namespace TelegramService
 		{
 			get
 			{
-				return new RegisteredUser[] { new RegisteredUser(){ Email="astmus@live.com", ChatId = 506545376, Id = 506545376 }, new RegisteredUser() { Email = "olgas88@live.com", ChatId = 355747145 } };
+				return new RegisteredUser[] { new RegisteredUser() { Email = "astmus@live.com", ChatId = 506545376, Id = 506545376 }, new RegisteredUser() { Email = "olgas88@live.com", ChatId = 355747145 } };
 			}
 		}
 	}
 
 	public class StorageWorker : BackgroundService
 	{
-		private readonly ILogger<Worker> _logger;
+		private readonly ILogger<StorageWorker> _logger;
 
 		private StorageTelegramBot _storageBot;
 
-		public StorageWorker(ILogger<Worker> logger)
+		public StorageWorker(ILogger<StorageWorker> logger)
 		{
 			_logger = logger;
 		}
-		
-		public override Task StartAsync(CancellationToken cancellationToken)
+
+		public IServiceProvider Services { get; }
+		public StorageWorker(IServiceProvider services, ILogger<StorageWorker> logger)
+		{
+			Services = services;
+			_logger = logger;
+		}
+
+		public override async Task StartAsync(CancellationToken cancellationToken)
 		{
 			var options = new DefaultStorageBotOptions();
 			_storageBot = new StorageTelegramBot(new DefaultStorageBotOptions());
 
 			_storageBot.StartReceiving(null, null, cancellationToken);
-			return base.StartAsync(cancellationToken);
+			await base.StartAsync(cancellationToken);
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken cancellationToken)
 		{
-			_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+			_logger.LogInformation("Storage Worker running at: {time}", DateTimeOffset.Now);
 
 			await foreach (var update in _storageBot.YieldUpdatesAsync())
 			{
-				if (cancellationToken.IsCancellationRequested) return;
+				if (cancellationToken.IsCancellationRequested)
+					return;
 				_logger.LogInformation(update.ToString());
 
 				var handler = _storageBot.CreateInteractionHandler(update);
 				try
 				{
-					await handler.HandleAsync(cancellationToken);
-				}catch(Exception error)
+					using (var scope = Services.CreateScope())
+					{
+						var context = scope.ServiceProvider.GetRequiredService<SQLiteProvider>();
+						var items = context.Items.Take(10).ToList();
+						items.ForEach(i => _logger.LogInformation(i.ItemFileName));
+						await handler.HandleAsync(cancellationToken);
+					}
+				}
+				catch (Exception error)
 				{
 					await handler.HandleErrorAsync(error, cancellationToken);
 				}
 			}
 		}
 
-		public override Task StopAsync(CancellationToken cancellationToken)
+		public override async Task StopAsync(CancellationToken cancellationToken)
 		{
 			_storageBot.StopReceiving();
-			return base.StopAsync(cancellationToken);
+			await base.StopAsync(cancellationToken);
 		}
 	}
 }

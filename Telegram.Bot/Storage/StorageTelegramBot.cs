@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Telegram.Bot.Connectivity;
 using Telegram.Bot.Extensions;
 using Telegram.Bot.Requests;
+using Telegram.Bot.Storage.InteractionHandlers;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -17,7 +18,7 @@ namespace Telegram.Bot.Storage
 	/// <summary>
 	/// Telegram bot for manage storage files
 	/// </summary>
-	public class StorageTelegramBot : TelegramBot, IYieldingUpdateReceiver
+	public class StorageTelegramBot : TelegramBot<StorageInteractionContext>, IYieldingUpdateReceiver
 	{
 		/// <summary>
 		/// 
@@ -25,8 +26,10 @@ namespace Telegram.Bot.Storage
 		/// <param name="options"></param>
 		public StorageTelegramBot(IBotOptions options) : base(options)
 		{
-
+			InteractionRouter = new StorageInteractionsRouter();
 		}
+		///
+		public override IInteractionRouter<StorageInteractionContext> InteractionRouter { get; set; }
 
 
 		/// <summary>

@@ -58,16 +58,8 @@ namespace Telegram.Bot.Connectivity
 	/// <summary>
 	/// 
 	/// </summary>
-	public class TelegramBot : BaseCentralDispatcher, IBot
+	public class TelegramBot<T> : BaseCentralDispatcher<T>, IBot, IDisposable where T : InteractionContext, new()
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="context"></param>
-		protected override void SetupAPIConnection(InteractionContext context)
-		{
-			context.Connection = this;
-		}
 		/// <summary>
 		/// 
 		/// </summary>
@@ -111,14 +103,14 @@ namespace Telegram.Bot.Connectivity
 		/// <summary>
 		/// 
 		/// </summary>
-		public override IInteractionRouter InteractionRouter { get; set; }
+		public override IInteractionRouter<T> InteractionRouter { get; set; }
 
 		#endregion Config Properties
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="options"></param>
-		private TelegramBot(IBotOptions options) : base(new StorageInteractionsRouter(), options.RegisteredUsersSource)
+		private TelegramBot(IBotOptions options) : base(options.RegisteredUsersSource)
 		{
 			_options = options;
 		}
@@ -1159,7 +1151,7 @@ namespace Telegram.Bot.Connectivity
 		/// </summary>
 		/// <typeparam name="TUpdateHandler">The <see cref="IUpdateHandler"/> used for processing <see cref="Update"/>s</typeparam>    
 		/// <param name="cancellationToken">The <see cref="CancellationToken"/> with which you can stop receiving</param>
-		public void StartReceiving<TUpdateHandler>(CancellationToken cancellationToken = default) where TUpdateHandler : IInteractionHandler, new()
+		public void StartReceiving<TUpdateHandler>(CancellationToken cancellationToken = default) where TUpdateHandler : IInteractionHandler<InteractionContext>, new()
 		{
 			StartReceiving(new TUpdateHandler(), cancellationToken);
 		}
@@ -1168,7 +1160,7 @@ namespace Telegram.Bot.Connectivity
 		/// </summary>		
 		/// <param name="updateHandler">The <see cref="IUpdateHandler"/> used for processing <see cref="Update"/>s</param>
 		/// <param name="cancellationToken">The <see cref="CancellationToken"/> with which you can stop receiving</param>
-		public void StartReceiving(IInteractionHandler updateHandler, CancellationToken cancellationToken = default)
+		public void StartReceiving(IInteractionHandler<InteractionContext> updateHandler, CancellationToken cancellationToken = default)
 		{
 			if (updateHandler == null)
 				throw new ArgumentNullException(nameof(updateHandler));
@@ -1192,7 +1184,7 @@ namespace Telegram.Bot.Connectivity
 		/// <typeparam name="TUpdateHandler">The <see cref="IUpdateHandler"/> used for processing <see cref="Update"/>s</typeparam>        
 		/// <param name="cancellationToken">The <see cref="CancellationToken"/> with which you can stop receiving</param>
 		/// <returns></returns>
-		public Task ReceiveAsync<TUpdateHandler>(CancellationToken cancellationToken = default) where TUpdateHandler : IInteractionHandler, new()
+		public Task ReceiveAsync<TUpdateHandler>(CancellationToken cancellationToken = default) where TUpdateHandler : IInteractionHandler<InteractionContext>, new()
 		{
 			return ReceiveAsync(new TUpdateHandler(), cancellationToken);
 		}
@@ -1203,7 +1195,7 @@ namespace Telegram.Bot.Connectivity
 		/// <param name="updateHandler">The <see cref="IUpdateHandler"/> used for processing <see cref="Update"/>s</param>
 		/// <param name="cancellationToken">The <see cref="CancellationToken"/> with which you can stop receiving</param>
 		/// <returns></returns>
-		public async Task ReceiveAsync(IInteractionHandler updateHandler, CancellationToken cancellationToken = default)
+		public async Task ReceiveAsync(IInteractionHandler<InteractionContext> updateHandler, CancellationToken cancellationToken = default)
 		{
 			if (updateHandler == null)
 				throw new ArgumentNullException(nameof(updateHandler));
@@ -1253,6 +1245,12 @@ namespace Telegram.Bot.Connectivity
 		public Task<Message> SendTextMessageAsync(ChatId chatId, string text, IReplyMarkup replyMarkup = null, CancellationToken cancellationToken = default)
 		{
 			return SendTextMessageAsync(chatId, text, default, default, default, default, replyMarkup, cancellationToken);
+		}
+
+		///
+		public void Dispose()
+		{
+
 		}
 	}
 }

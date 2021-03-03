@@ -11,11 +11,11 @@ namespace Telegram.Bot.Connectivity
 	public class InteractionContext
 	{
 		///
-		public Update Interaction { get; }
+		public Update Interaction { get; set; }
 		///
-		public User User { get; }
+		public User User { get; set; }
 		///
-		public Session Session { get; }
+		public Session Session { get; set; }
 		///
 		public IBot Connection { get; set; }
 		///
@@ -24,14 +24,6 @@ namespace Telegram.Bot.Connectivity
 		public InteractionContext()
 		{
 
-		}
-		///
-		public InteractionContext(Update interaction, User user, Session session, IBot bocConnection = null)
-		{
-			Interaction = interaction;
-			User = user;
-			Session = session;
-			Connection = bocConnection;
 		}
 		///
 		public override string ToString()

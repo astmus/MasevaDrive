@@ -11,7 +11,5 @@ namespace Telegram.Bot.Connectivity
 		ConcurrentBag<Session> CurrentSessions { get; }
 		Session StartSession(RegisteredUser user);
 		void ResetSession();
-		public InteractionContext DispatchInteractionToSession(Update interaction);
-
 	}
 }

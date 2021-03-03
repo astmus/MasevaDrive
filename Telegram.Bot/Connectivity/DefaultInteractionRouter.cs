@@ -7,14 +7,14 @@ namespace Telegram.Bot.Connectivity
 	/// <summary>
 	/// 
 	/// </summary>
-	public class DefaultInteractionRouter : IInteractionRouter
+	public class DefaultInteractionRouter : IInteractionRouter<InteractionContext>
 	{
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
-		public IInteractionHandler RouteInteraction(InteractionContext context)
+		public IInteractionHandler<InteractionContext> RouteInteraction(InteractionContext context)
 		{
 			return new InteractionHandler() { Context = context };
 		}

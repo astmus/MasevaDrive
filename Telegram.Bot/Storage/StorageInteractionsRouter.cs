@@ -6,9 +6,11 @@ using Telegram.Bot.Storage.InteractionHandlers;
 
 namespace Telegram.Bot.Storage
 {
-	class StorageInteractionsRouter : IInteractionRouter
+	///
+	public class StorageInteractionsRouter : IInteractionRouter<StorageInteractionContext>
 	{
-		public IInteractionHandler RouteInteraction(InteractionContext context)
+		///
+		public IInteractionHandler<StorageInteractionContext> RouteInteraction(StorageInteractionContext context)
 		{
 			return new MainCommandsHandler(context);
 		}

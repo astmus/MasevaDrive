@@ -4,7 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>dotnet-TelegramService-344F301F-529A-448B-9FE4-88E29BF0EC4A</UserSecretsId>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net5.0|x64'">
@@ -14,11 +16,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
     <PackageReference Include="TDLib" Version="1.7.0" />
     <PackageReference Include="TDLibCore" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\StorageProviders\StorageProviders.csproj" />
     <ProjectReference Include="..\Telegram.Bot\Telegram.Bot.csproj" />
   </ItemGroup>
 </Project>

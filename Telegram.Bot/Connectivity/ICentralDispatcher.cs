@@ -7,7 +7,7 @@ namespace Telegram.Bot.Connectivity
 	/// <summary>
 	/// 
 	/// </summary>
-	public interface ICentralDispatcher
+	public interface ICentralDispatcher<T> where T : InteractionContext
 	{
 		/// <summary>
 		/// 
@@ -16,6 +16,6 @@ namespace Telegram.Bot.Connectivity
 		/// <summary>
 		/// 
 		/// </summary>
-		IInteractionRouter InteractionRouter { get; set; }
+		IInteractionRouter<T> InteractionRouter { get; set; }
 	}
 }

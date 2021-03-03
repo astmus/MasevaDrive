@@ -18,6 +18,11 @@ using LinqToDB.Mapping;
 
 namespace StorageProviders.NetCore.DBs.SQLite
 {
+	/// <summary>
+	/// Database       : MediaDb.v1
+	/// Data Source    : MediaDb.v1
+	/// Server Version : 3.24.0
+	/// </summary>
 	public partial class SQLiteProvider : LinqToDB.Data.DataConnection
 	{
 		public ITable<Album>                        Albums                       { get { return this.GetTable<Album>(); } }

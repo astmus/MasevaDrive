@@ -12,12 +12,12 @@ namespace Telegram.Bot.Connectivity
 	/// <summary>
 	/// 
 	/// </summary>
-	public abstract class BaseInteractionHandler : IInteractionHandler
+	public abstract class BaseInteractionHandler<T> : IInteractionHandler<T> where T : InteractionContext
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		public BaseInteractionHandler(InteractionContext context)
+		public BaseInteractionHandler(T context)
 		{
 			Context = context;
 			AddMessageToHistory(Message);
@@ -25,7 +25,7 @@ namespace Telegram.Bot.Connectivity
 		/// <summary>
 		/// 
 		/// </summary>
-		public InteractionContext Context { get; set; }
+		public T Context { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
@@ -38,6 +38,7 @@ namespace Telegram.Bot.Connectivity
 		/// 
 		/// </summary>
 		public MessageType TypeOfMessage => Context.Interaction.Message.Type;
+
 		/// <summary>
 		/// 
 		/// </summary>
