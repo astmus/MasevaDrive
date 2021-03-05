@@ -1,66 +1,110 @@
 ﻿<#@ template language="C#" debug="True" hostSpecific="True" #>
 <#@ output extension=".generated.cs"                        #>
 
-<#@ include file="$(LinqToDBT4SQLiteTemplatesPath)LinqToDB.SQLite.Tools.ttinclude" once="true" #>
-<#@ include file="$(LinqToDBT4SQLiteTemplatesPath)PluralizationService.ttinclude"  once="true" #>
+<#@ include file="c:\Users\Astmus\.nuget\packages\linq2db.sqlite.ms\3.2.3\content\LinqToDB.Templates\LinqToDB.SQLite.Tools.ttinclude" once="true" #>
+<#@ include file="c:\Users\Astmus\.nuget\packages\linq2db.sqlite.ms\3.2.3\content\LinqToDB.Templates\PluralizationService.ttinclude"  once="true" #>
 <#
 	
-	NamespaceName = "StorageProviders.NetCore.DBs.SQLite";
+	NamespaceName = "StorageProviders.SQLite";
 	GetSchemaOptions.GetTables             = true;
-
-	GetSchemaOptions.GetForeignKeys        = true;
-
+	GetSchemaOptions.GetForeignKeys        = false;
 	GetSchemaOptions.GetProcedures         = true;
-
 	GetSchemaOptions.GenerateChar1AsString = false;
 
 	GetSchemaOptions.PreferProviderSpecificTypes = false;
-
-
+	DataContextName = "SQLiteDbContext";
+	
 	GetSchemaOptions.IncludedSchemas = null;
 	GetSchemaOptions.ExcludedSchemas = null;
 	GetSchemaOptions.DefaultSchema = null;
 
 	GetSchemaOptions.IncludedCatalogs = null;
-	GetSchemaOptions.ExcludedCatalogs = null;
-	GetSchemaOptions.LoadProcedure  = _ => true;          
-	//GetSchemaOptions.GetAssociationMemberName = true;
-
-
+	GetSchemaOptions.ExcludedCatalogs = null;	        
+	GetSchemaOptions.GetAssociationMemberName = null;
+	//GetSchemaOptions.LoadProcedure = null;
+	GetSchemaOptions.LoadTable = (LoadTableData d) => d.Name.IndexOf("Fts") == -1;
+	
+	//GenerateSchemaAsType            = false;	
 	EnableNullableReferenceTypes   = true;
-
+	//DatabaseName                  = null;
 	EnforceModelNullability        = true;
-	GenerateDatabaseInfo          = true;
+	GenerateDatabaseInfo          = false;
 	GenerateConstructors          = true;  
-
-
-	Func<string, bool> IsValueType = IsValueTypeDefault;
-	IsValueType = typeName => {
+	IncludeDefaultSchema          = true;
+	GenerateViews                 = true;
+	PrefixTableMappingWithSchema  = false;
+	ServerName                    = null;
+	DefaultConfiguration          = null;
+	//SchemaDataContextTypeName       = "DataContext";
+	GenerateDataTypes                   = true;
+// (boolean) Enables or disables generation of ColumnAttribute.Length property.
+// If null, GenerateDataTypes value is used
+//GenerateLengthProperty              = true;
+// (boolean) Enables or disables generation of ColumnAttribute.Precision property.
+// If null, GenerateDataTypes value is used
+//GeneratePrecisionProperty           = false;
+// (boolean) Enables or disables generation of ColumnAttribute.Scale property.
+// If null, GenerateDataTypes value is used
+//GenerateScaleProperty               = false;
+// Enables generation of ColumnAttribute.DbType property.
+//GenerateDbTypes                     = false;
+// Enables generation of ObsoleteAttribute for column aliases
+//GenerateObsoleteAttributeForAliases = false;
 	
-    switch (typeName)
-    {
-      case "unresolved type name": return true; // or false for reference type
-        default: return IsValueTypeDefault(typeName);
-    }
-	};
+
+	//Func<string, bool> IsValueType = IsValueTypeDefault;
 	
-	GenerateAssociations = true;
-	GenerateBackReferences        = true;
+	//OneToManyAssociationType      = "IEnumerable<{0}>";
+	// Enables generation of associations in table mappings
+	//GenerateAssociations          = true;
+	// Enables generation of back side of association. Applies to both table mapping members and extension
+	// associations
+	//GenerateBackReferences        = true;
 	// Enables generation of associations as extension methods for related table mapping classes
-	GenerateAssociationExtensions = true;
-	DataContextName = "SQLiteProvider";
+	//GenerateAssociationExtensions = true;
+	
 	GenerateFindExtensions        = true;
+	//GenerateDatabaseName          = false;
+//	BaseEntityClass               = null;
+	//Func<ForeignKey, string> GetAssociationExtensionSingularName
+   // = GetAssociationExtensionSingularNameDefault;
+// Defines method to generate name for "many" side of association
+//Func<ForeignKey, string> GetAssociationExtensionPluralName
+  //  = GetAssociationExtensionPluralNameDefault;
 
 	// Enables pluralization of table mapping classes
 PluralizeClassNames                 = false;
 // Enables singularization of table mapping classes
-SingularizeClassNames               = true;
+SingularizeClassNames               = false;
 // Enables pluralization of ITable<> properties in data context
 PluralizeDataContextPropertyNames   = true;
 // Enables singularization of ITable<> properties in data context
 SingularizeDataContextPropertyNames = true;
+//GenerateDbTypes                     = false;
 
-	LoadSQLiteMetadata("Data Source=e:\\StorageDB\\MediaDb.v1.sqlite");
+	ReplaceSimilarTables          = true;
+// If enabled, procedure schema load error will be generated as #error directive and fail build
+// of output file. Useful for initial generation to highlight places, that require review or
+// additional hints for schema loader
+// Also check GetSchemaOptions.LoadProcedure option above
+//GenerateProcedureErrors       = true;
+// If enabled, methods for procedures that return table will be generated with List<T> return type and
+// IMPORTANT: this will lead to load of all procedure results into list and could lead
+// to performance issues on big results
+//GenerateProcedureResultAsList = false;
+// Enables stored procedure methods to accept generated context object or DataConnection type
+//GenerateProceduresOnTypedContext = true;
+// see NormalizeNamesWithoutUnderscores setting
+NormalizeNames                                 = true;
+// enables normalization of names without underscores.
+NormalizeNamesWithoutUnderscores               = true;
+// Defines logic to convert type/member name, derived from database object name, to C# identifier.
+//Func<string, bool, string> ToValidName         = ToValidNameDefault;
+// Makes C# identifier valid by removing unsupported symbols and calling ToValidName
+//Func<string, bool, string> ConvertToCompilable = ConvertToCompilableDefault;
+
+
+	LoadSQLiteMetadata("data source=e:\\StorageDB\\MediaDb.v1.sqlite");
 	
 	GenerateModel();
 				#>

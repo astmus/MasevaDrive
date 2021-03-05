@@ -6,7 +6,7 @@ using LinqToDB;
 using LinqToDB.SchemaProvider;
 using System.Collections.Generic;
 using System.Linq;
-using StorageProviders.NetCore.DBs.SQLite;
+using StorageProviders.SQLite;//NetCore.DBs.SQLite;
 using System.Data.SQLite;
 using LinqToDB.DataProvider.SQLite;
 
@@ -53,15 +53,15 @@ namespace StorageProviders
 			var p = o.UseSQLite(b.ToString());
 			//System.Data.SQLite.SQLiteFunction
 			// pass configured options to data connection constructor
-			List<Item> items;
-			using (var dc = new SQLiteProvider(p.Build()))
+			//List<Item> items = null;
+			/*using (var dc = new SQLiteProvider(p.Build()))
 			{
 
-				items = (from i in dc.Items where i.ItemFileName.StartsWith("P") select i).ToList();
+				//		items = (from i in dc.Items where i.ItemFileName.StartsWith("P") select i).ToList();
 			}
 
 			foreach (var i in items)
-				Console.WriteLine($"{i}");
+				Console.WriteLine($"{i}");*/
 			Console.ReadKey();
 
 		}
@@ -70,9 +70,9 @@ namespace StorageProviders
 
 	public class ConnectionStringSettings : IConnectionStringSettings
 	{
-		public string ConnectionString { get; set; }
-		public string Name { get; set; }
-		public string ProviderName { get; set; }
+		public string? ConnectionString { get; set; } = " ";
+		public string? Name { get; set; }
+		public string? ProviderName { get; set; }
 		public bool IsGlobal => false;
 	}
 
@@ -92,7 +92,7 @@ namespace StorageProviders
 				b.JournalMode = System.Data.SQLite.SQLiteJournalModeEnum.Wal;
 				b.ForeignKeys = true;
 				b.RecursiveTriggers = true;
-				b.SyncMode = System.Data.SQLite.SynchronizationModes.Off;
+				b.SyncMode = System.Data.SQLite.SynchronizationModes.Full;
 				b.ReadOnly = true;
 				b.Pooling = true;
 
@@ -107,9 +107,9 @@ namespace StorageProviders
 		}
 	}
 }
-namespace StorageProviders.NetCore.DBs.SQLite
+namespace StorageProviders.SQLite//.NetCore.DBs.SQLite
 {
-	public partial class SQLiteProvider : LinqToDB.Data.DataConnection
+	public partial class SQLiteDbContext : LinqToDB.Data.DataConnection
 	{
 		[SQLiteFunction(FuncType = FunctionType.Collation, Name = "NoCaseUnicode")]
 		public class NoCaseUnicode : SQLiteFunction

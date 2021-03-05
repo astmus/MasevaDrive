@@ -2,24 +2,26 @@
 
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-		<TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
+		<TargetFrameworks>net5.0;netstandard2.0</TargetFrameworks>
 		<UserSecretsId>b8d3c49e-a8f8-4d7e-9768-b55cf8dba7f3</UserSecretsId>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DefineConstants>DEBUG;TRACE</DefineConstants>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)|$(TargetFramework)'=='Debug|AnyCPU|net5.0'">
+		<DefineConstants>DEBUG;TRACE;NET5_0</DefineConstants>
+		<LangVersion>9.0</LangVersion>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
-		<DefineConstants>NET5_0</DefineConstants>
-	</PropertyGroup>
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-		<LangVersion>8.0</LangVersion>
-		<DefineConstants>NETSTANDARD2_0</DefineConstants>
-	</PropertyGroup>
-
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
 		<PackageReference Include="linq2db.SQLite" Version="3.2.3" />
 		<PackageReference Include="linq2db.SQLite.MS" Version="3.2.3" />
+		<PackageReference Include="SQLitePCLRaw.provider.winsqlite3" Version="2.0.4">
+			<Aliases>SystemLite</Aliases>
+			<GeneratePathProperty>true</GeneratePathProperty>
+			<IncludeAssets>all</IncludeAssets>
+		</PackageReference>
 		<None Update="SQLite\SQLiteContext.tt">
 			<Generator>TextTemplatingFileGenerator</Generator>
 			<LastGenOutput>SQLiteContext.generated.cs</LastGenOutput>
@@ -30,9 +32,15 @@
 			<DependentUpon>SQLiteContext.tt</DependentUpon>
 		</Compile>
 	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+		<LangVersion>8.0</LangVersion>
+		<DefineConstants>TRACE;DEBUG;NETSTANDARD2_0</DefineConstants>
+	</PropertyGroup>
+
+
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
 		<PackageReference Include="linq2db.SQLite" Version="3.2.3" />
-		<PackageReference Include="linq2db.SQLite.MS" Version="3.2.3" />
 		<None Update="SQLite\SQLiteNetFrameworkContext.tt">
 			<LastGenOutput>SQLiteNetFrameworkContext.generated.cs</LastGenOutput>
 			<Generator>TextTemplatingFileGenerator</Generator>
@@ -63,7 +71,7 @@
 		<Folder Include="Properties\" />
 	</ItemGroup>
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
 	</ItemGroup>
 </Project>

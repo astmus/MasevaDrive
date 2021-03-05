@@ -22,7 +22,9 @@ namespace StorageProviders.SQLite
 			_logger = _loggerFactory.CreateLogger<DataConnection>();
 		}
 
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		public void OnTrace(string? message, string? category, TraceLevel level)
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 		{
 			var logLevel = level switch
 			{
@@ -222,7 +224,7 @@ namespace StorageProviders.SQLite
 				},
 				lifetime));
 			serviceCollection.TryAdd(new ServiceDescriptor(typeof(LinqToDbConnectionOptions),
-				provider => provider.GetService(typeof(LinqToDbConnectionOptions<TContextImplementation>)), lifetime));
+				provider => provider.GetRequiredService(typeof(LinqToDbConnectionOptions<TContextImplementation>)), lifetime));
 			return serviceCollection;
 		}
 
