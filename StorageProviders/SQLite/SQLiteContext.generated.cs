@@ -18,6 +18,11 @@ using LinqToDB.Mapping;
 
 namespace StorageProviders.SQLite
 {
+	/// <summary>
+	/// Database       : StorageDB
+	/// Data Source    : StorageDB
+	/// Server Version : 3.24.0
+	/// </summary>
 	public partial class SQLiteStorage : LinqToDB.Data.DataConnection
 	{
 		public ITable<Album>                            Albums                            { get { return this.GetTable<Album>(); } }
@@ -54,9 +59,9 @@ namespace StorageProviders.SQLite
 		public ITable<ItemEngineExemplar>               ItemEngineExemplars               { get { return this.GetTable<ItemEngineExemplar>(); } }
 		public ITable<ItemEngineStatus>                 ItemEngineStatus                  { get { return this.GetTable<ItemEngineStatus>(); } }
 		public ITable<ItemInferredLocationExperimental> ItemInferredLocationExperimentals { get { return this.GetTable<ItemInferredLocationExperimental>(); } }
-		public ITable<ItemTags>                         ItemTags                          { get { return this.GetTable<ItemTags>(); } }
+		public ITable<ItemTag>                          ItemTags                          { get { return this.GetTable<ItemTag>(); } }
 		public ITable<ItemVideoQuality>                 ItemVideoQualities                { get { return this.GetTable<ItemVideoQuality>(); } }
-		public ITable<ItemVideoTags>                    ItemVideoTags                     { get { return this.GetTable<ItemVideoTags>(); } }
+		public ITable<ItemVideoTag>                     ItemVideoTags                     { get { return this.GetTable<ItemVideoTag>(); } }
 		public ITable<LiveTile>                         LiveTiles                         { get { return this.GetTable<LiveTile>(); } }
 		public ITable<Location>                         Locations                         { get { return this.GetTable<Location>(); } }
 		public ITable<LocationCountry>                  LocationCountries                 { get { return this.GetTable<LocationCountry>(); } }
@@ -120,37 +125,37 @@ namespace StorageProviders.SQLite
 	[Table("Album")]
 	public partial class Album
 	{
-		[Column("Album_Id",                          DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    AlbumId                          { get; set; } // integer
-		[Column("Album_Name",                        DataType=LinqToDB.DataType.Text,   Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? AlbumName                        { get; set; } // text(max)
-		[Column("Album_Type",                        DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),                        NotNull] public long    AlbumType                        { get; set; } // integer
-		[Column("Album_State",                       DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),                        NotNull] public long    AlbumState                       { get; set; } // integer
-		[Column("Album_QueryType",                   DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),                        NotNull] public long    AlbumQueryType                   { get; set; } // integer
-		[Column("Album_QueryBoundsType",             DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),                        NotNull] public long    AlbumQueryBoundsType             { get; set; } // integer
-		[Column("Album_Query",                       DataType=LinqToDB.DataType.Text,   Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? AlbumQuery                       { get; set; } // text(max)
-		[Column("Album_DateCreated",                 DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),                        NotNull] public long    AlbumDateCreated                 { get; set; } // integer
-		[Column("Album_DateUpdated",                 DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumDateUpdated                 { get; set; } // integer
-		[Column("Album_DateUserModified",            DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumDateUserModified            { get; set; } // integer
-		[Column("Album_DateViewed",                  DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumDateViewed                  { get; set; } // integer
-		[Column("Album_DateShared",                  DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumDateShared                  { get; set; } // integer
-		[Column("Album_Count",                       DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),                        NotNull] public long    AlbumCount                       { get; set; } // integer
-		[Column("Album_CoverItemId",                 DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumCoverItemId                 { get; set; } // integer
-		[Column("Album_CoverBoundsLeft",             DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),              Nullable         ] public double? AlbumCoverBoundsLeft             { get; set; } // real
-		[Column("Album_CoverBoundsTop",              DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),              Nullable         ] public double? AlbumCoverBoundsTop              { get; set; } // real
-		[Column("Album_CoverBoundsRight",            DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),              Nullable         ] public double? AlbumCoverBoundsRight            { get; set; } // real
-		[Column("Album_CoverBoundsBottom",           DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),              Nullable         ] public double? AlbumCoverBoundsBottom           { get; set; } // real
-		[Column("Album_Visibility",                  DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),                        NotNull] public long    AlbumVisibility                  { get; set; } // integer
-		[Column("Album_EventStartDate",              DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumEventStartDate              { get; set; } // integer
-		[Column("Album_EventEndDate",                DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumEventEndDate                { get; set; } // integer
-		[Column("Album_SummaryStartDate",            DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumSummaryStartDate            { get; set; } // integer
-		[Column("Album_SummaryEndDate",              DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumSummaryEndDate              { get; set; } // integer
-		[Column("Album_Source",                      DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumSource                      { get; set; } // integer
-		[Column("Album_SourceId",                    DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumSourceId                    { get; set; } // integer
-		[Column("Album_PublishState",                DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumPublishState                { get; set; } // integer
-		[Column("Album_PendingTelemetryUploadState", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumPendingTelemetryUploadState { get; set; } // integer
-		[Column("Album_SentTelemetryUploadState",    DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumSentTelemetryUploadState    { get; set; } // integer
-		[Column("Album_ETag",                        DataType=LinqToDB.DataType.Text,   Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? AlbumETag                        { get; set; } // text(max)
-		[Column("Album_CreationType",                DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumCreationType                { get; set; } // integer
-		[Column("Album_Order",                       DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumOrder                       { get; set; } // integer
+		[Column("Album_Id"),                          PrimaryKey,  NotNull] public long    AlbumId                          { get; set; } // integer
+		[Column("Album_Name"),                           Nullable         ] public string? AlbumName                        { get; set; } // text(max)
+		[Column("Album_Type"),                                     NotNull] public long    AlbumType                        { get; set; } // integer
+		[Column("Album_State"),                                    NotNull] public long    AlbumState                       { get; set; } // integer
+		[Column("Album_QueryType"),                                NotNull] public long    AlbumQueryType                   { get; set; } // integer
+		[Column("Album_QueryBoundsType"),                          NotNull] public long    AlbumQueryBoundsType             { get; set; } // integer
+		[Column("Album_Query"),                          Nullable         ] public string? AlbumQuery                       { get; set; } // text(max)
+		[Column("Album_DateCreated"),                              NotNull] public long    AlbumDateCreated                 { get; set; } // integer
+		[Column("Album_DateUpdated"),                    Nullable         ] public long?   AlbumDateUpdated                 { get; set; } // integer
+		[Column("Album_DateUserModified"),               Nullable         ] public long?   AlbumDateUserModified            { get; set; } // integer
+		[Column("Album_DateViewed"),                     Nullable         ] public long?   AlbumDateViewed                  { get; set; } // integer
+		[Column("Album_DateShared"),                     Nullable         ] public long?   AlbumDateShared                  { get; set; } // integer
+		[Column("Album_Count"),                                    NotNull] public long    AlbumCount                       { get; set; } // integer
+		[Column("Album_CoverItemId"),                    Nullable         ] public long?   AlbumCoverItemId                 { get; set; } // integer
+		[Column("Album_CoverBoundsLeft"),                Nullable         ] public double? AlbumCoverBoundsLeft             { get; set; } // real
+		[Column("Album_CoverBoundsTop"),                 Nullable         ] public double? AlbumCoverBoundsTop              { get; set; } // real
+		[Column("Album_CoverBoundsRight"),               Nullable         ] public double? AlbumCoverBoundsRight            { get; set; } // real
+		[Column("Album_CoverBoundsBottom"),              Nullable         ] public double? AlbumCoverBoundsBottom           { get; set; } // real
+		[Column("Album_Visibility"),                               NotNull] public long    AlbumVisibility                  { get; set; } // integer
+		[Column("Album_EventStartDate"),                 Nullable         ] public long?   AlbumEventStartDate              { get; set; } // integer
+		[Column("Album_EventEndDate"),                   Nullable         ] public long?   AlbumEventEndDate                { get; set; } // integer
+		[Column("Album_SummaryStartDate"),               Nullable         ] public long?   AlbumSummaryStartDate            { get; set; } // integer
+		[Column("Album_SummaryEndDate"),                 Nullable         ] public long?   AlbumSummaryEndDate              { get; set; } // integer
+		[Column("Album_Source"),                         Nullable         ] public long?   AlbumSource                      { get; set; } // integer
+		[Column("Album_SourceId"),                       Nullable         ] public long?   AlbumSourceId                    { get; set; } // integer
+		[Column("Album_PublishState"),                   Nullable         ] public long?   AlbumPublishState                { get; set; } // integer
+		[Column("Album_PendingTelemetryUploadState"),    Nullable         ] public long?   AlbumPendingTelemetryUploadState { get; set; } // integer
+		[Column("Album_SentTelemetryUploadState"),       Nullable         ] public long?   AlbumSentTelemetryUploadState    { get; set; } // integer
+		[Column("Album_ETag"),                           Nullable         ] public string? AlbumETag                        { get; set; } // text(max)
+		[Column("Album_CreationType"),                   Nullable         ] public long?   AlbumCreationType                { get; set; } // integer
+		[Column("Album_Order"),                          Nullable         ] public long?   AlbumOrder                       { get; set; } // integer
 
 		#region Associations
 
@@ -220,10 +225,10 @@ namespace StorageProviders.SQLite
 	[Table("AlbumItemLink")]
 	public partial class AlbumItemLink
 	{
-		[Column("AlbumItemLink_AlbumId",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull    ] public long    AlbumItemLinkAlbumId           { get; set; } // integer
-		[Column("AlbumItemLink_ItemId",            DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull    ] public long    AlbumItemLinkItemId            { get; set; } // integer
-		[Column("AlbumItemLink_Order",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AlbumItemLinkOrder             { get; set; } // integer
-		[Column("AlbumItemLink_ItemPhotosCloudId", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? AlbumItemLinkItemPhotosCloudId { get; set; } // text(max)
+		[Column("AlbumItemLink_AlbumId"),           NotNull    ] public long    AlbumItemLinkAlbumId           { get; set; } // integer
+		[Column("AlbumItemLink_ItemId"),            NotNull    ] public long    AlbumItemLinkItemId            { get; set; } // integer
+		[Column("AlbumItemLink_Order"),                Nullable] public long?   AlbumItemLinkOrder             { get; set; } // integer
+		[Column("AlbumItemLink_ItemPhotosCloudId"),    Nullable] public string? AlbumItemLinkItemPhotosCloudId { get; set; } // text(max)
 
 		#region Associations
 
@@ -245,47 +250,47 @@ namespace StorageProviders.SQLite
 	[Table("AppGlobalState")]
 	public partial class AppGlobalState
 	{
-		[Column("AppGlobalState_DeferredUpgradeVersion",                 DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDeferredUpgradeVersion                 { get; set; } // integer
-		[Column("AppGlobalState_AnalysisVersion",                        DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? AppGlobalStateAnalysisVersion                        { get; set; } // text(max)
-		[Column("AppGlobalState_DateLastLocalReconciled",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastLocalReconciled                { get; set; } // integer
-		[Column("AppGlobalState_CountLastReconciliationQueryResults",    DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateCountLastReconciliationQueryResults    { get; set; } // integer
-		[Column("AppGlobalState_DateLastAlbumsMaintenance",              DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastAlbumsMaintenance              { get; set; } // integer
-		[Column("AppGlobalState_DateLastTagAlbumsMaintenance",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastTagAlbumsMaintenance           { get; set; } // integer
-		[Column("AppGlobalState_DateLastPetAlbumsMaintenance",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastPetAlbumsMaintenance           { get; set; } // integer
-		[Column("AppGlobalState_DateLastWeddingAlbumsMaintenance",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastWeddingAlbumsMaintenance       { get; set; } // integer
-		[Column("AppGlobalState_LastDateUsedInWeddingAlbumsMaintenance", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateLastDateUsedInWeddingAlbumsMaintenance { get; set; } // integer
-		[Column("AppGlobalState_DateLastSeasonalAlbumsMaintenance",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastSeasonalAlbumsMaintenance      { get; set; } // integer
-		[Column("AppGlobalState_DateLastSmileAlbumsMaintenance",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastSmileAlbumsMaintenance         { get; set; } // integer
-		[Column("AppGlobalState_DateLastCountryTripAlbumsMaintenance",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastCountryTripAlbumsMaintenance   { get; set; } // integer
-		[Column("AppGlobalState_DateLastItemDeleted",                    DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastItemDeleted                    { get; set; } // integer
-		[Column("AppGlobalState_DateLastCacheCleaned",                   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastCacheCleaned                   { get; set; } // integer
-		[Column("AppGlobalState_OneDriveDeltaSyncToken",                 DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? AppGlobalStateOneDriveDeltaSyncToken                 { get; set; } // text(max)
-		[Column("AppGlobalState_OneDriveFullSyncCompleted",              DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateOneDriveFullSyncCompleted              { get; set; } // integer
-		[Column("AppGlobalState_OneDriveAlbumDeltaSyncToken",            DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? AppGlobalStateOneDriveAlbumDeltaSyncToken            { get; set; } // text(max)
-		[Column("AppGlobalState_OneDriveKnownFoldersNeedUpgrade",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateOneDriveKnownFoldersNeedUpgrade        { get; set; } // integer
-		[Column("AppGlobalState_OneDriveItemsResyncing",                 DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateOneDriveItemsResyncing                 { get; set; } // integer
-		[Column("AppGlobalState_OneDriveAlbumsResyncing",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateOneDriveAlbumsResyncing                { get; set; } // integer
-		[Column("AppGlobalState_TruncateWALFilePending",                 DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateTruncateWALFilePending                 { get; set; } // integer
-		[Column("AppGlobalState_RichMediaGrovelVersion",                 DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateRichMediaGrovelVersion                 { get; set; } // integer
-		[Column("AppGlobalState_CurrentAutoEnhanceEnabledState",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateCurrentAutoEnhanceEnabledState         { get; set; } // integer
-		[Column("AppGlobalState_RunDedupWork",                           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull    ] public long    AppGlobalStateRunDedupWork                           { get; set; } // integer
-		[Column("AppGlobalState_OneDriveIdentifyPicturesScope",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateOneDriveIdentifyPicturesScope          { get; set; } // integer
-		[Column("AppGlobalState_CachedLocalCollectionSize",              DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateCachedLocalCollectionSize              { get; set; } // integer
-		[Column("AppGlobalState_NewAlbumsBadgeCount",                    DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateNewAlbumsBadgeCount                    { get; set; } // integer
-		[Column("AppGlobalState_ImportBadgeDisplayState",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateImportBadgeDisplayState                { get; set; } // integer
-		[Column("AppGlobalState_DateLastLocationLookupReady",            DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastLocationLookupReady            { get; set; } // integer
-		[Column("AppGlobalState_DateLastDbAnalyze",                      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastDbAnalyze                      { get; set; } // integer
-		[Column("AppGlobalState_DateLastDbVacuum",                       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateDateLastDbVacuum                       { get; set; } // integer
-		[Column("AppGlobalState_XboxLiveItemsResyncing",                 DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateXboxLiveItemsResyncing                 { get; set; } // integer
-		[Column("AppGlobalState_FaceRecognitionConsentDate",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateFaceRecognitionConsentDate             { get; set; } // integer
-		[Column("AppGlobalState_ExistingItemsSyncStarted",               DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AppGlobalStateExistingItemsSyncStarted               { get; set; } // integer
+		[Column("AppGlobalState_DeferredUpgradeVersion"),                    Nullable] public long?   AppGlobalStateDeferredUpgradeVersion                 { get; set; } // integer
+		[Column("AppGlobalState_AnalysisVersion"),                           Nullable] public string? AppGlobalStateAnalysisVersion                        { get; set; } // text(max)
+		[Column("AppGlobalState_DateLastLocalReconciled"),                   Nullable] public long?   AppGlobalStateDateLastLocalReconciled                { get; set; } // integer
+		[Column("AppGlobalState_CountLastReconciliationQueryResults"),       Nullable] public long?   AppGlobalStateCountLastReconciliationQueryResults    { get; set; } // integer
+		[Column("AppGlobalState_DateLastAlbumsMaintenance"),                 Nullable] public long?   AppGlobalStateDateLastAlbumsMaintenance              { get; set; } // integer
+		[Column("AppGlobalState_DateLastTagAlbumsMaintenance"),              Nullable] public long?   AppGlobalStateDateLastTagAlbumsMaintenance           { get; set; } // integer
+		[Column("AppGlobalState_DateLastPetAlbumsMaintenance"),              Nullable] public long?   AppGlobalStateDateLastPetAlbumsMaintenance           { get; set; } // integer
+		[Column("AppGlobalState_DateLastWeddingAlbumsMaintenance"),          Nullable] public long?   AppGlobalStateDateLastWeddingAlbumsMaintenance       { get; set; } // integer
+		[Column("AppGlobalState_LastDateUsedInWeddingAlbumsMaintenance"),    Nullable] public long?   AppGlobalStateLastDateUsedInWeddingAlbumsMaintenance { get; set; } // integer
+		[Column("AppGlobalState_DateLastSeasonalAlbumsMaintenance"),         Nullable] public long?   AppGlobalStateDateLastSeasonalAlbumsMaintenance      { get; set; } // integer
+		[Column("AppGlobalState_DateLastSmileAlbumsMaintenance"),            Nullable] public long?   AppGlobalStateDateLastSmileAlbumsMaintenance         { get; set; } // integer
+		[Column("AppGlobalState_DateLastCountryTripAlbumsMaintenance"),      Nullable] public long?   AppGlobalStateDateLastCountryTripAlbumsMaintenance   { get; set; } // integer
+		[Column("AppGlobalState_DateLastItemDeleted"),                       Nullable] public long?   AppGlobalStateDateLastItemDeleted                    { get; set; } // integer
+		[Column("AppGlobalState_DateLastCacheCleaned"),                      Nullable] public long?   AppGlobalStateDateLastCacheCleaned                   { get; set; } // integer
+		[Column("AppGlobalState_OneDriveDeltaSyncToken"),                    Nullable] public string? AppGlobalStateOneDriveDeltaSyncToken                 { get; set; } // text(max)
+		[Column("AppGlobalState_OneDriveFullSyncCompleted"),                 Nullable] public long?   AppGlobalStateOneDriveFullSyncCompleted              { get; set; } // integer
+		[Column("AppGlobalState_OneDriveAlbumDeltaSyncToken"),               Nullable] public string? AppGlobalStateOneDriveAlbumDeltaSyncToken            { get; set; } // text(max)
+		[Column("AppGlobalState_OneDriveKnownFoldersNeedUpgrade"),           Nullable] public long?   AppGlobalStateOneDriveKnownFoldersNeedUpgrade        { get; set; } // integer
+		[Column("AppGlobalState_OneDriveItemsResyncing"),                    Nullable] public long?   AppGlobalStateOneDriveItemsResyncing                 { get; set; } // integer
+		[Column("AppGlobalState_OneDriveAlbumsResyncing"),                   Nullable] public long?   AppGlobalStateOneDriveAlbumsResyncing                { get; set; } // integer
+		[Column("AppGlobalState_TruncateWALFilePending"),                    Nullable] public long?   AppGlobalStateTruncateWALFilePending                 { get; set; } // integer
+		[Column("AppGlobalState_RichMediaGrovelVersion"),                    Nullable] public long?   AppGlobalStateRichMediaGrovelVersion                 { get; set; } // integer
+		[Column("AppGlobalState_CurrentAutoEnhanceEnabledState"),            Nullable] public long?   AppGlobalStateCurrentAutoEnhanceEnabledState         { get; set; } // integer
+		[Column("AppGlobalState_RunDedupWork"),                           NotNull    ] public long    AppGlobalStateRunDedupWork                           { get; set; } // integer
+		[Column("AppGlobalState_OneDriveIdentifyPicturesScope"),             Nullable] public long?   AppGlobalStateOneDriveIdentifyPicturesScope          { get; set; } // integer
+		[Column("AppGlobalState_CachedLocalCollectionSize"),                 Nullable] public long?   AppGlobalStateCachedLocalCollectionSize              { get; set; } // integer
+		[Column("AppGlobalState_NewAlbumsBadgeCount"),                       Nullable] public long?   AppGlobalStateNewAlbumsBadgeCount                    { get; set; } // integer
+		[Column("AppGlobalState_ImportBadgeDisplayState"),                   Nullable] public long?   AppGlobalStateImportBadgeDisplayState                { get; set; } // integer
+		[Column("AppGlobalState_DateLastLocationLookupReady"),               Nullable] public long?   AppGlobalStateDateLastLocationLookupReady            { get; set; } // integer
+		[Column("AppGlobalState_DateLastDbAnalyze"),                         Nullable] public long?   AppGlobalStateDateLastDbAnalyze                      { get; set; } // integer
+		[Column("AppGlobalState_DateLastDbVacuum"),                          Nullable] public long?   AppGlobalStateDateLastDbVacuum                       { get; set; } // integer
+		[Column("AppGlobalState_XboxLiveItemsResyncing"),                    Nullable] public long?   AppGlobalStateXboxLiveItemsResyncing                 { get; set; } // integer
+		[Column("AppGlobalState_FaceRecognitionConsentDate"),                Nullable] public long?   AppGlobalStateFaceRecognitionConsentDate             { get; set; } // integer
+		[Column("AppGlobalState_ExistingItemsSyncStarted"),                  Nullable] public long?   AppGlobalStateExistingItemsSyncStarted               { get; set; } // integer
 	}
 
 	[Table("ApplicationName")]
 	public partial class ApplicationName
 	{
-		[Column("ApplicationName_Id",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ApplicationNameId   { get; set; } // integer
-		[Column("ApplicationName_Text", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ApplicationNameText { get; set; } // text(max)
+		[Column("ApplicationName_Id"),   PrimaryKey,  NotNull] public long    ApplicationNameId   { get; set; } // integer
+		[Column("ApplicationName_Text"),    Nullable         ] public string? ApplicationNameText { get; set; } // text(max)
 
 		#region Associations
 
@@ -301,43 +306,43 @@ namespace StorageProviders.SQLite
 	[Table("AppTelemetryState")]
 	public partial class AppTelemetryState
 	{
-		[Column("AppTelemetryState_EventName",     DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), Nullable] public string? AppTelemetryStateEventName     { get; set; } // text(max)
-		[Column("AppTelemetryState_EventFireTime", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           Nullable] public long?   AppTelemetryStateEventFireTime { get; set; } // integer
+		[Column("AppTelemetryState_EventName"),     Nullable] public string? AppTelemetryStateEventName     { get; set; } // text(max)
+		[Column("AppTelemetryState_EventFireTime"), Nullable] public long?   AppTelemetryStateEventFireTime { get; set; } // integer
 	}
 
 	[Table("Audio")]
 	public partial class Audio
 	{
-		[Column("Audio_Id",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),           PrimaryKey, NotNull] public long   AudioId                { get; set; } // integer
-		[Column("Audio_Url",               DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),             NotNull] public string AudioUrl               { get; set; } = null!; // text(max)
-		[Column("Audio_SampleRate",        DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                       NotNull] public long   AudioSampleRate        { get; set; } // integer
-		[Column("Audio_ChannelCount",      DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                       NotNull] public long   AudioChannelCount      { get; set; } // integer
-		[Column("Audio_IntegratedLUFS",    DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),                       NotNull] public double AudioIntegratedLUFS    { get; set; } // real
-		[Column("Audio_WindowInfos",       DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),             NotNull] public byte[] AudioWindowInfos       { get; set; } = null!; // blob
-		[Column("Audio_DurationPerWindow", DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                       NotNull] public long   AudioDurationPerWindow { get; set; } // integer
+		[Column("Audio_Id"),                PrimaryKey, NotNull] public long   AudioId                { get; set; } // integer
+		[Column("Audio_Url"),                           NotNull] public string AudioUrl               { get; set; } = null!; // text(max)
+		[Column("Audio_SampleRate"),                    NotNull] public long   AudioSampleRate        { get; set; } // integer
+		[Column("Audio_ChannelCount"),                  NotNull] public long   AudioChannelCount      { get; set; } // integer
+		[Column("Audio_IntegratedLUFS"),                NotNull] public double AudioIntegratedLUFS    { get; set; } // real
+		[Column("Audio_WindowInfos"),                   NotNull] public byte[] AudioWindowInfos       { get; set; } = null!; // blob
+		[Column("Audio_DurationPerWindow"),             NotNull] public long   AudioDurationPerWindow { get; set; } // integer
 	}
 
 	[Table("BackgroundTaskTelemetry")]
 	public partial class BackgroundTaskTelemetry
 	{
-		[Column("BackgroundTaskTelemetry_Id",              DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull    ] public long   BackgroundTaskTelemetryId              { get; set; } // integer
-		[Column("BackgroundTaskTelemetry_State",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull    ] public long   BackgroundTaskTelemetryState           { get; set; } // integer
-		[Column("BackgroundTaskTelemetry_Reason",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull    ] public long   BackgroundTaskTelemetryReason          { get; set; } // integer
-		[Column("BackgroundTaskTelemetry_Count",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull    ] public long   BackgroundTaskTelemetryCount           { get; set; } // integer
-		[Column("BackgroundTaskTelemetry_TotalTime",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?  BackgroundTaskTelemetryTotalTime       { get; set; } // integer
-		[Column("BackgroundTaskTelemetry_MinTime",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?  BackgroundTaskTelemetryMinTime         { get; set; } // integer
-		[Column("BackgroundTaskTelemetry_MaxTime",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?  BackgroundTaskTelemetryMaxTime         { get; set; } // integer
-		[Column("BackgroundTaskTelemetry_CorrelationGuid", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), NotNull    ] public string BackgroundTaskTelemetryCorrelationGuid { get; set; } = null!; // text(max)
+		[Column("BackgroundTaskTelemetry_Id"),              NotNull    ] public long   BackgroundTaskTelemetryId              { get; set; } // integer
+		[Column("BackgroundTaskTelemetry_State"),           NotNull    ] public long   BackgroundTaskTelemetryState           { get; set; } // integer
+		[Column("BackgroundTaskTelemetry_Reason"),          NotNull    ] public long   BackgroundTaskTelemetryReason          { get; set; } // integer
+		[Column("BackgroundTaskTelemetry_Count"),           NotNull    ] public long   BackgroundTaskTelemetryCount           { get; set; } // integer
+		[Column("BackgroundTaskTelemetry_TotalTime"),          Nullable] public long?  BackgroundTaskTelemetryTotalTime       { get; set; } // integer
+		[Column("BackgroundTaskTelemetry_MinTime"),            Nullable] public long?  BackgroundTaskTelemetryMinTime         { get; set; } // integer
+		[Column("BackgroundTaskTelemetry_MaxTime"),            Nullable] public long?  BackgroundTaskTelemetryMaxTime         { get; set; } // integer
+		[Column("BackgroundTaskTelemetry_CorrelationGuid"), NotNull    ] public string BackgroundTaskTelemetryCorrelationGuid { get; set; } = null!; // text(max)
 	}
 
 	[Table("Cache")]
 	public partial class Cache
 	{
-		[Column("Cache_Id",                  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    CacheId                  { get; set; } // integer
-		[Column("Cache_ItemId",              DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   CacheItemId              { get; set; } // integer
-		[Column("Cache_Filename",            DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CacheFilename            { get; set; } // text(max)
-		[Column("Cache_DateAccessed",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   CacheDateAccessed        { get; set; } // integer
-		[Column("Cache_ModificationVersion", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   CacheModificationVersion { get; set; } // integer
+		[Column("Cache_Id"),                  PrimaryKey,  NotNull] public long    CacheId                  { get; set; } // integer
+		[Column("Cache_ItemId"),                 Nullable         ] public long?   CacheItemId              { get; set; } // integer
+		[Column("Cache_Filename"),               Nullable         ] public string? CacheFilename            { get; set; } // text(max)
+		[Column("Cache_DateAccessed"),           Nullable         ] public long?   CacheDateAccessed        { get; set; } // integer
+		[Column("Cache_ModificationVersion"),    Nullable         ] public long?   CacheModificationVersion { get; set; } // integer
 
 		#region Associations
 
@@ -353,8 +358,8 @@ namespace StorageProviders.SQLite
 	[Table("CameraManufacturer")]
 	public partial class CameraManufacturer
 	{
-		[Column("CameraManufacturer_Id",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    CameraManufacturerId   { get; set; } // integer
-		[Column("CameraManufacturer_Text", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CameraManufacturerText { get; set; } // text(max)
+		[Column("CameraManufacturer_Id"),   PrimaryKey,  NotNull] public long    CameraManufacturerId   { get; set; } // integer
+		[Column("CameraManufacturer_Text"),    Nullable         ] public string? CameraManufacturerText { get; set; } // text(max)
 
 		#region Associations
 
@@ -370,8 +375,8 @@ namespace StorageProviders.SQLite
 	[Table("CameraModel")]
 	public partial class CameraModel
 	{
-		[Column("CameraModel_Id",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    CameraModelId   { get; set; } // integer
-		[Column("CameraModel_Text", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CameraModelText { get; set; } // text(max)
+		[Column("CameraModel_Id"),   PrimaryKey,  NotNull] public long    CameraModelId   { get; set; } // integer
+		[Column("CameraModel_Text"),    Nullable         ] public string? CameraModelText { get; set; } // text(max)
 
 		#region Associations
 
@@ -387,10 +392,10 @@ namespace StorageProviders.SQLite
 	[Table("CloudAlbum")]
 	public partial class CloudAlbum
 	{
-		[Column("CloudAlbum_Id",                     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    CloudAlbumId                     { get; set; } // integer
-		[Column("CloudAlbum_AlbumId",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    CloudAlbumAlbumId                { get; set; } // integer
-		[Column("CloudAlbum_CloudId",                DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CloudAlbumCloudId                { get; set; } // text(max)
-		[Column("CloudAlbum_CloudAlbumDefinitionId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   CloudAlbumCloudAlbumDefinitionId { get; set; } // integer
+		[Column("CloudAlbum_Id"),                     PrimaryKey,  NotNull] public long    CloudAlbumId                     { get; set; } // integer
+		[Column("CloudAlbum_AlbumId"),                             NotNull] public long    CloudAlbumAlbumId                { get; set; } // integer
+		[Column("CloudAlbum_CloudId"),                   Nullable         ] public string? CloudAlbumCloudId                { get; set; } // text(max)
+		[Column("CloudAlbum_CloudAlbumDefinitionId"),    Nullable         ] public long?   CloudAlbumCloudAlbumDefinitionId { get; set; } // integer
 
 		#region Associations
 
@@ -412,12 +417,12 @@ namespace StorageProviders.SQLite
 	[Table("CloudAlbumDefinition")]
 	public partial class CloudAlbumDefinition
 	{
-		[Column("CloudAlbumDefinition_Id",                        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    CloudAlbumDefinitionId                        { get; set; } // integer
-		[Column("CloudAlbumDefinition_CloudId",                   DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CloudAlbumDefinitionCloudId                   { get; set; } // text(max)
-		[Column("CloudAlbumDefinition_CloudQuery",                DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CloudAlbumDefinitionCloudQuery                { get; set; } // text(max)
-		[Column("CloudAlbumDefinition_CloudFriendlyName",         DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CloudAlbumDefinitionCloudFriendlyName         { get; set; } // text(max)
-		[Column("CloudAlbumDefinition_DateLastAlbumsMaintenance", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   CloudAlbumDefinitionDateLastAlbumsMaintenance { get; set; } // integer
-		[Column("CloudAlbumDefinition_QueryType",                 DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   CloudAlbumDefinitionQueryType                 { get; set; } // integer
+		[Column("CloudAlbumDefinition_Id"),                        PrimaryKey,  NotNull] public long    CloudAlbumDefinitionId                        { get; set; } // integer
+		[Column("CloudAlbumDefinition_CloudId"),                      Nullable         ] public string? CloudAlbumDefinitionCloudId                   { get; set; } // text(max)
+		[Column("CloudAlbumDefinition_CloudQuery"),                   Nullable         ] public string? CloudAlbumDefinitionCloudQuery                { get; set; } // text(max)
+		[Column("CloudAlbumDefinition_CloudFriendlyName"),            Nullable         ] public string? CloudAlbumDefinitionCloudFriendlyName         { get; set; } // text(max)
+		[Column("CloudAlbumDefinition_DateLastAlbumsMaintenance"),    Nullable         ] public long?   CloudAlbumDefinitionDateLastAlbumsMaintenance { get; set; } // integer
+		[Column("CloudAlbumDefinition_QueryType"),                    Nullable         ] public long?   CloudAlbumDefinitionQueryType                 { get; set; } // integer
 
 		#region Associations
 
@@ -433,25 +438,25 @@ namespace StorageProviders.SQLite
 	[Table("ConceptTagSuppressedTagList")]
 	public partial class ConceptTagSuppressedTagList
 	{
-		[Column("ConceptTagSuppressedTagList_TagResourceId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), Nullable] public long? ConceptTagSuppressedTagListTagResourceId { get; set; } // integer
+		[Column("ConceptTagSuppressedTagList_TagResourceId"), Nullable] public long? ConceptTagSuppressedTagListTagResourceId { get; set; } // integer
 	}
 
 	[Table("DbRecoveryTaskState")]
 	public partial class DbRecoveryTaskState
 	{
-		[Column("DbRecoveryTaskState_Id",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    DbRecoveryTaskStateId           { get; set; } // integer
-		[Column("DbRecoveryTaskState_TaskName",     DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),              NotNull] public string  DbRecoveryTaskStateTaskName     { get; set; } = null!; // text(max)
-		[Column("DbRecoveryTaskState_LastRun",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    DbRecoveryTaskStateLastRun      { get; set; } // integer
-		[Column("DbRecoveryTaskState_StatePayload", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? DbRecoveryTaskStateStatePayload { get; set; } // text(max)
+		[Column("DbRecoveryTaskState_Id"),           PrimaryKey,  NotNull] public long    DbRecoveryTaskStateId           { get; set; } // integer
+		[Column("DbRecoveryTaskState_TaskName"),                  NotNull] public string  DbRecoveryTaskStateTaskName     { get; set; } = null!; // text(max)
+		[Column("DbRecoveryTaskState_LastRun"),                   NotNull] public long    DbRecoveryTaskStateLastRun      { get; set; } // integer
+		[Column("DbRecoveryTaskState_StatePayload"),    Nullable         ] public string? DbRecoveryTaskStateStatePayload { get; set; } // text(max)
 	}
 
 	[Table("Event")]
 	public partial class Event
 	{
-		[Column("Event_Id",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long  EventId        { get; set; } // integer
-		[Column("Event_StartDate", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? EventStartDate { get; set; } // integer
-		[Column("Event_EndDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? EventEndDate   { get; set; } // integer
-		[Column("Event_Size",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? EventSize      { get; set; } // integer
+		[Column("Event_Id"),        PrimaryKey,  NotNull] public long  EventId        { get; set; } // integer
+		[Column("Event_StartDate"),    Nullable         ] public long? EventStartDate { get; set; } // integer
+		[Column("Event_EndDate"),      Nullable         ] public long? EventEndDate   { get; set; } // integer
+		[Column("Event_Size"),         Nullable         ] public long? EventSize      { get; set; } // integer
 
 		#region Associations
 
@@ -467,10 +472,10 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedAlbum")]
 	public partial class ExcludedAlbum
 	{
-		[Column("ExcludedAlbum_Id",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long ExcludedAlbumId             { get; set; } // integer
-		[Column("ExcludedAlbum_AlbumId",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedAlbumAlbumId        { get; set; } // integer
-		[Column("ExcludedAlbum_ExcludedForUse", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedAlbumExcludedForUse { get; set; } // integer
-		[Column("ExcludedAlbum_ExcludedDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedAlbumExcludedDate   { get; set; } // integer
+		[Column("ExcludedAlbum_Id"),             PrimaryKey, NotNull] public long ExcludedAlbumId             { get; set; } // integer
+		[Column("ExcludedAlbum_AlbumId"),                    NotNull] public long ExcludedAlbumAlbumId        { get; set; } // integer
+		[Column("ExcludedAlbum_ExcludedForUse"),             NotNull] public long ExcludedAlbumExcludedForUse { get; set; } // integer
+		[Column("ExcludedAlbum_ExcludedDate"),               NotNull] public long ExcludedAlbumExcludedDate   { get; set; } // integer
 
 		#region Associations
 
@@ -486,11 +491,11 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedFace")]
 	public partial class ExcludedFace
 	{
-		[Column("ExcludedFace_Id",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long ExcludedFaceId             { get; set; } // integer
-		[Column("ExcludedFace_FaceClusterId",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedFaceFaceClusterId  { get; set; } // integer
-		[Column("ExcludedFace_FaceId",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedFaceFaceId         { get; set; } // integer
-		[Column("ExcludedFace_ExcludedForUse", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedFaceExcludedForUse { get; set; } // integer
-		[Column("ExcludedFace_ExcludedDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedFaceExcludedDate   { get; set; } // integer
+		[Column("ExcludedFace_Id"),             PrimaryKey, NotNull] public long ExcludedFaceId             { get; set; } // integer
+		[Column("ExcludedFace_FaceClusterId"),              NotNull] public long ExcludedFaceFaceClusterId  { get; set; } // integer
+		[Column("ExcludedFace_FaceId"),                     NotNull] public long ExcludedFaceFaceId         { get; set; } // integer
+		[Column("ExcludedFace_ExcludedForUse"),             NotNull] public long ExcludedFaceExcludedForUse { get; set; } // integer
+		[Column("ExcludedFace_ExcludedDate"),               NotNull] public long ExcludedFaceExcludedDate   { get; set; } // integer
 
 		#region Associations
 
@@ -512,24 +517,24 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedImport")]
 	public partial class ExcludedImport
 	{
-		[Column("ExcludedImport_Id",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long ExcludedImportId             { get; set; } // integer
-		[Column("ExcludedImport_ImportId",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedImportImportId       { get; set; } // integer
-		[Column("ExcludedImport_ExcludedForUse", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedImportExcludedForUse { get; set; } // integer
-		[Column("ExcludedImport_ExcludedDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedImportExcludedDate   { get; set; } // integer
+		[Column("ExcludedImport_Id"),             PrimaryKey, NotNull] public long ExcludedImportId             { get; set; } // integer
+		[Column("ExcludedImport_ImportId"),                   NotNull] public long ExcludedImportImportId       { get; set; } // integer
+		[Column("ExcludedImport_ExcludedForUse"),             NotNull] public long ExcludedImportExcludedForUse { get; set; } // integer
+		[Column("ExcludedImport_ExcludedDate"),               NotNull] public long ExcludedImportExcludedDate   { get; set; } // integer
 	}
 
 	[Table("ExcludedItemTag")]
 	public partial class ExcludedItemTag
 	{
-		[Column("ExcludedItemTag_Id",                    DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long  ExcludedItemTagId                    { get; set; } // integer
-		[Column("ExcludedItemTag_ItemId",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              NotNull] public long  ExcludedItemTagItemId                { get; set; } // integer
-		[Column("ExcludedItemTag_TagId",                 DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              NotNull] public long  ExcludedItemTagTagId                 { get; set; } // integer
-		[Column("ExcludedItemTag_ExcludedForUse",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              NotNull] public long  ExcludedItemTagExcludedForUse        { get; set; } // integer
-		[Column("ExcludedItemTag_ExcludedDate",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              NotNull] public long  ExcludedItemTagExcludedDate          { get; set; } // integer
-		[Column("ExcludedItemTag_ConceptModelVersion",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? ExcludedItemTagConceptModelVersion   { get; set; } // integer
-		[Column("ExcludedItemTag_UploadState",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? ExcludedItemTagUploadState           { get; set; } // integer
-		[Column("ExcludedItemTag_UploadAttempts",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? ExcludedItemTagUploadAttempts        { get; set; } // integer
-		[Column("ExcludedItemTag_UploadDateLastAttempt", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? ExcludedItemTagUploadDateLastAttempt { get; set; } // integer
+		[Column("ExcludedItemTag_Id"),                    PrimaryKey,  NotNull] public long  ExcludedItemTagId                    { get; set; } // integer
+		[Column("ExcludedItemTag_ItemId"),                             NotNull] public long  ExcludedItemTagItemId                { get; set; } // integer
+		[Column("ExcludedItemTag_TagId"),                              NotNull] public long  ExcludedItemTagTagId                 { get; set; } // integer
+		[Column("ExcludedItemTag_ExcludedForUse"),                     NotNull] public long  ExcludedItemTagExcludedForUse        { get; set; } // integer
+		[Column("ExcludedItemTag_ExcludedDate"),                       NotNull] public long  ExcludedItemTagExcludedDate          { get; set; } // integer
+		[Column("ExcludedItemTag_ConceptModelVersion"),      Nullable         ] public long? ExcludedItemTagConceptModelVersion   { get; set; } // integer
+		[Column("ExcludedItemTag_UploadState"),              Nullable         ] public long? ExcludedItemTagUploadState           { get; set; } // integer
+		[Column("ExcludedItemTag_UploadAttempts"),           Nullable         ] public long? ExcludedItemTagUploadAttempts        { get; set; } // integer
+		[Column("ExcludedItemTag_UploadDateLastAttempt"),    Nullable         ] public long? ExcludedItemTagUploadDateLastAttempt { get; set; } // integer
 
 		#region Associations
 
@@ -551,10 +556,10 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedLocation")]
 	public partial class ExcludedLocation
 	{
-		[Column("ExcludedLocation_Id",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long ExcludedLocationId             { get; set; } // integer
-		[Column("ExcludedLocation_LocationId",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedLocationLocationId     { get; set; } // integer
-		[Column("ExcludedLocation_ExcludedForUse", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedLocationExcludedForUse { get; set; } // integer
-		[Column("ExcludedLocation_ExcludedDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedLocationExcludedDate   { get; set; } // integer
+		[Column("ExcludedLocation_Id"),             PrimaryKey, NotNull] public long ExcludedLocationId             { get; set; } // integer
+		[Column("ExcludedLocation_LocationId"),                 NotNull] public long ExcludedLocationLocationId     { get; set; } // integer
+		[Column("ExcludedLocation_ExcludedForUse"),             NotNull] public long ExcludedLocationExcludedForUse { get; set; } // integer
+		[Column("ExcludedLocation_ExcludedDate"),               NotNull] public long ExcludedLocationExcludedDate   { get; set; } // integer
 
 		#region Associations
 
@@ -570,10 +575,10 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedPerson")]
 	public partial class ExcludedPerson
 	{
-		[Column("ExcludedPerson_Id",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long ExcludedPersonId             { get; set; } // integer
-		[Column("ExcludedPerson_PersonId",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedPersonPersonId       { get; set; } // integer
-		[Column("ExcludedPerson_ExcludedForUse", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedPersonExcludedForUse { get; set; } // integer
-		[Column("ExcludedPerson_ExcludedDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedPersonExcludedDate   { get; set; } // integer
+		[Column("ExcludedPerson_Id"),             PrimaryKey, NotNull] public long ExcludedPersonId             { get; set; } // integer
+		[Column("ExcludedPerson_PersonId"),                   NotNull] public long ExcludedPersonPersonId       { get; set; } // integer
+		[Column("ExcludedPerson_ExcludedForUse"),             NotNull] public long ExcludedPersonExcludedForUse { get; set; } // integer
+		[Column("ExcludedPerson_ExcludedDate"),               NotNull] public long ExcludedPersonExcludedDate   { get; set; } // integer
 
 		#region Associations
 
@@ -589,10 +594,10 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedTag")]
 	public partial class ExcludedTag
 	{
-		[Column("ExcludedTag_Id",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long ExcludedTagId             { get; set; } // integer
-		[Column("ExcludedTag_TagId",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedTagTagId          { get; set; } // integer
-		[Column("ExcludedTag_ExcludedForUse", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedTagExcludedForUse { get; set; } // integer
-		[Column("ExcludedTag_ExcludedDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedTagExcludedDate   { get; set; } // integer
+		[Column("ExcludedTag_Id"),             PrimaryKey, NotNull] public long ExcludedTagId             { get; set; } // integer
+		[Column("ExcludedTag_TagId"),                      NotNull] public long ExcludedTagTagId          { get; set; } // integer
+		[Column("ExcludedTag_ExcludedForUse"),             NotNull] public long ExcludedTagExcludedForUse { get; set; } // integer
+		[Column("ExcludedTag_ExcludedDate"),               NotNull] public long ExcludedTagExcludedDate   { get; set; } // integer
 
 		#region Associations
 
@@ -608,9 +613,9 @@ namespace StorageProviders.SQLite
 	[Table("ExtractedText")]
 	public partial class ExtractedText
 	{
-		[Column("ExtractedText_Id",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ExtractedTextId     { get; set; } // integer
-		[Column("ExtractedText_ItemId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    ExtractedTextItemId { get; set; } // integer
-		[Column("ExtractedText_Text",   DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ExtractedTextText   { get; set; } // text(max)
+		[Column("ExtractedText_Id"),     PrimaryKey,  NotNull] public long    ExtractedTextId     { get; set; } // integer
+		[Column("ExtractedText_ItemId"),              NotNull] public long    ExtractedTextItemId { get; set; } // integer
+		[Column("ExtractedText_Text"),      Nullable         ] public string? ExtractedTextText   { get; set; } // text(max)
 
 		#region Associations
 
@@ -626,42 +631,42 @@ namespace StorageProviders.SQLite
 	[Table("Face")]
 	public partial class Face
 	{
-		[Column("Face_Id",                         DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    FaceId                         { get; set; } // integer
-		[Column("Face_ItemId",                     DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                        NotNull] public long    FaceItemId                     { get; set; } // integer
-		[Column("Face_FaceClusterId",              DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceFaceClusterId              { get; set; } // integer
-		[Column("Face_PersonId",                   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FacePersonId                   { get; set; } // integer
-		[Column("Face_PersonConfirmation",         DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FacePersonConfirmation         { get; set; } // integer
-		[Column("Face_RecoGroupId",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceRecoGroupId                { get; set; } // integer
-		[Column("Face_Pose",                       DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FacePose                       { get; set; } // integer
-		[Column("Face_QualityScore",               DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceQualityScore               { get; set; } // real
-		[Column("Face_Rect_Top",                   DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceRectTop                    { get; set; } // real
-		[Column("Face_Rect_Left",                  DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceRectLeft                   { get; set; } // real
-		[Column("Face_Rect_Width",                 DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceRectWidth                  { get; set; } // real
-		[Column("Face_Rect_Height",                DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceRectHeight                 { get; set; } // real
-		[Column("Face_ViewRect_Top",               DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceViewRectTop                { get; set; } // real
-		[Column("Face_ViewRect_Left",              DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceViewRectLeft               { get; set; } // real
-		[Column("Face_ViewRect_Width",             DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceViewRectWidth              { get; set; } // real
-		[Column("Face_ViewRect_Height",            DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceViewRectHeight             { get; set; } // real
-		[Column("Face_LeftEyeOpen",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceLeftEyeOpen                { get; set; } // integer
-		[Column("Face_RightEyeOpen",               DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceRightEyeOpen               { get; set; } // integer
-		[Column("Face_LeftEyeCameraFocus",         DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceLeftEyeCameraFocus         { get; set; } // integer
-		[Column("Face_RightEyeCameraFocus",        DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceRightEyeCameraFocus        { get; set; } // integer
-		[Column("Face_LeftEyeLookingAtCamera",     DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceLeftEyeLookingAtCamera     { get; set; } // integer
-		[Column("Face_RightEyeLookingAtCamera",    DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceRightEyeLookingAtCamera    { get; set; } // integer
-		[Column("Face_LeftEyeSharpness",           DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceLeftEyeSharpness           { get; set; } // integer
-		[Column("Face_RightEyeSharpness",          DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceRightEyeSharpness          { get; set; } // integer
-		[Column("Face_LeftEyeRedEye",              DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceLeftEyeRedEye              { get; set; } // integer
-		[Column("Face_RightEyeRedEye",             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceRightEyeRedEye             { get; set; } // integer
-		[Column("Face_MouthOpenState",             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceMouthOpenState             { get; set; } // integer
-		[Column("Face_TeethVisibleState",          DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceTeethVisibleState          { get; set; } // integer
-		[Column("Face_CutOffState",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceCutOffState                { get; set; } // integer
-		[Column("Face_FaceSharpness",              DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceFaceSharpness              { get; set; } // integer
-		[Column("Face_Expression",                 DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceExpression                 { get; set; } // integer
-		[Column("Face_RecoExemplar",               DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? FaceRecoExemplar               { get; set; } // blob
-		[Column("Face_ExemplarScore",              DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceExemplarScore              { get; set; } // real
-		[Column("Face_Version",                    DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceVersion                    { get; set; } // integer
-		[Column("Face_SmileProbability",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceSmileProbability           { get; set; } // real
-		[Column("Face_IsHighQualityExemplarScore", DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceIsHighQualityExemplarScore { get; set; } // integer
+		[Column("Face_Id"),                         PrimaryKey,  NotNull] public long    FaceId                         { get; set; } // integer
+		[Column("Face_ItemId"),                                  NotNull] public long    FaceItemId                     { get; set; } // integer
+		[Column("Face_FaceClusterId"),                 Nullable         ] public long?   FaceFaceClusterId              { get; set; } // integer
+		[Column("Face_PersonId"),                      Nullable         ] public long?   FacePersonId                   { get; set; } // integer
+		[Column("Face_PersonConfirmation"),            Nullable         ] public long?   FacePersonConfirmation         { get; set; } // integer
+		[Column("Face_RecoGroupId"),                   Nullable         ] public long?   FaceRecoGroupId                { get; set; } // integer
+		[Column("Face_Pose"),                          Nullable         ] public long?   FacePose                       { get; set; } // integer
+		[Column("Face_QualityScore"),                  Nullable         ] public double? FaceQualityScore               { get; set; } // real
+		[Column("Face_Rect_Top"),                      Nullable         ] public double? FaceRectTop                    { get; set; } // real
+		[Column("Face_Rect_Left"),                     Nullable         ] public double? FaceRectLeft                   { get; set; } // real
+		[Column("Face_Rect_Width"),                    Nullable         ] public double? FaceRectWidth                  { get; set; } // real
+		[Column("Face_Rect_Height"),                   Nullable         ] public double? FaceRectHeight                 { get; set; } // real
+		[Column("Face_ViewRect_Top"),                  Nullable         ] public double? FaceViewRectTop                { get; set; } // real
+		[Column("Face_ViewRect_Left"),                 Nullable         ] public double? FaceViewRectLeft               { get; set; } // real
+		[Column("Face_ViewRect_Width"),                Nullable         ] public double? FaceViewRectWidth              { get; set; } // real
+		[Column("Face_ViewRect_Height"),               Nullable         ] public double? FaceViewRectHeight             { get; set; } // real
+		[Column("Face_LeftEyeOpen"),                   Nullable         ] public long?   FaceLeftEyeOpen                { get; set; } // integer
+		[Column("Face_RightEyeOpen"),                  Nullable         ] public long?   FaceRightEyeOpen               { get; set; } // integer
+		[Column("Face_LeftEyeCameraFocus"),            Nullable         ] public long?   FaceLeftEyeCameraFocus         { get; set; } // integer
+		[Column("Face_RightEyeCameraFocus"),           Nullable         ] public long?   FaceRightEyeCameraFocus        { get; set; } // integer
+		[Column("Face_LeftEyeLookingAtCamera"),        Nullable         ] public long?   FaceLeftEyeLookingAtCamera     { get; set; } // integer
+		[Column("Face_RightEyeLookingAtCamera"),       Nullable         ] public long?   FaceRightEyeLookingAtCamera    { get; set; } // integer
+		[Column("Face_LeftEyeSharpness"),              Nullable         ] public long?   FaceLeftEyeSharpness           { get; set; } // integer
+		[Column("Face_RightEyeSharpness"),             Nullable         ] public long?   FaceRightEyeSharpness          { get; set; } // integer
+		[Column("Face_LeftEyeRedEye"),                 Nullable         ] public long?   FaceLeftEyeRedEye              { get; set; } // integer
+		[Column("Face_RightEyeRedEye"),                Nullable         ] public long?   FaceRightEyeRedEye             { get; set; } // integer
+		[Column("Face_MouthOpenState"),                Nullable         ] public long?   FaceMouthOpenState             { get; set; } // integer
+		[Column("Face_TeethVisibleState"),             Nullable         ] public long?   FaceTeethVisibleState          { get; set; } // integer
+		[Column("Face_CutOffState"),                   Nullable         ] public long?   FaceCutOffState                { get; set; } // integer
+		[Column("Face_FaceSharpness"),                 Nullable         ] public long?   FaceFaceSharpness              { get; set; } // integer
+		[Column("Face_Expression"),                    Nullable         ] public long?   FaceExpression                 { get; set; } // integer
+		[Column("Face_RecoExemplar"),                  Nullable         ] public byte[]? FaceRecoExemplar               { get; set; } // blob
+		[Column("Face_ExemplarScore"),                 Nullable         ] public double? FaceExemplarScore              { get; set; } // real
+		[Column("Face_Version"),                       Nullable         ] public long?   FaceVersion                    { get; set; } // integer
+		[Column("Face_SmileProbability"),              Nullable         ] public double? FaceSmileProbability           { get; set; } // real
+		[Column("Face_IsHighQualityExemplarScore"),    Nullable         ] public long?   FaceIsHighQualityExemplarScore { get; set; } // integer
 
 		#region Associations
 
@@ -725,9 +730,9 @@ namespace StorageProviders.SQLite
 	[Table("FaceCluster")]
 	public partial class FaceCluster
 	{
-		[Column("FaceCluster_Id",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long  FaceClusterId         { get; set; } // integer
-		[Column("FaceCluster_PersonId",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? FaceClusterPersonId   { get; set; } // integer
-		[Column("FaceCluster_BestFaceId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? FaceClusterBestFaceId { get; set; } // integer
+		[Column("FaceCluster_Id"),         PrimaryKey,  NotNull] public long  FaceClusterId         { get; set; } // integer
+		[Column("FaceCluster_PersonId"),      Nullable         ] public long? FaceClusterPersonId   { get; set; } // integer
+		[Column("FaceCluster_BestFaceId"),    Nullable         ] public long? FaceClusterBestFaceId { get; set; } // integer
 
 		#region Associations
 
@@ -761,10 +766,10 @@ namespace StorageProviders.SQLite
 	[Table("FaceFeature")]
 	public partial class FaceFeature
 	{
-		[Column("FaceFeature_FaceId",      DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0), PrimaryKey(0), NotNull] public long    FaceFeatureFaceId      { get; set; } // integer
-		[Column("FaceFeature_FeatureType", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0), PrimaryKey(1), NotNull] public long    FaceFeatureFeatureType { get; set; } // integer
-		[Column("FaceFeature_X",           DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable           ] public double? FaceFeatureX           { get; set; } // real
-		[Column("FaceFeature_Y",           DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable           ] public double? FaceFeatureY           { get; set; } // real
+		[Column("FaceFeature_FaceId"),      PrimaryKey(0), NotNull] public long    FaceFeatureFaceId      { get; set; } // integer
+		[Column("FaceFeature_FeatureType"), PrimaryKey(1), NotNull] public long    FaceFeatureFeatureType { get; set; } // integer
+		[Column("FaceFeature_X"),              Nullable           ] public double? FaceFeatureX           { get; set; } // real
+		[Column("FaceFeature_Y"),              Nullable           ] public double? FaceFeatureY           { get; set; } // real
 
 		#region Associations
 
@@ -780,20 +785,20 @@ namespace StorageProviders.SQLite
 	[Table("Folder")]
 	public partial class Folder
 	{
-		[Column("Folder_Id",                      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    FolderId                      { get; set; } // integer
-		[Column("Folder_ParentFolderId",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderParentFolderId          { get; set; } // integer
-		[Column("Folder_LibraryRelationship",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderLibraryRelationship     { get; set; } // integer
-		[Column("Folder_Source",                  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderSource                  { get; set; } // integer
-		[Column("Folder_SourceId",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderSourceId                { get; set; } // integer
-		[Column("Folder_Path",                    DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? FolderPath                    { get; set; } // text(max)
-		[Column("Folder_DisplayName",             DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? FolderDisplayName             { get; set; } // text(max)
-		[Column("Folder_DateCreated",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderDateCreated             { get; set; } // integer
-		[Column("Folder_DateModified",            DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderDateModified            { get; set; } // integer
-		[Column("Folder_KnownFolderType",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderKnownFolderType         { get; set; } // integer
-		[Column("Folder_SyncWith",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderSyncWith                { get; set; } // integer
-		[Column("Folder_StorageProviderFileId",   DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? FolderStorageProviderFileId   { get; set; } // text(max)
-		[Column("Folder_InOneDrivePicturesScope", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderInOneDrivePicturesScope { get; set; } // integer
-		[Column("Folder_ItemCount",               DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderItemCount               { get; set; } // integer
+		[Column("Folder_Id"),                      PrimaryKey,  NotNull] public long    FolderId                      { get; set; } // integer
+		[Column("Folder_ParentFolderId"),             Nullable         ] public long?   FolderParentFolderId          { get; set; } // integer
+		[Column("Folder_LibraryRelationship"),        Nullable         ] public long?   FolderLibraryRelationship     { get; set; } // integer
+		[Column("Folder_Source"),                     Nullable         ] public long?   FolderSource                  { get; set; } // integer
+		[Column("Folder_SourceId"),                   Nullable         ] public long?   FolderSourceId                { get; set; } // integer
+		[Column("Folder_Path"),                       Nullable         ] public string? FolderPath                    { get; set; } // text(max)
+		[Column("Folder_DisplayName"),                Nullable         ] public string? FolderDisplayName             { get; set; } // text(max)
+		[Column("Folder_DateCreated"),                Nullable         ] public long?   FolderDateCreated             { get; set; } // integer
+		[Column("Folder_DateModified"),               Nullable         ] public long?   FolderDateModified            { get; set; } // integer
+		[Column("Folder_KnownFolderType"),            Nullable         ] public long?   FolderKnownFolderType         { get; set; } // integer
+		[Column("Folder_SyncWith"),                   Nullable         ] public long?   FolderSyncWith                { get; set; } // integer
+		[Column("Folder_StorageProviderFileId"),      Nullable         ] public string? FolderStorageProviderFileId   { get; set; } // text(max)
+		[Column("Folder_InOneDrivePicturesScope"),    Nullable         ] public long?   FolderInOneDrivePicturesScope { get; set; } // integer
+		[Column("Folder_ItemCount"),                  Nullable         ] public long?   FolderItemCount               { get; set; } // integer
 
 		#region Associations
 
@@ -833,63 +838,63 @@ namespace StorageProviders.SQLite
 	[Table("ImageAnalysis")]
 	public partial class ImageAnalysis
 	{
-		[Column("ImageAnalysis_ItemId",                    DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ImageAnalysisItemId                    { get; set; } // integer
-		[Column("ImageAnalysis_ReDoAnalysis",              DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ImageAnalysisReDoAnalysis              { get; set; } // integer
-		[Column("ImageAnalysis_AnalysisModuleVersion",     DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? ImageAnalysisAnalysisModuleVersion     { get; set; } // blob
-		[Column("ImageAnalysis_SaliencyScore",             DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisSaliencyScore             { get; set; } // real
-		[Column("ImageAnalysis_RelevantFacesPercentage",   DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisRelevantFacesPercentage   { get; set; } // real
-		[Column("ImageAnalysis_PortraitType",              DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ImageAnalysisPortraitType              { get; set; } // integer
-		[Column("ImageAnalysis_AverageSaliency",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisAverageSaliency           { get; set; } // real
-		[Column("ImageAnalysis_SaliencyNormalizer",        DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisSaliencyNormalizer        { get; set; } // real
-		[Column("ImageAnalysis_PortraitSize",              DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ImageAnalysisPortraitSize              { get; set; } // integer
-		[Column("ImageAnalysis_PhotoAspectRatio",          DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisPhotoAspectRatio          { get; set; } // real
-		[Column("ImageAnalysis_AverageEyeYLocation",       DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisAverageEyeYLocation       { get; set; } // real
-		[Column("ImageAnalysis_AverageEyeYLocationTopRow", DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisAverageEyeYLocationTopRow { get; set; } // real
-		[Column("ImageAnalysis_AverageFaceXCoordinate",    DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisAverageFaceXCoordinate    { get; set; } // real
-		[Column("ImageAnalysis_FramedCenter",              DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisFramedCenter              { get; set; } // real
-		[Column("ImageAnalysis_OpenEyeFacePercentage",     DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisOpenEyeFacePercentage     { get; set; } // real
-		[Column("ImageAnalysis_FacingOutOfFrame",          DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ImageAnalysisFacingOutOfFrame          { get; set; } // integer
-		[Column("ImageAnalysis_HasMainObjectInBackground", DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ImageAnalysisHasMainObjectInBackground { get; set; } // integer
-		[Column("ImageAnalysis_HasSharpBackground",        DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ImageAnalysisHasSharpBackground        { get; set; } // integer
-		[Column("ImageAnalysis_UnsharpMaskRadius",         DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisUnsharpMaskRadius         { get; set; } // real
-		[Column("ImageAnalysis_UnsharpMaskAmount",         DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisUnsharpMaskAmount         { get; set; } // real
-		[Column("ImageAnalysis_UnsharpMaskThreshold",      DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisUnsharpMaskThreshold      { get; set; } // real
-		[Column("ImageAnalysis_RedAdjustment",             DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisRedAdjustment             { get; set; } // real
-		[Column("ImageAnalysis_GreenAdjustment",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisGreenAdjustment           { get; set; } // real
-		[Column("ImageAnalysis_BlueAdjustment",            DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisBlueAdjustment            { get; set; } // real
-		[Column("ImageAnalysis_HighlightsAdjustment",      DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisHighlightsAdjustment      { get; set; } // real
-		[Column("ImageAnalysis_ShadowsAdjustment",         DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisShadowsAdjustment         { get; set; } // real
-		[Column("ImageAnalysis_BlackPoint",                DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisBlackPoint                { get; set; } // real
-		[Column("ImageAnalysis_MidPoint",                  DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisMidPoint                  { get; set; } // real
-		[Column("ImageAnalysis_WhitePoint",                DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisWhitePoint                { get; set; } // real
-		[Column("ImageAnalysis_ShadowsNoiseLevel",         DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ImageAnalysisShadowsNoiseLevel         { get; set; } // integer
-		[Column("ImageAnalysis_StraightenAngle",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisStraightenAngle           { get; set; } // real
-		[Column("ImageAnalysis_ExposureQuality",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisExposureQuality           { get; set; } // real
-		[Column("ImageAnalysis_OverExposure",              DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisOverExposure              { get; set; } // real
-		[Column("ImageAnalysis_UnderExposure",             DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisUnderExposure             { get; set; } // real
-		[Column("ImageAnalysis_ExposureBalance",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisExposureBalance           { get; set; } // real
-		[Column("ImageAnalysis_CenterExposureQuality",     DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisCenterExposureQuality     { get; set; } // real
-		[Column("ImageAnalysis_CenterOverExposure",        DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisCenterOverExposure        { get; set; } // real
-		[Column("ImageAnalysis_CenterUnderExposure",       DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisCenterUnderExposure       { get; set; } // real
-		[Column("ImageAnalysis_CenterExposureBalance",     DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisCenterExposureBalance     { get; set; } // real
-		[Column("ImageAnalysis_SaturationQuality",         DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisSaturationQuality         { get; set; } // real
-		[Column("ImageAnalysis_SaturationType",            DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ImageAnalysisSaturationType            { get; set; } // integer
-		[Column("ImageAnalysis_HueVariety",                DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisHueVariety                { get; set; } // real
-		[Column("ImageAnalysis_SharpnessPoint0",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisSharpnessPoint0           { get; set; } // real
-		[Column("ImageAnalysis_SharpnessPoint1",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisSharpnessPoint1           { get; set; } // real
-		[Column("ImageAnalysis_SharpnessPoint2",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisSharpnessPoint2           { get; set; } // real
-		[Column("ImageAnalysis_SharpnessPoint3",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisSharpnessPoint3           { get; set; } // real
-		[Column("ImageAnalysis_SharpnessPoint4",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisSharpnessPoint4           { get; set; } // real
-		[Column("ImageAnalysis_NoiseLevel",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ImageAnalysisNoiseLevel                { get; set; } // integer
-		[Column("ImageAnalysis_LumaNoise",                 DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisLumaNoise                 { get; set; } // real
-		[Column("ImageAnalysis_ChromaNoise",               DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisChromaNoise               { get; set; } // real
-		[Column("ImageAnalysis_DetailsNoise",              DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisDetailsNoise              { get; set; } // real
-		[Column("ImageAnalysis_ShadowsLumaNoise",          DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisShadowsLumaNoise          { get; set; } // real
-		[Column("ImageAnalysis_ShadowsChromaNoise",        DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisShadowsChromaNoise        { get; set; } // real
-		[Column("ImageAnalysis_ShadowsDetailsNoise",       DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ImageAnalysisShadowsDetailsNoise       { get; set; } // real
-		[Column("ImageAnalysis_Utility",                   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ImageAnalysisUtility                   { get; set; } // integer
-		[Column("ImageAnalysis_HistogramBuckets",          DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? ImageAnalysisHistogramBuckets          { get; set; } // blob
-		[Column("ImageAnalysis_Tone",                      DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? ImageAnalysisTone                      { get; set; } // blob
+		[Column("ImageAnalysis_ItemId"),                    PrimaryKey,  NotNull] public long    ImageAnalysisItemId                    { get; set; } // integer
+		[Column("ImageAnalysis_ReDoAnalysis"),                 Nullable         ] public long?   ImageAnalysisReDoAnalysis              { get; set; } // integer
+		[Column("ImageAnalysis_AnalysisModuleVersion"),        Nullable         ] public byte[]? ImageAnalysisAnalysisModuleVersion     { get; set; } // blob
+		[Column("ImageAnalysis_SaliencyScore"),                Nullable         ] public double? ImageAnalysisSaliencyScore             { get; set; } // real
+		[Column("ImageAnalysis_RelevantFacesPercentage"),      Nullable         ] public double? ImageAnalysisRelevantFacesPercentage   { get; set; } // real
+		[Column("ImageAnalysis_PortraitType"),                 Nullable         ] public long?   ImageAnalysisPortraitType              { get; set; } // integer
+		[Column("ImageAnalysis_AverageSaliency"),              Nullable         ] public double? ImageAnalysisAverageSaliency           { get; set; } // real
+		[Column("ImageAnalysis_SaliencyNormalizer"),           Nullable         ] public double? ImageAnalysisSaliencyNormalizer        { get; set; } // real
+		[Column("ImageAnalysis_PortraitSize"),                 Nullable         ] public long?   ImageAnalysisPortraitSize              { get; set; } // integer
+		[Column("ImageAnalysis_PhotoAspectRatio"),             Nullable         ] public double? ImageAnalysisPhotoAspectRatio          { get; set; } // real
+		[Column("ImageAnalysis_AverageEyeYLocation"),          Nullable         ] public double? ImageAnalysisAverageEyeYLocation       { get; set; } // real
+		[Column("ImageAnalysis_AverageEyeYLocationTopRow"),    Nullable         ] public double? ImageAnalysisAverageEyeYLocationTopRow { get; set; } // real
+		[Column("ImageAnalysis_AverageFaceXCoordinate"),       Nullable         ] public double? ImageAnalysisAverageFaceXCoordinate    { get; set; } // real
+		[Column("ImageAnalysis_FramedCenter"),                 Nullable         ] public double? ImageAnalysisFramedCenter              { get; set; } // real
+		[Column("ImageAnalysis_OpenEyeFacePercentage"),        Nullable         ] public double? ImageAnalysisOpenEyeFacePercentage     { get; set; } // real
+		[Column("ImageAnalysis_FacingOutOfFrame"),             Nullable         ] public long?   ImageAnalysisFacingOutOfFrame          { get; set; } // integer
+		[Column("ImageAnalysis_HasMainObjectInBackground"),    Nullable         ] public long?   ImageAnalysisHasMainObjectInBackground { get; set; } // integer
+		[Column("ImageAnalysis_HasSharpBackground"),           Nullable         ] public long?   ImageAnalysisHasSharpBackground        { get; set; } // integer
+		[Column("ImageAnalysis_UnsharpMaskRadius"),            Nullable         ] public double? ImageAnalysisUnsharpMaskRadius         { get; set; } // real
+		[Column("ImageAnalysis_UnsharpMaskAmount"),            Nullable         ] public double? ImageAnalysisUnsharpMaskAmount         { get; set; } // real
+		[Column("ImageAnalysis_UnsharpMaskThreshold"),         Nullable         ] public double? ImageAnalysisUnsharpMaskThreshold      { get; set; } // real
+		[Column("ImageAnalysis_RedAdjustment"),                Nullable         ] public double? ImageAnalysisRedAdjustment             { get; set; } // real
+		[Column("ImageAnalysis_GreenAdjustment"),              Nullable         ] public double? ImageAnalysisGreenAdjustment           { get; set; } // real
+		[Column("ImageAnalysis_BlueAdjustment"),               Nullable         ] public double? ImageAnalysisBlueAdjustment            { get; set; } // real
+		[Column("ImageAnalysis_HighlightsAdjustment"),         Nullable         ] public double? ImageAnalysisHighlightsAdjustment      { get; set; } // real
+		[Column("ImageAnalysis_ShadowsAdjustment"),            Nullable         ] public double? ImageAnalysisShadowsAdjustment         { get; set; } // real
+		[Column("ImageAnalysis_BlackPoint"),                   Nullable         ] public double? ImageAnalysisBlackPoint                { get; set; } // real
+		[Column("ImageAnalysis_MidPoint"),                     Nullable         ] public double? ImageAnalysisMidPoint                  { get; set; } // real
+		[Column("ImageAnalysis_WhitePoint"),                   Nullable         ] public double? ImageAnalysisWhitePoint                { get; set; } // real
+		[Column("ImageAnalysis_ShadowsNoiseLevel"),            Nullable         ] public long?   ImageAnalysisShadowsNoiseLevel         { get; set; } // integer
+		[Column("ImageAnalysis_StraightenAngle"),              Nullable         ] public double? ImageAnalysisStraightenAngle           { get; set; } // real
+		[Column("ImageAnalysis_ExposureQuality"),              Nullable         ] public double? ImageAnalysisExposureQuality           { get; set; } // real
+		[Column("ImageAnalysis_OverExposure"),                 Nullable         ] public double? ImageAnalysisOverExposure              { get; set; } // real
+		[Column("ImageAnalysis_UnderExposure"),                Nullable         ] public double? ImageAnalysisUnderExposure             { get; set; } // real
+		[Column("ImageAnalysis_ExposureBalance"),              Nullable         ] public double? ImageAnalysisExposureBalance           { get; set; } // real
+		[Column("ImageAnalysis_CenterExposureQuality"),        Nullable         ] public double? ImageAnalysisCenterExposureQuality     { get; set; } // real
+		[Column("ImageAnalysis_CenterOverExposure"),           Nullable         ] public double? ImageAnalysisCenterOverExposure        { get; set; } // real
+		[Column("ImageAnalysis_CenterUnderExposure"),          Nullable         ] public double? ImageAnalysisCenterUnderExposure       { get; set; } // real
+		[Column("ImageAnalysis_CenterExposureBalance"),        Nullable         ] public double? ImageAnalysisCenterExposureBalance     { get; set; } // real
+		[Column("ImageAnalysis_SaturationQuality"),            Nullable         ] public double? ImageAnalysisSaturationQuality         { get; set; } // real
+		[Column("ImageAnalysis_SaturationType"),               Nullable         ] public long?   ImageAnalysisSaturationType            { get; set; } // integer
+		[Column("ImageAnalysis_HueVariety"),                   Nullable         ] public double? ImageAnalysisHueVariety                { get; set; } // real
+		[Column("ImageAnalysis_SharpnessPoint0"),              Nullable         ] public double? ImageAnalysisSharpnessPoint0           { get; set; } // real
+		[Column("ImageAnalysis_SharpnessPoint1"),              Nullable         ] public double? ImageAnalysisSharpnessPoint1           { get; set; } // real
+		[Column("ImageAnalysis_SharpnessPoint2"),              Nullable         ] public double? ImageAnalysisSharpnessPoint2           { get; set; } // real
+		[Column("ImageAnalysis_SharpnessPoint3"),              Nullable         ] public double? ImageAnalysisSharpnessPoint3           { get; set; } // real
+		[Column("ImageAnalysis_SharpnessPoint4"),              Nullable         ] public double? ImageAnalysisSharpnessPoint4           { get; set; } // real
+		[Column("ImageAnalysis_NoiseLevel"),                   Nullable         ] public long?   ImageAnalysisNoiseLevel                { get; set; } // integer
+		[Column("ImageAnalysis_LumaNoise"),                    Nullable         ] public double? ImageAnalysisLumaNoise                 { get; set; } // real
+		[Column("ImageAnalysis_ChromaNoise"),                  Nullable         ] public double? ImageAnalysisChromaNoise               { get; set; } // real
+		[Column("ImageAnalysis_DetailsNoise"),                 Nullable         ] public double? ImageAnalysisDetailsNoise              { get; set; } // real
+		[Column("ImageAnalysis_ShadowsLumaNoise"),             Nullable         ] public double? ImageAnalysisShadowsLumaNoise          { get; set; } // real
+		[Column("ImageAnalysis_ShadowsChromaNoise"),           Nullable         ] public double? ImageAnalysisShadowsChromaNoise        { get; set; } // real
+		[Column("ImageAnalysis_ShadowsDetailsNoise"),          Nullable         ] public double? ImageAnalysisShadowsDetailsNoise       { get; set; } // real
+		[Column("ImageAnalysis_Utility"),                      Nullable         ] public long?   ImageAnalysisUtility                   { get; set; } // integer
+		[Column("ImageAnalysis_HistogramBuckets"),             Nullable         ] public byte[]? ImageAnalysisHistogramBuckets          { get; set; } // blob
+		[Column("ImageAnalysis_Tone"),                         Nullable         ] public byte[]? ImageAnalysisTone                      { get; set; } // blob
 
 		#region Associations
 
@@ -905,96 +910,96 @@ namespace StorageProviders.SQLite
 	[Table("Item")]
 	public partial class Item
 	{
-		[Column("Item_Id",                                   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ItemId                                   { get; set; } // integer
-		[Column("Item_LibraryRelationship",                  DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemLibraryRelationship                  { get; set; } // integer
-		[Column("Item_Source",                               DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemSource                               { get; set; } // integer
-		[Column("Item_SourceId",                             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemSourceId                             { get; set; } // integer
-		[Column("Item_MediaType",                            DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemMediaType                            { get; set; } // integer
-		[Column("Item_DateTaken",                            DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemDateTaken                            { get; set; } // integer
-		[Column("Item_Width",                                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemWidth                                { get; set; } // integer
-		[Column("Item_Height",                               DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemHeight                               { get; set; } // integer
-		[Column("Item_EditState",                            DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemEditState                            { get; set; } // integer
-		[Column("Item_DateCreated",                          DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemDateCreated                          { get; set; } // integer
-		[Column("Item_DateModified",                         DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemDateModified                         { get; set; } // integer
-		[Column("Item_ExclusiveDateTaken",                   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemExclusiveDateTaken                   { get; set; } // integer
-		[Column("Item_SystemThumbnailCacheId",               DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemSystemThumbnailCacheId               { get; set; } // integer
-		[Column("Item_ParentFolderId",                       DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                        NotNull] public long    ItemParentFolderId                       { get; set; } // integer
-		[Column("Item_FileName",                             DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemFileName                             { get; set; } // text(max)
-		[Column("Item_FileExtension",                        DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemFileExtension                        { get; set; } // text(max)
-		[Column("Item_FileSize",                             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemFileSize                             { get; set; } // integer
-		[Column("Item_Latitude",                             DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ItemLatitude                             { get; set; } // real
-		[Column("Item_Longitude",                            DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ItemLongitude                            { get; set; } // real
-		[Column("Item_Caption",                              DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemCaption                              { get; set; } // text(max)
-		[Column("Item_SimpleRating",                         DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemSimpleRating                         { get; set; } // integer
-		[Column("Item_Duration",                             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemDuration                             { get; set; } // integer
-		[Column("Item_QualityScore",                         DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ItemQualityScore                         { get; set; } // real
-		[Column("Item_BurstClusterNumber",                   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemBurstClusterNumber                   { get; set; } // integer
-		[Column("Item_DateModifiedAtLastBurstRun",           DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemDateModifiedAtLastBurstRun           { get; set; } // integer
-		[Column("Item_BurstPrevItemId",                      DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemBurstPrevItemId                      { get; set; } // integer
-		[Column("Item_BurstChunk",                           DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemBurstChunk                           { get; set; } // integer
-		[Column("Item_LocationId",                           DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemLocationId                           { get; set; } // integer
-		[Column("Item_Flash",                                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemFlash                                { get; set; } // integer
-		[Column("Item_AnalysisVersion",                      DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemAnalysisVersion                      { get; set; } // integer
-		[Column("Item_AnalysisLastRun",                      DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemAnalysisLastRun                      { get; set; } // integer
-		[Column("Item_DateModifiedAtLastAnalysisRun",        DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemDateModifiedAtLastAnalysisRun        { get; set; } // integer
-		[Column("Item_AnalysisErrorCode",                    DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemAnalysisErrorCode                    { get; set; } // integer
-		[Column("Item_AnalysisErrorCount",                   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemAnalysisErrorCount                   { get; set; } // integer
-		[Column("Item_AnalysisQueueState",                   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                        NotNull] public long    ItemAnalysisQueueState                   { get; set; } // integer
-		[Column("Item_ApplicationNameId",                    DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemApplicationNameId                    { get; set; } // integer
-		[Column("Item_CameraManufacturerId",                 DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemCameraManufacturerId                 { get; set; } // integer
-		[Column("Item_CameraModelId",                        DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemCameraModelId                        { get; set; } // integer
-		[Column("Item_HasAuthor",                            DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemHasAuthor                            { get; set; } // integer
-		[Column("Item_HasCopyright",                         DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemHasCopyright                         { get; set; } // integer
-		[Column("Item_HasKeywords",                          DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemHasKeywords                          { get; set; } // integer
-		[Column("Item_FileWidth",                            DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemFileWidth                            { get; set; } // integer
-		[Column("Item_FileHeight",                           DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemFileHeight                           { get; set; } // integer
-		[Column("Item_NDEWidth",                             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemNDEWidth                             { get; set; } // integer
-		[Column("Item_NDEHeight",                            DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemNDEHeight                            { get; set; } // integer
-		[Column("Item_HashAtLastNDEThumbnailGeneration",     DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemHashAtLastNDEThumbnailGeneration     { get; set; } // integer
-		[Column("Item_EventId",                              DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemEventId                              { get; set; } // integer
-		[Column("Item_MetadataExtractedAsOf",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemMetadataExtractedAsOf                { get; set; } // integer
-		[Column("Item_PendingXmpExtractionMask",             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemPendingXmpExtractionMask             { get; set; } // integer
-		[Column("Item_DateIngested",                         DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                        NotNull] public long    ItemDateIngested                         { get; set; } // integer
-		[Column("Item_DupFinderVersion",                     DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemDupFinderVersion                     { get; set; } // integer
-		[Column("Item_DateDupFinding",                       DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemDateDupFinding                       { get; set; } // integer
-		[Column("Item_SameAs",                               DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemSameAs                               { get; set; } // integer
-		[Column("Item_SyncWith",                             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemSyncWith                             { get; set; } // integer
-		[Column("Item_HasDup",                               DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemHasDup                               { get; set; } // integer
-		[Column("Item_DupState",                             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemDupState                             { get; set; } // integer
-		[Column("Item_UserSelectedDupId",                    DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemUserSelectedDupId                    { get; set; } // integer
-		[Column("Item_UserUnlink",                           DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemUserUnlink                           { get; set; } // integer
-		[Column("Item_MetadataHash",                         DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemMetadataHash                         { get; set; } // text(max)
-		[Column("Item_PixelHash",                            DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemPixelHash                            { get; set; } // text(max)
-		[Column("Item_CameraSettingFNumber",                 DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ItemCameraSettingFNumber                 { get; set; } // real
-		[Column("Item_CameraSettingFocalLength",             DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ItemCameraSettingFocalLength             { get; set; } // real
-		[Column("Item_CameraSettingISOSpeed",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemCameraSettingISOSpeed                { get; set; } // integer
-		[Column("Item_CameraSettingExposureTime",            DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ItemCameraSettingExposureTime            { get; set; } // real
-		[Column("Item_EditList",                             DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? ItemEditList                             { get; set; } // blob
-		[Column("Item_ModificationVersion",                  DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemModificationVersion                  { get; set; } // integer
-		[Column("Item_RichMediaId",                          DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemRichMediaId                          { get; set; } // text(max)
-		[Column("Item_RichMediaAppId",                       DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemRichMediaAppId                       { get; set; } // text(max)
-		[Column("Item_RichMediaLaunchOptions",               DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemRichMediaLaunchOptions               { get; set; } // integer
-		[Column("Item_RichMediaSlowGrovelPending",           DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemRichMediaSlowGrovelPending           { get; set; } // integer
-		[Column("Item_ThumbnailPrecacheAttempted",           DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemThumbnailPrecacheAttempted           { get; set; } // integer
-		[Column("Item_PendingTelemetryUploadState",          DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemPendingTelemetryUploadState          { get; set; } // integer
-		[Column("Item_SentTelemetryUploadState",             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemSentTelemetryUploadState             { get; set; } // integer
-		[Column("Item_InAppRotatePending",                   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemInAppRotatePending                   { get; set; } // integer
-		[Column("Item_StorageProviderFileId",                DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemStorageProviderFileId                { get; set; } // text(max)
-		[Column("Item_NDEThumbnailGenerationErrorCount",     DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemNDEThumbnailGenerationErrorCount     { get; set; } // integer
-		[Column("Item_FrameRate",                            DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? ItemFrameRate                            { get; set; } // real
-		[Column("Item_ImportSession",                        DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemImportSession                        { get; set; } // integer
-		[Column("Item_PendingNDE",                           DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemPendingNDE                           { get; set; } // integer
-		[Column("Item_RichMediaFileStatus",                  DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemRichMediaFileStatus                  { get; set; } // integer
-		[Column("Item_UploadPendingState",                   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemUploadPendingState                   { get; set; } // integer
-		[Column("Item_UploadAttempts",                       DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemUploadAttempts                       { get; set; } // integer
-		[Column("Item_UploadRequestTime",                    DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemUploadRequestTime                    { get; set; } // integer
-		[Column("Item_LastUploadAttemptTime",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemLastUploadAttemptTime                { get; set; } // integer
-		[Column("Item_ETag",                                 DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemETag                                 { get; set; } // text(max)
-		[Column("Item_RewriteSupplementaryPropertiesNeeded", DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                        NotNull] public long    ItemRewriteSupplementaryPropertiesNeeded { get; set; } // integer
-		[Column("Item_LastEditDate",                         DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemLastEditDate                         { get; set; } // integer
-		[Column("Item_IsInked",                              DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemIsInked                              { get; set; } // integer
-		[Column("Item_IsExportedMovie",                      DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemIsExportedMovie                      { get; set; } // integer
-		[Column("Item_OnlineContentAttributionString",       DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemOnlineContentAttributionString       { get; set; } // text(max)
+		[Column("Item_Id"),                                   PrimaryKey,  NotNull] public long    ItemId                                   { get; set; } // integer
+		[Column("Item_LibraryRelationship"),                     Nullable         ] public long?   ItemLibraryRelationship                  { get; set; } // integer
+		[Column("Item_Source"),                                  Nullable         ] public long?   ItemSource                               { get; set; } // integer
+		[Column("Item_SourceId"),                                Nullable         ] public long?   ItemSourceId                             { get; set; } // integer
+		[Column("Item_MediaType"),                               Nullable         ] public long?   ItemMediaType                            { get; set; } // integer
+		[Column("Item_DateTaken"),                               Nullable         ] public long?   ItemDateTaken                            { get; set; } // integer
+		[Column("Item_Width"),                                   Nullable         ] public long?   ItemWidth                                { get; set; } // integer
+		[Column("Item_Height"),                                  Nullable         ] public long?   ItemHeight                               { get; set; } // integer
+		[Column("Item_EditState"),                               Nullable         ] public long?   ItemEditState                            { get; set; } // integer
+		[Column("Item_DateCreated"),                             Nullable         ] public long?   ItemDateCreated                          { get; set; } // integer
+		[Column("Item_DateModified"),                            Nullable         ] public long?   ItemDateModified                         { get; set; } // integer
+		[Column("Item_ExclusiveDateTaken"),                      Nullable         ] public long?   ItemExclusiveDateTaken                   { get; set; } // integer
+		[Column("Item_SystemThumbnailCacheId"),                  Nullable         ] public long?   ItemSystemThumbnailCacheId               { get; set; } // integer
+		[Column("Item_ParentFolderId"),                                    NotNull] public long    ItemParentFolderId                       { get; set; } // integer
+		[Column("Item_FileName"),                                Nullable         ] public string? ItemFileName                             { get; set; } // text(max)
+		[Column("Item_FileExtension"),                           Nullable         ] public string? ItemFileExtension                        { get; set; } // text(max)
+		[Column("Item_FileSize"),                                Nullable         ] public long?   ItemFileSize                             { get; set; } // integer
+		[Column("Item_Latitude"),                                Nullable         ] public double? ItemLatitude                             { get; set; } // real
+		[Column("Item_Longitude"),                               Nullable         ] public double? ItemLongitude                            { get; set; } // real
+		[Column("Item_Caption"),                                 Nullable         ] public string? ItemCaption                              { get; set; } // text(max)
+		[Column("Item_SimpleRating"),                            Nullable         ] public long?   ItemSimpleRating                         { get; set; } // integer
+		[Column("Item_Duration"),                                Nullable         ] public long?   ItemDuration                             { get; set; } // integer
+		[Column("Item_QualityScore"),                            Nullable         ] public double? ItemQualityScore                         { get; set; } // real
+		[Column("Item_BurstClusterNumber"),                      Nullable         ] public long?   ItemBurstClusterNumber                   { get; set; } // integer
+		[Column("Item_DateModifiedAtLastBurstRun"),              Nullable         ] public long?   ItemDateModifiedAtLastBurstRun           { get; set; } // integer
+		[Column("Item_BurstPrevItemId"),                         Nullable         ] public long?   ItemBurstPrevItemId                      { get; set; } // integer
+		[Column("Item_BurstChunk"),                              Nullable         ] public long?   ItemBurstChunk                           { get; set; } // integer
+		[Column("Item_LocationId"),                              Nullable         ] public long?   ItemLocationId                           { get; set; } // integer
+		[Column("Item_Flash"),                                   Nullable         ] public long?   ItemFlash                                { get; set; } // integer
+		[Column("Item_AnalysisVersion"),                         Nullable         ] public long?   ItemAnalysisVersion                      { get; set; } // integer
+		[Column("Item_AnalysisLastRun"),                         Nullable         ] public long?   ItemAnalysisLastRun                      { get; set; } // integer
+		[Column("Item_DateModifiedAtLastAnalysisRun"),           Nullable         ] public long?   ItemDateModifiedAtLastAnalysisRun        { get; set; } // integer
+		[Column("Item_AnalysisErrorCode"),                       Nullable         ] public long?   ItemAnalysisErrorCode                    { get; set; } // integer
+		[Column("Item_AnalysisErrorCount"),                      Nullable         ] public long?   ItemAnalysisErrorCount                   { get; set; } // integer
+		[Column("Item_AnalysisQueueState"),                                NotNull] public long    ItemAnalysisQueueState                   { get; set; } // integer
+		[Column("Item_ApplicationNameId"),                       Nullable         ] public long?   ItemApplicationNameId                    { get; set; } // integer
+		[Column("Item_CameraManufacturerId"),                    Nullable         ] public long?   ItemCameraManufacturerId                 { get; set; } // integer
+		[Column("Item_CameraModelId"),                           Nullable         ] public long?   ItemCameraModelId                        { get; set; } // integer
+		[Column("Item_HasAuthor"),                               Nullable         ] public long?   ItemHasAuthor                            { get; set; } // integer
+		[Column("Item_HasCopyright"),                            Nullable         ] public long?   ItemHasCopyright                         { get; set; } // integer
+		[Column("Item_HasKeywords"),                             Nullable         ] public long?   ItemHasKeywords                          { get; set; } // integer
+		[Column("Item_FileWidth"),                               Nullable         ] public long?   ItemFileWidth                            { get; set; } // integer
+		[Column("Item_FileHeight"),                              Nullable         ] public long?   ItemFileHeight                           { get; set; } // integer
+		[Column("Item_NDEWidth"),                                Nullable         ] public long?   ItemNDEWidth                             { get; set; } // integer
+		[Column("Item_NDEHeight"),                               Nullable         ] public long?   ItemNDEHeight                            { get; set; } // integer
+		[Column("Item_HashAtLastNDEThumbnailGeneration"),        Nullable         ] public long?   ItemHashAtLastNDEThumbnailGeneration     { get; set; } // integer
+		[Column("Item_EventId"),                                 Nullable         ] public long?   ItemEventId                              { get; set; } // integer
+		[Column("Item_MetadataExtractedAsOf"),                   Nullable         ] public long?   ItemMetadataExtractedAsOf                { get; set; } // integer
+		[Column("Item_PendingXmpExtractionMask"),                Nullable         ] public long?   ItemPendingXmpExtractionMask             { get; set; } // integer
+		[Column("Item_DateIngested"),                                      NotNull] public long    ItemDateIngested                         { get; set; } // integer
+		[Column("Item_DupFinderVersion"),                        Nullable         ] public long?   ItemDupFinderVersion                     { get; set; } // integer
+		[Column("Item_DateDupFinding"),                          Nullable         ] public long?   ItemDateDupFinding                       { get; set; } // integer
+		[Column("Item_SameAs"),                                  Nullable         ] public long?   ItemSameAs                               { get; set; } // integer
+		[Column("Item_SyncWith"),                                Nullable         ] public long?   ItemSyncWith                             { get; set; } // integer
+		[Column("Item_HasDup"),                                  Nullable         ] public long?   ItemHasDup                               { get; set; } // integer
+		[Column("Item_DupState"),                                Nullable         ] public long?   ItemDupState                             { get; set; } // integer
+		[Column("Item_UserSelectedDupId"),                       Nullable         ] public long?   ItemUserSelectedDupId                    { get; set; } // integer
+		[Column("Item_UserUnlink"),                              Nullable         ] public long?   ItemUserUnlink                           { get; set; } // integer
+		[Column("Item_MetadataHash"),                            Nullable         ] public string? ItemMetadataHash                         { get; set; } // text(max)
+		[Column("Item_PixelHash"),                               Nullable         ] public string? ItemPixelHash                            { get; set; } // text(max)
+		[Column("Item_CameraSettingFNumber"),                    Nullable         ] public double? ItemCameraSettingFNumber                 { get; set; } // real
+		[Column("Item_CameraSettingFocalLength"),                Nullable         ] public double? ItemCameraSettingFocalLength             { get; set; } // real
+		[Column("Item_CameraSettingISOSpeed"),                   Nullable         ] public long?   ItemCameraSettingISOSpeed                { get; set; } // integer
+		[Column("Item_CameraSettingExposureTime"),               Nullable         ] public double? ItemCameraSettingExposureTime            { get; set; } // real
+		[Column("Item_EditList"),                                Nullable         ] public byte[]? ItemEditList                             { get; set; } // blob
+		[Column("Item_ModificationVersion"),                     Nullable         ] public long?   ItemModificationVersion                  { get; set; } // integer
+		[Column("Item_RichMediaId"),                             Nullable         ] public string? ItemRichMediaId                          { get; set; } // text(max)
+		[Column("Item_RichMediaAppId"),                          Nullable         ] public string? ItemRichMediaAppId                       { get; set; } // text(max)
+		[Column("Item_RichMediaLaunchOptions"),                  Nullable         ] public long?   ItemRichMediaLaunchOptions               { get; set; } // integer
+		[Column("Item_RichMediaSlowGrovelPending"),              Nullable         ] public long?   ItemRichMediaSlowGrovelPending           { get; set; } // integer
+		[Column("Item_ThumbnailPrecacheAttempted"),              Nullable         ] public long?   ItemThumbnailPrecacheAttempted           { get; set; } // integer
+		[Column("Item_PendingTelemetryUploadState"),             Nullable         ] public long?   ItemPendingTelemetryUploadState          { get; set; } // integer
+		[Column("Item_SentTelemetryUploadState"),                Nullable         ] public long?   ItemSentTelemetryUploadState             { get; set; } // integer
+		[Column("Item_InAppRotatePending"),                      Nullable         ] public long?   ItemInAppRotatePending                   { get; set; } // integer
+		[Column("Item_StorageProviderFileId"),                   Nullable         ] public string? ItemStorageProviderFileId                { get; set; } // text(max)
+		[Column("Item_NDEThumbnailGenerationErrorCount"),        Nullable         ] public long?   ItemNDEThumbnailGenerationErrorCount     { get; set; } // integer
+		[Column("Item_FrameRate"),                               Nullable         ] public double? ItemFrameRate                            { get; set; } // real
+		[Column("Item_ImportSession"),                           Nullable         ] public long?   ItemImportSession                        { get; set; } // integer
+		[Column("Item_PendingNDE"),                              Nullable         ] public long?   ItemPendingNDE                           { get; set; } // integer
+		[Column("Item_RichMediaFileStatus"),                     Nullable         ] public long?   ItemRichMediaFileStatus                  { get; set; } // integer
+		[Column("Item_UploadPendingState"),                      Nullable         ] public long?   ItemUploadPendingState                   { get; set; } // integer
+		[Column("Item_UploadAttempts"),                          Nullable         ] public long?   ItemUploadAttempts                       { get; set; } // integer
+		[Column("Item_UploadRequestTime"),                       Nullable         ] public long?   ItemUploadRequestTime                    { get; set; } // integer
+		[Column("Item_LastUploadAttemptTime"),                   Nullable         ] public long?   ItemLastUploadAttemptTime                { get; set; } // integer
+		[Column("Item_ETag"),                                    Nullable         ] public string? ItemETag                                 { get; set; } // text(max)
+		[Column("Item_RewriteSupplementaryPropertiesNeeded"),              NotNull] public long    ItemRewriteSupplementaryPropertiesNeeded { get; set; } // integer
+		[Column("Item_LastEditDate"),                            Nullable         ] public long?   ItemLastEditDate                         { get; set; } // integer
+		[Column("Item_IsInked"),                                 Nullable         ] public long?   ItemIsInked                              { get; set; } // integer
+		[Column("Item_IsExportedMovie"),                         Nullable         ] public long?   ItemIsExportedMovie                      { get; set; } // integer
+		[Column("Item_OnlineContentAttributionString"),          Nullable         ] public string? ItemOnlineContentAttributionString       { get; set; } // text(max)
 
 		#region Associations
 
@@ -1110,7 +1115,7 @@ namespace StorageProviders.SQLite
 		/// FK_ItemTags_1_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemId", OtherKey="ItemTagsItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemTags> ItemTags { get; set; } = null!;
+		public IEnumerable<ItemTag> ItemTags { get; set; } = null!;
 
 		/// <summary>
 		/// FK_ItemVideoQuality_0_0_BackReference
@@ -1202,19 +1207,19 @@ namespace StorageProviders.SQLite
 	[Table("ItemDateTaken")]
 	public partial class ItemDateTaken
 	{
-		[Column("ItemDateTaken_ItemId",    DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long  ItemDateTakenItemId    { get; set; } // integer
-		[Column("ItemDateTaken_Year",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? ItemDateTakenYear      { get; set; } // integer
-		[Column("ItemDateTaken_Month",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? ItemDateTakenMonth     { get; set; } // integer
-		[Column("ItemDateTaken_Day",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? ItemDateTakenDay       { get; set; } // integer
-		[Column("ItemDateTaken_DayOfWeek", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? ItemDateTakenDayOfWeek { get; set; } // integer
+		[Column("ItemDateTaken_ItemId"),    PrimaryKey,  NotNull] public long  ItemDateTakenItemId    { get; set; } // integer
+		[Column("ItemDateTaken_Year"),         Nullable         ] public long? ItemDateTakenYear      { get; set; } // integer
+		[Column("ItemDateTaken_Month"),        Nullable         ] public long? ItemDateTakenMonth     { get; set; } // integer
+		[Column("ItemDateTaken_Day"),          Nullable         ] public long? ItemDateTakenDay       { get; set; } // integer
+		[Column("ItemDateTaken_DayOfWeek"),    Nullable         ] public long? ItemDateTakenDayOfWeek { get; set; } // integer
 	}
 
 	[Table("ItemEdit")]
 	public partial class ItemEdit
 	{
-		[Column("ItemEdit_ItemId",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull    ] public long  ItemEditItemId     { get; set; } // integer
-		[Column("ItemEdit_EditTypeId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable] public long? ItemEditEditTypeId { get; set; } // integer
-		[Column("ItemEdit_EditDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable] public long? ItemEditEditDate   { get; set; } // integer
+		[Column("ItemEdit_ItemId"),     NotNull    ] public long  ItemEditItemId     { get; set; } // integer
+		[Column("ItemEdit_EditTypeId"),    Nullable] public long? ItemEditEditTypeId { get; set; } // integer
+		[Column("ItemEdit_EditDate"),      Nullable] public long? ItemEditEditDate   { get; set; } // integer
 
 		#region Associations
 
@@ -1230,9 +1235,9 @@ namespace StorageProviders.SQLite
 	[Table("ItemEngineExemplar")]
 	public partial class ItemEngineExemplar
 	{
-		[Column("ItemEngineExemplar_Id",       DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ItemEngineExemplarId       { get; set; } // integer
-		[Column("ItemEngineExemplar_ItemId",   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                        NotNull] public long    ItemEngineExemplarItemId   { get; set; } // integer
-		[Column("ItemEngineExemplar_Exemplar", DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? ItemEngineExemplarExemplar { get; set; } // blob
+		[Column("ItemEngineExemplar_Id"),       PrimaryKey,  NotNull] public long    ItemEngineExemplarId       { get; set; } // integer
+		[Column("ItemEngineExemplar_ItemId"),                NotNull] public long    ItemEngineExemplarItemId   { get; set; } // integer
+		[Column("ItemEngineExemplar_Exemplar"),    Nullable         ] public byte[]? ItemEngineExemplarExemplar { get; set; } // blob
 
 		#region Associations
 
@@ -1248,17 +1253,17 @@ namespace StorageProviders.SQLite
 	[Table("ItemEngineStatus")]
 	public partial class ItemEngineStatus
 	{
-		[Column("ItemEngineStatus_Id",                  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ItemEngineStatusId                  { get; set; } // integer
-		[Column("ItemEngineStatus_ItemId",              DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    ItemEngineStatusItemId              { get; set; } // integer
-		[Column("ItemEngineStatus_Status",              DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemEngineStatusStatus              { get; set; } // integer
-		[Column("ItemEngineStatus_ErrorCode",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemEngineStatusErrorCode           { get; set; } // integer
-		[Column("ItemEngineStatus_ErrorString",         DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemEngineStatusErrorString         { get; set; } // text(max)
-		[Column("ItemEngineStatus_RetryCount",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemEngineStatusRetryCount          { get; set; } // integer
-		[Column("ItemEngineStatus_Version",             DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemEngineStatusVersion             { get; set; } // text(max)
-		[Column("ItemEngineStatus_LastRun",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemEngineStatusLastRun             { get; set; } // integer
-		[Column("ItemEngineStatus_LastFrameAnalyzed",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemEngineStatusLastFrameAnalyzed   { get; set; } // integer
-		[Column("ItemEngineStatus_PartialVideoVersion", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemEngineStatusPartialVideoVersion { get; set; } // text(max)
-		[Column("ItemEngineStatus_AnalysisDone",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    ItemEngineStatusAnalysisDone        { get; set; } // integer
+		[Column("ItemEngineStatus_Id"),                  PrimaryKey,  NotNull] public long    ItemEngineStatusId                  { get; set; } // integer
+		[Column("ItemEngineStatus_ItemId"),                           NotNull] public long    ItemEngineStatusItemId              { get; set; } // integer
+		[Column("ItemEngineStatus_Status"),                 Nullable         ] public long?   ItemEngineStatusStatus              { get; set; } // integer
+		[Column("ItemEngineStatus_ErrorCode"),              Nullable         ] public long?   ItemEngineStatusErrorCode           { get; set; } // integer
+		[Column("ItemEngineStatus_ErrorString"),            Nullable         ] public string? ItemEngineStatusErrorString         { get; set; } // text(max)
+		[Column("ItemEngineStatus_RetryCount"),             Nullable         ] public long?   ItemEngineStatusRetryCount          { get; set; } // integer
+		[Column("ItemEngineStatus_Version"),                Nullable         ] public string? ItemEngineStatusVersion             { get; set; } // text(max)
+		[Column("ItemEngineStatus_LastRun"),                Nullable         ] public long?   ItemEngineStatusLastRun             { get; set; } // integer
+		[Column("ItemEngineStatus_LastFrameAnalyzed"),      Nullable         ] public long?   ItemEngineStatusLastFrameAnalyzed   { get; set; } // integer
+		[Column("ItemEngineStatus_PartialVideoVersion"),    Nullable         ] public string? ItemEngineStatusPartialVideoVersion { get; set; } // text(max)
+		[Column("ItemEngineStatus_AnalysisDone"),                     NotNull] public long    ItemEngineStatusAnalysisDone        { get; set; } // integer
 
 		#region Associations
 
@@ -1274,8 +1279,8 @@ namespace StorageProviders.SQLite
 	[Table("ItemInferredLocationExperimental")]
 	public partial class ItemInferredLocationExperimental
 	{
-		[Column("ItemInferredLocationExperimental_ItemId",             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ItemInferredLocationExperimentalItemId             { get; set; } // integer
-		[Column("ItemInferredLocationExperimental_InferredLocationId", DataType=LinqToDB.DataType.Undefined, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public object? ItemInferredLocationExperimentalInferredLocationId { get; set; }
+		[Column("ItemInferredLocationExperimental_ItemId"),             PrimaryKey,  NotNull] public long    ItemInferredLocationExperimentalItemId             { get; set; } // integer
+		[Column("ItemInferredLocationExperimental_InferredLocationId"),    Nullable         ] public object? ItemInferredLocationExperimentalInferredLocationId { get; set; }
 
 		#region Associations
 
@@ -1289,12 +1294,12 @@ namespace StorageProviders.SQLite
 	}
 
 	[Table("ItemTags")]
-	public partial class ItemTags
+	public partial class ItemTag
 	{
-		[Column("ItemTags_Id",         DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long    ItemTagsId         { get; set; } // integer
-		[Column("ItemTags_ItemId",     DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemTagsItemId     { get; set; } // integer
-		[Column("ItemTags_TagId",      DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemTagsTagId      { get; set; } // integer
-		[Column("ItemTags_Confidence", DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? ItemTagsConfidence { get; set; } // real
+		[Column("ItemTags_Id"),         PrimaryKey,  NotNull] public long    ItemTagsId         { get; set; } // integer
+		[Column("ItemTags_ItemId"),                  NotNull] public long    ItemTagsItemId     { get; set; } // integer
+		[Column("ItemTags_TagId"),                   NotNull] public long    ItemTagsTagId      { get; set; } // integer
+		[Column("ItemTags_Confidence"),    Nullable         ] public double? ItemTagsConfidence { get; set; } // real
 
 		#region Associations
 
@@ -1314,7 +1319,7 @@ namespace StorageProviders.SQLite
 		/// FK_ItemVideoTags_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="ItemTagsId", OtherKey="ItemVideoTagsItemTagsId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemVideoTags> ItemVideoTags { get; set; } = null!;
+		public IEnumerable<ItemVideoTag> ItemVideoTags { get; set; } = null!;
 
 		#endregion
 	}
@@ -1322,12 +1327,12 @@ namespace StorageProviders.SQLite
 	[Table("ItemVideoQuality")]
 	public partial class ItemVideoQuality
 	{
-		[Column("ItemVideoQuality_Id",           DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long    ItemVideoQualityId           { get; set; } // integer
-		[Column("ItemVideoQuality_ItemId",       DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemVideoQualityItemId       { get; set; } // integer
-		[Column("ItemVideoQuality_Quality",      DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? ItemVideoQualityQuality      { get; set; } // real
-		[Column("ItemVideoQuality_QualityLevel", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   ItemVideoQualityQualityLevel { get; set; } // integer
-		[Column("ItemVideoQuality_BeginFrame",   DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemVideoQualityBeginFrame   { get; set; } // integer
-		[Column("ItemVideoQuality_EndFrame",     DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemVideoQualityEndFrame     { get; set; } // integer
+		[Column("ItemVideoQuality_Id"),           PrimaryKey,  NotNull] public long    ItemVideoQualityId           { get; set; } // integer
+		[Column("ItemVideoQuality_ItemId"),                    NotNull] public long    ItemVideoQualityItemId       { get; set; } // integer
+		[Column("ItemVideoQuality_Quality"),         Nullable         ] public double? ItemVideoQualityQuality      { get; set; } // real
+		[Column("ItemVideoQuality_QualityLevel"),    Nullable         ] public long?   ItemVideoQualityQualityLevel { get; set; } // integer
+		[Column("ItemVideoQuality_BeginFrame"),                NotNull] public long    ItemVideoQualityBeginFrame   { get; set; } // integer
+		[Column("ItemVideoQuality_EndFrame"),                  NotNull] public long    ItemVideoQualityEndFrame     { get; set; } // integer
 
 		#region Associations
 
@@ -1341,13 +1346,13 @@ namespace StorageProviders.SQLite
 	}
 
 	[Table("ItemVideoTags")]
-	public partial class ItemVideoTags
+	public partial class ItemVideoTag
 	{
-		[Column("ItemVideoTags_Id",         DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long    ItemVideoTagsId         { get; set; } // integer
-		[Column("ItemVideoTags_ItemTagsId", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemVideoTagsItemTagsId { get; set; } // integer
-		[Column("ItemVideoTags_Confidence", DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? ItemVideoTagsConfidence { get; set; } // real
-		[Column("ItemVideoTags_BeginFrame", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemVideoTagsBeginFrame { get; set; } // integer
-		[Column("ItemVideoTags_EndFrame",   DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemVideoTagsEndFrame   { get; set; } // integer
+		[Column("ItemVideoTags_Id"),         PrimaryKey,  NotNull] public long    ItemVideoTagsId         { get; set; } // integer
+		[Column("ItemVideoTags_ItemTagsId"),              NotNull] public long    ItemVideoTagsItemTagsId { get; set; } // integer
+		[Column("ItemVideoTags_Confidence"),    Nullable         ] public double? ItemVideoTagsConfidence { get; set; } // real
+		[Column("ItemVideoTags_BeginFrame"),              NotNull] public long    ItemVideoTagsBeginFrame { get; set; } // integer
+		[Column("ItemVideoTags_EndFrame"),                NotNull] public long    ItemVideoTagsEndFrame   { get; set; } // integer
 
 		#region Associations
 
@@ -1355,7 +1360,7 @@ namespace StorageProviders.SQLite
 		/// FK_ItemVideoTags_0_0
 		/// </summary>
 		[Association(ThisKey="ItemVideoTagsItemTagsId", OtherKey="ItemTagsId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemVideoTags_0_0", BackReferenceName="ItemVideoTags")]
-		public ItemTags ItemVideoTagsItemTag { get; set; } = null!;
+		public ItemTag ItemVideoTagsItemTag { get; set; } = null!;
 
 		#endregion
 	}
@@ -1363,7 +1368,7 @@ namespace StorageProviders.SQLite
 	[Table("LiveTile")]
 	public partial class LiveTile
 	{
-		[Column("LiveTile_ItemId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long LiveTileItemId { get; set; } // integer
+		[Column("LiveTile_ItemId"), PrimaryKey, NotNull] public long LiveTileItemId { get; set; } // integer
 
 		#region Associations
 
@@ -1379,13 +1384,13 @@ namespace StorageProviders.SQLite
 	[Table("Location")]
 	public partial class Location
 	{
-		[Column("Location_Id",                 DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    LocationId                 { get; set; } // integer
-		[Column("Location_Name",               DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? LocationName               { get; set; } // text(max)
-		[Column("Location_LocationRegionId",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationLocationRegionId   { get; set; } // integer
-		[Column("Location_LocationDistrictId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationLocationDistrictId { get; set; } // integer
-		[Column("Location_LocationCountryId",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationLocationCountryId  { get; set; } // integer
-		[Column("Location_ItemsCountExcDupes", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationItemsCountExcDupes { get; set; } // integer
-		[Column("Location_CoverItemId",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationCoverItemId        { get; set; } // integer
+		[Column("Location_Id"),                 PrimaryKey,  NotNull] public long    LocationId                 { get; set; } // integer
+		[Column("Location_Name"),                  Nullable         ] public string? LocationName               { get; set; } // text(max)
+		[Column("Location_LocationRegionId"),      Nullable         ] public long?   LocationLocationRegionId   { get; set; } // integer
+		[Column("Location_LocationDistrictId"),    Nullable         ] public long?   LocationLocationDistrictId { get; set; } // integer
+		[Column("Location_LocationCountryId"),     Nullable         ] public long?   LocationLocationCountryId  { get; set; } // integer
+		[Column("Location_ItemsCountExcDupes"),    Nullable         ] public long?   LocationItemsCountExcDupes { get; set; } // integer
+		[Column("Location_CoverItemId"),           Nullable         ] public long?   LocationCoverItemId        { get; set; } // integer
 
 		#region Associations
 
@@ -1443,8 +1448,8 @@ namespace StorageProviders.SQLite
 	[Table("LocationCountry")]
 	public partial class LocationCountry
 	{
-		[Column("LocationCountry_Id",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    LocationCountryId   { get; set; } // integer
-		[Column("LocationCountry_Name", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? LocationCountryName { get; set; } // text(max)
+		[Column("LocationCountry_Id"),   PrimaryKey,  NotNull] public long    LocationCountryId   { get; set; } // integer
+		[Column("LocationCountry_Name"),    Nullable         ] public string? LocationCountryName { get; set; } // text(max)
 
 		#region Associations
 
@@ -1466,9 +1471,9 @@ namespace StorageProviders.SQLite
 	[Table("LocationDistrict")]
 	public partial class LocationDistrict
 	{
-		[Column("LocationDistrict_Id",               DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    LocationDistrictId               { get; set; } // integer
-		[Column("LocationDistrict_Name",             DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? LocationDistrictName             { get; set; } // text(max)
-		[Column("LocationDistrict_LocationRegionId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationDistrictLocationRegionId { get; set; } // integer
+		[Column("LocationDistrict_Id"),               PrimaryKey,  NotNull] public long    LocationDistrictId               { get; set; } // integer
+		[Column("LocationDistrict_Name"),                Nullable         ] public string? LocationDistrictName             { get; set; } // text(max)
+		[Column("LocationDistrict_LocationRegionId"),    Nullable         ] public long?   LocationDistrictLocationRegionId { get; set; } // integer
 
 		#region Associations
 
@@ -1490,12 +1495,12 @@ namespace StorageProviders.SQLite
 	[Table("LocationGrid")]
 	public partial class LocationGrid
 	{
-		[Column("LocationGrid_Id",         DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long    LocationGridId         { get; set; } // integer
-		[Column("LocationGrid_Latitude",   DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? LocationGridLatitude   { get; set; } // real
-		[Column("LocationGrid_Longitude",  DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? LocationGridLongitude  { get; set; } // real
-		[Column("LocationGrid_LocationId", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   LocationGridLocationId { get; set; } // integer
-		[Column("LocationGrid_ErrorCount", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   LocationGridErrorCount { get; set; } // integer
-		[Column("LocationGrid_LastRun",    DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   LocationGridLastRun    { get; set; } // integer
+		[Column("LocationGrid_Id"),         PrimaryKey,  NotNull] public long    LocationGridId         { get; set; } // integer
+		[Column("LocationGrid_Latitude"),      Nullable         ] public double? LocationGridLatitude   { get; set; } // real
+		[Column("LocationGrid_Longitude"),     Nullable         ] public double? LocationGridLongitude  { get; set; } // real
+		[Column("LocationGrid_LocationId"),    Nullable         ] public long?   LocationGridLocationId { get; set; } // integer
+		[Column("LocationGrid_ErrorCount"),    Nullable         ] public long?   LocationGridErrorCount { get; set; } // integer
+		[Column("LocationGrid_LastRun"),       Nullable         ] public long?   LocationGridLastRun    { get; set; } // integer
 
 		#region Associations
 
@@ -1511,9 +1516,9 @@ namespace StorageProviders.SQLite
 	[Table("LocationRegion")]
 	public partial class LocationRegion
 	{
-		[Column("LocationRegion_Id",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    LocationRegionId                { get; set; } // integer
-		[Column("LocationRegion_Name",              DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? LocationRegionName              { get; set; } // text(max)
-		[Column("LocationRegion_LocationCountryId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationRegionLocationCountryId { get; set; } // integer
+		[Column("LocationRegion_Id"),                PrimaryKey,  NotNull] public long    LocationRegionId                { get; set; } // integer
+		[Column("LocationRegion_Name"),                 Nullable         ] public string? LocationRegionName              { get; set; } // text(max)
+		[Column("LocationRegion_LocationCountryId"),    Nullable         ] public long?   LocationRegionLocationCountryId { get; set; } // integer
 
 		#region Associations
 
@@ -1541,19 +1546,19 @@ namespace StorageProviders.SQLite
 	[Table("NetworkTelemetry")]
 	public partial class NetworkTelemetry
 	{
-		[Column("NetworkTelemetry_Source",               DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey(0), NotNull] public long NetworkTelemetrySource               { get; set; } // integer
-		[Column("NetworkTelemetry_RequestType",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey(1), NotNull] public long NetworkTelemetryRequestType          { get; set; } // integer
-		[Column("NetworkTelemetry_IsBackgroundTaskHost", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey(2), NotNull] public long NetworkTelemetryIsBackgroundTaskHost { get; set; } // integer
-		[Column("NetworkTelemetry_TotalCount",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                NotNull] public long NetworkTelemetryTotalCount           { get; set; } // integer
-		[Column("NetworkTelemetry_ByteSize",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                NotNull] public long NetworkTelemetryByteSize             { get; set; } // integer
+		[Column("NetworkTelemetry_Source"),               PrimaryKey(0), NotNull] public long NetworkTelemetrySource               { get; set; } // integer
+		[Column("NetworkTelemetry_RequestType"),          PrimaryKey(1), NotNull] public long NetworkTelemetryRequestType          { get; set; } // integer
+		[Column("NetworkTelemetry_IsBackgroundTaskHost"), PrimaryKey(2), NotNull] public long NetworkTelemetryIsBackgroundTaskHost { get; set; } // integer
+		[Column("NetworkTelemetry_TotalCount"),                          NotNull] public long NetworkTelemetryTotalCount           { get; set; } // integer
+		[Column("NetworkTelemetry_ByteSize"),                            NotNull] public long NetworkTelemetryByteSize             { get; set; } // integer
 	}
 
 	[Table("OCRItem")]
 	public partial class OCRItem
 	{
-		[Column("OCRItem_Id",        DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long   OCRItemId        { get; set; } // integer
-		[Column("OCRItem_ItemId",    DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),             NotNull] public long   OCRItemItemId    { get; set; } // integer
-		[Column("OCRItem_TextAngle", DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),             NotNull] public double OCRItemTextAngle { get; set; } // real
+		[Column("OCRItem_Id"),        PrimaryKey, NotNull] public long   OCRItemId        { get; set; } // integer
+		[Column("OCRItem_ItemId"),                NotNull] public long   OCRItemItemId    { get; set; } // integer
+		[Column("OCRItem_TextAngle"),             NotNull] public double OCRItemTextAngle { get; set; } // real
 
 		#region Associations
 
@@ -1575,16 +1580,16 @@ namespace StorageProviders.SQLite
 	[Table("OCRItemTextView", IsView=true)]
 	public partial class OCRItemTextView
 	{
-		[Column("rowid",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),           NotNull    ] public long    Rowid               { get; set; } // integer
-		[Column("OCRItemTextView_Text", DataType=LinqToDB.DataType.Undefined, Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public object? OCRItemTextViewText { get; set; }
+		[Column("rowid"),                NotNull    ] public long    Rowid               { get; set; } // integer
+		[Column("OCRItemTextView_Text"),    Nullable] public object? OCRItemTextViewText { get; set; }
 	}
 
 	[Table("OCRLine")]
 	public partial class OCRLine
 	{
-		[Column("OCRLine_Id",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long OCRLineId          { get; set; } // integer
-		[Column("OCRLine_OCRItemId",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long OCRLineOCRItemId   { get; set; } // integer
-		[Column("OCRLine_IndexOnItem", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long OCRLineIndexOnItem { get; set; } // integer
+		[Column("OCRLine_Id"),          PrimaryKey, NotNull] public long OCRLineId          { get; set; } // integer
+		[Column("OCRLine_OCRItemId"),               NotNull] public long OCRLineOCRItemId   { get; set; } // integer
+		[Column("OCRLine_IndexOnItem"),             NotNull] public long OCRLineIndexOnItem { get; set; } // integer
 
 		#region Associations
 
@@ -1606,14 +1611,14 @@ namespace StorageProviders.SQLite
 	[Table("OCRWord")]
 	public partial class OCRWord
 	{
-		[Column("OCRWord_Id",          DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),           PrimaryKey, NotNull] public long   OCRWordId          { get; set; } // integer
-		[Column("OCRWord_OCRLineId",   DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),                       NotNull] public long   OCRWordOCRLineId   { get; set; } // integer
-		[Column("OCRWord_IndexOnLine", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),                       NotNull] public long   OCRWordIndexOnLine { get; set; } // integer
-		[Column("OCRWord_Text",        DataType=LinqToDB.DataType.Text,   Length=int.MaxValue, Precision=0, Scale=0),             NotNull] public string OCRWordText        { get; set; } = null!; // text(max)
-		[Column("OCRWord_Height",      DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),                       NotNull] public double OCRWordHeight      { get; set; } // real
-		[Column("OCRWord_Width",       DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),                       NotNull] public double OCRWordWidth       { get; set; } // real
-		[Column("OCRWord_X",           DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),                       NotNull] public double OCRWordX           { get; set; } // real
-		[Column("OCRWord_Y",           DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),                       NotNull] public double OCRWordY           { get; set; } // real
+		[Column("OCRWord_Id"),          PrimaryKey, NotNull] public long   OCRWordId          { get; set; } // integer
+		[Column("OCRWord_OCRLineId"),               NotNull] public long   OCRWordOCRLineId   { get; set; } // integer
+		[Column("OCRWord_IndexOnLine"),             NotNull] public long   OCRWordIndexOnLine { get; set; } // integer
+		[Column("OCRWord_Text"),                    NotNull] public string OCRWordText        { get; set; } = null!; // text(max)
+		[Column("OCRWord_Height"),                  NotNull] public double OCRWordHeight      { get; set; } // real
+		[Column("OCRWord_Width"),                   NotNull] public double OCRWordWidth       { get; set; } // real
+		[Column("OCRWord_X"),                       NotNull] public double OCRWordX           { get; set; } // real
+		[Column("OCRWord_Y"),                       NotNull] public double OCRWordY           { get; set; } // real
 
 		#region Associations
 
@@ -1629,29 +1634,29 @@ namespace StorageProviders.SQLite
 	[Table("OneDriveStorageAndUpsellInfo")]
 	public partial class OneDriveStorageAndUpsellInfo
 	{
-		[Column("OneDriveStorageAndUpsellInfo_UserId",                 DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), PrimaryKey,  NotNull] public string  OneDriveStorageAndUpsellInfoUserId                 { get; set; } = null!; // text(max)
-		[Column("OneDriveStorageAndUpsellInfo_TotalSpace",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   OneDriveStorageAndUpsellInfoTotalSpace             { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_UsedSpace",              DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   OneDriveStorageAndUpsellInfoUsedSpace              { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_IsHighestPlan",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   OneDriveStorageAndUpsellInfoIsHighestPlan          { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_PaidSpace",              DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   OneDriveStorageAndUpsellInfoPaidSpace              { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_CountOfClickUpsellLink", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   OneDriveStorageAndUpsellInfoCountOfClickUpsellLink { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_TotalSpaceForDisplay",   DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? OneDriveStorageAndUpsellInfoTotalSpaceForDisplay   { get; set; } // text(max)
-		[Column("OneDriveStorageAndUpsellInfo_UsedSpaceForDisplay",    DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? OneDriveStorageAndUpsellInfoUsedSpaceForDisplay    { get; set; } // text(max)
-		[Column("OneDriveStorageAndUpsellInfo_PriceForDisplay",        DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? OneDriveStorageAndUpsellInfoPriceForDisplay        { get; set; } // text(max)
-		[Column("OneDriveStorageAndUpsellInfo_UpsellUrl",              DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? OneDriveStorageAndUpsellInfoUpsellUrl              { get; set; } // text(max)
-		[Column("OneDriveStorageAndUpsellInfo_UpsellState",            DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   OneDriveStorageAndUpsellInfoUpsellState            { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_LastGetQuotaTime",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   OneDriveStorageAndUpsellInfoLastGetQuotaTime       { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_LastGetUpsellInfoTime",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   OneDriveStorageAndUpsellInfoLastGetUpsellInfoTime  { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_CurrentPlan",            DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   OneDriveStorageAndUpsellInfoCurrentPlan            { get; set; } // integer
-		[Column("OneDriveStorageAndUpsellInfo_QuotaStatus",            DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   OneDriveStorageAndUpsellInfoQuotaStatus            { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_UserId"),                 PrimaryKey,  NotNull] public string  OneDriveStorageAndUpsellInfoUserId                 { get; set; } = null!; // text(max)
+		[Column("OneDriveStorageAndUpsellInfo_TotalSpace"),                Nullable         ] public long?   OneDriveStorageAndUpsellInfoTotalSpace             { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_UsedSpace"),                 Nullable         ] public long?   OneDriveStorageAndUpsellInfoUsedSpace              { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_IsHighestPlan"),             Nullable         ] public long?   OneDriveStorageAndUpsellInfoIsHighestPlan          { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_PaidSpace"),                 Nullable         ] public long?   OneDriveStorageAndUpsellInfoPaidSpace              { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_CountOfClickUpsellLink"),    Nullable         ] public long?   OneDriveStorageAndUpsellInfoCountOfClickUpsellLink { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_TotalSpaceForDisplay"),      Nullable         ] public string? OneDriveStorageAndUpsellInfoTotalSpaceForDisplay   { get; set; } // text(max)
+		[Column("OneDriveStorageAndUpsellInfo_UsedSpaceForDisplay"),       Nullable         ] public string? OneDriveStorageAndUpsellInfoUsedSpaceForDisplay    { get; set; } // text(max)
+		[Column("OneDriveStorageAndUpsellInfo_PriceForDisplay"),           Nullable         ] public string? OneDriveStorageAndUpsellInfoPriceForDisplay        { get; set; } // text(max)
+		[Column("OneDriveStorageAndUpsellInfo_UpsellUrl"),                 Nullable         ] public string? OneDriveStorageAndUpsellInfoUpsellUrl              { get; set; } // text(max)
+		[Column("OneDriveStorageAndUpsellInfo_UpsellState"),               Nullable         ] public long?   OneDriveStorageAndUpsellInfoUpsellState            { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_LastGetQuotaTime"),          Nullable         ] public long?   OneDriveStorageAndUpsellInfoLastGetQuotaTime       { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_LastGetUpsellInfoTime"),     Nullable         ] public long?   OneDriveStorageAndUpsellInfoLastGetUpsellInfoTime  { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_CurrentPlan"),               Nullable         ] public long?   OneDriveStorageAndUpsellInfoCurrentPlan            { get; set; } // integer
+		[Column("OneDriveStorageAndUpsellInfo_QuotaStatus"),               Nullable         ] public long?   OneDriveStorageAndUpsellInfoQuotaStatus            { get; set; } // integer
 	}
 
 	[Table("PendingCloudAlbumDelete")]
 	public partial class PendingCloudAlbumDelete
 	{
-		[Column("PendingCloudAlbumDelete_Id",            DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    PendingCloudAlbumDeleteId            { get; set; } // integer
-		[Column("PendingCloudAlbumDelete_PhotosCloudId", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? PendingCloudAlbumDeletePhotosCloudId { get; set; } // text(max)
-		[Column("PendingCloudAlbumDelete_SourceId",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PendingCloudAlbumDeleteSourceId      { get; set; } // integer
+		[Column("PendingCloudAlbumDelete_Id"),            PrimaryKey,  NotNull] public long    PendingCloudAlbumDeleteId            { get; set; } // integer
+		[Column("PendingCloudAlbumDelete_PhotosCloudId"),    Nullable         ] public string? PendingCloudAlbumDeletePhotosCloudId { get; set; } // text(max)
+		[Column("PendingCloudAlbumDelete_SourceId"),         Nullable         ] public long?   PendingCloudAlbumDeleteSourceId      { get; set; } // integer
 
 		#region Associations
 
@@ -1667,18 +1672,18 @@ namespace StorageProviders.SQLite
 	[Table("PendingUploadItem")]
 	public partial class PendingUploadItem
 	{
-		[Column("PendingUploadItem_ItemId",               DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull    ] public long    PendingUploadItemItemId               { get; set; } // integer
-		[Column("PendingUploadItem_AlbumId",              DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull    ] public long    PendingUploadItemAlbumId              { get; set; } // integer
-		[Column("PendingUploadItem_Result",               DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   PendingUploadItemResult               { get; set; } // integer
-		[Column("PendingUploadItem_ResourceId",           DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? PendingUploadItemResourceId           { get; set; } // text(max)
-		[Column("PendingUploadItem_SourceId",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   PendingUploadItemSourceId             { get; set; } // integer
-		[Column("PendingUploadItem_Type",                 DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   PendingUploadItemType                 { get; set; } // integer
-		[Column("PendingUploadItem_NeedsAEUpload",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   PendingUploadItemNeedsAEUpload        { get; set; } // integer
-		[Column("PendingUploadItem_ActionAfterUpload",    DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   PendingUploadItemActionAfterUpload    { get; set; } // integer
-		[Column("PendingUploadItem_AlbumRemoteId",        DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? PendingUploadItemAlbumRemoteId        { get; set; } // text(max)
-		[Column("PendingUploadItem_ResourceIdSourceType", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   PendingUploadItemResourceIdSourceType { get; set; } // integer
-		[Column("PendingUploadItem_UploadSessionUrl",     DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? PendingUploadItemUploadSessionUrl     { get; set; } // text(max)
-		[Column("PendingUploadItem_ResumableUploadUrl",   DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? PendingUploadItemResumableUploadUrl   { get; set; } // text(max)
+		[Column("PendingUploadItem_ItemId"),               NotNull    ] public long    PendingUploadItemItemId               { get; set; } // integer
+		[Column("PendingUploadItem_AlbumId"),              NotNull    ] public long    PendingUploadItemAlbumId              { get; set; } // integer
+		[Column("PendingUploadItem_Result"),                  Nullable] public long?   PendingUploadItemResult               { get; set; } // integer
+		[Column("PendingUploadItem_ResourceId"),              Nullable] public string? PendingUploadItemResourceId           { get; set; } // text(max)
+		[Column("PendingUploadItem_SourceId"),                Nullable] public long?   PendingUploadItemSourceId             { get; set; } // integer
+		[Column("PendingUploadItem_Type"),                    Nullable] public long?   PendingUploadItemType                 { get; set; } // integer
+		[Column("PendingUploadItem_NeedsAEUpload"),           Nullable] public long?   PendingUploadItemNeedsAEUpload        { get; set; } // integer
+		[Column("PendingUploadItem_ActionAfterUpload"),       Nullable] public long?   PendingUploadItemActionAfterUpload    { get; set; } // integer
+		[Column("PendingUploadItem_AlbumRemoteId"),           Nullable] public string? PendingUploadItemAlbumRemoteId        { get; set; } // text(max)
+		[Column("PendingUploadItem_ResourceIdSourceType"),    Nullable] public long?   PendingUploadItemResourceIdSourceType { get; set; } // integer
+		[Column("PendingUploadItem_UploadSessionUrl"),        Nullable] public string? PendingUploadItemUploadSessionUrl     { get; set; } // text(max)
+		[Column("PendingUploadItem_ResumableUploadUrl"),      Nullable] public string? PendingUploadItemResumableUploadUrl   { get; set; } // text(max)
 
 		#region Associations
 
@@ -1706,19 +1711,19 @@ namespace StorageProviders.SQLite
 	[Table("Person")]
 	public partial class Person
 	{
-		[Column("Person_Id",                        DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    PersonId                        { get; set; } // integer
-		[Column("Person_CID",                       DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PersonCid                       { get; set; } // integer
-		[Column("Person_BestFaceId",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PersonBestFaceId                { get; set; } // integer
-		[Column("Person_SafeBestFaceId",            DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PersonSafeBestFaceId            { get; set; } // integer
-		[Column("Person_ServiceId",                 DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PersonServiceId                 { get; set; } // integer
-		[Column("Person_Name",                      DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? PersonName                      { get; set; } // text(max)
-		[Column("Person_SourceAndId",               DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? PersonSourceAndId               { get; set; } // text(max)
-		[Column("Person_ItemCount",                 DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PersonItemCount                 { get; set; } // integer
-		[Column("Person_EmailDigest",               DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? PersonEmailDigest               { get; set; } // blob
-		[Column("Person_RepresentativeThumbStream", DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? PersonRepresentativeThumbStream { get; set; } // blob
-		[Column("Person_Rank",                      DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PersonRank                      { get; set; } // integer
-		[Column("Person_RecalcBestFace",            DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PersonRecalcBestFace            { get; set; } // integer
-		[Column("Person_RecalcRank",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PersonRecalcRank                { get; set; } // integer
+		[Column("Person_Id"),                        PrimaryKey,  NotNull] public long    PersonId                        { get; set; } // integer
+		[Column("Person_CID"),                          Nullable         ] public long?   PersonCid                       { get; set; } // integer
+		[Column("Person_BestFaceId"),                   Nullable         ] public long?   PersonBestFaceId                { get; set; } // integer
+		[Column("Person_SafeBestFaceId"),               Nullable         ] public long?   PersonSafeBestFaceId            { get; set; } // integer
+		[Column("Person_ServiceId"),                    Nullable         ] public long?   PersonServiceId                 { get; set; } // integer
+		[Column("Person_Name"),                         Nullable         ] public string? PersonName                      { get; set; } // text(max)
+		[Column("Person_SourceAndId"),                  Nullable         ] public string? PersonSourceAndId               { get; set; } // text(max)
+		[Column("Person_ItemCount"),                    Nullable         ] public long?   PersonItemCount                 { get; set; } // integer
+		[Column("Person_EmailDigest"),                  Nullable         ] public byte[]? PersonEmailDigest               { get; set; } // blob
+		[Column("Person_RepresentativeThumbStream"),    Nullable         ] public byte[]? PersonRepresentativeThumbStream { get; set; } // blob
+		[Column("Person_Rank"),                         Nullable         ] public long?   PersonRank                      { get; set; } // integer
+		[Column("Person_RecalcBestFace"),               Nullable         ] public long?   PersonRecalcBestFace            { get; set; } // integer
+		[Column("Person_RecalcRank"),                   Nullable         ] public long?   PersonRecalcRank                { get; set; } // integer
 
 		#region Associations
 
@@ -1758,23 +1763,23 @@ namespace StorageProviders.SQLite
 	[Table("PinnedSearch")]
 	public partial class PinnedSearch
 	{
-		[Column("PinnedSearch_Id",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    PinnedSearchId         { get; set; } // integer
-		[Column("PinnedSearch_PinnedDate", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    PinnedSearchPinnedDate { get; set; } // integer
-		[Column("PinnedSearch_SearchText", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? PinnedSearchSearchText { get; set; } // text(max)
+		[Column("PinnedSearch_Id"),         PrimaryKey,  NotNull] public long    PinnedSearchId         { get; set; } // integer
+		[Column("PinnedSearch_PinnedDate"),              NotNull] public long    PinnedSearchPinnedDate { get; set; } // integer
+		[Column("PinnedSearch_SearchText"),    Nullable         ] public string? PinnedSearchSearchText { get; set; } // text(max)
 	}
 
 	[Table("Project")]
 	public partial class Project
 	{
-		[Column("Project_Id",                       DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ProjectId                       { get; set; } // integer
-		[Column("Project_AlbumId",                  DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ProjectAlbumId                  { get; set; } // integer
-		[Column("Project_Guid",                     DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),              NotNull] public string  ProjectGuid                     { get; set; } = null!; // text(max)
-		[Column("Project_Name",                     DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ProjectName                     { get; set; } // text(max)
-		[Column("Project_RpmState",                 DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ProjectRpmState                 { get; set; } // text(max)
-		[Column("Project_AgmState",                 DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ProjectAgmState                 { get; set; } // text(max)
-		[Column("Project_DateCreated",              DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                        NotNull] public long    ProjectDateCreated              { get; set; } // integer
-		[Column("Project_Duration",                 DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ProjectDuration                 { get; set; } // integer
-		[Column("Project_StoryBuilderProjectState", DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? ProjectStoryBuilderProjectState { get; set; } // blob
+		[Column("Project_Id"),                       PrimaryKey,  NotNull] public long    ProjectId                       { get; set; } // integer
+		[Column("Project_AlbumId"),                     Nullable         ] public long?   ProjectAlbumId                  { get; set; } // integer
+		[Column("Project_Guid"),                                  NotNull] public string  ProjectGuid                     { get; set; } = null!; // text(max)
+		[Column("Project_Name"),                        Nullable         ] public string? ProjectName                     { get; set; } // text(max)
+		[Column("Project_RpmState"),                    Nullable         ] public string? ProjectRpmState                 { get; set; } // text(max)
+		[Column("Project_AgmState"),                    Nullable         ] public string? ProjectAgmState                 { get; set; } // text(max)
+		[Column("Project_DateCreated"),                           NotNull] public long    ProjectDateCreated              { get; set; } // integer
+		[Column("Project_Duration"),                    Nullable         ] public long?   ProjectDuration                 { get; set; } // integer
+		[Column("Project_StoryBuilderProjectState"),    Nullable         ] public byte[]? ProjectStoryBuilderProjectState { get; set; } // blob
 
 		#region Associations
 
@@ -1796,14 +1801,14 @@ namespace StorageProviders.SQLite
 	[Table("RemoteAlbum")]
 	public partial class RemoteAlbum
 	{
-		[Column("RemoteAlbum_AlbumId",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    RemoteAlbumAlbumId           { get; set; } // integer
-		[Column("RemoteAlbum_RemoteId",          DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? RemoteAlbumRemoteId          { get; set; } // text(max)
-		[Column("RemoteAlbum_PresentAtSync",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   RemoteAlbumPresentAtSync     { get; set; } // integer
-		[Column("RemoteAlbum_GenericViewUrl",    DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? RemoteAlbumGenericViewUrl    { get; set; } // text(max)
-		[Column("RemoteAlbum_CoverDuringUpload", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? RemoteAlbumCoverDuringUpload { get; set; } // text(max)
-		[Column("RemoteAlbum_AlbumType",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   RemoteAlbumAlbumType         { get; set; } // integer
-		[Column("RemoteAlbum_PhotosCloudId",     DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? RemoteAlbumPhotosCloudId     { get; set; } // text(max)
-		[Column("RemoteAlbum_ETag",              DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? RemoteAlbumETag              { get; set; } // text(max)
+		[Column("RemoteAlbum_AlbumId"),           PrimaryKey,  NotNull] public long    RemoteAlbumAlbumId           { get; set; } // integer
+		[Column("RemoteAlbum_RemoteId"),             Nullable         ] public string? RemoteAlbumRemoteId          { get; set; } // text(max)
+		[Column("RemoteAlbum_PresentAtSync"),        Nullable         ] public long?   RemoteAlbumPresentAtSync     { get; set; } // integer
+		[Column("RemoteAlbum_GenericViewUrl"),       Nullable         ] public string? RemoteAlbumGenericViewUrl    { get; set; } // text(max)
+		[Column("RemoteAlbum_CoverDuringUpload"),    Nullable         ] public string? RemoteAlbumCoverDuringUpload { get; set; } // text(max)
+		[Column("RemoteAlbum_AlbumType"),            Nullable         ] public long?   RemoteAlbumAlbumType         { get; set; } // integer
+		[Column("RemoteAlbum_PhotosCloudId"),        Nullable         ] public string? RemoteAlbumPhotosCloudId     { get; set; } // text(max)
+		[Column("RemoteAlbum_ETag"),                 Nullable         ] public string? RemoteAlbumETag              { get; set; } // text(max)
 
 		#region Associations
 
@@ -1819,13 +1824,13 @@ namespace StorageProviders.SQLite
 	[Table("RemoteItem")]
 	public partial class RemoteItem
 	{
-		[Column("RemoteItem_RemoteId",       DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), Nullable] public string? RemoteItemRemoteId       { get; set; } // text(max)
-		[Column("RemoteItem_RemoteParentId", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), Nullable] public string? RemoteItemRemoteParentId { get; set; } // text(max)
-		[Column("RemoteItem_ItemId",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           Nullable] public long?   RemoteItemItemId         { get; set; } // integer
-		[Column("RemoteItem_FolderId",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           Nullable] public long?   RemoteItemFolderId       { get; set; } // integer
-		[Column("RemoteItem_DownloadUrl",    DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), Nullable] public string? RemoteItemDownloadUrl    { get; set; } // text(max)
-		[Column("RemoteItem_PresentAtSync",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           Nullable] public long?   RemoteItemPresentAtSync  { get; set; } // integer
-		[Column("RemoteItem_PhotosCloudId",  DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), Nullable] public string? RemoteItemPhotosCloudId  { get; set; } // text(max)
+		[Column("RemoteItem_RemoteId"),       Nullable] public string? RemoteItemRemoteId       { get; set; } // text(max)
+		[Column("RemoteItem_RemoteParentId"), Nullable] public string? RemoteItemRemoteParentId { get; set; } // text(max)
+		[Column("RemoteItem_ItemId"),         Nullable] public long?   RemoteItemItemId         { get; set; } // integer
+		[Column("RemoteItem_FolderId"),       Nullable] public long?   RemoteItemFolderId       { get; set; } // integer
+		[Column("RemoteItem_DownloadUrl"),    Nullable] public string? RemoteItemDownloadUrl    { get; set; } // text(max)
+		[Column("RemoteItem_PresentAtSync"),  Nullable] public long?   RemoteItemPresentAtSync  { get; set; } // integer
+		[Column("RemoteItem_PhotosCloudId"),  Nullable] public string? RemoteItemPhotosCloudId  { get; set; } // text(max)
 
 		#region Associations
 
@@ -1847,13 +1852,13 @@ namespace StorageProviders.SQLite
 	[Table("RemoteProject")]
 	public partial class RemoteProject
 	{
-		[Column("RemoteProject_Id",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    RemoteProjectId                { get; set; } // integer
-		[Column("RemoteProject_ProjectGuid",       DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),              NotNull] public string  RemoteProjectProjectGuid       { get; set; } = null!; // text(max)
-		[Column("RemoteProject_PhotosCloudId",     DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? RemoteProjectPhotosCloudId     { get; set; } // text(max)
-		[Column("RemoteProject_PublishState",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    RemoteProjectPublishState      { get; set; } // integer
-		[Column("RemoteProject_DateLastSynced",    DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   RemoteProjectDateLastSynced    { get; set; } // integer
-		[Column("RemoteProject_ETag",              DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? RemoteProjectETag              { get; set; } // text(max)
-		[Column("RemoteProject_MigratedFromCloud", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    RemoteProjectMigratedFromCloud { get; set; } // integer
+		[Column("RemoteProject_Id"),                PrimaryKey,  NotNull] public long    RemoteProjectId                { get; set; } // integer
+		[Column("RemoteProject_ProjectGuid"),                    NotNull] public string  RemoteProjectProjectGuid       { get; set; } = null!; // text(max)
+		[Column("RemoteProject_PhotosCloudId"),        Nullable         ] public string? RemoteProjectPhotosCloudId     { get; set; } // text(max)
+		[Column("RemoteProject_PublishState"),                   NotNull] public long    RemoteProjectPublishState      { get; set; } // integer
+		[Column("RemoteProject_DateLastSynced"),       Nullable         ] public long?   RemoteProjectDateLastSynced    { get; set; } // integer
+		[Column("RemoteProject_ETag"),                 Nullable         ] public string? RemoteProjectETag              { get; set; } // text(max)
+		[Column("RemoteProject_MigratedFromCloud"),              NotNull] public long    RemoteProjectMigratedFromCloud { get; set; } // integer
 
 		#region Associations
 
@@ -1869,10 +1874,10 @@ namespace StorageProviders.SQLite
 	[Table("RemoteThumbnail")]
 	public partial class RemoteThumbnail
 	{
-		[Column("RemoteThumbnail_ItemId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull    ] public long    RemoteThumbnailItemId { get; set; } // integer
-		[Column("RemoteThumbnail_Width",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   RemoteThumbnailWidth  { get; set; } // integer
-		[Column("RemoteThumbnail_Height", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   RemoteThumbnailHeight { get; set; } // integer
-		[Column("RemoteThumbnail_Url",    DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? RemoteThumbnailUrl    { get; set; } // text(max)
+		[Column("RemoteThumbnail_ItemId"), NotNull    ] public long    RemoteThumbnailItemId { get; set; } // integer
+		[Column("RemoteThumbnail_Width"),     Nullable] public long?   RemoteThumbnailWidth  { get; set; } // integer
+		[Column("RemoteThumbnail_Height"),    Nullable] public long?   RemoteThumbnailHeight { get; set; } // integer
+		[Column("RemoteThumbnail_Url"),       Nullable] public string? RemoteThumbnailUrl    { get; set; } // text(max)
 
 		#region Associations
 
@@ -1888,15 +1893,15 @@ namespace StorageProviders.SQLite
 	[Table("SalientRect")]
 	public partial class SalientRect
 	{
-		[Column("SalientRect_Id",              DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long    SalientRectId              { get; set; } // integer
-		[Column("SalientRect_ItemId",          DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    SalientRectItemId          { get; set; } // integer
-		[Column("SalientRect_Rect_Left",       DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? SalientRectRectLeft        { get; set; } // real
-		[Column("SalientRect_Rect_Top",        DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? SalientRectRectTop         { get; set; } // real
-		[Column("SalientRect_Rect_Width",      DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? SalientRectRectWidth       { get; set; } // real
-		[Column("SalientRect_Rect_Height",     DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? SalientRectRectHeight      { get; set; } // real
-		[Column("SalientRect_Sharpness",       DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? SalientRectSharpness       { get; set; } // real
-		[Column("SalientRect_ContainsFaces",   DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   SalientRectContainsFaces   { get; set; } // integer
-		[Column("SalientRect_IsFaceUnionRect", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   SalientRectIsFaceUnionRect { get; set; } // integer
+		[Column("SalientRect_Id"),              PrimaryKey,  NotNull] public long    SalientRectId              { get; set; } // integer
+		[Column("SalientRect_ItemId"),                       NotNull] public long    SalientRectItemId          { get; set; } // integer
+		[Column("SalientRect_Rect_Left"),          Nullable         ] public double? SalientRectRectLeft        { get; set; } // real
+		[Column("SalientRect_Rect_Top"),           Nullable         ] public double? SalientRectRectTop         { get; set; } // real
+		[Column("SalientRect_Rect_Width"),         Nullable         ] public double? SalientRectRectWidth       { get; set; } // real
+		[Column("SalientRect_Rect_Height"),        Nullable         ] public double? SalientRectRectHeight      { get; set; } // real
+		[Column("SalientRect_Sharpness"),          Nullable         ] public double? SalientRectSharpness       { get; set; } // real
+		[Column("SalientRect_ContainsFaces"),      Nullable         ] public long?   SalientRectContainsFaces   { get; set; } // integer
+		[Column("SalientRect_IsFaceUnionRect"),    Nullable         ] public long?   SalientRectIsFaceUnionRect { get; set; } // integer
 
 		#region Associations
 
@@ -1912,9 +1917,9 @@ namespace StorageProviders.SQLite
 	[Table("SearchAnalysisItemPriority")]
 	public partial class SearchAnalysisItemPriority
 	{
-		[Column("SearchAnalysisItemPriority_Id",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long SearchAnalysisItemPriorityId       { get; set; } // integer
-		[Column("SearchAnalysisItemPriority_ItemId",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long SearchAnalysisItemPriorityItemId   { get; set; } // integer
-		[Column("SearchAnalysisItemPriority_Priority", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long SearchAnalysisItemPriorityPriority { get; set; } // integer
+		[Column("SearchAnalysisItemPriority_Id"),       PrimaryKey, NotNull] public long SearchAnalysisItemPriorityId       { get; set; } // integer
+		[Column("SearchAnalysisItemPriority_ItemId"),               NotNull] public long SearchAnalysisItemPriorityItemId   { get; set; } // integer
+		[Column("SearchAnalysisItemPriority_Priority"),             NotNull] public long SearchAnalysisItemPriorityPriority { get; set; } // integer
 
 		#region Associations
 
@@ -1930,18 +1935,18 @@ namespace StorageProviders.SQLite
 	[Table("Source")]
 	public partial class Source
 	{
-		[Column("Source_Id",                      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    SourceId                      { get; set; } // integer
-		[Column("Source_Type",                    DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   SourceType                    { get; set; } // integer
-		[Column("Source_UserId",                  DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? SourceUserId                  { get; set; } // text(max)
-		[Column("Source_UserName",                DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? SourceUserName                { get; set; } // text(max)
-		[Column("Source_Status",                  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   SourceStatus                  { get; set; } // integer
-		[Column("Source_UserEnabled",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   SourceUserEnabled             { get; set; } // integer
-		[Column("Source_PhotosCloudUserId",       DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? SourcePhotosCloudUserId       { get; set; } // text(max)
-		[Column("Source_DeltaSyncToken",          DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? SourceDeltaSyncToken          { get; set; } // text(max)
-		[Column("Source_FullSyncCompleted",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   SourceFullSyncCompleted       { get; set; } // integer
-		[Column("Source_ItemsResyncing",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   SourceItemsResyncing          { get; set; } // integer
-		[Column("Source_SignOutTime",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   SourceSignOutTime             { get; set; } // integer
-		[Column("Source_ODSyncThrottleStartTime", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   SourceODSyncThrottleStartTime { get; set; } // integer
+		[Column("Source_Id"),                      PrimaryKey,  NotNull] public long    SourceId                      { get; set; } // integer
+		[Column("Source_Type"),                       Nullable         ] public long?   SourceType                    { get; set; } // integer
+		[Column("Source_UserId"),                     Nullable         ] public string? SourceUserId                  { get; set; } // text(max)
+		[Column("Source_UserName"),                   Nullable         ] public string? SourceUserName                { get; set; } // text(max)
+		[Column("Source_Status"),                     Nullable         ] public long?   SourceStatus                  { get; set; } // integer
+		[Column("Source_UserEnabled"),                Nullable         ] public long?   SourceUserEnabled             { get; set; } // integer
+		[Column("Source_PhotosCloudUserId"),          Nullable         ] public string? SourcePhotosCloudUserId       { get; set; } // text(max)
+		[Column("Source_DeltaSyncToken"),             Nullable         ] public string? SourceDeltaSyncToken          { get; set; } // text(max)
+		[Column("Source_FullSyncCompleted"),          Nullable         ] public long?   SourceFullSyncCompleted       { get; set; } // integer
+		[Column("Source_ItemsResyncing"),             Nullable         ] public long?   SourceItemsResyncing          { get; set; } // integer
+		[Column("Source_SignOutTime"),                Nullable         ] public long?   SourceSignOutTime             { get; set; } // integer
+		[Column("Source_ODSyncThrottleStartTime"),    Nullable         ] public long?   SourceODSyncThrottleStartTime { get; set; } // integer
 
 		#region Associations
 
@@ -1981,9 +1986,9 @@ namespace StorageProviders.SQLite
 	[Table("Tag")]
 	public partial class Tag
 	{
-		[Column("Tag_Id",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long  TagId          { get; set; } // integer
-		[Column("Tag_ResourceId",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? TagResourceId  { get; set; } // integer
-		[Column("Tag_CreatedDate", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? TagCreatedDate { get; set; } // integer
+		[Column("Tag_Id"),          PrimaryKey,  NotNull] public long  TagId          { get; set; } // integer
+		[Column("Tag_ResourceId"),     Nullable         ] public long? TagResourceId  { get; set; } // integer
+		[Column("Tag_CreatedDate"),    Nullable         ] public long? TagCreatedDate { get; set; } // integer
 
 		#region Associations
 
@@ -2003,7 +2008,7 @@ namespace StorageProviders.SQLite
 		/// FK_ItemTags_0_0_BackReference
 		/// </summary>
 		[Association(ThisKey="TagId", OtherKey="ItemTagsTagId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
-		public IEnumerable<ItemTags> ItemTags { get; set; } = null!;
+		public IEnumerable<ItemTag> ItemTags { get; set; } = null!;
 
 		#endregion
 	}
@@ -2011,19 +2016,19 @@ namespace StorageProviders.SQLite
 	[Table("TagVariant")]
 	public partial class TagVariant
 	{
-		[Column("TagVariant_Id",            DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    TagVariantId            { get; set; } // integer
-		[Column("TagVariant_TagResourceId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   TagVariantTagResourceId { get; set; } // integer
-		[Column("TagVariant_Text",          DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? TagVariantText          { get; set; } // text(max)
-		[Column("TagVariant_IsPrimary",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   TagVariantIsPrimary     { get; set; } // integer
+		[Column("TagVariant_Id"),            PrimaryKey,  NotNull] public long    TagVariantId            { get; set; } // integer
+		[Column("TagVariant_TagResourceId"),    Nullable         ] public long?   TagVariantTagResourceId { get; set; } // integer
+		[Column("TagVariant_Text"),             Nullable         ] public string? TagVariantText          { get; set; } // text(max)
+		[Column("TagVariant_IsPrimary"),        Nullable         ] public long?   TagVariantIsPrimary     { get; set; } // integer
 	}
 
 	[Table("UserActionAlbumView")]
 	public partial class UserActionAlbumView
 	{
-		[Column("UserActionAlbumView_Id",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey,  Identity] public long  UserActionAlbumViewId           { get; set; } // integer
-		[Column("UserActionAlbumView_Date",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionAlbumViewDate         { get; set; } // integer
-		[Column("UserActionAlbumView_AlbumId",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable          ] public long? UserActionAlbumViewAlbumId      { get; set; } // integer
-		[Column("UserActionAlbumView_ActionOrigin", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionAlbumViewActionOrigin { get; set; } // integer
+		[Column("UserActionAlbumView_Id"),           PrimaryKey,  Identity] public long  UserActionAlbumViewId           { get; set; } // integer
+		[Column("UserActionAlbumView_Date"),         NotNull              ] public long  UserActionAlbumViewDate         { get; set; } // integer
+		[Column("UserActionAlbumView_AlbumId"),         Nullable          ] public long? UserActionAlbumViewAlbumId      { get; set; } // integer
+		[Column("UserActionAlbumView_ActionOrigin"), NotNull              ] public long  UserActionAlbumViewActionOrigin { get; set; } // integer
 
 		#region Associations
 
@@ -2039,31 +2044,31 @@ namespace StorageProviders.SQLite
 	[Table("UserActionImport")]
 	public partial class UserActionImport
 	{
-		[Column("UserActionImport_Id",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey, Identity] public long   UserActionImportId           { get; set; } // integer
-		[Column("UserActionImport_Date",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull             ] public long   UserActionImportDate         { get; set; } // integer
-		[Column("UserActionImport_SessionId",    DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull             ] public long   UserActionImportSessionId    { get; set; } // integer
-		[Column("UserActionImport_Destination",  DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), NotNull             ] public string UserActionImportDestination  { get; set; } = null!; // text(max)
-		[Column("UserActionImport_ActionOrigin", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull             ] public long   UserActionImportActionOrigin { get; set; } // integer
-		[Column("UserActionImport_Manufacturer", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), NotNull             ] public string UserActionImportManufacturer { get; set; } = null!; // text(max)
-		[Column("UserActionImport_Model",        DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), NotNull             ] public string UserActionImportModel        { get; set; } = null!; // text(max)
-		[Column("UserActionImport_TotalCount",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull             ] public long   UserActionImportTotalCount   { get; set; } // integer
+		[Column("UserActionImport_Id"),           PrimaryKey, Identity] public long   UserActionImportId           { get; set; } // integer
+		[Column("UserActionImport_Date"),         NotNull             ] public long   UserActionImportDate         { get; set; } // integer
+		[Column("UserActionImport_SessionId"),    NotNull             ] public long   UserActionImportSessionId    { get; set; } // integer
+		[Column("UserActionImport_Destination"),  NotNull             ] public string UserActionImportDestination  { get; set; } = null!; // text(max)
+		[Column("UserActionImport_ActionOrigin"), NotNull             ] public long   UserActionImportActionOrigin { get; set; } // integer
+		[Column("UserActionImport_Manufacturer"), NotNull             ] public string UserActionImportManufacturer { get; set; } = null!; // text(max)
+		[Column("UserActionImport_Model"),        NotNull             ] public string UserActionImportModel        { get; set; } = null!; // text(max)
+		[Column("UserActionImport_TotalCount"),   NotNull             ] public long   UserActionImportTotalCount   { get; set; } // integer
 	}
 
 	[Table("UserActionLaunch")]
 	public partial class UserActionLaunch
 	{
-		[Column("UserActionLaunch_Id",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, Identity] public long UserActionLaunchId         { get; set; } // integer
-		[Column("UserActionLaunch_Date",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull             ] public long UserActionLaunchDate       { get; set; } // integer
-		[Column("UserActionLaunch_EntryPoint", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull             ] public long UserActionLaunchEntryPoint { get; set; } // integer
+		[Column("UserActionLaunch_Id"),         PrimaryKey, Identity] public long UserActionLaunchId         { get; set; } // integer
+		[Column("UserActionLaunch_Date"),       NotNull             ] public long UserActionLaunchDate       { get; set; } // integer
+		[Column("UserActionLaunch_EntryPoint"), NotNull             ] public long UserActionLaunchEntryPoint { get; set; } // integer
 	}
 
 	[Table("UserActionPrint")]
 	public partial class UserActionPrint
 	{
-		[Column("UserActionPrint_Id",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey,  Identity] public long  UserActionPrintId           { get; set; } // integer
-		[Column("UserActionPrint_Date",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionPrintDate         { get; set; } // integer
-		[Column("UserActionPrint_ItemId",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable          ] public long? UserActionPrintItemId       { get; set; } // integer
-		[Column("UserActionPrint_ActionOrigin", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionPrintActionOrigin { get; set; } // integer
+		[Column("UserActionPrint_Id"),           PrimaryKey,  Identity] public long  UserActionPrintId           { get; set; } // integer
+		[Column("UserActionPrint_Date"),         NotNull              ] public long  UserActionPrintDate         { get; set; } // integer
+		[Column("UserActionPrint_ItemId"),          Nullable          ] public long? UserActionPrintItemId       { get; set; } // integer
+		[Column("UserActionPrint_ActionOrigin"), NotNull              ] public long  UserActionPrintActionOrigin { get; set; } // integer
 
 		#region Associations
 
@@ -2079,25 +2084,25 @@ namespace StorageProviders.SQLite
 	[Table("UserActionSearch")]
 	public partial class UserActionSearch
 	{
-		[Column("UserActionSearch_Id",                  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey, Identity] public long   UserActionSearchId                  { get; set; } // integer
-		[Column("UserActionSearch_Date",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull             ] public long   UserActionSearchDate                { get; set; } // integer
-		[Column("UserActionSearch_Json",                DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), NotNull             ] public string UserActionSearchJson                { get; set; } = null!; // text(max)
-		[Column("UserActionSearch_Textbox",             DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), NotNull             ] public string UserActionSearchTextbox             { get; set; } = null!; // text(max)
-		[Column("UserActionSearch_ActionOrigin",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull             ] public long   UserActionSearchActionOrigin        { get; set; } // integer
-		[Column("UserActionSearch_RequestOrigin",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull             ] public long   UserActionSearchRequestOrigin       { get; set; } // integer
-		[Column("UserActionSearch_NumberOfResults",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull             ] public long   UserActionSearchNumberOfResults     { get; set; } // integer
-		[Column("UserActionSearch_IndexingWasComplete", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull             ] public long   UserActionSearchIndexingWasComplete { get; set; } // integer
+		[Column("UserActionSearch_Id"),                  PrimaryKey, Identity] public long   UserActionSearchId                  { get; set; } // integer
+		[Column("UserActionSearch_Date"),                NotNull             ] public long   UserActionSearchDate                { get; set; } // integer
+		[Column("UserActionSearch_Json"),                NotNull             ] public string UserActionSearchJson                { get; set; } = null!; // text(max)
+		[Column("UserActionSearch_Textbox"),             NotNull             ] public string UserActionSearchTextbox             { get; set; } = null!; // text(max)
+		[Column("UserActionSearch_ActionOrigin"),        NotNull             ] public long   UserActionSearchActionOrigin        { get; set; } // integer
+		[Column("UserActionSearch_RequestOrigin"),       NotNull             ] public long   UserActionSearchRequestOrigin       { get; set; } // integer
+		[Column("UserActionSearch_NumberOfResults"),     NotNull             ] public long   UserActionSearchNumberOfResults     { get; set; } // integer
+		[Column("UserActionSearch_IndexingWasComplete"), NotNull             ] public long   UserActionSearchIndexingWasComplete { get; set; } // integer
 	}
 
 	[Table("UserActionShare")]
 	public partial class UserActionShare
 	{
-		[Column("UserActionShare_Id",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  Identity] public long   UserActionShareId           { get; set; } // integer
-		[Column("UserActionShare_Date",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull              ] public long   UserActionShareDate         { get; set; } // integer
-		[Column("UserActionShare_ItemId",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable          ] public long?  UserActionShareItemId       { get; set; } // integer
-		[Column("UserActionShare_ActionOrigin", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull              ] public long   UserActionShareActionOrigin { get; set; } // integer
-		[Column("UserActionShare_Target",       DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), NotNull              ] public string UserActionShareTarget       { get; set; } = null!; // text(max)
-		[Column("UserActionShare_Result",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull              ] public long   UserActionShareResult       { get; set; } // integer
+		[Column("UserActionShare_Id"),           PrimaryKey,  Identity] public long   UserActionShareId           { get; set; } // integer
+		[Column("UserActionShare_Date"),         NotNull              ] public long   UserActionShareDate         { get; set; } // integer
+		[Column("UserActionShare_ItemId"),          Nullable          ] public long?  UserActionShareItemId       { get; set; } // integer
+		[Column("UserActionShare_ActionOrigin"), NotNull              ] public long   UserActionShareActionOrigin { get; set; } // integer
+		[Column("UserActionShare_Target"),       NotNull              ] public string UserActionShareTarget       { get; set; } = null!; // text(max)
+		[Column("UserActionShare_Result"),       NotNull              ] public long   UserActionShareResult       { get; set; } // integer
 
 		#region Associations
 
@@ -2113,11 +2118,11 @@ namespace StorageProviders.SQLite
 	[Table("UserActionSlideshow")]
 	public partial class UserActionSlideshow
 	{
-		[Column("UserActionSlideshow_Id",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey,  Identity] public long  UserActionSlideshowId           { get; set; } // integer
-		[Column("UserActionSlideshow_Date",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionSlideshowDate         { get; set; } // integer
-		[Column("UserActionSlideshow_AlbumId",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable          ] public long? UserActionSlideshowAlbumId      { get; set; } // integer
-		[Column("UserActionSlideshow_ItemId",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable          ] public long? UserActionSlideshowItemId       { get; set; } // integer
-		[Column("UserActionSlideshow_ActionOrigin", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionSlideshowActionOrigin { get; set; } // integer
+		[Column("UserActionSlideshow_Id"),           PrimaryKey,  Identity] public long  UserActionSlideshowId           { get; set; } // integer
+		[Column("UserActionSlideshow_Date"),         NotNull              ] public long  UserActionSlideshowDate         { get; set; } // integer
+		[Column("UserActionSlideshow_AlbumId"),         Nullable          ] public long? UserActionSlideshowAlbumId      { get; set; } // integer
+		[Column("UserActionSlideshow_ItemId"),          Nullable          ] public long? UserActionSlideshowItemId       { get; set; } // integer
+		[Column("UserActionSlideshow_ActionOrigin"), NotNull              ] public long  UserActionSlideshowActionOrigin { get; set; } // integer
 
 		#region Associations
 
@@ -2139,10 +2144,10 @@ namespace StorageProviders.SQLite
 	[Table("UserActionView")]
 	public partial class UserActionView
 	{
-		[Column("UserActionView_Id",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey,  Identity] public long  UserActionViewId           { get; set; } // integer
-		[Column("UserActionView_Date",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionViewDate         { get; set; } // integer
-		[Column("UserActionView_ItemId",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable          ] public long? UserActionViewItemId       { get; set; } // integer
-		[Column("UserActionView_ActionOrigin", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionViewActionOrigin { get; set; } // integer
+		[Column("UserActionView_Id"),           PrimaryKey,  Identity] public long  UserActionViewId           { get; set; } // integer
+		[Column("UserActionView_Date"),         NotNull              ] public long  UserActionViewDate         { get; set; } // integer
+		[Column("UserActionView_ItemId"),          Nullable          ] public long? UserActionViewItemId       { get; set; } // integer
+		[Column("UserActionView_ActionOrigin"), NotNull              ] public long  UserActionViewActionOrigin { get; set; } // integer
 
 		#region Associations
 
@@ -2158,11 +2163,11 @@ namespace StorageProviders.SQLite
 	[Table("VideoFaceOccurrence")]
 	public partial class VideoFaceOccurrence
 	{
-		[Column("VideoFaceOccurrence_Id",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long VideoFaceOccurrenceId         { get; set; } // integer
-		[Column("VideoFaceOccurrence_FaceId",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long VideoFaceOccurrenceFaceId     { get; set; } // integer
-		[Column("VideoFaceOccurrence_BeginFrame", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long VideoFaceOccurrenceBeginFrame { get; set; } // integer
-		[Column("VideoFaceOccurrence_EndFrame",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long VideoFaceOccurrenceEndFrame   { get; set; } // integer
-		[Column("VideoFaceOccurrence_FaceFrame",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long VideoFaceOccurrenceFaceFrame  { get; set; } // integer
+		[Column("VideoFaceOccurrence_Id"),         PrimaryKey, NotNull] public long VideoFaceOccurrenceId         { get; set; } // integer
+		[Column("VideoFaceOccurrence_FaceId"),                 NotNull] public long VideoFaceOccurrenceFaceId     { get; set; } // integer
+		[Column("VideoFaceOccurrence_BeginFrame"),             NotNull] public long VideoFaceOccurrenceBeginFrame { get; set; } // integer
+		[Column("VideoFaceOccurrence_EndFrame"),               NotNull] public long VideoFaceOccurrenceEndFrame   { get; set; } // integer
+		[Column("VideoFaceOccurrence_FaceFrame"),              NotNull] public long VideoFaceOccurrenceFaceFrame  { get; set; } // integer
 
 		#region Associations
 
@@ -2346,7 +2351,7 @@ namespace StorageProviders.SQLite
 				t.ItemInferredLocationExperimentalItemId == ItemInferredLocationExperimentalItemId);
 		}
 
-		public static ItemTags? Find(this ITable<ItemTags> table, long ItemTagsId)
+		public static ItemTag? Find(this ITable<ItemTag> table, long ItemTagsId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ItemTagsId == ItemTagsId);
@@ -2358,7 +2363,7 @@ namespace StorageProviders.SQLite
 				t.ItemVideoQualityId == ItemVideoQualityId);
 		}
 
-		public static ItemVideoTags? Find(this ITable<ItemVideoTags> table, long ItemVideoTagsId)
+		public static ItemVideoTag? Find(this ITable<ItemVideoTag> table, long ItemVideoTagsId)
 		{
 			return table.FirstOrDefault(t =>
 				t.ItemVideoTagsId == ItemVideoTagsId);
