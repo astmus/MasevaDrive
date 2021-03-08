@@ -125,37 +125,37 @@ namespace StorageProviders.SQLite
 	[Table("Album")]
 	public partial class Album
 	{
-		[Column("Album_Id"),                          PrimaryKey,  NotNull] public long    AlbumId                          { get; set; } // integer
-		[Column("Album_Name"),                           Nullable         ] public string? AlbumName                        { get; set; } // text(max)
-		[Column("Album_Type"),                                     NotNull] public long    AlbumType                        { get; set; } // integer
-		[Column("Album_State"),                                    NotNull] public long    AlbumState                       { get; set; } // integer
-		[Column("Album_QueryType"),                                NotNull] public long    AlbumQueryType                   { get; set; } // integer
-		[Column("Album_QueryBoundsType"),                          NotNull] public long    AlbumQueryBoundsType             { get; set; } // integer
-		[Column("Album_Query"),                          Nullable         ] public string? AlbumQuery                       { get; set; } // text(max)
-		[Column("Album_DateCreated"),                              NotNull] public long    AlbumDateCreated                 { get; set; } // integer
-		[Column("Album_DateUpdated"),                    Nullable         ] public long?   AlbumDateUpdated                 { get; set; } // integer
-		[Column("Album_DateUserModified"),               Nullable         ] public long?   AlbumDateUserModified            { get; set; } // integer
-		[Column("Album_DateViewed"),                     Nullable         ] public long?   AlbumDateViewed                  { get; set; } // integer
-		[Column("Album_DateShared"),                     Nullable         ] public long?   AlbumDateShared                  { get; set; } // integer
-		[Column("Album_Count"),                                    NotNull] public long    AlbumCount                       { get; set; } // integer
-		[Column("Album_CoverItemId"),                    Nullable         ] public long?   AlbumCoverItemId                 { get; set; } // integer
-		[Column("Album_CoverBoundsLeft"),                Nullable         ] public double? AlbumCoverBoundsLeft             { get; set; } // real
-		[Column("Album_CoverBoundsTop"),                 Nullable         ] public double? AlbumCoverBoundsTop              { get; set; } // real
-		[Column("Album_CoverBoundsRight"),               Nullable         ] public double? AlbumCoverBoundsRight            { get; set; } // real
-		[Column("Album_CoverBoundsBottom"),              Nullable         ] public double? AlbumCoverBoundsBottom           { get; set; } // real
-		[Column("Album_Visibility"),                               NotNull] public long    AlbumVisibility                  { get; set; } // integer
-		[Column("Album_EventStartDate"),                 Nullable         ] public long?   AlbumEventStartDate              { get; set; } // integer
-		[Column("Album_EventEndDate"),                   Nullable         ] public long?   AlbumEventEndDate                { get; set; } // integer
-		[Column("Album_SummaryStartDate"),               Nullable         ] public long?   AlbumSummaryStartDate            { get; set; } // integer
-		[Column("Album_SummaryEndDate"),                 Nullable         ] public long?   AlbumSummaryEndDate              { get; set; } // integer
-		[Column("Album_Source"),                         Nullable         ] public long?   AlbumSource                      { get; set; } // integer
-		[Column("Album_SourceId"),                       Nullable         ] public long?   AlbumSourceId                    { get; set; } // integer
-		[Column("Album_PublishState"),                   Nullable         ] public long?   AlbumPublishState                { get; set; } // integer
-		[Column("Album_PendingTelemetryUploadState"),    Nullable         ] public long?   AlbumPendingTelemetryUploadState { get; set; } // integer
-		[Column("Album_SentTelemetryUploadState"),       Nullable         ] public long?   AlbumSentTelemetryUploadState    { get; set; } // integer
-		[Column("Album_ETag"),                           Nullable         ] public string? AlbumETag                        { get; set; } // text(max)
-		[Column("Album_CreationType"),                   Nullable         ] public long?   AlbumCreationType                { get; set; } // integer
-		[Column("Album_Order"),                          Nullable         ] public long?   AlbumOrder                       { get; set; } // integer
+		[Column("Album_Id"),                          PrimaryKey,  NotNull] public long      AlbumId                          { get; set; } // integer
+		[Column("Album_Name"),                           Nullable         ] public string?   AlbumName                        { get; set; } // text(max)
+		[Column("Album_Type"),                                     NotNull] public long      AlbumType                        { get; set; } // integer
+		[Column("Album_State"),                                    NotNull] public long      AlbumState                       { get; set; } // integer
+		[Column("Album_QueryType"),                                NotNull] public long      AlbumQueryType                   { get; set; } // integer
+		[Column("Album_QueryBoundsType"),                          NotNull] public long      AlbumQueryBoundsType             { get; set; } // integer
+		[Column("Album_Query"),                          Nullable         ] public string?   AlbumQuery                       { get; set; } // text(max)
+		[Column("Album_DateCreated"),                              NotNull] public DateTime  AlbumDateCreated                 { get; set; } // integer
+		[Column("Album_DateUpdated"),                    Nullable         ] public DateTime? AlbumDateUpdated                 { get; set; } // integer
+		[Column("Album_DateUserModified"),               Nullable         ] public DateTime? AlbumDateUserModified            { get; set; } // integer
+		[Column("Album_DateViewed"),                     Nullable         ] public DateTime? AlbumDateViewed                  { get; set; } // integer
+		[Column("Album_DateShared"),                     Nullable         ] public DateTime? AlbumDateShared                  { get; set; } // integer
+		[Column("Album_Count"),                                    NotNull] public long      AlbumCount                       { get; set; } // integer
+		[Column("Album_CoverItemId"),                    Nullable         ] public long?     AlbumCoverItemId                 { get; set; } // integer
+		[Column("Album_CoverBoundsLeft"),                Nullable         ] public double?   AlbumCoverBoundsLeft             { get; set; } // real
+		[Column("Album_CoverBoundsTop"),                 Nullable         ] public double?   AlbumCoverBoundsTop              { get; set; } // real
+		[Column("Album_CoverBoundsRight"),               Nullable         ] public double?   AlbumCoverBoundsRight            { get; set; } // real
+		[Column("Album_CoverBoundsBottom"),              Nullable         ] public double?   AlbumCoverBoundsBottom           { get; set; } // real
+		[Column("Album_Visibility"),                               NotNull] public long      AlbumVisibility                  { get; set; } // integer
+		[Column("Album_EventStartDate"),                 Nullable         ] public DateTime? AlbumEventStartDate              { get; set; } // integer
+		[Column("Album_EventEndDate"),                   Nullable         ] public DateTime? AlbumEventEndDate                { get; set; } // integer
+		[Column("Album_SummaryStartDate"),               Nullable         ] public DateTime? AlbumSummaryStartDate            { get; set; } // integer
+		[Column("Album_SummaryEndDate"),                 Nullable         ] public DateTime? AlbumSummaryEndDate              { get; set; } // integer
+		[Column("Album_Source"),                         Nullable         ] public long?     AlbumSource                      { get; set; } // integer
+		[Column("Album_SourceId"),                       Nullable         ] public long?     AlbumSourceId                    { get; set; } // integer
+		[Column("Album_PublishState"),                   Nullable         ] public long?     AlbumPublishState                { get; set; } // integer
+		[Column("Album_PendingTelemetryUploadState"),    Nullable         ] public long?     AlbumPendingTelemetryUploadState { get; set; } // integer
+		[Column("Album_SentTelemetryUploadState"),       Nullable         ] public long?     AlbumSentTelemetryUploadState    { get; set; } // integer
+		[Column("Album_ETag"),                           Nullable         ] public string?   AlbumETag                        { get; set; } // text(max)
+		[Column("Album_CreationType"),                   Nullable         ] public long?     AlbumCreationType                { get; set; } // integer
+		[Column("Album_Order"),                          Nullable         ] public long?     AlbumOrder                       { get; set; } // integer
 
 		#region Associations
 
@@ -250,40 +250,40 @@ namespace StorageProviders.SQLite
 	[Table("AppGlobalState")]
 	public partial class AppGlobalState
 	{
-		[Column("AppGlobalState_DeferredUpgradeVersion"),                    Nullable] public long?   AppGlobalStateDeferredUpgradeVersion                 { get; set; } // integer
-		[Column("AppGlobalState_AnalysisVersion"),                           Nullable] public string? AppGlobalStateAnalysisVersion                        { get; set; } // text(max)
-		[Column("AppGlobalState_DateLastLocalReconciled"),                   Nullable] public long?   AppGlobalStateDateLastLocalReconciled                { get; set; } // integer
-		[Column("AppGlobalState_CountLastReconciliationQueryResults"),       Nullable] public long?   AppGlobalStateCountLastReconciliationQueryResults    { get; set; } // integer
-		[Column("AppGlobalState_DateLastAlbumsMaintenance"),                 Nullable] public long?   AppGlobalStateDateLastAlbumsMaintenance              { get; set; } // integer
-		[Column("AppGlobalState_DateLastTagAlbumsMaintenance"),              Nullable] public long?   AppGlobalStateDateLastTagAlbumsMaintenance           { get; set; } // integer
-		[Column("AppGlobalState_DateLastPetAlbumsMaintenance"),              Nullable] public long?   AppGlobalStateDateLastPetAlbumsMaintenance           { get; set; } // integer
-		[Column("AppGlobalState_DateLastWeddingAlbumsMaintenance"),          Nullable] public long?   AppGlobalStateDateLastWeddingAlbumsMaintenance       { get; set; } // integer
-		[Column("AppGlobalState_LastDateUsedInWeddingAlbumsMaintenance"),    Nullable] public long?   AppGlobalStateLastDateUsedInWeddingAlbumsMaintenance { get; set; } // integer
-		[Column("AppGlobalState_DateLastSeasonalAlbumsMaintenance"),         Nullable] public long?   AppGlobalStateDateLastSeasonalAlbumsMaintenance      { get; set; } // integer
-		[Column("AppGlobalState_DateLastSmileAlbumsMaintenance"),            Nullable] public long?   AppGlobalStateDateLastSmileAlbumsMaintenance         { get; set; } // integer
-		[Column("AppGlobalState_DateLastCountryTripAlbumsMaintenance"),      Nullable] public long?   AppGlobalStateDateLastCountryTripAlbumsMaintenance   { get; set; } // integer
-		[Column("AppGlobalState_DateLastItemDeleted"),                       Nullable] public long?   AppGlobalStateDateLastItemDeleted                    { get; set; } // integer
-		[Column("AppGlobalState_DateLastCacheCleaned"),                      Nullable] public long?   AppGlobalStateDateLastCacheCleaned                   { get; set; } // integer
-		[Column("AppGlobalState_OneDriveDeltaSyncToken"),                    Nullable] public string? AppGlobalStateOneDriveDeltaSyncToken                 { get; set; } // text(max)
-		[Column("AppGlobalState_OneDriveFullSyncCompleted"),                 Nullable] public long?   AppGlobalStateOneDriveFullSyncCompleted              { get; set; } // integer
-		[Column("AppGlobalState_OneDriveAlbumDeltaSyncToken"),               Nullable] public string? AppGlobalStateOneDriveAlbumDeltaSyncToken            { get; set; } // text(max)
-		[Column("AppGlobalState_OneDriveKnownFoldersNeedUpgrade"),           Nullable] public long?   AppGlobalStateOneDriveKnownFoldersNeedUpgrade        { get; set; } // integer
-		[Column("AppGlobalState_OneDriveItemsResyncing"),                    Nullable] public long?   AppGlobalStateOneDriveItemsResyncing                 { get; set; } // integer
-		[Column("AppGlobalState_OneDriveAlbumsResyncing"),                   Nullable] public long?   AppGlobalStateOneDriveAlbumsResyncing                { get; set; } // integer
-		[Column("AppGlobalState_TruncateWALFilePending"),                    Nullable] public long?   AppGlobalStateTruncateWALFilePending                 { get; set; } // integer
-		[Column("AppGlobalState_RichMediaGrovelVersion"),                    Nullable] public long?   AppGlobalStateRichMediaGrovelVersion                 { get; set; } // integer
-		[Column("AppGlobalState_CurrentAutoEnhanceEnabledState"),            Nullable] public long?   AppGlobalStateCurrentAutoEnhanceEnabledState         { get; set; } // integer
-		[Column("AppGlobalState_RunDedupWork"),                           NotNull    ] public long    AppGlobalStateRunDedupWork                           { get; set; } // integer
-		[Column("AppGlobalState_OneDriveIdentifyPicturesScope"),             Nullable] public long?   AppGlobalStateOneDriveIdentifyPicturesScope          { get; set; } // integer
-		[Column("AppGlobalState_CachedLocalCollectionSize"),                 Nullable] public long?   AppGlobalStateCachedLocalCollectionSize              { get; set; } // integer
-		[Column("AppGlobalState_NewAlbumsBadgeCount"),                       Nullable] public long?   AppGlobalStateNewAlbumsBadgeCount                    { get; set; } // integer
-		[Column("AppGlobalState_ImportBadgeDisplayState"),                   Nullable] public long?   AppGlobalStateImportBadgeDisplayState                { get; set; } // integer
-		[Column("AppGlobalState_DateLastLocationLookupReady"),               Nullable] public long?   AppGlobalStateDateLastLocationLookupReady            { get; set; } // integer
-		[Column("AppGlobalState_DateLastDbAnalyze"),                         Nullable] public long?   AppGlobalStateDateLastDbAnalyze                      { get; set; } // integer
-		[Column("AppGlobalState_DateLastDbVacuum"),                          Nullable] public long?   AppGlobalStateDateLastDbVacuum                       { get; set; } // integer
-		[Column("AppGlobalState_XboxLiveItemsResyncing"),                    Nullable] public long?   AppGlobalStateXboxLiveItemsResyncing                 { get; set; } // integer
-		[Column("AppGlobalState_FaceRecognitionConsentDate"),                Nullable] public long?   AppGlobalStateFaceRecognitionConsentDate             { get; set; } // integer
-		[Column("AppGlobalState_ExistingItemsSyncStarted"),                  Nullable] public long?   AppGlobalStateExistingItemsSyncStarted               { get; set; } // integer
+		[Column("AppGlobalState_DeferredUpgradeVersion"),                    Nullable] public long?     AppGlobalStateDeferredUpgradeVersion                 { get; set; } // integer
+		[Column("AppGlobalState_AnalysisVersion"),                           Nullable] public string?   AppGlobalStateAnalysisVersion                        { get; set; } // text(max)
+		[Column("AppGlobalState_DateLastLocalReconciled"),                   Nullable] public DateTime? AppGlobalStateDateLastLocalReconciled                { get; set; } // integer
+		[Column("AppGlobalState_CountLastReconciliationQueryResults"),       Nullable] public long?     AppGlobalStateCountLastReconciliationQueryResults    { get; set; } // integer
+		[Column("AppGlobalState_DateLastAlbumsMaintenance"),                 Nullable] public DateTime? AppGlobalStateDateLastAlbumsMaintenance              { get; set; } // integer
+		[Column("AppGlobalState_DateLastTagAlbumsMaintenance"),              Nullable] public DateTime? AppGlobalStateDateLastTagAlbumsMaintenance           { get; set; } // integer
+		[Column("AppGlobalState_DateLastPetAlbumsMaintenance"),              Nullable] public DateTime? AppGlobalStateDateLastPetAlbumsMaintenance           { get; set; } // integer
+		[Column("AppGlobalState_DateLastWeddingAlbumsMaintenance"),          Nullable] public DateTime? AppGlobalStateDateLastWeddingAlbumsMaintenance       { get; set; } // integer
+		[Column("AppGlobalState_LastDateUsedInWeddingAlbumsMaintenance"),    Nullable] public DateTime? AppGlobalStateLastDateUsedInWeddingAlbumsMaintenance { get; set; } // integer
+		[Column("AppGlobalState_DateLastSeasonalAlbumsMaintenance"),         Nullable] public DateTime? AppGlobalStateDateLastSeasonalAlbumsMaintenance      { get; set; } // integer
+		[Column("AppGlobalState_DateLastSmileAlbumsMaintenance"),            Nullable] public DateTime? AppGlobalStateDateLastSmileAlbumsMaintenance         { get; set; } // integer
+		[Column("AppGlobalState_DateLastCountryTripAlbumsMaintenance"),      Nullable] public DateTime? AppGlobalStateDateLastCountryTripAlbumsMaintenance   { get; set; } // integer
+		[Column("AppGlobalState_DateLastItemDeleted"),                       Nullable] public DateTime? AppGlobalStateDateLastItemDeleted                    { get; set; } // integer
+		[Column("AppGlobalState_DateLastCacheCleaned"),                      Nullable] public DateTime? AppGlobalStateDateLastCacheCleaned                   { get; set; } // integer
+		[Column("AppGlobalState_OneDriveDeltaSyncToken"),                    Nullable] public string?   AppGlobalStateOneDriveDeltaSyncToken                 { get; set; } // text(max)
+		[Column("AppGlobalState_OneDriveFullSyncCompleted"),                 Nullable] public long?     AppGlobalStateOneDriveFullSyncCompleted              { get; set; } // integer
+		[Column("AppGlobalState_OneDriveAlbumDeltaSyncToken"),               Nullable] public string?   AppGlobalStateOneDriveAlbumDeltaSyncToken            { get; set; } // text(max)
+		[Column("AppGlobalState_OneDriveKnownFoldersNeedUpgrade"),           Nullable] public long?     AppGlobalStateOneDriveKnownFoldersNeedUpgrade        { get; set; } // integer
+		[Column("AppGlobalState_OneDriveItemsResyncing"),                    Nullable] public long?     AppGlobalStateOneDriveItemsResyncing                 { get; set; } // integer
+		[Column("AppGlobalState_OneDriveAlbumsResyncing"),                   Nullable] public long?     AppGlobalStateOneDriveAlbumsResyncing                { get; set; } // integer
+		[Column("AppGlobalState_TruncateWALFilePending"),                    Nullable] public long?     AppGlobalStateTruncateWALFilePending                 { get; set; } // integer
+		[Column("AppGlobalState_RichMediaGrovelVersion"),                    Nullable] public long?     AppGlobalStateRichMediaGrovelVersion                 { get; set; } // integer
+		[Column("AppGlobalState_CurrentAutoEnhanceEnabledState"),            Nullable] public long?     AppGlobalStateCurrentAutoEnhanceEnabledState         { get; set; } // integer
+		[Column("AppGlobalState_RunDedupWork"),                           NotNull    ] public long      AppGlobalStateRunDedupWork                           { get; set; } // integer
+		[Column("AppGlobalState_OneDriveIdentifyPicturesScope"),             Nullable] public long?     AppGlobalStateOneDriveIdentifyPicturesScope          { get; set; } // integer
+		[Column("AppGlobalState_CachedLocalCollectionSize"),                 Nullable] public long?     AppGlobalStateCachedLocalCollectionSize              { get; set; } // integer
+		[Column("AppGlobalState_NewAlbumsBadgeCount"),                       Nullable] public long?     AppGlobalStateNewAlbumsBadgeCount                    { get; set; } // integer
+		[Column("AppGlobalState_ImportBadgeDisplayState"),                   Nullable] public long?     AppGlobalStateImportBadgeDisplayState                { get; set; } // integer
+		[Column("AppGlobalState_DateLastLocationLookupReady"),               Nullable] public DateTime? AppGlobalStateDateLastLocationLookupReady            { get; set; } // integer
+		[Column("AppGlobalState_DateLastDbAnalyze"),                         Nullable] public DateTime? AppGlobalStateDateLastDbAnalyze                      { get; set; } // integer
+		[Column("AppGlobalState_DateLastDbVacuum"),                          Nullable] public DateTime? AppGlobalStateDateLastDbVacuum                       { get; set; } // integer
+		[Column("AppGlobalState_XboxLiveItemsResyncing"),                    Nullable] public long?     AppGlobalStateXboxLiveItemsResyncing                 { get; set; } // integer
+		[Column("AppGlobalState_FaceRecognitionConsentDate"),                Nullable] public DateTime? AppGlobalStateFaceRecognitionConsentDate             { get; set; } // integer
+		[Column("AppGlobalState_ExistingItemsSyncStarted"),                  Nullable] public long?     AppGlobalStateExistingItemsSyncStarted               { get; set; } // integer
 	}
 
 	[Table("ApplicationName")]
@@ -338,11 +338,11 @@ namespace StorageProviders.SQLite
 	[Table("Cache")]
 	public partial class Cache
 	{
-		[Column("Cache_Id"),                  PrimaryKey,  NotNull] public long    CacheId                  { get; set; } // integer
-		[Column("Cache_ItemId"),                 Nullable         ] public long?   CacheItemId              { get; set; } // integer
-		[Column("Cache_Filename"),               Nullable         ] public string? CacheFilename            { get; set; } // text(max)
-		[Column("Cache_DateAccessed"),           Nullable         ] public long?   CacheDateAccessed        { get; set; } // integer
-		[Column("Cache_ModificationVersion"),    Nullable         ] public long?   CacheModificationVersion { get; set; } // integer
+		[Column("Cache_Id"),                  PrimaryKey,  NotNull] public long      CacheId                  { get; set; } // integer
+		[Column("Cache_ItemId"),                 Nullable         ] public long?     CacheItemId              { get; set; } // integer
+		[Column("Cache_Filename"),               Nullable         ] public string?   CacheFilename            { get; set; } // text(max)
+		[Column("Cache_DateAccessed"),           Nullable         ] public DateTime? CacheDateAccessed        { get; set; } // integer
+		[Column("Cache_ModificationVersion"),    Nullable         ] public long?     CacheModificationVersion { get; set; } // integer
 
 		#region Associations
 
@@ -417,12 +417,12 @@ namespace StorageProviders.SQLite
 	[Table("CloudAlbumDefinition")]
 	public partial class CloudAlbumDefinition
 	{
-		[Column("CloudAlbumDefinition_Id"),                        PrimaryKey,  NotNull] public long    CloudAlbumDefinitionId                        { get; set; } // integer
-		[Column("CloudAlbumDefinition_CloudId"),                      Nullable         ] public string? CloudAlbumDefinitionCloudId                   { get; set; } // text(max)
-		[Column("CloudAlbumDefinition_CloudQuery"),                   Nullable         ] public string? CloudAlbumDefinitionCloudQuery                { get; set; } // text(max)
-		[Column("CloudAlbumDefinition_CloudFriendlyName"),            Nullable         ] public string? CloudAlbumDefinitionCloudFriendlyName         { get; set; } // text(max)
-		[Column("CloudAlbumDefinition_DateLastAlbumsMaintenance"),    Nullable         ] public long?   CloudAlbumDefinitionDateLastAlbumsMaintenance { get; set; } // integer
-		[Column("CloudAlbumDefinition_QueryType"),                    Nullable         ] public long?   CloudAlbumDefinitionQueryType                 { get; set; } // integer
+		[Column("CloudAlbumDefinition_Id"),                        PrimaryKey,  NotNull] public long      CloudAlbumDefinitionId                        { get; set; } // integer
+		[Column("CloudAlbumDefinition_CloudId"),                      Nullable         ] public string?   CloudAlbumDefinitionCloudId                   { get; set; } // text(max)
+		[Column("CloudAlbumDefinition_CloudQuery"),                   Nullable         ] public string?   CloudAlbumDefinitionCloudQuery                { get; set; } // text(max)
+		[Column("CloudAlbumDefinition_CloudFriendlyName"),            Nullable         ] public string?   CloudAlbumDefinitionCloudFriendlyName         { get; set; } // text(max)
+		[Column("CloudAlbumDefinition_DateLastAlbumsMaintenance"),    Nullable         ] public DateTime? CloudAlbumDefinitionDateLastAlbumsMaintenance { get; set; } // integer
+		[Column("CloudAlbumDefinition_QueryType"),                    Nullable         ] public long?     CloudAlbumDefinitionQueryType                 { get; set; } // integer
 
 		#region Associations
 
@@ -453,10 +453,10 @@ namespace StorageProviders.SQLite
 	[Table("Event")]
 	public partial class Event
 	{
-		[Column("Event_Id"),        PrimaryKey,  NotNull] public long  EventId        { get; set; } // integer
-		[Column("Event_StartDate"),    Nullable         ] public long? EventStartDate { get; set; } // integer
-		[Column("Event_EndDate"),      Nullable         ] public long? EventEndDate   { get; set; } // integer
-		[Column("Event_Size"),         Nullable         ] public long? EventSize      { get; set; } // integer
+		[Column("Event_Id"),        PrimaryKey,  NotNull] public long      EventId        { get; set; } // integer
+		[Column("Event_StartDate"),    Nullable         ] public DateTime? EventStartDate { get; set; } // integer
+		[Column("Event_EndDate"),      Nullable         ] public DateTime? EventEndDate   { get; set; } // integer
+		[Column("Event_Size"),         Nullable         ] public long?     EventSize      { get; set; } // integer
 
 		#region Associations
 
@@ -472,10 +472,10 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedAlbum")]
 	public partial class ExcludedAlbum
 	{
-		[Column("ExcludedAlbum_Id"),             PrimaryKey, NotNull] public long ExcludedAlbumId             { get; set; } // integer
-		[Column("ExcludedAlbum_AlbumId"),                    NotNull] public long ExcludedAlbumAlbumId        { get; set; } // integer
-		[Column("ExcludedAlbum_ExcludedForUse"),             NotNull] public long ExcludedAlbumExcludedForUse { get; set; } // integer
-		[Column("ExcludedAlbum_ExcludedDate"),               NotNull] public long ExcludedAlbumExcludedDate   { get; set; } // integer
+		[Column("ExcludedAlbum_Id"),             PrimaryKey, NotNull] public long     ExcludedAlbumId             { get; set; } // integer
+		[Column("ExcludedAlbum_AlbumId"),                    NotNull] public long     ExcludedAlbumAlbumId        { get; set; } // integer
+		[Column("ExcludedAlbum_ExcludedForUse"),             NotNull] public long     ExcludedAlbumExcludedForUse { get; set; } // integer
+		[Column("ExcludedAlbum_ExcludedDate"),               NotNull] public DateTime ExcludedAlbumExcludedDate   { get; set; } // integer
 
 		#region Associations
 
@@ -491,11 +491,11 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedFace")]
 	public partial class ExcludedFace
 	{
-		[Column("ExcludedFace_Id"),             PrimaryKey, NotNull] public long ExcludedFaceId             { get; set; } // integer
-		[Column("ExcludedFace_FaceClusterId"),              NotNull] public long ExcludedFaceFaceClusterId  { get; set; } // integer
-		[Column("ExcludedFace_FaceId"),                     NotNull] public long ExcludedFaceFaceId         { get; set; } // integer
-		[Column("ExcludedFace_ExcludedForUse"),             NotNull] public long ExcludedFaceExcludedForUse { get; set; } // integer
-		[Column("ExcludedFace_ExcludedDate"),               NotNull] public long ExcludedFaceExcludedDate   { get; set; } // integer
+		[Column("ExcludedFace_Id"),             PrimaryKey, NotNull] public long     ExcludedFaceId             { get; set; } // integer
+		[Column("ExcludedFace_FaceClusterId"),              NotNull] public long     ExcludedFaceFaceClusterId  { get; set; } // integer
+		[Column("ExcludedFace_FaceId"),                     NotNull] public long     ExcludedFaceFaceId         { get; set; } // integer
+		[Column("ExcludedFace_ExcludedForUse"),             NotNull] public long     ExcludedFaceExcludedForUse { get; set; } // integer
+		[Column("ExcludedFace_ExcludedDate"),               NotNull] public DateTime ExcludedFaceExcludedDate   { get; set; } // integer
 
 		#region Associations
 
@@ -517,24 +517,24 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedImport")]
 	public partial class ExcludedImport
 	{
-		[Column("ExcludedImport_Id"),             PrimaryKey, NotNull] public long ExcludedImportId             { get; set; } // integer
-		[Column("ExcludedImport_ImportId"),                   NotNull] public long ExcludedImportImportId       { get; set; } // integer
-		[Column("ExcludedImport_ExcludedForUse"),             NotNull] public long ExcludedImportExcludedForUse { get; set; } // integer
-		[Column("ExcludedImport_ExcludedDate"),               NotNull] public long ExcludedImportExcludedDate   { get; set; } // integer
+		[Column("ExcludedImport_Id"),             PrimaryKey, NotNull] public long     ExcludedImportId             { get; set; } // integer
+		[Column("ExcludedImport_ImportId"),                   NotNull] public long     ExcludedImportImportId       { get; set; } // integer
+		[Column("ExcludedImport_ExcludedForUse"),             NotNull] public long     ExcludedImportExcludedForUse { get; set; } // integer
+		[Column("ExcludedImport_ExcludedDate"),               NotNull] public DateTime ExcludedImportExcludedDate   { get; set; } // integer
 	}
 
 	[Table("ExcludedItemTag")]
 	public partial class ExcludedItemTag
 	{
-		[Column("ExcludedItemTag_Id"),                    PrimaryKey,  NotNull] public long  ExcludedItemTagId                    { get; set; } // integer
-		[Column("ExcludedItemTag_ItemId"),                             NotNull] public long  ExcludedItemTagItemId                { get; set; } // integer
-		[Column("ExcludedItemTag_TagId"),                              NotNull] public long  ExcludedItemTagTagId                 { get; set; } // integer
-		[Column("ExcludedItemTag_ExcludedForUse"),                     NotNull] public long  ExcludedItemTagExcludedForUse        { get; set; } // integer
-		[Column("ExcludedItemTag_ExcludedDate"),                       NotNull] public long  ExcludedItemTagExcludedDate          { get; set; } // integer
-		[Column("ExcludedItemTag_ConceptModelVersion"),      Nullable         ] public long? ExcludedItemTagConceptModelVersion   { get; set; } // integer
-		[Column("ExcludedItemTag_UploadState"),              Nullable         ] public long? ExcludedItemTagUploadState           { get; set; } // integer
-		[Column("ExcludedItemTag_UploadAttempts"),           Nullable         ] public long? ExcludedItemTagUploadAttempts        { get; set; } // integer
-		[Column("ExcludedItemTag_UploadDateLastAttempt"),    Nullable         ] public long? ExcludedItemTagUploadDateLastAttempt { get; set; } // integer
+		[Column("ExcludedItemTag_Id"),                    PrimaryKey,  NotNull] public long      ExcludedItemTagId                    { get; set; } // integer
+		[Column("ExcludedItemTag_ItemId"),                             NotNull] public long      ExcludedItemTagItemId                { get; set; } // integer
+		[Column("ExcludedItemTag_TagId"),                              NotNull] public long      ExcludedItemTagTagId                 { get; set; } // integer
+		[Column("ExcludedItemTag_ExcludedForUse"),                     NotNull] public long      ExcludedItemTagExcludedForUse        { get; set; } // integer
+		[Column("ExcludedItemTag_ExcludedDate"),                       NotNull] public DateTime  ExcludedItemTagExcludedDate          { get; set; } // integer
+		[Column("ExcludedItemTag_ConceptModelVersion"),      Nullable         ] public long?     ExcludedItemTagConceptModelVersion   { get; set; } // integer
+		[Column("ExcludedItemTag_UploadState"),              Nullable         ] public long?     ExcludedItemTagUploadState           { get; set; } // integer
+		[Column("ExcludedItemTag_UploadAttempts"),           Nullable         ] public long?     ExcludedItemTagUploadAttempts        { get; set; } // integer
+		[Column("ExcludedItemTag_UploadDateLastAttempt"),    Nullable         ] public DateTime? ExcludedItemTagUploadDateLastAttempt { get; set; } // integer
 
 		#region Associations
 
@@ -556,10 +556,10 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedLocation")]
 	public partial class ExcludedLocation
 	{
-		[Column("ExcludedLocation_Id"),             PrimaryKey, NotNull] public long ExcludedLocationId             { get; set; } // integer
-		[Column("ExcludedLocation_LocationId"),                 NotNull] public long ExcludedLocationLocationId     { get; set; } // integer
-		[Column("ExcludedLocation_ExcludedForUse"),             NotNull] public long ExcludedLocationExcludedForUse { get; set; } // integer
-		[Column("ExcludedLocation_ExcludedDate"),               NotNull] public long ExcludedLocationExcludedDate   { get; set; } // integer
+		[Column("ExcludedLocation_Id"),             PrimaryKey, NotNull] public long     ExcludedLocationId             { get; set; } // integer
+		[Column("ExcludedLocation_LocationId"),                 NotNull] public long     ExcludedLocationLocationId     { get; set; } // integer
+		[Column("ExcludedLocation_ExcludedForUse"),             NotNull] public long     ExcludedLocationExcludedForUse { get; set; } // integer
+		[Column("ExcludedLocation_ExcludedDate"),               NotNull] public DateTime ExcludedLocationExcludedDate   { get; set; } // integer
 
 		#region Associations
 
@@ -575,10 +575,10 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedPerson")]
 	public partial class ExcludedPerson
 	{
-		[Column("ExcludedPerson_Id"),             PrimaryKey, NotNull] public long ExcludedPersonId             { get; set; } // integer
-		[Column("ExcludedPerson_PersonId"),                   NotNull] public long ExcludedPersonPersonId       { get; set; } // integer
-		[Column("ExcludedPerson_ExcludedForUse"),             NotNull] public long ExcludedPersonExcludedForUse { get; set; } // integer
-		[Column("ExcludedPerson_ExcludedDate"),               NotNull] public long ExcludedPersonExcludedDate   { get; set; } // integer
+		[Column("ExcludedPerson_Id"),             PrimaryKey, NotNull] public long     ExcludedPersonId             { get; set; } // integer
+		[Column("ExcludedPerson_PersonId"),                   NotNull] public long     ExcludedPersonPersonId       { get; set; } // integer
+		[Column("ExcludedPerson_ExcludedForUse"),             NotNull] public long     ExcludedPersonExcludedForUse { get; set; } // integer
+		[Column("ExcludedPerson_ExcludedDate"),               NotNull] public DateTime ExcludedPersonExcludedDate   { get; set; } // integer
 
 		#region Associations
 
@@ -594,10 +594,10 @@ namespace StorageProviders.SQLite
 	[Table("ExcludedTag")]
 	public partial class ExcludedTag
 	{
-		[Column("ExcludedTag_Id"),             PrimaryKey, NotNull] public long ExcludedTagId             { get; set; } // integer
-		[Column("ExcludedTag_TagId"),                      NotNull] public long ExcludedTagTagId          { get; set; } // integer
-		[Column("ExcludedTag_ExcludedForUse"),             NotNull] public long ExcludedTagExcludedForUse { get; set; } // integer
-		[Column("ExcludedTag_ExcludedDate"),               NotNull] public long ExcludedTagExcludedDate   { get; set; } // integer
+		[Column("ExcludedTag_Id"),             PrimaryKey, NotNull] public long     ExcludedTagId             { get; set; } // integer
+		[Column("ExcludedTag_TagId"),                      NotNull] public long     ExcludedTagTagId          { get; set; } // integer
+		[Column("ExcludedTag_ExcludedForUse"),             NotNull] public long     ExcludedTagExcludedForUse { get; set; } // integer
+		[Column("ExcludedTag_ExcludedDate"),               NotNull] public DateTime ExcludedTagExcludedDate   { get; set; } // integer
 
 		#region Associations
 
@@ -785,20 +785,20 @@ namespace StorageProviders.SQLite
 	[Table("Folder")]
 	public partial class Folder
 	{
-		[Column("Folder_Id"),                      PrimaryKey,  NotNull] public long    FolderId                      { get; set; } // integer
-		[Column("Folder_ParentFolderId"),             Nullable         ] public long?   FolderParentFolderId          { get; set; } // integer
-		[Column("Folder_LibraryRelationship"),        Nullable         ] public long?   FolderLibraryRelationship     { get; set; } // integer
-		[Column("Folder_Source"),                     Nullable         ] public long?   FolderSource                  { get; set; } // integer
-		[Column("Folder_SourceId"),                   Nullable         ] public long?   FolderSourceId                { get; set; } // integer
-		[Column("Folder_Path"),                       Nullable         ] public string? FolderPath                    { get; set; } // text(max)
-		[Column("Folder_DisplayName"),                Nullable         ] public string? FolderDisplayName             { get; set; } // text(max)
-		[Column("Folder_DateCreated"),                Nullable         ] public long?   FolderDateCreated             { get; set; } // integer
-		[Column("Folder_DateModified"),               Nullable         ] public long?   FolderDateModified            { get; set; } // integer
-		[Column("Folder_KnownFolderType"),            Nullable         ] public long?   FolderKnownFolderType         { get; set; } // integer
-		[Column("Folder_SyncWith"),                   Nullable         ] public long?   FolderSyncWith                { get; set; } // integer
-		[Column("Folder_StorageProviderFileId"),      Nullable         ] public string? FolderStorageProviderFileId   { get; set; } // text(max)
-		[Column("Folder_InOneDrivePicturesScope"),    Nullable         ] public long?   FolderInOneDrivePicturesScope { get; set; } // integer
-		[Column("Folder_ItemCount"),                  Nullable         ] public long?   FolderItemCount               { get; set; } // integer
+		[Column("Folder_Id"),                      PrimaryKey,  NotNull] public long      FolderId                      { get; set; } // integer
+		[Column("Folder_ParentFolderId"),             Nullable         ] public long?     FolderParentFolderId          { get; set; } // integer
+		[Column("Folder_LibraryRelationship"),        Nullable         ] public long?     FolderLibraryRelationship     { get; set; } // integer
+		[Column("Folder_Source"),                     Nullable         ] public long?     FolderSource                  { get; set; } // integer
+		[Column("Folder_SourceId"),                   Nullable         ] public long?     FolderSourceId                { get; set; } // integer
+		[Column("Folder_Path"),                       Nullable         ] public string?   FolderPath                    { get; set; } // text(max)
+		[Column("Folder_DisplayName"),                Nullable         ] public string?   FolderDisplayName             { get; set; } // text(max)
+		[Column("Folder_DateCreated"),                Nullable         ] public DateTime? FolderDateCreated             { get; set; } // integer
+		[Column("Folder_DateModified"),               Nullable         ] public DateTime? FolderDateModified            { get; set; } // integer
+		[Column("Folder_KnownFolderType"),            Nullable         ] public long?     FolderKnownFolderType         { get; set; } // integer
+		[Column("Folder_SyncWith"),                   Nullable         ] public long?     FolderSyncWith                { get; set; } // integer
+		[Column("Folder_StorageProviderFileId"),      Nullable         ] public string?   FolderStorageProviderFileId   { get; set; } // text(max)
+		[Column("Folder_InOneDrivePicturesScope"),    Nullable         ] public long?     FolderInOneDrivePicturesScope { get; set; } // integer
+		[Column("Folder_ItemCount"),                  Nullable         ] public long?     FolderItemCount               { get; set; } // integer
 
 		#region Associations
 
@@ -910,96 +910,96 @@ namespace StorageProviders.SQLite
 	[Table("Item")]
 	public partial class Item
 	{
-		[Column("Item_Id"),                                   PrimaryKey,  NotNull] public long    ItemId                                   { get; set; } // integer
-		[Column("Item_LibraryRelationship"),                     Nullable         ] public long?   ItemLibraryRelationship                  { get; set; } // integer
-		[Column("Item_Source"),                                  Nullable         ] public long?   ItemSource                               { get; set; } // integer
-		[Column("Item_SourceId"),                                Nullable         ] public long?   ItemSourceId                             { get; set; } // integer
-		[Column("Item_MediaType"),                               Nullable         ] public long?   ItemMediaType                            { get; set; } // integer
-		[Column("Item_DateTaken"),                               Nullable         ] public long?   ItemDateTaken                            { get; set; } // integer
-		[Column("Item_Width"),                                   Nullable         ] public long?   ItemWidth                                { get; set; } // integer
-		[Column("Item_Height"),                                  Nullable         ] public long?   ItemHeight                               { get; set; } // integer
-		[Column("Item_EditState"),                               Nullable         ] public long?   ItemEditState                            { get; set; } // integer
-		[Column("Item_DateCreated"),                             Nullable         ] public long?   ItemDateCreated                          { get; set; } // integer
-		[Column("Item_DateModified"),                            Nullable         ] public long?   ItemDateModified                         { get; set; } // integer
-		[Column("Item_ExclusiveDateTaken"),                      Nullable         ] public long?   ItemExclusiveDateTaken                   { get; set; } // integer
-		[Column("Item_SystemThumbnailCacheId"),                  Nullable         ] public long?   ItemSystemThumbnailCacheId               { get; set; } // integer
-		[Column("Item_ParentFolderId"),                                    NotNull] public long    ItemParentFolderId                       { get; set; } // integer
-		[Column("Item_FileName"),                                Nullable         ] public string? ItemFileName                             { get; set; } // text(max)
-		[Column("Item_FileExtension"),                           Nullable         ] public string? ItemFileExtension                        { get; set; } // text(max)
-		[Column("Item_FileSize"),                                Nullable         ] public long?   ItemFileSize                             { get; set; } // integer
-		[Column("Item_Latitude"),                                Nullable         ] public double? ItemLatitude                             { get; set; } // real
-		[Column("Item_Longitude"),                               Nullable         ] public double? ItemLongitude                            { get; set; } // real
-		[Column("Item_Caption"),                                 Nullable         ] public string? ItemCaption                              { get; set; } // text(max)
-		[Column("Item_SimpleRating"),                            Nullable         ] public long?   ItemSimpleRating                         { get; set; } // integer
-		[Column("Item_Duration"),                                Nullable         ] public long?   ItemDuration                             { get; set; } // integer
-		[Column("Item_QualityScore"),                            Nullable         ] public double? ItemQualityScore                         { get; set; } // real
-		[Column("Item_BurstClusterNumber"),                      Nullable         ] public long?   ItemBurstClusterNumber                   { get; set; } // integer
-		[Column("Item_DateModifiedAtLastBurstRun"),              Nullable         ] public long?   ItemDateModifiedAtLastBurstRun           { get; set; } // integer
-		[Column("Item_BurstPrevItemId"),                         Nullable         ] public long?   ItemBurstPrevItemId                      { get; set; } // integer
-		[Column("Item_BurstChunk"),                              Nullable         ] public long?   ItemBurstChunk                           { get; set; } // integer
-		[Column("Item_LocationId"),                              Nullable         ] public long?   ItemLocationId                           { get; set; } // integer
-		[Column("Item_Flash"),                                   Nullable         ] public long?   ItemFlash                                { get; set; } // integer
-		[Column("Item_AnalysisVersion"),                         Nullable         ] public long?   ItemAnalysisVersion                      { get; set; } // integer
-		[Column("Item_AnalysisLastRun"),                         Nullable         ] public long?   ItemAnalysisLastRun                      { get; set; } // integer
-		[Column("Item_DateModifiedAtLastAnalysisRun"),           Nullable         ] public long?   ItemDateModifiedAtLastAnalysisRun        { get; set; } // integer
-		[Column("Item_AnalysisErrorCode"),                       Nullable         ] public long?   ItemAnalysisErrorCode                    { get; set; } // integer
-		[Column("Item_AnalysisErrorCount"),                      Nullable         ] public long?   ItemAnalysisErrorCount                   { get; set; } // integer
-		[Column("Item_AnalysisQueueState"),                                NotNull] public long    ItemAnalysisQueueState                   { get; set; } // integer
-		[Column("Item_ApplicationNameId"),                       Nullable         ] public long?   ItemApplicationNameId                    { get; set; } // integer
-		[Column("Item_CameraManufacturerId"),                    Nullable         ] public long?   ItemCameraManufacturerId                 { get; set; } // integer
-		[Column("Item_CameraModelId"),                           Nullable         ] public long?   ItemCameraModelId                        { get; set; } // integer
-		[Column("Item_HasAuthor"),                               Nullable         ] public long?   ItemHasAuthor                            { get; set; } // integer
-		[Column("Item_HasCopyright"),                            Nullable         ] public long?   ItemHasCopyright                         { get; set; } // integer
-		[Column("Item_HasKeywords"),                             Nullable         ] public long?   ItemHasKeywords                          { get; set; } // integer
-		[Column("Item_FileWidth"),                               Nullable         ] public long?   ItemFileWidth                            { get; set; } // integer
-		[Column("Item_FileHeight"),                              Nullable         ] public long?   ItemFileHeight                           { get; set; } // integer
-		[Column("Item_NDEWidth"),                                Nullable         ] public long?   ItemNDEWidth                             { get; set; } // integer
-		[Column("Item_NDEHeight"),                               Nullable         ] public long?   ItemNDEHeight                            { get; set; } // integer
-		[Column("Item_HashAtLastNDEThumbnailGeneration"),        Nullable         ] public long?   ItemHashAtLastNDEThumbnailGeneration     { get; set; } // integer
-		[Column("Item_EventId"),                                 Nullable         ] public long?   ItemEventId                              { get; set; } // integer
-		[Column("Item_MetadataExtractedAsOf"),                   Nullable         ] public long?   ItemMetadataExtractedAsOf                { get; set; } // integer
-		[Column("Item_PendingXmpExtractionMask"),                Nullable         ] public long?   ItemPendingXmpExtractionMask             { get; set; } // integer
-		[Column("Item_DateIngested"),                                      NotNull] public long    ItemDateIngested                         { get; set; } // integer
-		[Column("Item_DupFinderVersion"),                        Nullable         ] public long?   ItemDupFinderVersion                     { get; set; } // integer
-		[Column("Item_DateDupFinding"),                          Nullable         ] public long?   ItemDateDupFinding                       { get; set; } // integer
-		[Column("Item_SameAs"),                                  Nullable         ] public long?   ItemSameAs                               { get; set; } // integer
-		[Column("Item_SyncWith"),                                Nullable         ] public long?   ItemSyncWith                             { get; set; } // integer
-		[Column("Item_HasDup"),                                  Nullable         ] public long?   ItemHasDup                               { get; set; } // integer
-		[Column("Item_DupState"),                                Nullable         ] public long?   ItemDupState                             { get; set; } // integer
-		[Column("Item_UserSelectedDupId"),                       Nullable         ] public long?   ItemUserSelectedDupId                    { get; set; } // integer
-		[Column("Item_UserUnlink"),                              Nullable         ] public long?   ItemUserUnlink                           { get; set; } // integer
-		[Column("Item_MetadataHash"),                            Nullable         ] public string? ItemMetadataHash                         { get; set; } // text(max)
-		[Column("Item_PixelHash"),                               Nullable         ] public string? ItemPixelHash                            { get; set; } // text(max)
-		[Column("Item_CameraSettingFNumber"),                    Nullable         ] public double? ItemCameraSettingFNumber                 { get; set; } // real
-		[Column("Item_CameraSettingFocalLength"),                Nullable         ] public double? ItemCameraSettingFocalLength             { get; set; } // real
-		[Column("Item_CameraSettingISOSpeed"),                   Nullable         ] public long?   ItemCameraSettingISOSpeed                { get; set; } // integer
-		[Column("Item_CameraSettingExposureTime"),               Nullable         ] public double? ItemCameraSettingExposureTime            { get; set; } // real
-		[Column("Item_EditList"),                                Nullable         ] public byte[]? ItemEditList                             { get; set; } // blob
-		[Column("Item_ModificationVersion"),                     Nullable         ] public long?   ItemModificationVersion                  { get; set; } // integer
-		[Column("Item_RichMediaId"),                             Nullable         ] public string? ItemRichMediaId                          { get; set; } // text(max)
-		[Column("Item_RichMediaAppId"),                          Nullable         ] public string? ItemRichMediaAppId                       { get; set; } // text(max)
-		[Column("Item_RichMediaLaunchOptions"),                  Nullable         ] public long?   ItemRichMediaLaunchOptions               { get; set; } // integer
-		[Column("Item_RichMediaSlowGrovelPending"),              Nullable         ] public long?   ItemRichMediaSlowGrovelPending           { get; set; } // integer
-		[Column("Item_ThumbnailPrecacheAttempted"),              Nullable         ] public long?   ItemThumbnailPrecacheAttempted           { get; set; } // integer
-		[Column("Item_PendingTelemetryUploadState"),             Nullable         ] public long?   ItemPendingTelemetryUploadState          { get; set; } // integer
-		[Column("Item_SentTelemetryUploadState"),                Nullable         ] public long?   ItemSentTelemetryUploadState             { get; set; } // integer
-		[Column("Item_InAppRotatePending"),                      Nullable         ] public long?   ItemInAppRotatePending                   { get; set; } // integer
-		[Column("Item_StorageProviderFileId"),                   Nullable         ] public string? ItemStorageProviderFileId                { get; set; } // text(max)
-		[Column("Item_NDEThumbnailGenerationErrorCount"),        Nullable         ] public long?   ItemNDEThumbnailGenerationErrorCount     { get; set; } // integer
-		[Column("Item_FrameRate"),                               Nullable         ] public double? ItemFrameRate                            { get; set; } // real
-		[Column("Item_ImportSession"),                           Nullable         ] public long?   ItemImportSession                        { get; set; } // integer
-		[Column("Item_PendingNDE"),                              Nullable         ] public long?   ItemPendingNDE                           { get; set; } // integer
-		[Column("Item_RichMediaFileStatus"),                     Nullable         ] public long?   ItemRichMediaFileStatus                  { get; set; } // integer
-		[Column("Item_UploadPendingState"),                      Nullable         ] public long?   ItemUploadPendingState                   { get; set; } // integer
-		[Column("Item_UploadAttempts"),                          Nullable         ] public long?   ItemUploadAttempts                       { get; set; } // integer
-		[Column("Item_UploadRequestTime"),                       Nullable         ] public long?   ItemUploadRequestTime                    { get; set; } // integer
-		[Column("Item_LastUploadAttemptTime"),                   Nullable         ] public long?   ItemLastUploadAttemptTime                { get; set; } // integer
-		[Column("Item_ETag"),                                    Nullable         ] public string? ItemETag                                 { get; set; } // text(max)
-		[Column("Item_RewriteSupplementaryPropertiesNeeded"),              NotNull] public long    ItemRewriteSupplementaryPropertiesNeeded { get; set; } // integer
-		[Column("Item_LastEditDate"),                            Nullable         ] public long?   ItemLastEditDate                         { get; set; } // integer
-		[Column("Item_IsInked"),                                 Nullable         ] public long?   ItemIsInked                              { get; set; } // integer
-		[Column("Item_IsExportedMovie"),                         Nullable         ] public long?   ItemIsExportedMovie                      { get; set; } // integer
-		[Column("Item_OnlineContentAttributionString"),          Nullable         ] public string? ItemOnlineContentAttributionString       { get; set; } // text(max)
+		[Column("Item_Id"),                                   PrimaryKey,  NotNull] public long      ItemId                                   { get; set; } // integer
+		[Column("Item_LibraryRelationship"),                     Nullable         ] public long?     ItemLibraryRelationship                  { get; set; } // integer
+		[Column("Item_Source"),                                  Nullable         ] public long?     ItemSource                               { get; set; } // integer
+		[Column("Item_SourceId"),                                Nullable         ] public long?     ItemSourceId                             { get; set; } // integer
+		[Column("Item_MediaType"),                               Nullable         ] public long?     ItemMediaType                            { get; set; } // integer
+		[Column("Item_DateTaken"),                               Nullable         ] public DateTime? ItemDateTaken                            { get; set; } // integer
+		[Column("Item_Width"),                                   Nullable         ] public long?     ItemWidth                                { get; set; } // integer
+		[Column("Item_Height"),                                  Nullable         ] public long?     ItemHeight                               { get; set; } // integer
+		[Column("Item_EditState"),                               Nullable         ] public long?     ItemEditState                            { get; set; } // integer
+		[Column("Item_DateCreated"),                             Nullable         ] public DateTime? ItemDateCreated                          { get; set; } // integer
+		[Column("Item_DateModified"),                            Nullable         ] public DateTime? ItemDateModified                         { get; set; } // integer
+		[Column("Item_ExclusiveDateTaken"),                      Nullable         ] public DateTime? ItemExclusiveDateTaken                   { get; set; } // integer
+		[Column("Item_SystemThumbnailCacheId"),                  Nullable         ] public long?     ItemSystemThumbnailCacheId               { get; set; } // integer
+		[Column("Item_ParentFolderId"),                                    NotNull] public long      ItemParentFolderId                       { get; set; } // integer
+		[Column("Item_FileName"),                                Nullable         ] public string?   ItemFileName                             { get; set; } // text(max)
+		[Column("Item_FileExtension"),                           Nullable         ] public string?   ItemFileExtension                        { get; set; } // text(max)
+		[Column("Item_FileSize"),                                Nullable         ] public long?     ItemFileSize                             { get; set; } // integer
+		[Column("Item_Latitude"),                                Nullable         ] public double?   ItemLatitude                             { get; set; } // real
+		[Column("Item_Longitude"),                               Nullable         ] public double?   ItemLongitude                            { get; set; } // real
+		[Column("Item_Caption"),                                 Nullable         ] public string?   ItemCaption                              { get; set; } // text(max)
+		[Column("Item_SimpleRating"),                            Nullable         ] public long?     ItemSimpleRating                         { get; set; } // integer
+		[Column("Item_Duration"),                                Nullable         ] public long?     ItemDuration                             { get; set; } // integer
+		[Column("Item_QualityScore"),                            Nullable         ] public double?   ItemQualityScore                         { get; set; } // real
+		[Column("Item_BurstClusterNumber"),                      Nullable         ] public long?     ItemBurstClusterNumber                   { get; set; } // integer
+		[Column("Item_DateModifiedAtLastBurstRun"),              Nullable         ] public DateTime? ItemDateModifiedAtLastBurstRun           { get; set; } // integer
+		[Column("Item_BurstPrevItemId"),                         Nullable         ] public long?     ItemBurstPrevItemId                      { get; set; } // integer
+		[Column("Item_BurstChunk"),                              Nullable         ] public long?     ItemBurstChunk                           { get; set; } // integer
+		[Column("Item_LocationId"),                              Nullable         ] public long?     ItemLocationId                           { get; set; } // integer
+		[Column("Item_Flash"),                                   Nullable         ] public long?     ItemFlash                                { get; set; } // integer
+		[Column("Item_AnalysisVersion"),                         Nullable         ] public long?     ItemAnalysisVersion                      { get; set; } // integer
+		[Column("Item_AnalysisLastRun"),                         Nullable         ] public long?     ItemAnalysisLastRun                      { get; set; } // integer
+		[Column("Item_DateModifiedAtLastAnalysisRun"),           Nullable         ] public DateTime? ItemDateModifiedAtLastAnalysisRun        { get; set; } // integer
+		[Column("Item_AnalysisErrorCode"),                       Nullable         ] public long?     ItemAnalysisErrorCode                    { get; set; } // integer
+		[Column("Item_AnalysisErrorCount"),                      Nullable         ] public long?     ItemAnalysisErrorCount                   { get; set; } // integer
+		[Column("Item_AnalysisQueueState"),                                NotNull] public long      ItemAnalysisQueueState                   { get; set; } // integer
+		[Column("Item_ApplicationNameId"),                       Nullable         ] public long?     ItemApplicationNameId                    { get; set; } // integer
+		[Column("Item_CameraManufacturerId"),                    Nullable         ] public long?     ItemCameraManufacturerId                 { get; set; } // integer
+		[Column("Item_CameraModelId"),                           Nullable         ] public long?     ItemCameraModelId                        { get; set; } // integer
+		[Column("Item_HasAuthor"),                               Nullable         ] public long?     ItemHasAuthor                            { get; set; } // integer
+		[Column("Item_HasCopyright"),                            Nullable         ] public long?     ItemHasCopyright                         { get; set; } // integer
+		[Column("Item_HasKeywords"),                             Nullable         ] public long?     ItemHasKeywords                          { get; set; } // integer
+		[Column("Item_FileWidth"),                               Nullable         ] public long?     ItemFileWidth                            { get; set; } // integer
+		[Column("Item_FileHeight"),                              Nullable         ] public long?     ItemFileHeight                           { get; set; } // integer
+		[Column("Item_NDEWidth"),                                Nullable         ] public long?     ItemNDEWidth                             { get; set; } // integer
+		[Column("Item_NDEHeight"),                               Nullable         ] public long?     ItemNDEHeight                            { get; set; } // integer
+		[Column("Item_HashAtLastNDEThumbnailGeneration"),        Nullable         ] public long?     ItemHashAtLastNDEThumbnailGeneration     { get; set; } // integer
+		[Column("Item_EventId"),                                 Nullable         ] public long?     ItemEventId                              { get; set; } // integer
+		[Column("Item_MetadataExtractedAsOf"),                   Nullable         ] public long?     ItemMetadataExtractedAsOf                { get; set; } // integer
+		[Column("Item_PendingXmpExtractionMask"),                Nullable         ] public long?     ItemPendingXmpExtractionMask             { get; set; } // integer
+		[Column("Item_DateIngested"),                                      NotNull] public DateTime  ItemDateIngested                         { get; set; } // integer
+		[Column("Item_DupFinderVersion"),                        Nullable         ] public long?     ItemDupFinderVersion                     { get; set; } // integer
+		[Column("Item_DateDupFinding"),                          Nullable         ] public DateTime? ItemDateDupFinding                       { get; set; } // integer
+		[Column("Item_SameAs"),                                  Nullable         ] public long?     ItemSameAs                               { get; set; } // integer
+		[Column("Item_SyncWith"),                                Nullable         ] public long?     ItemSyncWith                             { get; set; } // integer
+		[Column("Item_HasDup"),                                  Nullable         ] public long?     ItemHasDup                               { get; set; } // integer
+		[Column("Item_DupState"),                                Nullable         ] public long?     ItemDupState                             { get; set; } // integer
+		[Column("Item_UserSelectedDupId"),                       Nullable         ] public long?     ItemUserSelectedDupId                    { get; set; } // integer
+		[Column("Item_UserUnlink"),                              Nullable         ] public long?     ItemUserUnlink                           { get; set; } // integer
+		[Column("Item_MetadataHash"),                            Nullable         ] public string?   ItemMetadataHash                         { get; set; } // text(max)
+		[Column("Item_PixelHash"),                               Nullable         ] public string?   ItemPixelHash                            { get; set; } // text(max)
+		[Column("Item_CameraSettingFNumber"),                    Nullable         ] public double?   ItemCameraSettingFNumber                 { get; set; } // real
+		[Column("Item_CameraSettingFocalLength"),                Nullable         ] public double?   ItemCameraSettingFocalLength             { get; set; } // real
+		[Column("Item_CameraSettingISOSpeed"),                   Nullable         ] public long?     ItemCameraSettingISOSpeed                { get; set; } // integer
+		[Column("Item_CameraSettingExposureTime"),               Nullable         ] public double?   ItemCameraSettingExposureTime            { get; set; } // real
+		[Column("Item_EditList"),                                Nullable         ] public byte[]?   ItemEditList                             { get; set; } // blob
+		[Column("Item_ModificationVersion"),                     Nullable         ] public long?     ItemModificationVersion                  { get; set; } // integer
+		[Column("Item_RichMediaId"),                             Nullable         ] public string?   ItemRichMediaId                          { get; set; } // text(max)
+		[Column("Item_RichMediaAppId"),                          Nullable         ] public string?   ItemRichMediaAppId                       { get; set; } // text(max)
+		[Column("Item_RichMediaLaunchOptions"),                  Nullable         ] public long?     ItemRichMediaLaunchOptions               { get; set; } // integer
+		[Column("Item_RichMediaSlowGrovelPending"),              Nullable         ] public long?     ItemRichMediaSlowGrovelPending           { get; set; } // integer
+		[Column("Item_ThumbnailPrecacheAttempted"),              Nullable         ] public long?     ItemThumbnailPrecacheAttempted           { get; set; } // integer
+		[Column("Item_PendingTelemetryUploadState"),             Nullable         ] public long?     ItemPendingTelemetryUploadState          { get; set; } // integer
+		[Column("Item_SentTelemetryUploadState"),                Nullable         ] public long?     ItemSentTelemetryUploadState             { get; set; } // integer
+		[Column("Item_InAppRotatePending"),                      Nullable         ] public long?     ItemInAppRotatePending                   { get; set; } // integer
+		[Column("Item_StorageProviderFileId"),                   Nullable         ] public string?   ItemStorageProviderFileId                { get; set; } // text(max)
+		[Column("Item_NDEThumbnailGenerationErrorCount"),        Nullable         ] public long?     ItemNDEThumbnailGenerationErrorCount     { get; set; } // integer
+		[Column("Item_FrameRate"),                               Nullable         ] public double?   ItemFrameRate                            { get; set; } // real
+		[Column("Item_ImportSession"),                           Nullable         ] public long?     ItemImportSession                        { get; set; } // integer
+		[Column("Item_PendingNDE"),                              Nullable         ] public long?     ItemPendingNDE                           { get; set; } // integer
+		[Column("Item_RichMediaFileStatus"),                     Nullable         ] public long?     ItemRichMediaFileStatus                  { get; set; } // integer
+		[Column("Item_UploadPendingState"),                      Nullable         ] public long?     ItemUploadPendingState                   { get; set; } // integer
+		[Column("Item_UploadAttempts"),                          Nullable         ] public long?     ItemUploadAttempts                       { get; set; } // integer
+		[Column("Item_UploadRequestTime"),                       Nullable         ] public long?     ItemUploadRequestTime                    { get; set; } // integer
+		[Column("Item_LastUploadAttemptTime"),                   Nullable         ] public long?     ItemLastUploadAttemptTime                { get; set; } // integer
+		[Column("Item_ETag"),                                    Nullable         ] public string?   ItemETag                                 { get; set; } // text(max)
+		[Column("Item_RewriteSupplementaryPropertiesNeeded"),              NotNull] public long      ItemRewriteSupplementaryPropertiesNeeded { get; set; } // integer
+		[Column("Item_LastEditDate"),                            Nullable         ] public DateTime? ItemLastEditDate                         { get; set; } // integer
+		[Column("Item_IsInked"),                                 Nullable         ] public long?     ItemIsInked                              { get; set; } // integer
+		[Column("Item_IsExportedMovie"),                         Nullable         ] public long?     ItemIsExportedMovie                      { get; set; } // integer
+		[Column("Item_OnlineContentAttributionString"),          Nullable         ] public string?   ItemOnlineContentAttributionString       { get; set; } // text(max)
 
 		#region Associations
 
@@ -1207,19 +1207,19 @@ namespace StorageProviders.SQLite
 	[Table("ItemDateTaken")]
 	public partial class ItemDateTaken
 	{
-		[Column("ItemDateTaken_ItemId"),    PrimaryKey,  NotNull] public long  ItemDateTakenItemId    { get; set; } // integer
-		[Column("ItemDateTaken_Year"),         Nullable         ] public long? ItemDateTakenYear      { get; set; } // integer
-		[Column("ItemDateTaken_Month"),        Nullable         ] public long? ItemDateTakenMonth     { get; set; } // integer
-		[Column("ItemDateTaken_Day"),          Nullable         ] public long? ItemDateTakenDay       { get; set; } // integer
-		[Column("ItemDateTaken_DayOfWeek"),    Nullable         ] public long? ItemDateTakenDayOfWeek { get; set; } // integer
+		[Column("ItemDateTaken_ItemId"),    PrimaryKey,  NotNull] public long      ItemDateTakenItemId    { get; set; } // integer
+		[Column("ItemDateTaken_Year"),         Nullable         ] public DateTime? ItemDateTakenYear      { get; set; } // integer
+		[Column("ItemDateTaken_Month"),        Nullable         ] public DateTime? ItemDateTakenMonth     { get; set; } // integer
+		[Column("ItemDateTaken_Day"),          Nullable         ] public DateTime? ItemDateTakenDay       { get; set; } // integer
+		[Column("ItemDateTaken_DayOfWeek"),    Nullable         ] public DateTime? ItemDateTakenDayOfWeek { get; set; } // integer
 	}
 
 	[Table("ItemEdit")]
 	public partial class ItemEdit
 	{
-		[Column("ItemEdit_ItemId"),     NotNull    ] public long  ItemEditItemId     { get; set; } // integer
-		[Column("ItemEdit_EditTypeId"),    Nullable] public long? ItemEditEditTypeId { get; set; } // integer
-		[Column("ItemEdit_EditDate"),      Nullable] public long? ItemEditEditDate   { get; set; } // integer
+		[Column("ItemEdit_ItemId"),     NotNull    ] public long      ItemEditItemId     { get; set; } // integer
+		[Column("ItemEdit_EditTypeId"),    Nullable] public long?     ItemEditEditTypeId { get; set; } // integer
+		[Column("ItemEdit_EditDate"),      Nullable] public DateTime? ItemEditEditDate   { get; set; } // integer
 
 		#region Associations
 
@@ -1763,23 +1763,23 @@ namespace StorageProviders.SQLite
 	[Table("PinnedSearch")]
 	public partial class PinnedSearch
 	{
-		[Column("PinnedSearch_Id"),         PrimaryKey,  NotNull] public long    PinnedSearchId         { get; set; } // integer
-		[Column("PinnedSearch_PinnedDate"),              NotNull] public long    PinnedSearchPinnedDate { get; set; } // integer
-		[Column("PinnedSearch_SearchText"),    Nullable         ] public string? PinnedSearchSearchText { get; set; } // text(max)
+		[Column("PinnedSearch_Id"),         PrimaryKey,  NotNull] public long     PinnedSearchId         { get; set; } // integer
+		[Column("PinnedSearch_PinnedDate"),              NotNull] public DateTime PinnedSearchPinnedDate { get; set; } // integer
+		[Column("PinnedSearch_SearchText"),    Nullable         ] public string?  PinnedSearchSearchText { get; set; } // text(max)
 	}
 
 	[Table("Project")]
 	public partial class Project
 	{
-		[Column("Project_Id"),                       PrimaryKey,  NotNull] public long    ProjectId                       { get; set; } // integer
-		[Column("Project_AlbumId"),                     Nullable         ] public long?   ProjectAlbumId                  { get; set; } // integer
-		[Column("Project_Guid"),                                  NotNull] public string  ProjectGuid                     { get; set; } = null!; // text(max)
-		[Column("Project_Name"),                        Nullable         ] public string? ProjectName                     { get; set; } // text(max)
-		[Column("Project_RpmState"),                    Nullable         ] public string? ProjectRpmState                 { get; set; } // text(max)
-		[Column("Project_AgmState"),                    Nullable         ] public string? ProjectAgmState                 { get; set; } // text(max)
-		[Column("Project_DateCreated"),                           NotNull] public long    ProjectDateCreated              { get; set; } // integer
-		[Column("Project_Duration"),                    Nullable         ] public long?   ProjectDuration                 { get; set; } // integer
-		[Column("Project_StoryBuilderProjectState"),    Nullable         ] public byte[]? ProjectStoryBuilderProjectState { get; set; } // blob
+		[Column("Project_Id"),                       PrimaryKey,  NotNull] public long     ProjectId                       { get; set; } // integer
+		[Column("Project_AlbumId"),                     Nullable         ] public long?    ProjectAlbumId                  { get; set; } // integer
+		[Column("Project_Guid"),                                  NotNull] public string   ProjectGuid                     { get; set; } = null!; // text(max)
+		[Column("Project_Name"),                        Nullable         ] public string?  ProjectName                     { get; set; } // text(max)
+		[Column("Project_RpmState"),                    Nullable         ] public string?  ProjectRpmState                 { get; set; } // text(max)
+		[Column("Project_AgmState"),                    Nullable         ] public string?  ProjectAgmState                 { get; set; } // text(max)
+		[Column("Project_DateCreated"),                           NotNull] public DateTime ProjectDateCreated              { get; set; } // integer
+		[Column("Project_Duration"),                    Nullable         ] public long?    ProjectDuration                 { get; set; } // integer
+		[Column("Project_StoryBuilderProjectState"),    Nullable         ] public byte[]?  ProjectStoryBuilderProjectState { get; set; } // blob
 
 		#region Associations
 
@@ -1852,13 +1852,13 @@ namespace StorageProviders.SQLite
 	[Table("RemoteProject")]
 	public partial class RemoteProject
 	{
-		[Column("RemoteProject_Id"),                PrimaryKey,  NotNull] public long    RemoteProjectId                { get; set; } // integer
-		[Column("RemoteProject_ProjectGuid"),                    NotNull] public string  RemoteProjectProjectGuid       { get; set; } = null!; // text(max)
-		[Column("RemoteProject_PhotosCloudId"),        Nullable         ] public string? RemoteProjectPhotosCloudId     { get; set; } // text(max)
-		[Column("RemoteProject_PublishState"),                   NotNull] public long    RemoteProjectPublishState      { get; set; } // integer
-		[Column("RemoteProject_DateLastSynced"),       Nullable         ] public long?   RemoteProjectDateLastSynced    { get; set; } // integer
-		[Column("RemoteProject_ETag"),                 Nullable         ] public string? RemoteProjectETag              { get; set; } // text(max)
-		[Column("RemoteProject_MigratedFromCloud"),              NotNull] public long    RemoteProjectMigratedFromCloud { get; set; } // integer
+		[Column("RemoteProject_Id"),                PrimaryKey,  NotNull] public long      RemoteProjectId                { get; set; } // integer
+		[Column("RemoteProject_ProjectGuid"),                    NotNull] public string    RemoteProjectProjectGuid       { get; set; } = null!; // text(max)
+		[Column("RemoteProject_PhotosCloudId"),        Nullable         ] public string?   RemoteProjectPhotosCloudId     { get; set; } // text(max)
+		[Column("RemoteProject_PublishState"),                   NotNull] public long      RemoteProjectPublishState      { get; set; } // integer
+		[Column("RemoteProject_DateLastSynced"),       Nullable         ] public DateTime? RemoteProjectDateLastSynced    { get; set; } // integer
+		[Column("RemoteProject_ETag"),                 Nullable         ] public string?   RemoteProjectETag              { get; set; } // text(max)
+		[Column("RemoteProject_MigratedFromCloud"),              NotNull] public long      RemoteProjectMigratedFromCloud { get; set; } // integer
 
 		#region Associations
 
@@ -1986,9 +1986,9 @@ namespace StorageProviders.SQLite
 	[Table("Tag")]
 	public partial class Tag
 	{
-		[Column("Tag_Id"),          PrimaryKey,  NotNull] public long  TagId          { get; set; } // integer
-		[Column("Tag_ResourceId"),     Nullable         ] public long? TagResourceId  { get; set; } // integer
-		[Column("Tag_CreatedDate"),    Nullable         ] public long? TagCreatedDate { get; set; } // integer
+		[Column("Tag_Id"),          PrimaryKey,  NotNull] public long      TagId          { get; set; } // integer
+		[Column("Tag_ResourceId"),     Nullable         ] public long?     TagResourceId  { get; set; } // integer
+		[Column("Tag_CreatedDate"),    Nullable         ] public DateTime? TagCreatedDate { get; set; } // integer
 
 		#region Associations
 
@@ -2025,10 +2025,10 @@ namespace StorageProviders.SQLite
 	[Table("UserActionAlbumView")]
 	public partial class UserActionAlbumView
 	{
-		[Column("UserActionAlbumView_Id"),           PrimaryKey,  Identity] public long  UserActionAlbumViewId           { get; set; } // integer
-		[Column("UserActionAlbumView_Date"),         NotNull              ] public long  UserActionAlbumViewDate         { get; set; } // integer
-		[Column("UserActionAlbumView_AlbumId"),         Nullable          ] public long? UserActionAlbumViewAlbumId      { get; set; } // integer
-		[Column("UserActionAlbumView_ActionOrigin"), NotNull              ] public long  UserActionAlbumViewActionOrigin { get; set; } // integer
+		[Column("UserActionAlbumView_Id"),           PrimaryKey,  Identity] public long     UserActionAlbumViewId           { get; set; } // integer
+		[Column("UserActionAlbumView_Date"),         NotNull              ] public DateTime UserActionAlbumViewDate         { get; set; } // integer
+		[Column("UserActionAlbumView_AlbumId"),         Nullable          ] public long?    UserActionAlbumViewAlbumId      { get; set; } // integer
+		[Column("UserActionAlbumView_ActionOrigin"), NotNull              ] public long     UserActionAlbumViewActionOrigin { get; set; } // integer
 
 		#region Associations
 
@@ -2044,31 +2044,31 @@ namespace StorageProviders.SQLite
 	[Table("UserActionImport")]
 	public partial class UserActionImport
 	{
-		[Column("UserActionImport_Id"),           PrimaryKey, Identity] public long   UserActionImportId           { get; set; } // integer
-		[Column("UserActionImport_Date"),         NotNull             ] public long   UserActionImportDate         { get; set; } // integer
-		[Column("UserActionImport_SessionId"),    NotNull             ] public long   UserActionImportSessionId    { get; set; } // integer
-		[Column("UserActionImport_Destination"),  NotNull             ] public string UserActionImportDestination  { get; set; } = null!; // text(max)
-		[Column("UserActionImport_ActionOrigin"), NotNull             ] public long   UserActionImportActionOrigin { get; set; } // integer
-		[Column("UserActionImport_Manufacturer"), NotNull             ] public string UserActionImportManufacturer { get; set; } = null!; // text(max)
-		[Column("UserActionImport_Model"),        NotNull             ] public string UserActionImportModel        { get; set; } = null!; // text(max)
-		[Column("UserActionImport_TotalCount"),   NotNull             ] public long   UserActionImportTotalCount   { get; set; } // integer
+		[Column("UserActionImport_Id"),           PrimaryKey, Identity] public long     UserActionImportId           { get; set; } // integer
+		[Column("UserActionImport_Date"),         NotNull             ] public DateTime UserActionImportDate         { get; set; } // integer
+		[Column("UserActionImport_SessionId"),    NotNull             ] public long     UserActionImportSessionId    { get; set; } // integer
+		[Column("UserActionImport_Destination"),  NotNull             ] public string   UserActionImportDestination  { get; set; } = null!; // text(max)
+		[Column("UserActionImport_ActionOrigin"), NotNull             ] public long     UserActionImportActionOrigin { get; set; } // integer
+		[Column("UserActionImport_Manufacturer"), NotNull             ] public string   UserActionImportManufacturer { get; set; } = null!; // text(max)
+		[Column("UserActionImport_Model"),        NotNull             ] public string   UserActionImportModel        { get; set; } = null!; // text(max)
+		[Column("UserActionImport_TotalCount"),   NotNull             ] public long     UserActionImportTotalCount   { get; set; } // integer
 	}
 
 	[Table("UserActionLaunch")]
 	public partial class UserActionLaunch
 	{
-		[Column("UserActionLaunch_Id"),         PrimaryKey, Identity] public long UserActionLaunchId         { get; set; } // integer
-		[Column("UserActionLaunch_Date"),       NotNull             ] public long UserActionLaunchDate       { get; set; } // integer
-		[Column("UserActionLaunch_EntryPoint"), NotNull             ] public long UserActionLaunchEntryPoint { get; set; } // integer
+		[Column("UserActionLaunch_Id"),         PrimaryKey, Identity] public long     UserActionLaunchId         { get; set; } // integer
+		[Column("UserActionLaunch_Date"),       NotNull             ] public DateTime UserActionLaunchDate       { get; set; } // integer
+		[Column("UserActionLaunch_EntryPoint"), NotNull             ] public long     UserActionLaunchEntryPoint { get; set; } // integer
 	}
 
 	[Table("UserActionPrint")]
 	public partial class UserActionPrint
 	{
-		[Column("UserActionPrint_Id"),           PrimaryKey,  Identity] public long  UserActionPrintId           { get; set; } // integer
-		[Column("UserActionPrint_Date"),         NotNull              ] public long  UserActionPrintDate         { get; set; } // integer
-		[Column("UserActionPrint_ItemId"),          Nullable          ] public long? UserActionPrintItemId       { get; set; } // integer
-		[Column("UserActionPrint_ActionOrigin"), NotNull              ] public long  UserActionPrintActionOrigin { get; set; } // integer
+		[Column("UserActionPrint_Id"),           PrimaryKey,  Identity] public long     UserActionPrintId           { get; set; } // integer
+		[Column("UserActionPrint_Date"),         NotNull              ] public DateTime UserActionPrintDate         { get; set; } // integer
+		[Column("UserActionPrint_ItemId"),          Nullable          ] public long?    UserActionPrintItemId       { get; set; } // integer
+		[Column("UserActionPrint_ActionOrigin"), NotNull              ] public long     UserActionPrintActionOrigin { get; set; } // integer
 
 		#region Associations
 
@@ -2084,25 +2084,25 @@ namespace StorageProviders.SQLite
 	[Table("UserActionSearch")]
 	public partial class UserActionSearch
 	{
-		[Column("UserActionSearch_Id"),                  PrimaryKey, Identity] public long   UserActionSearchId                  { get; set; } // integer
-		[Column("UserActionSearch_Date"),                NotNull             ] public long   UserActionSearchDate                { get; set; } // integer
-		[Column("UserActionSearch_Json"),                NotNull             ] public string UserActionSearchJson                { get; set; } = null!; // text(max)
-		[Column("UserActionSearch_Textbox"),             NotNull             ] public string UserActionSearchTextbox             { get; set; } = null!; // text(max)
-		[Column("UserActionSearch_ActionOrigin"),        NotNull             ] public long   UserActionSearchActionOrigin        { get; set; } // integer
-		[Column("UserActionSearch_RequestOrigin"),       NotNull             ] public long   UserActionSearchRequestOrigin       { get; set; } // integer
-		[Column("UserActionSearch_NumberOfResults"),     NotNull             ] public long   UserActionSearchNumberOfResults     { get; set; } // integer
-		[Column("UserActionSearch_IndexingWasComplete"), NotNull             ] public long   UserActionSearchIndexingWasComplete { get; set; } // integer
+		[Column("UserActionSearch_Id"),                  PrimaryKey, Identity] public long     UserActionSearchId                  { get; set; } // integer
+		[Column("UserActionSearch_Date"),                NotNull             ] public DateTime UserActionSearchDate                { get; set; } // integer
+		[Column("UserActionSearch_Json"),                NotNull             ] public string   UserActionSearchJson                { get; set; } = null!; // text(max)
+		[Column("UserActionSearch_Textbox"),             NotNull             ] public string   UserActionSearchTextbox             { get; set; } = null!; // text(max)
+		[Column("UserActionSearch_ActionOrigin"),        NotNull             ] public long     UserActionSearchActionOrigin        { get; set; } // integer
+		[Column("UserActionSearch_RequestOrigin"),       NotNull             ] public long     UserActionSearchRequestOrigin       { get; set; } // integer
+		[Column("UserActionSearch_NumberOfResults"),     NotNull             ] public long     UserActionSearchNumberOfResults     { get; set; } // integer
+		[Column("UserActionSearch_IndexingWasComplete"), NotNull             ] public long     UserActionSearchIndexingWasComplete { get; set; } // integer
 	}
 
 	[Table("UserActionShare")]
 	public partial class UserActionShare
 	{
-		[Column("UserActionShare_Id"),           PrimaryKey,  Identity] public long   UserActionShareId           { get; set; } // integer
-		[Column("UserActionShare_Date"),         NotNull              ] public long   UserActionShareDate         { get; set; } // integer
-		[Column("UserActionShare_ItemId"),          Nullable          ] public long?  UserActionShareItemId       { get; set; } // integer
-		[Column("UserActionShare_ActionOrigin"), NotNull              ] public long   UserActionShareActionOrigin { get; set; } // integer
-		[Column("UserActionShare_Target"),       NotNull              ] public string UserActionShareTarget       { get; set; } = null!; // text(max)
-		[Column("UserActionShare_Result"),       NotNull              ] public long   UserActionShareResult       { get; set; } // integer
+		[Column("UserActionShare_Id"),           PrimaryKey,  Identity] public long     UserActionShareId           { get; set; } // integer
+		[Column("UserActionShare_Date"),         NotNull              ] public DateTime UserActionShareDate         { get; set; } // integer
+		[Column("UserActionShare_ItemId"),          Nullable          ] public long?    UserActionShareItemId       { get; set; } // integer
+		[Column("UserActionShare_ActionOrigin"), NotNull              ] public long     UserActionShareActionOrigin { get; set; } // integer
+		[Column("UserActionShare_Target"),       NotNull              ] public string   UserActionShareTarget       { get; set; } = null!; // text(max)
+		[Column("UserActionShare_Result"),       NotNull              ] public long     UserActionShareResult       { get; set; } // integer
 
 		#region Associations
 
@@ -2118,11 +2118,11 @@ namespace StorageProviders.SQLite
 	[Table("UserActionSlideshow")]
 	public partial class UserActionSlideshow
 	{
-		[Column("UserActionSlideshow_Id"),           PrimaryKey,  Identity] public long  UserActionSlideshowId           { get; set; } // integer
-		[Column("UserActionSlideshow_Date"),         NotNull              ] public long  UserActionSlideshowDate         { get; set; } // integer
-		[Column("UserActionSlideshow_AlbumId"),         Nullable          ] public long? UserActionSlideshowAlbumId      { get; set; } // integer
-		[Column("UserActionSlideshow_ItemId"),          Nullable          ] public long? UserActionSlideshowItemId       { get; set; } // integer
-		[Column("UserActionSlideshow_ActionOrigin"), NotNull              ] public long  UserActionSlideshowActionOrigin { get; set; } // integer
+		[Column("UserActionSlideshow_Id"),           PrimaryKey,  Identity] public long     UserActionSlideshowId           { get; set; } // integer
+		[Column("UserActionSlideshow_Date"),         NotNull              ] public DateTime UserActionSlideshowDate         { get; set; } // integer
+		[Column("UserActionSlideshow_AlbumId"),         Nullable          ] public long?    UserActionSlideshowAlbumId      { get; set; } // integer
+		[Column("UserActionSlideshow_ItemId"),          Nullable          ] public long?    UserActionSlideshowItemId       { get; set; } // integer
+		[Column("UserActionSlideshow_ActionOrigin"), NotNull              ] public long     UserActionSlideshowActionOrigin { get; set; } // integer
 
 		#region Associations
 
@@ -2144,10 +2144,10 @@ namespace StorageProviders.SQLite
 	[Table("UserActionView")]
 	public partial class UserActionView
 	{
-		[Column("UserActionView_Id"),           PrimaryKey,  Identity] public long  UserActionViewId           { get; set; } // integer
-		[Column("UserActionView_Date"),         NotNull              ] public long  UserActionViewDate         { get; set; } // integer
-		[Column("UserActionView_ItemId"),          Nullable          ] public long? UserActionViewItemId       { get; set; } // integer
-		[Column("UserActionView_ActionOrigin"), NotNull              ] public long  UserActionViewActionOrigin { get; set; } // integer
+		[Column("UserActionView_Id"),           PrimaryKey,  Identity] public long     UserActionViewId           { get; set; } // integer
+		[Column("UserActionView_Date"),         NotNull              ] public DateTime UserActionViewDate         { get; set; } // integer
+		[Column("UserActionView_ItemId"),          Nullable          ] public long?    UserActionViewItemId       { get; set; } // integer
+		[Column("UserActionView_ActionOrigin"), NotNull              ] public long     UserActionViewActionOrigin { get; set; } // integer
 
 		#region Associations
 

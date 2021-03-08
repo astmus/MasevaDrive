@@ -5,16 +5,14 @@
 <#@ include file="$(LinqToDBT4SQLiteTemplatesPath)PluralizationService.ttinclude"  once="true" #>
 <#
 	
-	NamespaceName = "StorageProviders.SQLite";
+	
 	GetSchemaOptions.GetTables             = true;
 	GetSchemaOptions.GetForeignKeys        = true;
 	GetSchemaOptions.GetProcedures         = true;
 	GetSchemaOptions.GenerateChar1AsString = false;
-
 	GetSchemaOptions.PreferProviderSpecificTypes = false;
-	DataContextName = "SQLiteStorage";
 	
-	//GetSchemaOptions.IncludedSchemas = null;
+	//GetSchemaOptions.IncludedSchemas = new string[]{"master"};
 	//GetSchemaOptions.ExcludedSchemas = null;
 	//GetSchemaOptions.DefaultSchema = null;
 
@@ -22,34 +20,35 @@
 	//GetSchemaOptions.ExcludedCatalogs = null;	        
 	//GetSchemaOptions.GetAssociationMemberName = null;	
 	GetSchemaOptions.LoadTable = (LoadTableData d) => d.Name.IndexOf("Fts") == -1;
-
+	NamespaceName = "StorageProviders.SQLite";
+	DataContextName = "SQLiteStorage";
 	
 	
-	GenerateSchemaAsType            = false;	
+	//GenerateSchemaAsType            = false;	
 	EnableNullableReferenceTypes   = true;
 	//DatabaseName                  = null;
 	EnforceModelNullability        = true;
 	GenerateDatabaseInfo          = true;
 	GenerateConstructors          = true;  
 	//IncludeDefaultSchema          = true;
-	GenerateViews                 = true;
+	//GenerateViews                 = true;
 	//PrefixTableMappingWithSchema  = true;
 	//ServerName                    = "MediaStorage";
 	//DefaultConfiguration          = null;
 	//SchemaDataContextTypeName       = "SQLiteStorageDataContext";
 	//SchemaNameSuffix                = "Schema";
 	//GenerateDataTypes                   = true;
-// (boolean) Enables or disables generation of ColumnAttribute.Length property.
-// If null, GenerateDataTypes value is used
-//GenerateLengthProperty              = true;
-// (boolean) Enables or disables generation of ColumnAttribute.Precision property.
-// If null, GenerateDataTypes value is used
-//GeneratePrecisionProperty           = false;
-// (boolean) Enables or disables generation of ColumnAttribute.Scale property.
-// If null, GenerateDataTypes value is used
-//GenerateScaleProperty               = false;
-// Enables generation of ObsoleteAttribute for column aliases
-//GenerateObsoleteAttributeForAliases = false;
+	// (boolean) Enables or disables generation of ColumnAttribute.Length property.
+	// If null, GenerateDataTypes value is used
+	//GenerateLengthProperty              = true;
+	// (boolean) Enables or disables generation of ColumnAttribute.Precision property.
+	// If null, GenerateDataTypes value is used
+	//GeneratePrecisionProperty           = false;
+	// (boolean) Enables or disables generation of ColumnAttribute.Scale property.
+	// If null, GenerateDataTypes value is used
+	//GenerateScaleProperty               = false;
+	// Enables generation of ObsoleteAttribute for column aliases
+	//GenerateObsoleteAttributeForAliases = false;
 	
 
 	//Func<string, bool> IsValueType = IsValueTypeDefault;
@@ -65,45 +64,53 @@
 	
 	GenerateFindExtensions        = true;
 	//GenerateDatabaseName          = false;
-//	BaseEntityClass               = null;
+	//	BaseEntityClass               = null;
 	//Func<ForeignKey, string> GetAssociationExtensionSingularName
    // = GetAssociationExtensionSingularNameDefault;
-// Defines method to generate name for "many" side of association
-//Func<ForeignKey, string> GetAssociationExtensionPluralName
-  //  = GetAssociationExtensionPluralNameDefault;
+	// Defines method to generate name for "many" side of association
+	//Func<ForeignKey, string> GetAssociationExtensionPluralName
+	//  = GetAssociationExtensionPluralNameDefault;
 
 	// Enables pluralization of table mapping classes
 PluralizeClassNames                 = false;
-// Enables singularization of table mapping classes
+	// Enables singularization of table mapping classes
 SingularizeClassNames               = true;
-// Enables pluralization of ITable<> properties in data context
+	// Enables pluralization of ITable<> properties in data context
 PluralizeDataContextPropertyNames   = true;
-// Enables singularization of ITable<> properties in data context
+	// Enables singularization of ITable<> properties in data context
 SingularizeDataContextPropertyNames = false;
-//GenerateDbTypes                     = false;
+	//GenerateDbTypes                     = false;
 
 	ReplaceSimilarTables          = true;
 // If enabled, procedure schema load error will be generated as #error directive and fail build
 // of output file. Useful for initial generation to highlight places, that require review or
 // additional hints for schema loader
 // Also check GetSchemaOptions.LoadProcedure option above
-//GenerateProcedureErrors       = true;
+	//GenerateProcedureErrors       = true;
 // If enabled, methods for procedures that return table will be generated with List<T> return type and
 // IMPORTANT: this will lead to load of all procedure results into list and could lead
 // to performance issues on big results
-//GenerateProcedureResultAsList = true;
+	//GenerateProcedureResultAsList = true;
 // Enables stored procedure methods to accept generated context object or DataConnection type
-GenerateProceduresOnTypedContext = true;
+	GenerateProceduresOnTypedContext = true;
 // see NormalizeNamesWithoutUnderscores setting
-NormalizeNames                                 = true;
+	NormalizeNames                                 = true;
 // enables normalization of names without underscores.
-//NormalizeNamesWithoutUnderscores               = true;
+	//NormalizeNamesWithoutUnderscores               = true;
 // Defines logic to convert type/member name, derived from database object name, to C# identifier.
-//Func<string, bool, string> ToValidName         = ToValidNameDefault;
+	//Func<string, bool, string> ToValidName         = ToValidNameDefault;
 // Makes C# identifier valid by removing unsupported symbols and calling ToValidName
-//Func<string, bool, string> ConvertToCompilable = ConvertToCompilableDefault;
+	//Func<string, bool, string> ConvertToCompilable = ConvertToCompilableDefault;
+
+	
 
 	LoadSQLiteMetadata("e:\\StorageDB", "StorageDB.sqlite");
+	
+	foreach (var t in Tables.Values)
+    foreach (var c in t.Columns.Values)
+        if (c.MemberName.IndexOf("Date") > -1 && c.MemberName.IndexOf("Id") == -1)
+            c.Type = c.IsNullable ? "DateTime?" : "DateTime";
+	
 	GenerateModel();
 				#>
 			
