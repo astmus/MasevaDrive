@@ -17,7 +17,7 @@ using LinqToDB.Mapping;
 
 namespace StorageProviders.SQLite
 {
-	public partial class SQLiteDbContext : LinqToDB.Data.DataConnection
+	public partial class SQLiteStorage : LinqToDB.Data.DataConnection
 	{
 		public ITable<Album>                            Albums                            { get { return this.GetTable<Album>(); } }
 		public ITable<AlbumItemLink>                    AlbumItemLinks                    { get { return this.GetTable<AlbumItemLink>(); } }
@@ -92,20 +92,20 @@ namespace StorageProviders.SQLite
 		public ITable<UserActionView>                   UserActionViews                   { get { return this.GetTable<UserActionView>(); } }
 		public ITable<VideoFaceOccurrence>              VideoFaceOccurrences              { get { return this.GetTable<VideoFaceOccurrence>(); } }
 
-		public SQLiteDbContext()
+		public SQLiteStorage()
 		{
 			InitDataContext();
 			InitMappingSchema();
 		}
 
-		public SQLiteDbContext(string configuration)
+		public SQLiteStorage(string configuration)
 			: base(configuration)
 		{
 			InitDataContext();
 			InitMappingSchema();
 		}
 
-		public SQLiteDbContext(LinqToDbConnectionOptions options)
+		public SQLiteStorage(LinqToDbConnectionOptions options)
 			: base(options)
 		{
 			InitDataContext();

@@ -82,6 +82,21 @@ namespace StorageProviders
 
 		public string DefaultConfiguration => @"Data Source = e:\\StorageDB\\MediaDb.v1.sqlite; Mode=ReadOnly; Cache=Shared; Pooling=True; Max Pool Size=100; Cache Size=2000; Journal Mode=Wal;";
 		public string DefaultDataProvider => "SQLite";
+		//options.UseConnectionString(ProviderName.SQLiteMS, hostContext.Configuration.GetConnectionString("DbConnectionString")).UseDefaultLogging(provider).Build<SQLiteDbContext>();
+		//(Context.SQLite.Connection as Microsoft.Data.Sqlite.SqliteConnection).CreateCollation("NoCaseUnicode", (x, y) => string.Compare(x, y, ignoreCase: true));
+		//(Context.SQLite.Connection as Microsoft.Data.Sqlite.SqliteConnection).CreateCollation("NoCaseLinguistic", (x, y) => StringComparer.InvariantCultureIgnoreCase.Compare(x, y));
+		////System.Data.SQLite.SQLiteFunction
+		//// pass configured options to data connection constructor
+		////List<Item> items = null;
+		//using (var dc = new SQLiteDbContext(b.Build()))
+		//{
+		//	dc.Col
+		//	//		items = (from i in dc.Items where i.ItemFileName.StartsWith("P") select i).ToList();
+		//}
+
+		//foreach (var i in items)
+		//	Console.WriteLine($"{i}");*/
+
 
 		public IEnumerable<IConnectionStringSettings> ConnectionStrings
 		{
@@ -104,23 +119,6 @@ namespace StorageProviders
 						ConnectionString = b.ToString()
 					};
 			}
-		}
-	}
-}
-namespace StorageProviders.SQLite//.NetCore.DBs.SQLite
-{
-	public partial class SQLiteDbContext : LinqToDB.Data.DataConnection
-	{
-		[SQLiteFunction(FuncType = FunctionType.Collation, Name = "NoCaseUnicode")]
-		public class NoCaseUnicode : SQLiteFunction
-		{
-			public override int Compare(string x, string y) => string.Compare(x, y, ignoreCase: true);
-		}
-
-		[SQLiteFunction(FuncType = FunctionType.Collation, Name = "NoCaseLinguistic")]
-		public class NoCaseLinguistic : SQLiteFunction
-		{
-			public override int Compare(string x, string y) => string.Compare(x, y, StringComparison.InvariantCultureIgnoreCase);
 		}
 	}
 }

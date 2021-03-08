@@ -8,8 +8,27 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using LinqToDB;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Data.SQLite;
 
 namespace StorageProviders.SQLite
+{
+	public partial class SQLiteStorage : LinqToDB.Data.DataConnection
+	{
+		[SQLiteFunction(FuncType = FunctionType.Collation, Name = "NoCaseUnicode")]
+		public class NoCaseUnicode : SQLiteFunction
+		{
+			public override int Compare(string x, string y) => string.Compare(x, y, ignoreCase: true);
+		}
+
+		[SQLiteFunction(FuncType = FunctionType.Collation, Name = "NoCaseLinguistic")]
+		public class NoCaseLinguistic : SQLiteFunction
+		{
+			public override int Compare(string x, string y) => string.Compare(x, y, StringComparison.InvariantCultureIgnoreCase);
+		}
+	}
+}
+
+namespace StorageProviders.SQLite.Extensions
 {
 	public class LinqToDbLoggerFactoryAdapter
 	{
@@ -37,7 +56,7 @@ namespace StorageProviders.SQLite
 
 			_logger.Log(logLevel, 0, message, null, (s, exception) => s);
 		}
-	}
+	}	
 
 	public static class ServiceConfigurationExtensions
 	{

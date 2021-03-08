@@ -1,8 +1,8 @@
 ﻿<#@ template language="C#" debug="True" hostSpecific="True" #>
 <#@ output extension=".generated.cs"                        #>
 
-<#@ include file="c:\Users\Astmus\.nuget\packages\linq2db.sqlite.ms\3.2.3\content\LinqToDB.Templates\LinqToDB.SQLite.Tools.ttinclude" once="true" #>
-<#@ include file="c:\Users\Astmus\.nuget\packages\linq2db.sqlite.ms\3.2.3\content\LinqToDB.Templates\PluralizationService.ttinclude"  once="true" #>
+<#@ include file="$(LinqToDBT4SQLiteTemplatesPath)LinqToDB.SQLite.Tools.ttinclude" once="true" #>
+<#@ include file="$(LinqToDBT4SQLiteTemplatesPath)PluralizationService.ttinclude"  once="true" #>
 <#
 	
 	NamespaceName = "StorageProviders.SQLite";
@@ -12,7 +12,7 @@
 	GetSchemaOptions.GenerateChar1AsString = false;
 
 	GetSchemaOptions.PreferProviderSpecificTypes = false;
-	DataContextName = "SQLiteDbContext";
+	DataContextName = "SQLiteStorage";
 	
 	GetSchemaOptions.IncludedSchemas = null;
 	GetSchemaOptions.ExcludedSchemas = null;
@@ -52,7 +52,7 @@
 //GenerateObsoleteAttributeForAliases = false;
 	
 
-	//Func<string, bool> IsValueType = IsValueTypeDefault;
+	Func<string, bool> IsValueType = IsValueTypeDefault;
 	
 	//OneToManyAssociationType      = "IEnumerable<{0}>";
 	// Enables generation of associations in table mappings
@@ -87,13 +87,13 @@ SingularizeDataContextPropertyNames = true;
 // of output file. Useful for initial generation to highlight places, that require review or
 // additional hints for schema loader
 // Also check GetSchemaOptions.LoadProcedure option above
-//GenerateProcedureErrors       = true;
+GenerateProcedureErrors       = true;
 // If enabled, methods for procedures that return table will be generated with List<T> return type and
 // IMPORTANT: this will lead to load of all procedure results into list and could lead
 // to performance issues on big results
-//GenerateProcedureResultAsList = false;
+GenerateProcedureResultAsList = false;
 // Enables stored procedure methods to accept generated context object or DataConnection type
-//GenerateProceduresOnTypedContext = true;
+GenerateProceduresOnTypedContext = true;
 // see NormalizeNamesWithoutUnderscores setting
 NormalizeNames                                 = true;
 // enables normalization of names without underscores.
