@@ -57,7 +57,7 @@ PluralizeDataContextPropertyNames   = true;
 // Enables singularization of ITable<> properties in data context
 SingularizeDataContextPropertyNames = true;
 
-	LoadSQLiteMetadata("Data Source=e:\\StorageDB\\MediaDb.v1.sqlite");
+	LoadSQLiteMetadata("Data Source=e:\\StorageDB\\StorageDB.sqlite");
 	
 	GenerateModel();
 				#>

@@ -9,6 +9,7 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using LinqToDB;
@@ -150,6 +151,70 @@ namespace StorageProviders.SQLite
 		[Column("Album_ETag",                        DataType=LinqToDB.DataType.Text,   Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? AlbumETag                        { get; set; } // text(max)
 		[Column("Album_CreationType",                DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumCreationType                { get; set; } // integer
 		[Column("Album_Order",                       DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              Nullable         ] public long?   AlbumOrder                       { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_Album_1_0
+		/// </summary>
+		[Association(ThisKey="AlbumCoverItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Album_1_0", BackReferenceName="Albums")]
+		public Item? AlbumCoverItem { get; set; }
+
+		/// <summary>
+		/// FK_AlbumItemLink_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="AlbumItemLinkAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<AlbumItemLink> AlbumItemLinks { get; set; } = null!;
+
+		/// <summary>
+		/// FK_CloudAlbum_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="CloudAlbumAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<CloudAlbum> CloudAlbums { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ExcludedAlbum_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="ExcludedAlbumAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ExcludedAlbum> ExcludedAlbums { get; set; } = null!;
+
+		/// <summary>
+		/// FK_PendingUploadItem_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="PendingUploadItemAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<PendingUploadItem> PendingUploadItems { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Project_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="ProjectAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Project> Projects { get; set; } = null!;
+
+		/// <summary>
+		/// FK_RemoteAlbum_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="RemoteAlbumAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
+		public RemoteAlbum? RemoteAlbum { get; set; }
+
+		/// <summary>
+		/// FK_Album_0_0
+		/// </summary>
+		[Association(ThisKey="AlbumSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Album_0_0", BackReferenceName="Albums")]
+		public Source? Source { get; set; }
+
+		/// <summary>
+		/// FK_UserActionAlbumView_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="UserActionAlbumViewAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<UserActionAlbumView> UserActionAlbumViews { get; set; } = null!;
+
+		/// <summary>
+		/// FK_UserActionSlideshow_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="AlbumId", OtherKey="UserActionSlideshowAlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<UserActionSlideshow> UserActionSlideshows { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("AlbumItemLink")]
@@ -159,6 +224,22 @@ namespace StorageProviders.SQLite
 		[Column("AlbumItemLink_ItemId",            DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull    ] public long    AlbumItemLinkItemId            { get; set; } // integer
 		[Column("AlbumItemLink_Order",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   AlbumItemLinkOrder             { get; set; } // integer
 		[Column("AlbumItemLink_ItemPhotosCloudId", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? AlbumItemLinkItemPhotosCloudId { get; set; } // text(max)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_AlbumItemLink_1_0
+		/// </summary>
+		[Association(ThisKey="AlbumItemLinkAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_AlbumItemLink_1_0", BackReferenceName="AlbumItemLinks")]
+		public Album AlbumItemLinkAlbum { get; set; } = null!;
+
+		/// <summary>
+		/// FK_AlbumItemLink_0_0
+		/// </summary>
+		[Association(ThisKey="AlbumItemLinkItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_AlbumItemLink_0_0", BackReferenceName="AlbumItemLinks")]
+		public Item AlbumItemLinkItem { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("AppGlobalState")]
@@ -205,6 +286,16 @@ namespace StorageProviders.SQLite
 	{
 		[Column("ApplicationName_Id",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ApplicationNameId   { get; set; } // integer
 		[Column("ApplicationName_Text", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ApplicationNameText { get; set; } // text(max)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_Item_3_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ApplicationNameId", OtherKey="ItemApplicationNameId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Item> Items { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("AppTelemetryState")]
@@ -247,6 +338,16 @@ namespace StorageProviders.SQLite
 		[Column("Cache_Filename",            DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CacheFilename            { get; set; } // text(max)
 		[Column("Cache_DateAccessed",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   CacheDateAccessed        { get; set; } // integer
 		[Column("Cache_ModificationVersion", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   CacheModificationVersion { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_Cache_0_0
+		/// </summary>
+		[Association(ThisKey="CacheItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Cache_0_0", BackReferenceName="Caches")]
+		public Item? CacheItem { get; set; }
+
+		#endregion
 	}
 
 	[Table("CameraManufacturer")]
@@ -254,6 +355,16 @@ namespace StorageProviders.SQLite
 	{
 		[Column("CameraManufacturer_Id",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    CameraManufacturerId   { get; set; } // integer
 		[Column("CameraManufacturer_Text", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CameraManufacturerText { get; set; } // text(max)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_Item_2_0_BackReference
+		/// </summary>
+		[Association(ThisKey="CameraManufacturerId", OtherKey="ItemCameraManufacturerId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Item> Items { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("CameraModel")]
@@ -261,6 +372,16 @@ namespace StorageProviders.SQLite
 	{
 		[Column("CameraModel_Id",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    CameraModelId   { get; set; } // integer
 		[Column("CameraModel_Text", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CameraModelText { get; set; } // text(max)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_Item_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="CameraModelId", OtherKey="ItemCameraModelId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Item> Items { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("CloudAlbum")]
@@ -270,6 +391,22 @@ namespace StorageProviders.SQLite
 		[Column("CloudAlbum_AlbumId",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    CloudAlbumAlbumId                { get; set; } // integer
 		[Column("CloudAlbum_CloudId",                DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CloudAlbumCloudId                { get; set; } // text(max)
 		[Column("CloudAlbum_CloudAlbumDefinitionId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   CloudAlbumCloudAlbumDefinitionId { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_CloudAlbum_1_0
+		/// </summary>
+		[Association(ThisKey="CloudAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_CloudAlbum_1_0", BackReferenceName="CloudAlbums")]
+		public Album CloudAlbumAlbum { get; set; } = null!;
+
+		/// <summary>
+		/// FK_CloudAlbum_0_0
+		/// </summary>
+		[Association(ThisKey="CloudAlbumCloudAlbumDefinitionId", OtherKey="CloudAlbumDefinitionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_CloudAlbum_0_0", BackReferenceName="CloudAlbums")]
+		public CloudAlbumDefinition? CloudAlbumCloudAlbumDefinition { get; set; }
+
+		#endregion
 	}
 
 	[Table("CloudAlbumDefinition")]
@@ -281,6 +418,16 @@ namespace StorageProviders.SQLite
 		[Column("CloudAlbumDefinition_CloudFriendlyName",         DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? CloudAlbumDefinitionCloudFriendlyName         { get; set; } // text(max)
 		[Column("CloudAlbumDefinition_DateLastAlbumsMaintenance", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   CloudAlbumDefinitionDateLastAlbumsMaintenance { get; set; } // integer
 		[Column("CloudAlbumDefinition_QueryType",                 DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   CloudAlbumDefinitionQueryType                 { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_CloudAlbum_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="CloudAlbumDefinitionId", OtherKey="CloudAlbumCloudAlbumDefinitionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<CloudAlbum> CloudAlbums { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ConceptTagSuppressedTagList")]
@@ -305,6 +452,16 @@ namespace StorageProviders.SQLite
 		[Column("Event_StartDate", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? EventStartDate { get; set; } // integer
 		[Column("Event_EndDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? EventEndDate   { get; set; } // integer
 		[Column("Event_Size",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? EventSize      { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_Item_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="EventId", OtherKey="ItemEventId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Item> Items { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ExcludedAlbum")]
@@ -314,6 +471,16 @@ namespace StorageProviders.SQLite
 		[Column("ExcludedAlbum_AlbumId",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedAlbumAlbumId        { get; set; } // integer
 		[Column("ExcludedAlbum_ExcludedForUse", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedAlbumExcludedForUse { get; set; } // integer
 		[Column("ExcludedAlbum_ExcludedDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedAlbumExcludedDate   { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExcludedAlbum_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedAlbum_0_0", BackReferenceName="ExcludedAlbums")]
+		public Album ExcludedAlbumAlbum { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ExcludedFace")]
@@ -324,6 +491,22 @@ namespace StorageProviders.SQLite
 		[Column("ExcludedFace_FaceId",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedFaceFaceId         { get; set; } // integer
 		[Column("ExcludedFace_ExcludedForUse", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedFaceExcludedForUse { get; set; } // integer
 		[Column("ExcludedFace_ExcludedDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedFaceExcludedDate   { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExcludedFace_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedFaceFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedFace_0_0", BackReferenceName="ExcludedFaces")]
+		public Face ExcludedFaceFace { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ExcludedFace_1_0
+		/// </summary>
+		[Association(ThisKey="ExcludedFaceFaceClusterId", OtherKey="FaceClusterId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedFace_1_0", BackReferenceName="ExcludedFaces")]
+		public FaceCluster ExcludedFaceFaceCluster { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ExcludedImport")]
@@ -347,6 +530,22 @@ namespace StorageProviders.SQLite
 		[Column("ExcludedItemTag_UploadState",           DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? ExcludedItemTagUploadState           { get; set; } // integer
 		[Column("ExcludedItemTag_UploadAttempts",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? ExcludedItemTagUploadAttempts        { get; set; } // integer
 		[Column("ExcludedItemTag_UploadDateLastAttempt", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? ExcludedItemTagUploadDateLastAttempt { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExcludedItemTag_1_0
+		/// </summary>
+		[Association(ThisKey="ExcludedItemTagItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedItemTag_1_0", BackReferenceName="ExcludedItemTags")]
+		public Item ExcludedItemTagItem { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ExcludedItemTag_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedItemTagTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedItemTag_0_0", BackReferenceName="ExcludedItemTags")]
+		public Tag ExcludedItemTagTag { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ExcludedLocation")]
@@ -356,6 +555,16 @@ namespace StorageProviders.SQLite
 		[Column("ExcludedLocation_LocationId",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedLocationLocationId     { get; set; } // integer
 		[Column("ExcludedLocation_ExcludedForUse", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedLocationExcludedForUse { get; set; } // integer
 		[Column("ExcludedLocation_ExcludedDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedLocationExcludedDate   { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExcludedLocation_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedLocationLocationId", OtherKey="LocationId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedLocation_0_0", BackReferenceName="ExcludedLocations")]
+		public Location ExcludedLocationLocation { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ExcludedPerson")]
@@ -365,6 +574,16 @@ namespace StorageProviders.SQLite
 		[Column("ExcludedPerson_PersonId",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedPersonPersonId       { get; set; } // integer
 		[Column("ExcludedPerson_ExcludedForUse", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedPersonExcludedForUse { get; set; } // integer
 		[Column("ExcludedPerson_ExcludedDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedPersonExcludedDate   { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExcludedPerson_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedPersonPersonId", OtherKey="PersonId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedPerson_0_0", BackReferenceName="ExcludedPeople")]
+		public Person ExcludedPersonPerson { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ExcludedTag")]
@@ -374,6 +593,16 @@ namespace StorageProviders.SQLite
 		[Column("ExcludedTag_TagId",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedTagTagId          { get; set; } // integer
 		[Column("ExcludedTag_ExcludedForUse", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedTagExcludedForUse { get; set; } // integer
 		[Column("ExcludedTag_ExcludedDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long ExcludedTagExcludedDate   { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExcludedTag_0_0
+		/// </summary>
+		[Association(ThisKey="ExcludedTagTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExcludedTag_0_0", BackReferenceName="ExcludedTags")]
+		public Tag ExcludedTagTag { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ExtractedText")]
@@ -382,6 +611,16 @@ namespace StorageProviders.SQLite
 		[Column("ExtractedText_Id",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ExtractedTextId     { get; set; } // integer
 		[Column("ExtractedText_ItemId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    ExtractedTextItemId { get; set; } // integer
 		[Column("ExtractedText_Text",   DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ExtractedTextText   { get; set; } // text(max)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExtractedText_0_0
+		/// </summary>
+		[Association(ThisKey="ExtractedTextItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ExtractedText_0_0", BackReferenceName="ExtractedTexts")]
+		public Item ExtractedTextItem { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("Face")]
@@ -423,6 +662,64 @@ namespace StorageProviders.SQLite
 		[Column("Face_Version",                    DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceVersion                    { get; set; } // integer
 		[Column("Face_SmileProbability",           DataType=LinqToDB.DataType.Single,    Length=8, Precision=53, Scale=0),              Nullable         ] public double? FaceSmileProbability           { get; set; } // real
 		[Column("Face_IsHighQualityExemplarScore", DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FaceIsHighQualityExemplarScore { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExcludedFace_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="ExcludedFaceFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ExcludedFace> ExcludedFaces { get; set; } = null!;
+
+		/// <summary>
+		/// FK_FaceCluster_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="FaceClusterBestFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<FaceCluster> FaceClusters { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Face_1_0
+		/// </summary>
+		[Association(ThisKey="FaceFaceClusterId", OtherKey="FaceClusterId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_1_0", BackReferenceName="Faces")]
+		public FaceCluster? FaceFaceCluster { get; set; }
+
+		/// <summary>
+		/// FK_FaceFeature_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="FaceFeatureFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<FaceFeature> FaceFeatures { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Face_2_0
+		/// </summary>
+		[Association(ThisKey="FaceItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_2_0", BackReferenceName="Faces")]
+		public Item FaceItem { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Face_0_0
+		/// </summary>
+		[Association(ThisKey="FacePersonId", OtherKey="PersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Face_0_0", BackReferenceName="Faces")]
+		public Person? FacePerson { get; set; }
+
+		/// <summary>
+		/// FK_Person_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="PersonBestFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Person> FkPerson10BackReferences { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Person_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="PersonSafeBestFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Person> People { get; set; } = null!;
+
+		/// <summary>
+		/// FK_VideoFaceOccurrence_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceId", OtherKey="VideoFaceOccurrenceFaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<VideoFaceOccurrence> VideoFaceOccurrences { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("FaceCluster")]
@@ -431,6 +728,34 @@ namespace StorageProviders.SQLite
 		[Column("FaceCluster_Id",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long  FaceClusterId         { get; set; } // integer
 		[Column("FaceCluster_PersonId",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? FaceClusterPersonId   { get; set; } // integer
 		[Column("FaceCluster_BestFaceId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? FaceClusterBestFaceId { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExcludedFace_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceClusterId", OtherKey="ExcludedFaceFaceClusterId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ExcludedFace> ExcludedFaces { get; set; } = null!;
+
+		/// <summary>
+		/// FK_FaceCluster_0_0
+		/// </summary>
+		[Association(ThisKey="FaceClusterBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceCluster_0_0", BackReferenceName="FaceClusters")]
+		public Face? FaceClusterBestFace { get; set; }
+
+		/// <summary>
+		/// FK_FaceCluster_1_0
+		/// </summary>
+		[Association(ThisKey="FaceClusterPersonId", OtherKey="PersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceCluster_1_0", BackReferenceName="FaceClusters")]
+		public Person? FaceClusterPerson { get; set; }
+
+		/// <summary>
+		/// FK_Face_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FaceClusterId", OtherKey="FaceFaceClusterId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Face> Faces { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("FaceFeature")]
@@ -440,6 +765,16 @@ namespace StorageProviders.SQLite
 		[Column("FaceFeature_FeatureType", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0), PrimaryKey(1), NotNull] public long    FaceFeatureFeatureType { get; set; } // integer
 		[Column("FaceFeature_X",           DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable           ] public double? FaceFeatureX           { get; set; } // real
 		[Column("FaceFeature_Y",           DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable           ] public double? FaceFeatureY           { get; set; } // real
+
+		#region Associations
+
+		/// <summary>
+		/// FK_FaceFeature_0_0
+		/// </summary>
+		[Association(ThisKey="FaceFeatureFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_FaceFeature_0_0", BackReferenceName="FaceFeatures")]
+		public Face FaceFeatureFace { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("Folder")]
@@ -459,6 +794,40 @@ namespace StorageProviders.SQLite
 		[Column("Folder_StorageProviderFileId",   DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? FolderStorageProviderFileId   { get; set; } // text(max)
 		[Column("Folder_InOneDrivePicturesScope", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderInOneDrivePicturesScope { get; set; } // integer
 		[Column("Folder_ItemCount",               DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   FolderItemCount               { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_Folder_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FolderId", OtherKey="FolderParentFolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Folder> FkFolder10BackReferences { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Folder_1_0
+		/// </summary>
+		[Association(ThisKey="FolderParentFolderId", OtherKey="FolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Folder_1_0", BackReferenceName="FkFolder10BackReferences")]
+		public Folder? FolderParentFolder { get; set; }
+
+		/// <summary>
+		/// FK_Item_6_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FolderId", OtherKey="ItemParentFolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Item> Items { get; set; } = null!;
+
+		/// <summary>
+		/// FK_RemoteItem_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="FolderId", OtherKey="RemoteItemFolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<RemoteItem> RemoteItems { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Folder_0_0
+		/// </summary>
+		[Association(ThisKey="FolderSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Folder_0_0", BackReferenceName="Folders")]
+		public Source? Source { get; set; }
+
+		#endregion
 	}
 
 	[Table("ImageAnalysis")]
@@ -521,6 +890,16 @@ namespace StorageProviders.SQLite
 		[Column("ImageAnalysis_Utility",                   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ImageAnalysisUtility                   { get; set; } // integer
 		[Column("ImageAnalysis_HistogramBuckets",          DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? ImageAnalysisHistogramBuckets          { get; set; } // blob
 		[Column("ImageAnalysis_Tone",                      DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? ImageAnalysisTone                      { get; set; } // blob
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ImageAnalysis_0_0
+		/// </summary>
+		[Association(ThisKey="ImageAnalysisItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_ImageAnalysis_0_0", BackReferenceName="ImageAnalysis")]
+		public Item ImageAnalysisItem { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("Item")]
@@ -616,6 +995,208 @@ namespace StorageProviders.SQLite
 		[Column("Item_IsInked",                              DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemIsInked                              { get; set; } // integer
 		[Column("Item_IsExportedMovie",                      DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemIsExportedMovie                      { get; set; } // integer
 		[Column("Item_OnlineContentAttributionString",       DataType=LinqToDB.DataType.Text,      Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemOnlineContentAttributionString       { get; set; } // text(max)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_AlbumItemLink_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="AlbumItemLinkItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<AlbumItemLink> AlbumItemLinks { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Album_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="AlbumCoverItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Album> Albums { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Cache_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="CacheItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Cache> Caches { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ExcludedItemTag_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ExcludedItemTagItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ExcludedItemTag> ExcludedItemTags { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ExtractedText_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ExtractedTextItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ExtractedText> ExtractedTexts { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Face_2_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="FaceItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Face> Faces { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Item_5_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemBurstPrevItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Item> FkItem50BackReferences { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ImageAnalysis_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ImageAnalysisItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
+		public ImageAnalysis? ImageAnalysis { get; set; }
+
+		/// <summary>
+		/// FK_Item_3_0
+		/// </summary>
+		[Association(ThisKey="ItemApplicationNameId", OtherKey="ApplicationNameId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_3_0", BackReferenceName="Items")]
+		public ApplicationName? ItemApplicationName { get; set; }
+
+		/// <summary>
+		/// FK_Item_5_0
+		/// </summary>
+		[Association(ThisKey="ItemBurstPrevItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_5_0", BackReferenceName="FkItem50BackReferences")]
+		public Item? ItemBurstPrevItem { get; set; }
+
+		/// <summary>
+		/// FK_Item_2_0
+		/// </summary>
+		[Association(ThisKey="ItemCameraManufacturerId", OtherKey="CameraManufacturerId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_2_0", BackReferenceName="Items")]
+		public CameraManufacturer? ItemCameraManufacturer { get; set; }
+
+		/// <summary>
+		/// FK_Item_1_0
+		/// </summary>
+		[Association(ThisKey="ItemCameraModelId", OtherKey="CameraModelId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_1_0", BackReferenceName="Items")]
+		public CameraModel? ItemCameraModel { get; set; }
+
+		/// <summary>
+		/// FK_ItemEdit_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemEditItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ItemEdit> ItemEdits { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ItemEngineExemplar_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemEngineExemplarItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ItemEngineExemplar> ItemEngineExemplars { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ItemEngineStatus_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemEngineStatusItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ItemEngineStatus> ItemEngineStatus { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Item_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEventId", OtherKey="EventId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_0_0", BackReferenceName="Items")]
+		public Event? ItemEvent { get; set; }
+
+		/// <summary>
+		/// FK_Item_4_0
+		/// </summary>
+		[Association(ThisKey="ItemLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_4_0", BackReferenceName="Items")]
+		public Location? ItemLocation { get; set; }
+
+		/// <summary>
+		/// FK_Item_6_0
+		/// </summary>
+		[Association(ThisKey="ItemParentFolderId", OtherKey="FolderId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_6_0", BackReferenceName="Items")]
+		public Folder ItemParentFolder { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ItemTags_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemTagsItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ItemTags> ItemTags { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ItemVideoQuality_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="ItemVideoQualityItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ItemVideoQuality> ItemVideoQualities { get; set; } = null!;
+
+		/// <summary>
+		/// FK_LiveTile_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="LiveTileItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToOne, IsBackReference=true)]
+		public LiveTile? LiveTile { get; set; }
+
+		/// <summary>
+		/// FK_Location_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="LocationCoverItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Location> Locations { get; set; } = null!;
+
+		/// <summary>
+		/// FK_OCRItem_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="OCRItemItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<OCRItem> OCRItems { get; set; } = null!;
+
+		/// <summary>
+		/// FK_PendingUploadItem_2_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="PendingUploadItemItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<PendingUploadItem> PendingUploadItems { get; set; } = null!;
+
+		/// <summary>
+		/// FK_RemoteItem_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="RemoteItemItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<RemoteItem> RemoteItems { get; set; } = null!;
+
+		/// <summary>
+		/// FK_RemoteThumbnail_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="RemoteThumbnailItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<RemoteThumbnail> RemoteThumbnails { get; set; } = null!;
+
+		/// <summary>
+		/// FK_SalientRect_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="SalientRectItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<SalientRect> SalientRects { get; set; } = null!;
+
+		/// <summary>
+		/// FK_SearchAnalysisItemPriority_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="SearchAnalysisItemPriorityItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<SearchAnalysisItemPriority> SearchAnalysisItemPriorities { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Item_7_0
+		/// </summary>
+		[Association(ThisKey="ItemSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Item_7_0", BackReferenceName="Items")]
+		public Source? Source { get; set; }
+
+		/// <summary>
+		/// FK_UserActionPrint_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="UserActionPrintItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<UserActionPrint> UserActionPrints { get; set; } = null!;
+
+		/// <summary>
+		/// FK_UserActionShare_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="UserActionShareItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<UserActionShare> UserActionShares { get; set; } = null!;
+
+		/// <summary>
+		/// FK_UserActionSlideshow_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="UserActionSlideshowItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<UserActionSlideshow> UserActionSlideshows { get; set; } = null!;
+
+		/// <summary>
+		/// FK_UserActionView_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemId", OtherKey="UserActionViewItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<UserActionView> UserActionViews { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ItemDateTaken")]
@@ -634,6 +1215,16 @@ namespace StorageProviders.SQLite
 		[Column("ItemEdit_ItemId",     DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull    ] public long  ItemEditItemId     { get; set; } // integer
 		[Column("ItemEdit_EditTypeId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable] public long? ItemEditEditTypeId { get; set; } // integer
 		[Column("ItemEdit_EditDate",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable] public long? ItemEditEditDate   { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ItemEdit_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEditItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEdit_0_0", BackReferenceName="ItemEdits")]
+		public Item ItemEditItem { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ItemEngineExemplar")]
@@ -642,6 +1233,16 @@ namespace StorageProviders.SQLite
 		[Column("ItemEngineExemplar_Id",       DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ItemEngineExemplarId       { get; set; } // integer
 		[Column("ItemEngineExemplar_ItemId",   DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                        NotNull] public long    ItemEngineExemplarItemId   { get; set; } // integer
 		[Column("ItemEngineExemplar_Exemplar", DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? ItemEngineExemplarExemplar { get; set; } // blob
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ItemEngineExemplar_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEngineExemplarItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEngineExemplar_0_0", BackReferenceName="ItemEngineExemplars")]
+		public Item ItemEngineExemplarItem { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ItemEngineStatus")]
@@ -658,6 +1259,16 @@ namespace StorageProviders.SQLite
 		[Column("ItemEngineStatus_LastFrameAnalyzed",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ItemEngineStatusLastFrameAnalyzed   { get; set; } // integer
 		[Column("ItemEngineStatus_PartialVideoVersion", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? ItemEngineStatusPartialVideoVersion { get; set; } // text(max)
 		[Column("ItemEngineStatus_AnalysisDone",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    ItemEngineStatusAnalysisDone        { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ItemEngineStatus_0_0
+		/// </summary>
+		[Association(ThisKey="ItemEngineStatusItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemEngineStatus_0_0", BackReferenceName="ItemEngineStatus")]
+		public Item ItemEngineStatusItem { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ItemInferredLocationExperimental")]
@@ -665,6 +1276,16 @@ namespace StorageProviders.SQLite
 	{
 		[Column("ItemInferredLocationExperimental_ItemId",             DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    ItemInferredLocationExperimentalItemId             { get; set; } // integer
 		[Column("ItemInferredLocationExperimental_InferredLocationId", DataType=LinqToDB.DataType.Undefined, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public object? ItemInferredLocationExperimentalInferredLocationId { get; set; }
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ItemInferredLocationExperimental_0_0
+		/// </summary>
+		[Association(ThisKey="ItemInferredLocationExperimentalInferredLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemInferredLocationExperimental_0_0", BackReferenceName="ItemInferredLocationExperimentals")]
+		public Location? ItemInferredLocationExperimentalInferredLocation { get; set; }
+
+		#endregion
 	}
 
 	[Table("ItemTags")]
@@ -674,6 +1295,28 @@ namespace StorageProviders.SQLite
 		[Column("ItemTags_ItemId",     DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemTagsItemId     { get; set; } // integer
 		[Column("ItemTags_TagId",      DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemTagsTagId      { get; set; } // integer
 		[Column("ItemTags_Confidence", DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? ItemTagsConfidence { get; set; } // real
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ItemTags_1_0
+		/// </summary>
+		[Association(ThisKey="ItemTagsItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemTags_1_0", BackReferenceName="ItemTags")]
+		public Item ItemTagsItem { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ItemTags_0_0
+		/// </summary>
+		[Association(ThisKey="ItemTagsTagId", OtherKey="TagId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemTags_0_0", BackReferenceName="ItemTags")]
+		public Tag ItemTagsTag { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ItemVideoTags_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ItemTagsId", OtherKey="ItemVideoTagsItemTagsId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ItemVideoTags> ItemVideoTags { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ItemVideoQuality")]
@@ -685,6 +1328,16 @@ namespace StorageProviders.SQLite
 		[Column("ItemVideoQuality_QualityLevel", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   ItemVideoQualityQualityLevel { get; set; } // integer
 		[Column("ItemVideoQuality_BeginFrame",   DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemVideoQualityBeginFrame   { get; set; } // integer
 		[Column("ItemVideoQuality_EndFrame",     DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemVideoQualityEndFrame     { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ItemVideoQuality_0_0
+		/// </summary>
+		[Association(ThisKey="ItemVideoQualityItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemVideoQuality_0_0", BackReferenceName="ItemVideoQualities")]
+		public Item ItemVideoQualityItem { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("ItemVideoTags")]
@@ -695,12 +1348,32 @@ namespace StorageProviders.SQLite
 		[Column("ItemVideoTags_Confidence", DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? ItemVideoTagsConfidence { get; set; } // real
 		[Column("ItemVideoTags_BeginFrame", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemVideoTagsBeginFrame { get; set; } // integer
 		[Column("ItemVideoTags_EndFrame",   DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),              NotNull] public long    ItemVideoTagsEndFrame   { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ItemVideoTags_0_0
+		/// </summary>
+		[Association(ThisKey="ItemVideoTagsItemTagsId", OtherKey="ItemTagsId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_ItemVideoTags_0_0", BackReferenceName="ItemVideoTags")]
+		public ItemTags ItemVideoTagsItemTag { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("LiveTile")]
 	public partial class LiveTile
 	{
 		[Column("LiveTile_ItemId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long LiveTileItemId { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_LiveTile_0_0
+		/// </summary>
+		[Association(ThisKey="LiveTileItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_LiveTile_0_0", BackReferenceName="LiveTile")]
+		public Item LiveTileItem { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("Location")]
@@ -713,6 +1386,58 @@ namespace StorageProviders.SQLite
 		[Column("Location_LocationCountryId",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationLocationCountryId  { get; set; } // integer
 		[Column("Location_ItemsCountExcDupes", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationItemsCountExcDupes { get; set; } // integer
 		[Column("Location_CoverItemId",        DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationCoverItemId        { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExcludedLocation_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationId", OtherKey="ExcludedLocationLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ExcludedLocation> ExcludedLocations { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ItemInferredLocationExperimental_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationId", OtherKey="ItemInferredLocationExperimentalInferredLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ItemInferredLocationExperimental> ItemInferredLocationExperimentals { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Item_4_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationId", OtherKey="ItemLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Item> Items { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Location_0_0
+		/// </summary>
+		[Association(ThisKey="LocationCoverItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_0_0", BackReferenceName="Locations")]
+		public Item? LocationCoverItem { get; set; }
+
+		/// <summary>
+		/// FK_LocationGrid_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationId", OtherKey="LocationGridLocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<LocationGrid> LocationGrids { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Location_1_0
+		/// </summary>
+		[Association(ThisKey="LocationLocationCountryId", OtherKey="LocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_1_0", BackReferenceName="Locations")]
+		public LocationCountry? LocationLocationCountry { get; set; }
+
+		/// <summary>
+		/// FK_Location_2_0
+		/// </summary>
+		[Association(ThisKey="LocationLocationDistrictId", OtherKey="LocationDistrictId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_2_0", BackReferenceName="Locations")]
+		public LocationDistrict? LocationLocationDistrict { get; set; }
+
+		/// <summary>
+		/// FK_Location_3_0
+		/// </summary>
+		[Association(ThisKey="LocationLocationRegionId", OtherKey="LocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Location_3_0", BackReferenceName="Locations")]
+		public LocationRegion? LocationLocationRegion { get; set; }
+
+		#endregion
 	}
 
 	[Table("LocationCountry")]
@@ -720,6 +1445,22 @@ namespace StorageProviders.SQLite
 	{
 		[Column("LocationCountry_Id",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    LocationCountryId   { get; set; } // integer
 		[Column("LocationCountry_Name", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? LocationCountryName { get; set; } // text(max)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_LocationRegion_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationCountryId", OtherKey="LocationRegionLocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<LocationRegion> LocationRegions { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Location_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationCountryId", OtherKey="LocationLocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Location> Locations { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("LocationDistrict")]
@@ -728,6 +1469,22 @@ namespace StorageProviders.SQLite
 		[Column("LocationDistrict_Id",               DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    LocationDistrictId               { get; set; } // integer
 		[Column("LocationDistrict_Name",             DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? LocationDistrictName             { get; set; } // text(max)
 		[Column("LocationDistrict_LocationRegionId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationDistrictLocationRegionId { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_LocationDistrict_0_0
+		/// </summary>
+		[Association(ThisKey="LocationDistrictLocationRegionId", OtherKey="LocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationDistrict_0_0", BackReferenceName="LocationDistricts")]
+		public LocationRegion? LocationDistrictLocationRegion { get; set; }
+
+		/// <summary>
+		/// FK_Location_2_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationDistrictId", OtherKey="LocationLocationDistrictId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Location> Locations { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("LocationGrid")]
@@ -739,6 +1496,16 @@ namespace StorageProviders.SQLite
 		[Column("LocationGrid_LocationId", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   LocationGridLocationId { get; set; } // integer
 		[Column("LocationGrid_ErrorCount", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   LocationGridErrorCount { get; set; } // integer
 		[Column("LocationGrid_LastRun",    DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   LocationGridLastRun    { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_LocationGrid_0_0
+		/// </summary>
+		[Association(ThisKey="LocationGridLocationId", OtherKey="LocationId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationGrid_0_0", BackReferenceName="LocationGrids")]
+		public Location? LocationGridLocation { get; set; }
+
+		#endregion
 	}
 
 	[Table("LocationRegion")]
@@ -747,6 +1514,28 @@ namespace StorageProviders.SQLite
 		[Column("LocationRegion_Id",                DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    LocationRegionId                { get; set; } // integer
 		[Column("LocationRegion_Name",              DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? LocationRegionName              { get; set; } // text(max)
 		[Column("LocationRegion_LocationCountryId", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   LocationRegionLocationCountryId { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_LocationDistrict_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationRegionId", OtherKey="LocationDistrictLocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<LocationDistrict> LocationDistricts { get; set; } = null!;
+
+		/// <summary>
+		/// FK_LocationRegion_0_0
+		/// </summary>
+		[Association(ThisKey="LocationRegionLocationCountryId", OtherKey="LocationCountryId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_LocationRegion_0_0", BackReferenceName="LocationRegions")]
+		public LocationCountry? LocationRegionLocationCountry { get; set; }
+
+		/// <summary>
+		/// FK_Location_3_0_BackReference
+		/// </summary>
+		[Association(ThisKey="LocationRegionId", OtherKey="LocationLocationRegionId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Location> Locations { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("NetworkTelemetry")]
@@ -765,6 +1554,22 @@ namespace StorageProviders.SQLite
 		[Column("OCRItem_Id",        DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long   OCRItemId        { get; set; } // integer
 		[Column("OCRItem_ItemId",    DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),             NotNull] public long   OCRItemItemId    { get; set; } // integer
 		[Column("OCRItem_TextAngle", DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),             NotNull] public double OCRItemTextAngle { get; set; } // real
+
+		#region Associations
+
+		/// <summary>
+		/// FK_OCRItem_0_0
+		/// </summary>
+		[Association(ThisKey="OCRItemItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRItem_0_0", BackReferenceName="OCRItems")]
+		public Item OCRItemItem { get; set; } = null!;
+
+		/// <summary>
+		/// FK_OCRLine_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="OCRItemId", OtherKey="OCRLineOCRItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<OCRLine> OCRLines { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("OCRItemTextView", IsView=true)]
@@ -780,6 +1585,22 @@ namespace StorageProviders.SQLite
 		[Column("OCRLine_Id",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long OCRLineId          { get; set; } // integer
 		[Column("OCRLine_OCRItemId",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long OCRLineOCRItemId   { get; set; } // integer
 		[Column("OCRLine_IndexOnItem", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long OCRLineIndexOnItem { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_OCRLine_0_0
+		/// </summary>
+		[Association(ThisKey="OCRLineOCRItemId", OtherKey="OCRItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRLine_0_0", BackReferenceName="OCRLines")]
+		public OCRItem OCRLineOCRItem { get; set; } = null!;
+
+		/// <summary>
+		/// FK_OCRWord_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="OCRLineId", OtherKey="OCRWordOCRLineId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<OCRWord> OCRWords { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("OCRWord")]
@@ -793,6 +1614,16 @@ namespace StorageProviders.SQLite
 		[Column("OCRWord_Width",       DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),                       NotNull] public double OCRWordWidth       { get; set; } // real
 		[Column("OCRWord_X",           DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),                       NotNull] public double OCRWordX           { get; set; } // real
 		[Column("OCRWord_Y",           DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),                       NotNull] public double OCRWordY           { get; set; } // real
+
+		#region Associations
+
+		/// <summary>
+		/// FK_OCRWord_0_0
+		/// </summary>
+		[Association(ThisKey="OCRWordOCRLineId", OtherKey="OCRLineId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_OCRWord_0_0", BackReferenceName="OCRWords")]
+		public OCRLine OCRWordOCRLine { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("OneDriveStorageAndUpsellInfo")]
@@ -821,6 +1652,16 @@ namespace StorageProviders.SQLite
 		[Column("PendingCloudAlbumDelete_Id",            DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           PrimaryKey,  NotNull] public long    PendingCloudAlbumDeleteId            { get; set; } // integer
 		[Column("PendingCloudAlbumDelete_PhotosCloudId", DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? PendingCloudAlbumDeletePhotosCloudId { get; set; } // text(max)
 		[Column("PendingCloudAlbumDelete_SourceId",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PendingCloudAlbumDeleteSourceId      { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_PendingCloudAlbumDelete_0_0
+		/// </summary>
+		[Association(ThisKey="PendingCloudAlbumDeleteSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingCloudAlbumDelete_0_0", BackReferenceName="PendingCloudAlbumDeletes")]
+		public Source? PendingCloudAlbumDeleteSource { get; set; }
+
+		#endregion
 	}
 
 	[Table("PendingUploadItem")]
@@ -838,6 +1679,28 @@ namespace StorageProviders.SQLite
 		[Column("PendingUploadItem_ResourceIdSourceType", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   PendingUploadItemResourceIdSourceType { get; set; } // integer
 		[Column("PendingUploadItem_UploadSessionUrl",     DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? PendingUploadItemUploadSessionUrl     { get; set; } // text(max)
 		[Column("PendingUploadItem_ResumableUploadUrl",   DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? PendingUploadItemResumableUploadUrl   { get; set; } // text(max)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_PendingUploadItem_1_0
+		/// </summary>
+		[Association(ThisKey="PendingUploadItemAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_1_0", BackReferenceName="PendingUploadItems")]
+		public Album PendingUploadItemAlbum { get; set; } = null!;
+
+		/// <summary>
+		/// FK_PendingUploadItem_2_0
+		/// </summary>
+		[Association(ThisKey="PendingUploadItemItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_2_0", BackReferenceName="PendingUploadItems")]
+		public Item PendingUploadItemItem { get; set; } = null!;
+
+		/// <summary>
+		/// FK_PendingUploadItem_0_0
+		/// </summary>
+		[Association(ThisKey="PendingUploadItemSourceId", OtherKey="SourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_PendingUploadItem_0_0", BackReferenceName="PendingUploadItems")]
+		public Source? PendingUploadItemSource { get; set; }
+
+		#endregion
 	}
 
 	[Table("Person")]
@@ -856,6 +1719,40 @@ namespace StorageProviders.SQLite
 		[Column("Person_Rank",                      DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PersonRank                      { get; set; } // integer
 		[Column("Person_RecalcBestFace",            DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PersonRecalcBestFace            { get; set; } // integer
 		[Column("Person_RecalcRank",                DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   PersonRecalcRank                { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExcludedPerson_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="PersonId", OtherKey="ExcludedPersonPersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ExcludedPerson> ExcludedPeople { get; set; } = null!;
+
+		/// <summary>
+		/// FK_FaceCluster_1_0_BackReference
+		/// </summary>
+		[Association(ThisKey="PersonId", OtherKey="FaceClusterPersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<FaceCluster> FaceClusters { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Face_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="PersonId", OtherKey="FacePersonId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Face> Faces { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Person_1_0
+		/// </summary>
+		[Association(ThisKey="PersonBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Person_1_0", BackReferenceName="FkPerson10BackReferences")]
+		public Face? PersonBestFace { get; set; }
+
+		/// <summary>
+		/// FK_Person_0_0
+		/// </summary>
+		[Association(ThisKey="PersonSafeBestFaceId", OtherKey="FaceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Person_0_0", BackReferenceName="People")]
+		public Face? PersonSafeBestFace { get; set; }
+
+		#endregion
 	}
 
 	[Table("PinnedSearch")]
@@ -878,6 +1775,22 @@ namespace StorageProviders.SQLite
 		[Column("Project_DateCreated",              DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),                        NotNull] public long    ProjectDateCreated              { get; set; } // integer
 		[Column("Project_Duration",                 DataType=LinqToDB.DataType.Int64,     Length=8, Precision=19, Scale=0),              Nullable         ] public long?   ProjectDuration                 { get; set; } // integer
 		[Column("Project_StoryBuilderProjectState", DataType=LinqToDB.DataType.VarBinary, Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public byte[]? ProjectStoryBuilderProjectState { get; set; } // blob
+
+		#region Associations
+
+		/// <summary>
+		/// FK_Project_0_0
+		/// </summary>
+		[Association(ThisKey="ProjectAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_Project_0_0", BackReferenceName="Projects")]
+		public Album? ProjectAlbum { get; set; }
+
+		/// <summary>
+		/// FK_RemoteProject_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="ProjectGuid", OtherKey="RemoteProjectProjectGuid", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<RemoteProject> RemoteProjects { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("RemoteAlbum")]
@@ -891,6 +1804,16 @@ namespace StorageProviders.SQLite
 		[Column("RemoteAlbum_AlbumType",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   RemoteAlbumAlbumType         { get; set; } // integer
 		[Column("RemoteAlbum_PhotosCloudId",     DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? RemoteAlbumPhotosCloudId     { get; set; } // text(max)
 		[Column("RemoteAlbum_ETag",              DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? RemoteAlbumETag              { get; set; } // text(max)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_RemoteAlbum_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteAlbumAlbumId", OtherKey="AlbumId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.OneToOne, KeyName="FK_RemoteAlbum_0_0", BackReferenceName="RemoteAlbum")]
+		public Album RemoteAlbumAlbum { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("RemoteItem")]
@@ -903,6 +1826,22 @@ namespace StorageProviders.SQLite
 		[Column("RemoteItem_DownloadUrl",    DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), Nullable] public string? RemoteItemDownloadUrl    { get; set; } // text(max)
 		[Column("RemoteItem_PresentAtSync",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           Nullable] public long?   RemoteItemPresentAtSync  { get; set; } // integer
 		[Column("RemoteItem_PhotosCloudId",  DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), Nullable] public string? RemoteItemPhotosCloudId  { get; set; } // text(max)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_RemoteItem_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteItemFolderId", OtherKey="FolderId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteItem_0_0", BackReferenceName="RemoteItems")]
+		public Folder? RemoteItemFolder { get; set; }
+
+		/// <summary>
+		/// FK_RemoteItem_1_0
+		/// </summary>
+		[Association(ThisKey="RemoteItemItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteItem_1_0", BackReferenceName="RemoteItems")]
+		public Item? RemoteItemItem { get; set; }
+
+		#endregion
 	}
 
 	[Table("RemoteProject")]
@@ -915,6 +1854,16 @@ namespace StorageProviders.SQLite
 		[Column("RemoteProject_DateLastSynced",    DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   RemoteProjectDateLastSynced    { get; set; } // integer
 		[Column("RemoteProject_ETag",              DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable         ] public string? RemoteProjectETag              { get; set; } // text(max)
 		[Column("RemoteProject_MigratedFromCloud", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),                        NotNull] public long    RemoteProjectMigratedFromCloud { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_RemoteProject_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteProjectProjectGuid", OtherKey="ProjectGuid", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteProject_0_0", BackReferenceName="RemoteProjects")]
+		public Project RemoteProjectProjectGu { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("RemoteThumbnail")]
@@ -924,6 +1873,16 @@ namespace StorageProviders.SQLite
 		[Column("RemoteThumbnail_Width",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   RemoteThumbnailWidth  { get; set; } // integer
 		[Column("RemoteThumbnail_Height", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable] public long?   RemoteThumbnailHeight { get; set; } // integer
 		[Column("RemoteThumbnail_Url",    DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0),    Nullable] public string? RemoteThumbnailUrl    { get; set; } // text(max)
+
+		#region Associations
+
+		/// <summary>
+		/// FK_RemoteThumbnail_0_0
+		/// </summary>
+		[Association(ThisKey="RemoteThumbnailItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_RemoteThumbnail_0_0", BackReferenceName="RemoteThumbnails")]
+		public Item RemoteThumbnailItem { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("SalientRect")]
@@ -938,6 +1897,16 @@ namespace StorageProviders.SQLite
 		[Column("SalientRect_Sharpness",       DataType=LinqToDB.DataType.Single, Length=8, Precision=53, Scale=0),    Nullable         ] public double? SalientRectSharpness       { get; set; } // real
 		[Column("SalientRect_ContainsFaces",   DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   SalientRectContainsFaces   { get; set; } // integer
 		[Column("SalientRect_IsFaceUnionRect", DataType=LinqToDB.DataType.Int64,  Length=8, Precision=19, Scale=0),    Nullable         ] public long?   SalientRectIsFaceUnionRect { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_SalientRect_0_0
+		/// </summary>
+		[Association(ThisKey="SalientRectItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_SalientRect_0_0", BackReferenceName="SalientRects")]
+		public Item SalientRectItem { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("SearchAnalysisItemPriority")]
@@ -946,6 +1915,16 @@ namespace StorageProviders.SQLite
 		[Column("SearchAnalysisItemPriority_Id",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey, NotNull] public long SearchAnalysisItemPriorityId       { get; set; } // integer
 		[Column("SearchAnalysisItemPriority_ItemId",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long SearchAnalysisItemPriorityItemId   { get; set; } // integer
 		[Column("SearchAnalysisItemPriority_Priority", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long SearchAnalysisItemPriorityPriority { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_SearchAnalysisItemPriority_0_0
+		/// </summary>
+		[Association(ThisKey="SearchAnalysisItemPriorityItemId", OtherKey="ItemId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_SearchAnalysisItemPriority_0_0", BackReferenceName="SearchAnalysisItemPriorities")]
+		public Item SearchAnalysisItemPriorityItem { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("Source")]
@@ -963,6 +1942,40 @@ namespace StorageProviders.SQLite
 		[Column("Source_ItemsResyncing",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   SourceItemsResyncing          { get; set; } // integer
 		[Column("Source_SignOutTime",             DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   SourceSignOutTime             { get; set; } // integer
 		[Column("Source_ODSyncThrottleStartTime", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),              Nullable         ] public long?   SourceODSyncThrottleStartTime { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_Album_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="AlbumSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Album> Albums { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Folder_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="FolderSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Folder> Folders { get; set; } = null!;
+
+		/// <summary>
+		/// FK_Item_7_0_BackReference
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="ItemSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<Item> Items { get; set; } = null!;
+
+		/// <summary>
+		/// FK_PendingCloudAlbumDelete_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="PendingCloudAlbumDeleteSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<PendingCloudAlbumDelete> PendingCloudAlbumDeletes { get; set; } = null!;
+
+		/// <summary>
+		/// FK_PendingUploadItem_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="SourceId", OtherKey="PendingUploadItemSourceId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<PendingUploadItem> PendingUploadItems { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("Tag")]
@@ -971,6 +1984,28 @@ namespace StorageProviders.SQLite
 		[Column("Tag_Id",          DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), PrimaryKey,  NotNull] public long  TagId          { get; set; } // integer
 		[Column("Tag_ResourceId",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? TagResourceId  { get; set; } // integer
 		[Column("Tag_CreatedDate", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable         ] public long? TagCreatedDate { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_ExcludedItemTag_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="TagId", OtherKey="ExcludedItemTagTagId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ExcludedItemTag> ExcludedItemTags { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ExcludedTag_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="TagId", OtherKey="ExcludedTagTagId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ExcludedTag> ExcludedTags { get; set; } = null!;
+
+		/// <summary>
+		/// FK_ItemTags_0_0_BackReference
+		/// </summary>
+		[Association(ThisKey="TagId", OtherKey="ItemTagsTagId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.OneToMany, IsBackReference=true)]
+		public IEnumerable<ItemTags> ItemTags { get; set; } = null!;
+
+		#endregion
 	}
 
 	[Table("TagVariant")]
@@ -989,6 +2024,16 @@ namespace StorageProviders.SQLite
 		[Column("UserActionAlbumView_Date",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionAlbumViewDate         { get; set; } // integer
 		[Column("UserActionAlbumView_AlbumId",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable          ] public long? UserActionAlbumViewAlbumId      { get; set; } // integer
 		[Column("UserActionAlbumView_ActionOrigin", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionAlbumViewActionOrigin { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_UserActionAlbumView_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionAlbumViewAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionAlbumView_0_0", BackReferenceName="UserActionAlbumViews")]
+		public Album? UserActionAlbumViewAlbum { get; set; }
+
+		#endregion
 	}
 
 	[Table("UserActionImport")]
@@ -1019,6 +2064,16 @@ namespace StorageProviders.SQLite
 		[Column("UserActionPrint_Date",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionPrintDate         { get; set; } // integer
 		[Column("UserActionPrint_ItemId",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable          ] public long? UserActionPrintItemId       { get; set; } // integer
 		[Column("UserActionPrint_ActionOrigin", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionPrintActionOrigin { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_UserActionPrint_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionPrintItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionPrint_0_0", BackReferenceName="UserActionPrints")]
+		public Item? UserActionPrintItem { get; set; }
+
+		#endregion
 	}
 
 	[Table("UserActionSearch")]
@@ -1043,6 +2098,16 @@ namespace StorageProviders.SQLite
 		[Column("UserActionShare_ActionOrigin", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull              ] public long   UserActionShareActionOrigin { get; set; } // integer
 		[Column("UserActionShare_Target",       DataType=LinqToDB.DataType.Text,  Length=int.MaxValue, Precision=0, Scale=0), NotNull              ] public string UserActionShareTarget       { get; set; } = null!; // text(max)
 		[Column("UserActionShare_Result",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),           NotNull              ] public long   UserActionShareResult       { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_UserActionShare_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionShareItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionShare_0_0", BackReferenceName="UserActionShares")]
+		public Item? UserActionShareItem { get; set; }
+
+		#endregion
 	}
 
 	[Table("UserActionSlideshow")]
@@ -1053,6 +2118,22 @@ namespace StorageProviders.SQLite
 		[Column("UserActionSlideshow_AlbumId",      DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable          ] public long? UserActionSlideshowAlbumId      { get; set; } // integer
 		[Column("UserActionSlideshow_ItemId",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable          ] public long? UserActionSlideshowItemId       { get; set; } // integer
 		[Column("UserActionSlideshow_ActionOrigin", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionSlideshowActionOrigin { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_UserActionSlideshow_1_0
+		/// </summary>
+		[Association(ThisKey="UserActionSlideshowAlbumId", OtherKey="AlbumId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionSlideshow_1_0", BackReferenceName="UserActionSlideshows")]
+		public Album? UserActionSlideshowAlbum { get; set; }
+
+		/// <summary>
+		/// FK_UserActionSlideshow_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionSlideshowItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionSlideshow_0_0", BackReferenceName="UserActionSlideshows")]
+		public Item? UserActionSlideshowItem { get; set; }
+
+		#endregion
 	}
 
 	[Table("UserActionView")]
@@ -1062,6 +2143,16 @@ namespace StorageProviders.SQLite
 		[Column("UserActionView_Date",         DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionViewDate         { get; set; } // integer
 		[Column("UserActionView_ItemId",       DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),    Nullable          ] public long? UserActionViewItemId       { get; set; } // integer
 		[Column("UserActionView_ActionOrigin", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0), NotNull              ] public long  UserActionViewActionOrigin { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_UserActionView_0_0
+		/// </summary>
+		[Association(ThisKey="UserActionViewItemId", OtherKey="ItemId", CanBeNull=true, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_UserActionView_0_0", BackReferenceName="UserActionViews")]
+		public Item? UserActionViewItem { get; set; }
+
+		#endregion
 	}
 
 	[Table("VideoFaceOccurrence")]
@@ -1072,6 +2163,16 @@ namespace StorageProviders.SQLite
 		[Column("VideoFaceOccurrence_BeginFrame", DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long VideoFaceOccurrenceBeginFrame { get; set; } // integer
 		[Column("VideoFaceOccurrence_EndFrame",   DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long VideoFaceOccurrenceEndFrame   { get; set; } // integer
 		[Column("VideoFaceOccurrence_FaceFrame",  DataType=LinqToDB.DataType.Int64, Length=8, Precision=19, Scale=0),             NotNull] public long VideoFaceOccurrenceFaceFrame  { get; set; } // integer
+
+		#region Associations
+
+		/// <summary>
+		/// FK_VideoFaceOccurrence_0_0
+		/// </summary>
+		[Association(ThisKey="VideoFaceOccurrenceFaceId", OtherKey="FaceId", CanBeNull=false, Relationship=LinqToDB.Mapping.Relationship.ManyToOne, KeyName="FK_VideoFaceOccurrence_0_0", BackReferenceName="VideoFaceOccurrences")]
+		public Face VideoFaceOccurrenceFace { get; set; } = null!;
+
+		#endregion
 	}
 
 	public static partial class TableExtensions

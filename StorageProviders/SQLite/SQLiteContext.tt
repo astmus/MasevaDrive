@@ -7,7 +7,7 @@
 	
 	NamespaceName = "StorageProviders.SQLite";
 	GetSchemaOptions.GetTables             = true;
-	GetSchemaOptions.GetForeignKeys        = false;
+	GetSchemaOptions.GetForeignKeys        = true;
 	GetSchemaOptions.GetProcedures         = true;
 	GetSchemaOptions.GenerateChar1AsString = false;
 
@@ -104,7 +104,7 @@ NormalizeNamesWithoutUnderscores               = true;
 //Func<string, bool, string> ConvertToCompilable = ConvertToCompilableDefault;
 
 
-	LoadSQLiteMetadata("data source=e:\\StorageDB\\MediaDb.v1.sqlite");
+	LoadSQLiteMetadata("data source=e:\\StorageDB\\StorageDB.sqlite");
 	
 	GenerateModel();
 				#>

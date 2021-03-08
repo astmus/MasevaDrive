@@ -16,7 +16,7 @@ namespace StorageProviders
 	{
 		public static string ConnectionStringExample()
 		{
-			var b = new System.Data.SQLite.SQLiteConnectionStringBuilder(@"Data Source=e:\\StorageDB\\MediaDb.v1.sqlite");
+			var b = new System.Data.SQLite.SQLiteConnectionStringBuilder(@"Data Source=e:\\StorageDB\\StorageDB.sqlite");
 			b.CacheSize = 8192;
 			b.JournalMode = System.Data.SQLite.SQLiteJournalModeEnum.Wal;
 			b.ForeignKeys = true;
@@ -37,13 +37,14 @@ namespace StorageProviders
 			builder.ForeignKeys = true;
 			builder.RecursiveTriggers = true;*/
 			// configure connection string
-			//builder.UseSQLite(@"e:\StorageDB\MediaDb.v1.sqlite");
-			var b = new System.Data.SQLite.SQLiteConnectionStringBuilder(@"Data Source=e:\\StorageDB\\MediaDb.v1.sqlite");
+			//builder.UseSQLite(@"e:\StorageDB\StorageDB.sqlite");
+			var b = new System.Data.SQLite.SQLiteConnectionStringBuilder(@"Data Source=e:\\StorageDB\\StorageDB.sqlite");
 			b.CacheSize = 8192;
 			b.JournalMode = System.Data.SQLite.SQLiteJournalModeEnum.Wal;
 			b.ForeignKeys = true;
 			b.RecursiveTriggers = true;
 			b.Enlist = true;
+			b.PageSize = 4096;
 			b.SyncMode = System.Data.SQLite.SynchronizationModes.Full;
 			b.ReadOnly = true;
 			b.Pooling = true;
@@ -80,7 +81,7 @@ namespace StorageProviders
 	{
 		public IEnumerable<IDataProviderSettings> DataProviders => Enumerable.Empty<IDataProviderSettings>();
 
-		public string DefaultConfiguration => @"Data Source = e:\\StorageDB\\MediaDb.v1.sqlite; Mode=ReadOnly; Cache=Shared; Pooling=True; Max Pool Size=100; Cache Size=2000; Journal Mode=Wal;";
+		public string DefaultConfiguration => @"Data Source = e:\\StorageDB\\StorageDB.sqlite; Mode=ReadOnly; Cache=Shared; Pooling=True; Max Pool Size=100; Cache Size=2000; Journal Mode=Wal;";
 		public string DefaultDataProvider => "SQLite";
 		//options.UseConnectionString(ProviderName.SQLiteMS, hostContext.Configuration.GetConnectionString("DbConnectionString")).UseDefaultLogging(provider).Build<SQLiteDbContext>();
 		//(Context.SQLite.Connection as Microsoft.Data.Sqlite.SqliteConnection).CreateCollation("NoCaseUnicode", (x, y) => string.Compare(x, y, ignoreCase: true));
@@ -102,7 +103,7 @@ namespace StorageProviders
 		{
 			get
 			{
-				var b = new System.Data.SQLite.SQLiteConnectionStringBuilder(@"Data Source=e:\\StorageDB\\MediaDb.v1.sqlite");
+				var b = new System.Data.SQLite.SQLiteConnectionStringBuilder(@"Data Source=e:\\StorageDB\\StorageDB.sqlite");
 				b.CacheSize = 8192;
 				b.JournalMode = System.Data.SQLite.SQLiteJournalModeEnum.Wal;
 				b.ForeignKeys = true;
@@ -115,7 +116,7 @@ namespace StorageProviders
 					new ConnectionStringSettings
 					{
 						Name = "Media",
-						ProviderName = "SQLite",
+						ProviderName = ProviderName.SQLiteClassic,
 						ConnectionString = b.ToString()
 					};
 			}
