@@ -5,11 +5,19 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+<<<<<<< HEAD:MasevaDriveService/Properties/AssemblyInfo.cs
 [assembly: AssemblyTitle("TelegramInteractionService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TelegramInteractionService")]
+=======
+[assembly: AssemblyTitle("DriveDataInfoActualizer")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("DriveDataInfoActualizer")]
+>>>>>>> 0cba5b5221ec821863fad0035ba1abcd30cbbdcd:DriveDataInfoActualizer/Properties/AssemblyInfo.cs
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

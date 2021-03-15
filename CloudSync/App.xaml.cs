@@ -40,7 +40,8 @@ namespace CloudSync
 		}
 
 		private void Application_Exit(object sender, ExitEventArgs e)
-		{						
+		{			
+			//TelegramService.StopService();			
 			LogManager.Flush();			
 		}		
 	}
