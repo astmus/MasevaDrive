@@ -8,7 +8,7 @@ namespace Telegram.Bot.Types
 	/// Represents a general file to be sent
 	/// </summary>
 	[JsonObject(MemberSerialization.OptIn, NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-	public class InputMediaDocument : InputMediaBase, IInputMediaThumb
+	public class InputMediaDocument : @object, IInputMediaThumb
 	{
 		/// <inheritdoc />
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]

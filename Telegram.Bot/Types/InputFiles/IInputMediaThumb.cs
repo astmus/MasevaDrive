@@ -3,7 +3,7 @@
 namespace Telegram.Bot.Types
 {
 	/// <summary>
-	/// Indicates that an <see cref="InputMediaBase"/> has a thumbnail.
+	/// Indicates that an <see cref="@object"/> has a thumbnail.
 	/// </summary>
 	public interface IInputMediaThumb
 	{

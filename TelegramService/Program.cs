@@ -10,11 +10,19 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.WindowsServices;
 using LinqToDB.DataProvider;
 using LinqToDB.Extensions;
-using StorageProviders.NetCore.DBs.SQLite;
 using StorageProviders.SQLite;
 using Microsoft.Extensions.Logging;
 using System.Threading;
+using System.Configuration;
 using LinqToDB;
+using TelegramService.Jarvise.Interfaces;
+using TelegramService.Jarvise;
+using LinqToDB.DataProvider.SQLite;
+using LinqToDB.SchemaProvider;
+using StorageProviders.SQLite.Extensions;
+using System.Data.SQLite;
+using TelegramService.Jarvise.Commands;
+using TelegramService.Jarvise.Session;
 
 namespace TelegramService
 {
@@ -31,24 +39,56 @@ namespace TelegramService
 				conf.ServiceName = "UniPoint Storage Service";
 			}).ConfigureHostConfiguration(b =>
 			{
+				b.AddEnvironmentVariables().Build();			
+			}).ConfigureAppConfiguration(b =>
+			{
 				b.AddEnvironmentVariables().Build();
-			}).
-			ConfigureServices((hostContext, services) =>
+				
+			}).ConfigureServices((hostContext, services) =>
 				{
-					services.AddHostedService<StorageWorker>().AddLinqToDbContext<SQLiteProvider>((provider, options) =>
+				services.AddHostedService<RootBot>(/*(IServiceProvider provider)=>
+				{
+					
+				}*/).AddScoped<UserSessionService>(((IServiceProvider provider, UserSessionService options)
+					=> (IServiceProvider proovider, options)=> { } ).AddLinqToDb((IServiceProvider provider, LinqToDbConnectionOptionsBuilder options) =>
 					{
-						options.UseSQLite(hostContext.Configuration.GetConnectionString("DbConnectionString")).UseDefaultLogging(provider);
+						/*var b = new System.Data.SQLite.SQLiteConnectionStringBuilder(hostContext.Configuration.GetConnectionString("DbConnectionString"));
+						b.CacheSize = 65536;
+						b.JournalMode = System.Data.SQLite.SQLiteJournalModeEnum.Wal;
+						b.ForeignKeys = true;
+						b.RecursiveTriggers = true;
+						b.Enlist = true;
+						b.PageSize = 4096;						
+						b.ReadOnly = true;
+						b.Pooling = true;
+
+						options.UseSQLite(b.ToString()).UseDefaultLogging(provider);		*/
+						options.UseConnectionFactory(
+							SQLiteTools.GetDataProvider(ProviderName.SQLiteClassic),
+							() =>
+							{
+								var b = new System.Data.SQLite.SQLiteConnectionStringBuilder(hostContext.Configuration.GetConnectionString("DbConnectionString"));
+								b.CacheSize = 65536;
+								b.JournalMode = System.Data.SQLite.SQLiteJournalModeEnum.Wal;
+								b.ForeignKeys = true;
+								b.RecursiveTriggers = true;
+								b.Enlist = true;
+								b.PageSize = 4096;
+								b.ReadOnly = true;
+								b.Pooling = true;
+								return new SQLiteConnection(b.ToString());
+							}).UseDefaultLogging(provider);
 					});
-					services.AddScoped<SQLiteProvider>();
+					services.AddScoped<SQLiteStorage>();
+					services.AddScoped<IReplier, DefaultReplier>();
+					services.AddTransient((IServiceProvider collection) =>
+					{
+						var res = new RootBotMenuOptions();
+						res.UseMenuItem<RootBot.StartCommand>();
+						return res;
+					});
+					//services.Configure<RootBot>(conf => 
 				});
 	}
 
-	/*public class SQLiteConnection : SQLiteProvider
-	{
-		public SQLiteConnection(LinqToDbConnectionOptions<SQLiteConnection> options)
-			: base(options)
-		{
-
-		}
-	}*/
 }

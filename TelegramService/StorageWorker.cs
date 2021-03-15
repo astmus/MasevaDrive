@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -8,53 +7,28 @@ using LinqToDB;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using StorageProviders.NetCore.DBs.SQLite;
 using Telegram.Bot;
-using Telegram.Bot.Connectivity;
 using Telegram.Bot.Storage;
 using Telegram.Bot.Storage.InteractionHandlers;
+using Telegram.Bot.ExtensionsBase;
+using Telegram.Bot.Types;
+using TelegramService.Storage;
+using TelegramService.Jarvise.Interfaces;
+using LinqToDB.Common;
+using StorageProviders.SQLite;
+using System.Linq.Expressions;
+using Telegram.Bot.Interaction;
+using TelegramService.Jarvise.Interaction;
+using System.Security.Cryptography;
 
 namespace TelegramService
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class DefaultStorageBotOptions : IBotOptions
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public string Username => "Jarvise";
-		/// <summary>
-		/// 
-		/// </summary>
-		public string ApiToken => Environment.GetEnvironmentVariable("JarviseKey", EnvironmentVariableTarget.User);
-		/// <summary>
-		/// 
-		/// </summary>
-		public string WebhookPath => null;
-		/// <summary>
-		/// 
-		/// </summary>
-		public TimeSpan Timeout => TimeSpan.FromMinutes(2);
-		/// <summary>
-		/// 
-		/// </summary>
-		public IEnumerable<RegisteredUser> RegisteredUsersSource
-		{
-			get
-			{
-				return new RegisteredUser[] { new RegisteredUser() { Email = "astmus@live.com", ChatId = 506545376, Id = 506545376 }, new RegisteredUser() { Email = "olgas88@live.com", ChatId = 355747145 } };
-			}
-		}
-	}
-
 	public class StorageWorker : BackgroundService
 	{
 		private readonly ILogger<StorageWorker> _logger;
-
-		private StorageTelegramBot _storageBot;
-
+		private StorageTelegramBot<InteractionContext> _storageBot;
+		
+		TelegramBot telegramBot;
 		public StorageWorker(ILogger<StorageWorker> logger)
 		{
 			_logger = logger;
@@ -63,42 +37,59 @@ namespace TelegramService
 		public IServiceProvider Services { get; }
 		public StorageWorker(IServiceProvider services, ILogger<StorageWorker> logger)
 		{
-			Services = services;
+			Services = services;			
 			_logger = logger;
+			_storageBot = new StorageTelegramBot<InteractionContext>();
 		}
 
 		public override async Task StartAsync(CancellationToken cancellationToken)
 		{
-			var options = new DefaultStorageBotOptions();
-			_storageBot = new StorageTelegramBot(new DefaultStorageBotOptions());
-			_storageBot.InteractionRouter = new StorageInteractionsRouter();
-
-			_storageBot.StartReceiving(null, null, cancellationToken);
+			var r = await _storageBot.GetMeAsync(cancellationToken);			
+			_storageBot.StartReceiving(null, logException, cancellationToken);
 			await base.StartAsync(cancellationToken);
+		}
+
+		private async Task logException(Exception error, CancellationToken cancelToken)
+		{
+			_logger.LogError(error.Message);
+			await Task.CompletedTask;
 		}
 
 		protected override async Task ExecuteAsync(CancellationToken cancellationToken)
 		{
-			_logger.LogInformation("Storage Worker running at: {time}", DateTimeOffset.Now);
-
-			await foreach (var update in _storageBot.YieldUpdatesAsync())
+			var mms = from m in _storageBot.Updates select m;
+			await foreach (Update updateContext in _storageBot.Updates)
 			{
-				if (cancellationToken.IsCancellationRequested)
-					return;
-				_logger.LogInformation(update.ToString());
 				using (var scope = Services.CreateScope())
 				{
-					SQLiteProvider dbProvider = scope.ServiceProvider.GetRequiredService<SQLiteProvider>();
-					using (var handler = _storageBot.CreateInteractionHandler(update, context => { context.StorageItemsProvider = dbProvider; }))
+					Console.WriteLine(updateContext.RawCommand());
+					//_storageBot.SessionDispatcher.DispatchSession(updateContext);
+					//updateContext.BotConnection = _storageBot; // may be should refactored?
+
+					using (SQLiteStorage dbProvider = scope.ServiceProvider.GetRequiredService<SQLiteStorage>())
 					{
-						try
+						//updateContext.SQLite = dbProvider;						
+						/*using (var handler = _storageBot.MakeHandler(updateContext))
 						{
-							await handler.HandleAsync(cancellationToken);
-						}
-						catch (Exception error)
-						{
-							await handler.HandleErrorAsync(error, cancellationToken);
-						}
+							HandleResult result;
+							try
+							{
+								result = await handler.HandleAsync(updateContext, cancellationToken);
+							}
+							catch (Exception error)
+							{
+								result = await handler.HandleErrorAsync(error, cancellationToken);
+							}
+							if (result != null)
+							{
+								var replier = scope.ServiceProvider.GetRequiredService<IReplier>();
+								Console.WriteLine("replier code => " + replier.GetHashCode().ToString());
+								await replier.ReplyAsync(result, updateContext, cancellationToken);
+								Console.WriteLine(updateContext.Message.Text + " => replied");
+							}
+							else
+								Console.WriteLine($"There is no handler for command {updateContext.Message.Text}");
+						}*/
 					}
 				}
 			}
@@ -106,7 +97,7 @@ namespace TelegramService
 
 		public override async Task StopAsync(CancellationToken cancellationToken)
 		{
-			_storageBot.StopReceiving();
+			_storageBot.StopReceiving();			
 			await base.StopAsync(cancellationToken);
 		}
 	}

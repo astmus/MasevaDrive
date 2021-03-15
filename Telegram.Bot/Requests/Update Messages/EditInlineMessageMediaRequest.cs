@@ -23,7 +23,7 @@ namespace Telegram.Bot.Requests
 		/// New media content of the message
 		/// </summary>
 		[JsonProperty(Required = Required.Always)]
-		public InputMediaBase Media { get; }
+		public @object Media { get; }
 
 		/// <inheritdoc cref="IInlineReplyMarkupMessage.ReplyMarkup" />
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
@@ -34,7 +34,7 @@ namespace Telegram.Bot.Requests
 		/// </summary>
 		/// <param name="inlineMessageId">Identifier of the inline message</param>
 		/// <param name="media">New media content of the message</param>
-		public EditInlineMessageMediaRequest(string inlineMessageId, InputMediaBase media)
+		public EditInlineMessageMediaRequest(string inlineMessageId, @object media)
 			: base("editMessageMedia")
 		{
 			InlineMessageId = inlineMessageId;

@@ -45,7 +45,7 @@ namespace Telegram.Bot.Requests
 		/// <param name="chatId">ID of target chat</param>
 		/// <param name="media">Media items to send</param>
 		[Obsolete("Use the other constructor. Only photo and video input types are allowed.")]
-		public SendMediaGroupRequest(ChatId chatId, IEnumerable<InputMediaBase> media)
+		public SendMediaGroupRequest(ChatId chatId, IEnumerable<@object> media)
 			: base("sendMediaGroup")
 		{
 			ChatId = chatId;
