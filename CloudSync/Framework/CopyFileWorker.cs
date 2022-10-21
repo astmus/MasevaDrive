@@ -69,8 +69,8 @@ namespace CloudSync.Framework
 				Status = "Open file";
 				string pathToLoadedFile = Path.Combine(DispathFolder, SyncItem.Name);
 				FileInfo file = new FileInfo(pathToLoadedFile);
-				if (file.Length != SyncItem.Size)
-					throw new FileMismatchSizeException(SyncItem.Name, SyncItem.Size, file.Length, pathToLoadedFile);
+				//if (file.Length != SyncItem.Size)
+				//	throw new FileMismatchSizeException(SyncItem.Name, SyncItem.Size, file.Length, pathToLoadedFile);
 				using (var sourceStream = new FileStream(pathToLoadedFile, FileMode.Open, FileAccess.Read, FileShare.None, bufferSize, true))
 				{
 					Status = "Create destination file";

@@ -66,7 +66,7 @@ namespace TelegramService.Jarvise.Commands
 		public BotMenuOptions<T> UseMenuItem<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] B>() where B : T
 		{
 			menuItemTypes.Add(typeof(B).Name, typeof(B));			
-			return this;
+			return this; 
 		}
 
 		public BotMenuOptions<T> UseMenuItem(T menuItem)

@@ -43,14 +43,12 @@ namespace TelegramService
 			}).ConfigureAppConfiguration(b =>
 			{
 				b.AddEnvironmentVariables().Build();
-				
 			}).ConfigureServices((hostContext, services) =>
-				{
+			{
 				services.AddHostedService<RootBot>(/*(IServiceProvider provider)=>
 				{
 					
-				}*/).AddScoped<UserSessionService>(((IServiceProvider provider, UserSessionService options)
-					=> (IServiceProvider proovider, options)=> { } ).AddLinqToDb((IServiceProvider provider, LinqToDbConnectionOptionsBuilder options) =>
+				}*/).AddScoped<UserSessionService>().AddLinqToDb((IServiceProvider provider, LinqToDbConnectionOptionsBuilder options) =>
 					{
 						/*var b = new System.Data.SQLite.SQLiteConnectionStringBuilder(hostContext.Configuration.GetConnectionString("DbConnectionString"));
 						b.CacheSize = 65536;
